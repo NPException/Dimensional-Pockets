@@ -16,3 +16,11 @@ Repo-link for modjam signup is this:
 ```
 https://github.com/NPException42/Modjam-4
 ```
+
+
+Tools to use:
+```
+https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe
+
+https://github-windows.s3.amazonaws.com/GitHubSetup.exe
+```
