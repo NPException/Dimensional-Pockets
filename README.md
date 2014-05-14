@@ -3,7 +3,7 @@ Modjam-4
 
 So this is our repo for Modjam 4.
 
-participants are: (in no particular order)
+participants are: (in ranking of awesome)
 Jezza, Nox, gellegbs, NPException
 
 The team name is: (copy the following for modjam-registration!)
