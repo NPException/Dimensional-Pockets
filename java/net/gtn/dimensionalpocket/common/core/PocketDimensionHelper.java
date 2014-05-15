@@ -25,7 +25,7 @@ public class PocketDimensionHelper {
             double posY = targetSet.getY() * 16;
             double posZ = targetSet.getZ() * 16;
 
-            player.playerNetServerHandler.setPlayerLocation(posX + 8, posY, posZ + 8, player.rotationYaw, player.rotationPitch);
+            player.playerNetServerHandler.setPlayerLocation(posX + 8, posY + 1, posZ + 8, player.rotationYaw, player.rotationPitch);
         }
     }
 
