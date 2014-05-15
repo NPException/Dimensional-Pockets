@@ -53,5 +53,4 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public CoordSet getChunkSet() {
         return chunkSet;
     }
-
 }

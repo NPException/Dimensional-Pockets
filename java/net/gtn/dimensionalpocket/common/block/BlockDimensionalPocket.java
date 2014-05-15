@@ -32,7 +32,6 @@ public class BlockDimensionalPocket extends BlockDP {
                     pocket.genChunkSet();
 
                 CoordSet targetSet = pocket.getChunkSet();
-                pocket.setCell(PocketDimensionHelper.assignCellToBlock(targetSet));
                 PocketDimensionHelper.teleportPlayerToPocket(player, targetSet);
             }
         }
@@ -48,7 +47,7 @@ public class BlockDimensionalPocket extends BlockDP {
         if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket)
             ((TileDimensionalPocket) tileEntity).setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
     }
-
+    
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
         return null;

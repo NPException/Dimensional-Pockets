@@ -41,25 +41,4 @@ public class PocketDimensionHelper {
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
     }
-
-    public static CellState assignCellToBlock(CoordSet targetSet) {
-        return new CellState(targetSet);
-    }
-
-    public static class CellState extends CoordSet {
-
-        /**
-         * The 16*16*16 coords.
-         * 
-         * @param coordSet
-         */
-        public CellState(CoordSet coordSet) {
-            super(coordSet.getX(), coordSet.getY(), coordSet.getZ());
-        }
-
-        public CellState(int x, int y, int z) {
-            super(x, y, z);
-        }
-
-    }
 }
