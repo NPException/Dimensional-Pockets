@@ -17,17 +17,49 @@ public class PocketDimensionHelper {
         return tempLoc;
     }
 
-    public static void teleportPlayerToPocket(EntityPlayer player) {
-        if (player.worldObj.isRemote)
+    public static void teleportPlayerToPocket(EntityPlayer entityPlayer, CoordSet targetSet) {
+        if (entityPlayer.worldObj.isRemote)
             return;
+
+        EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
         int dimID = player.dimension;
 
-        // if (dimID != Reference.DIMENSION_ID)
-        transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID, new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID)));
+        if (dimID != Reference.DIMENSION_ID) {
+            PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), targetSet);
+            transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
+        } else {
+            double posX = targetSet.getX() * 16;
+            double posY = targetSet.getY() * 16;
+            double posZ = targetSet.getZ() * 16;
+
+            player.playerNetServerHandler.setPlayerLocation(posX + 8, posY + 8, posZ + 8, player.rotationYaw, player.rotationPitch);
+        }
+
     }
 
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
+    }
+
+    public static CellState assignCellToBlock(CoordSet targetSet) {
+        return new CellState(targetSet);
+    }
+
+    public static class CellState extends CoordSet {
+
+        /**
+         * The 16*16*16 coords.
+         * 
+         * @param coordSet
+         */
+        public CellState(CoordSet coordSet) {
+            super(coordSet.getX(), coordSet.getY(), coordSet.getZ());
+        }
+
+        public CellState(int x, int y, int z) {
+            super(x, y, z);
+        }
+
     }
 }

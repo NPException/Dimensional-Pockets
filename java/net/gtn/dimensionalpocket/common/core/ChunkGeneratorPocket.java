@@ -74,11 +74,9 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         chunk.generateSkylightMap();
 
         byte[] byteArray = new byte[256];
-
         Arrays.fill(byteArray, (byte) BiomeHelper.getPocketBiome().biomeID);
 
         chunk.setBiomeArray(byteArray);
-
         chunk.generateSkylightMap();
         return chunk;
     }

@@ -12,6 +12,10 @@ public class TeleportingRegistry {
 
     /**
      * NPE you probably want to fix this.
+     * NPE you probably want to fix this.
+     * NPE you probably want to fix this.
+     * NPE you probably want to fix this.
+     * NPE you probably want to fix this.
      */
     public static CoordSet genNewChunkSet() {
         currentChunk.addY(1);

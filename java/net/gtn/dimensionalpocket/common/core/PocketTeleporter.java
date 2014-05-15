@@ -6,15 +6,19 @@ import net.minecraft.world.WorldServer;
 
 public class PocketTeleporter extends Teleporter {
 
-    public PocketTeleporter(WorldServer worldServer) {
+    CoordSet coordSet;
+
+    public PocketTeleporter(WorldServer worldServer, CoordSet coordSet) {
         super(worldServer);
+        this.coordSet = coordSet;
     }
 
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
 
-        DPLogger.info(x + " : " + y + " : " + z);
+        DPLogger.info(coordSet);
 
         super.placeInPortal(entity, x, y, z, par8);
     }
+
 }

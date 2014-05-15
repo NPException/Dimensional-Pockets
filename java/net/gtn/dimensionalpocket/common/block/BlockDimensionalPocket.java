@@ -32,7 +32,8 @@ public class BlockDimensionalPocket extends BlockDP {
                     pocket.genChunkSet();
 
                 CoordSet targetSet = pocket.getChunkSet();
-                PocketDimensionHelper.teleportPlayerToPocket(player);
+                pocket.setCell(PocketDimensionHelper.assignCellToBlock(targetSet));
+                PocketDimensionHelper.teleportPlayerToPocket(player, targetSet);
             }
         }
 
