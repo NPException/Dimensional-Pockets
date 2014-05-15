@@ -14,18 +14,37 @@ Exiting the cell.
 	- And if you retain what tileEntity took what chunk coordinate set, then you should be able to spawn at the block.
 	- Look at my helper class for tips on traversing the world.
 	
+Portal code.
+	- I removed the code that makes you teleport to and from, purely because it is nether based.
+	- All you need to do is code the positioning.
+	- Look at the super placeInPortal() for how to teleport, etc.
+	
 Investigate the frame rate tank.
+	- Speaks for itself.
+	- The frame rate drops considerable, and that's with no machines.
+	- Do you're magic NPE.
+	
 Textures for frame block.
+	- Gel, ask the boys what textures they want for the frame, etc.
+	- I don't care what it look like.
 
 Smoother gen for the dimension.
+	- NPE, look at the gen code for the dimension.
+	- The code for populating the chunk lies in ChunkGeneratorPocket.provideChunk(int x, int z);
 
 Book thingy, for information on how to use the mod.
+	- Nox, I've started making a book or ItemInfoTool, I think.
+	- Make it a quick intro guide to the mod, how it works, etc.
 
-What I've done.
-========================
-The dimension is done.
-	- The only thing left is optimisations.
-The main block is done.
-	- You still need to do textures, Gel.
-The frame is done.
-	- Textures for it, and of course, a way out.
+Redstone Compatablity.
+	- NPE or Nox, good luck, should be fairly easy.
+	- Use the tileEntity as a bridge for the block method that detects if there is a change.
+	
+Recipes.
+	- Speaks for itself again.
+	
+Hopefully, all these are done.
+	- Once all the above are done, and we have enough time, see if we can add support for other mods, etc.
+	
+Remember, COMMIT OFTEN.
+INCLUDING YOU GEL.
