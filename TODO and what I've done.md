@@ -22,10 +22,9 @@ TODO
 - The blocks are supposed to have light given the light from the world.
 - Good luck. :P
 	
-### Investigate the frame rate tank.
-- Speaks for itself.
-- The frame rate drops considerable, and that's with no machines.
-- Do you're magic NPE.
+### ~~Investigate the frame rate tank.~~
+- Jezza, you derp. Think about what could have caused your fps drop
+ - Hint: it's not your codes fault
 	
 ### Textures for frame block.
 - Gel, ask the boys what textures they want for the frame, etc.
