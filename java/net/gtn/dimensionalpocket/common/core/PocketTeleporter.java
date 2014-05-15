@@ -13,7 +13,7 @@ public class PocketTeleporter extends Teleporter {
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
 
-        DPLogger.info("Called");
+        DPLogger.info(x + " : " + y + " : " + z);
 
         super.placeInPortal(entity, x, y, z, par8);
     }

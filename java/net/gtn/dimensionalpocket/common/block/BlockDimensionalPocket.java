@@ -27,13 +27,11 @@ public class BlockDimensionalPocket extends BlockDP {
         if (player == null)
             return true;
 
+        
         if (!world.isRemote) {
-            // TODO, ID shit
-            int dimID = player.dimension;
-
-            if (dimID != Reference.DIMENSION_ID)
-                MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID, new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID)));
+            
         }
+            
         return true;
     }
 
