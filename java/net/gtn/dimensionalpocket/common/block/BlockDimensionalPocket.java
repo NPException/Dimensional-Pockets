@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,8 +46,13 @@ public class BlockDimensionalPocket extends BlockDP {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
         TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket)
-            ((TileDimensionalPocket) tileEntity).setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
+        if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
+            TileDimensionalPocket pocket = (TileDimensionalPocket) tileEntity;
+            pocket.setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
+            if (pocket.hasChunkSet()) {
+                TeleportingRegistry.changeTeleportLink(pocket.getChunkSet(), entityLiving.dimension, pocket.getCoordSet());
+            }
+        }
     }
     
     @Override

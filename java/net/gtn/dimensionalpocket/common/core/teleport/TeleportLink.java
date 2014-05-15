@@ -7,8 +7,8 @@ public class TeleportLink {
     private CoordSet blockCoords, pocketChunkCoords;
     
     TeleportLink(int blockDim, CoordSet blockCoords, CoordSet pocketChunkCoords) {
-        this.blockDim = blockDim;
-        this.blockCoords = blockCoords;
+        setBlockDim(blockDim);
+        setBlockCoords(blockCoords);
         this.pocketChunkCoords = pocketChunkCoords;
     }
     
@@ -20,5 +20,13 @@ public class TeleportLink {
     }
     public CoordSet getPocketChunkCoords() {
         return pocketChunkCoords;
+    }
+    
+    public void setBlockDim(int blockDim) {
+        this.blockDim = blockDim;
+    }
+    
+    public void setBlockCoords(CoordSet blockCoords) {
+        this.blockCoords = blockCoords;
     }
 }

@@ -1,7 +1,11 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
+import net.gtn.dimensionalpocket.common.core.CoordSet;
+import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -17,8 +21,16 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-//        TileEntity tileEntity = TeleportingRegistry.getRelativeBlock(x, y, z);
-        // Calculate the way out, by using the teleporting registry.
+        if (player == null)
+            return true;
+
+        if (!world.isRemote) {
+            if (player.dimension != Reference.DIMENSION_ID)
+                return true;
+            
+            PocketDimensionHelper.teleportPlayerFromPocket(player, new CoordSet(x, y, z));
+        }
+
         return true;
     }
 

@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.core;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 public class PocketDimensionHelper {
 
     public static void teleportPlayerToPocket(EntityPlayer entityPlayer, CoordSet chunkSet) {
-        if (entityPlayer.worldObj.isRemote)
+        if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
             return;
 
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
@@ -83,7 +84,15 @@ public class PocketDimensionHelper {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
     }
     
-    public static void teleportPlayerFromPocket(){
+    public static void teleportPlayerFromPocket(EntityPlayer entityPlayer, CoordSet frameCoords){
+        if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
+            return;
+        
+        EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
+
+        // adjust to chunk coordinates
+        
+        TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
         
     }
 }
