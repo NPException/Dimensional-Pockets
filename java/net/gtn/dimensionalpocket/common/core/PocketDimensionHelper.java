@@ -10,6 +10,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class PocketDimensionHelper {
@@ -35,11 +36,19 @@ public class PocketDimensionHelper {
         }
     }
     
+    /**
+     * Generates the new room. THATS why you hired me :D
+     * @author NPException
+     * @param world
+     * @param chunkSet
+     */
     private static void generatePocket(World world, CoordSet chunkSet) {
         
         int worldX = chunkSet.getX()*16;
         int worldY = chunkSet.getY()*16;
         int worldZ = chunkSet.getZ()*16;
+        
+        Chunk chunk = world.getChunkFromChunkCoords(chunkSet.getX(), chunkSet.getZ());
         
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
@@ -47,7 +56,20 @@ public class PocketDimensionHelper {
                     if (!(x == 0 || x == 15 || y == 0 || y == 15 || z == 0 || z == 15)) {
                         continue;
                     }
-                    world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
+                    
+                    int l = worldY >> 4;
+                    ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
+
+                    if (extendedBlockStorage == null) {
+                        extendedBlockStorage = new ExtendedBlockStorage(worldY, !world.provider.hasNoSky);
+                        chunk.getBlockStorageArray()[l] = extendedBlockStorage;
+                    }
+
+                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                  
+                    
+                    // use that method if setting things in the chunk will cause problems in the future
+//                    world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
             }
         }
