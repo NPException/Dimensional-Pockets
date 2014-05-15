@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

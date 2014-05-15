@@ -3,7 +3,7 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.IBlockNotifier;
-import net.gtn.dimensionalpocket.common.core.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
