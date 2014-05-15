@@ -37,19 +37,13 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     public void populateChunk(int x, int z, Block[] blocks) {
 
-        int index = 0;
-        
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < worldObj.getHeight(); j++) {
                 for (int k = 0; k < 16; k++) {
-                    if ((j & 1) == 0 || (j & 16) == 0) {
-                        index++;
-                    }
+                        blocks[]
                 }
             }
         }
-        
-        DPLogger.info(index);
 
     }
 
