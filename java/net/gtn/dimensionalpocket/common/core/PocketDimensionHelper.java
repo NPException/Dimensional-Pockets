@@ -34,7 +34,7 @@ public class PocketDimensionHelper {
         if (player.worldObj.getBlock(chunkSet.getX()*16, chunkSet.getY()*16, chunkSet.getZ()*16) != ModBlocks.dimensionalPocketFrame) {
             long start = System.currentTimeMillis();
             generatePocket(player.worldObj, chunkSet);
-            DPLogger.debug("Generation took " + (System.currentTimeMillis()-start) + " milliseconds");
+            DPLogger.info("Generation took " + (System.currentTimeMillis()-start) + " milliseconds");
         }
     }
     
@@ -52,24 +52,21 @@ public class PocketDimensionHelper {
         
         Chunk chunk = world.getChunkFromChunkCoords(chunkSet.getX(), chunkSet.getZ());
         
+        int l = worldY >> 4; 
+        ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
+
+        if (extendedBlockStorage == null) {
+            extendedBlockStorage = new ExtendedBlockStorage(worldY, !world.provider.hasNoSky);
+            chunk.getBlockStorageArray()[l] = extendedBlockStorage;
+        }
+        
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
                     if (!(x == 0 || x == 15 || y == 0 || y == 15 || z == 0 || z == 15)) {
                         continue;
                     }
-                    
-                    int l = worldY >> 4;
-                    ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
-
-                    if (extendedBlockStorage == null) {
-                        extendedBlockStorage = new ExtendedBlockStorage(worldY, !world.provider.hasNoSky);
-                        chunk.getBlockStorageArray()[l] = extendedBlockStorage;
-                    }
-
                     extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
-                    
-                    world.scheduleBlockUpdate(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame, 1);
                   
                     
                     // use that method if setting things in the chunk will cause problems in the future
