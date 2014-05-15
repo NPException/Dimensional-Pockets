@@ -32,7 +32,9 @@ public class PocketDimensionHelper {
         }
         
         if (player.worldObj.getBlock(chunkSet.getX()*16, chunkSet.getY()*16, chunkSet.getZ()*16) != ModBlocks.dimensionalPocketFrame) {
+            long start = System.currentTimeMillis();
             generatePocket(player.worldObj, chunkSet);
+            DPLogger.debug("Generation took " + (System.currentTimeMillis()-start) + " milliseconds");
         }
     }
     
@@ -66,6 +68,8 @@ public class PocketDimensionHelper {
                     }
 
                     extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    
+                    world.scheduleBlockUpdate(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame, 1);
                   
                     
                     // use that method if setting things in the chunk will cause problems in the future
