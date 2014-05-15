@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.PocketTeleporter;
 import net.gtn.dimensionalpocket.common.items.ItemBlockHolder;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,11 +28,16 @@ public class BlockDimensionalPocket extends BlockDP {
         if (player == null)
             return true;
 
-        
         if (!world.isRemote) {
-            
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            if (tileEntity instanceof TileDimensionalPocket) {
+                TileDimensionalPocket pocket = (TileDimensionalPocket) tileEntity;
+                if (!pocket.hasChunkSet()) {
+                    pocket.genChunkSet();
+                }
+            }
         }
-            
+
         return true;
     }
 
@@ -42,6 +48,6 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public TileEntity getTileEntity(int metadata) {
-        return null;
+        return new TileDimensionalPocket();
     }
 }
