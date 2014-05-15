@@ -23,7 +23,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         if (worldObj.isRemote)
             return;
 
-        // ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
         if (!itemStack.hasTagCompound())

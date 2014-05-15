@@ -17,5 +17,4 @@ public class PocketTeleporter extends Teleporter {
 
         super.placeInPortal(entity, x, y, z, par8);
     }
-
 }

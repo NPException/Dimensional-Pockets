@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -17,6 +18,9 @@ import net.minecraft.world.gen.ChunkProviderFlat;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Look at this class Optimise, etc.
+ */
 public class ChunkGeneratorPocket implements IChunkProvider {
 
     private World worldObj;
@@ -56,8 +60,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
                     Block block = Blocks.air;
                     if (i == 0 || i == 15 || j == 0 || j == 15 || (k % 16) == 0 || (k % 16) == 15)
-                        if (!((i == 0 && z == 0) || (i == 0 && z == 15) || (i == 15 && z == 15) || (i == 15 && z == 0)))
-                            block = ModBlocks.dimensionalPocketFrame;
+                        block = ModBlocks.dimensionalPocketFrame;
 
                     tempArray[((i * 16 + j) * 256 + k)] = block;
 
@@ -68,9 +71,13 @@ public class ChunkGeneratorPocket implements IChunkProvider {
             }
         }
 
-        // chunk.generateSkylightMap();
+        chunk.generateSkylightMap();
 
-        // chunk.setBiomeArray(new byte[] { (byte) BiomeHelper.getPocketBiome().biomeID });
+        byte[] byteArray = new byte[256];
+
+        Arrays.fill(byteArray, (byte) BiomeHelper.getPocketBiome().biomeID);
+
+        chunk.setBiomeArray(byteArray);
 
         chunk.generateSkylightMap();
         return chunk;
