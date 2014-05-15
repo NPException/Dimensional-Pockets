@@ -8,14 +8,14 @@ public class WorldProviderPocket extends WorldProvider {
 
     @Override
     public IChunkProvider createChunkGenerator() {
-        return super.createChunkGenerator();
+        return new ChunkGeneratorPocket(worldObj);
     }
-    
+
     @Override
     public boolean canRespawnHere() {
         return true;
     }
-    
+
     @Override
     public boolean canDoLightning(Chunk chunk) {
         return false;

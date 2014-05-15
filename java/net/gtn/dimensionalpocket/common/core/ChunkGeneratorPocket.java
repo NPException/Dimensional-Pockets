@@ -15,11 +15,11 @@ import com.google.common.collect.Lists;
 public class ChunkGeneratorPocket implements IChunkProvider {
 
     World worldObj;
-    
+
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;
     }
-    
+
     @Override
     public boolean chunkExists(int var1, int var2) {
         return true;
@@ -27,16 +27,29 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     @Override
     public Chunk provideChunk(int x, int z) {
-        Block[] blocks = new Block[32768];
+        Block[] blocks = new Block[65536];
 
         populateChunk(x, z, blocks);
 
         Chunk chunk = new Chunk(worldObj, blocks, x, z);
-
-        return null;
+        return chunk;
     }
 
     public void populateChunk(int x, int z, Block[] blocks) {
+
+        int index = 0;
+        
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < worldObj.getHeight(); j++) {
+                for (int k = 0; k < 16; k++) {
+                    if ((j & 1) == 0 || (j & 16) == 0) {
+                        index++;
+                    }
+                }
+            }
+        }
+        
+        DPLogger.info(index);
 
     }
 
