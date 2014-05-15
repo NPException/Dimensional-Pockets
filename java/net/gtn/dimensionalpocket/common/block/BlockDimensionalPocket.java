@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class BlockDimensionalPocket extends BlockDP {
 
-    protected BlockDimensionalPocket(Material material, String name) {
+    public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
     }
