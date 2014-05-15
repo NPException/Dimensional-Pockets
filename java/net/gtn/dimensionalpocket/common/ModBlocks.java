@@ -7,8 +7,7 @@ import net.minecraft.block.material.Material;
 
 public class ModBlocks {
 
-    // Break time
-    static Block dimensionalPocket;
+    public static Block dimensionalPocket;
 
     public static void init() {
         dimensionalPocket = new BlockDimensionalPocket(Material.anvil, Strings.BLOCK_POCKET);
