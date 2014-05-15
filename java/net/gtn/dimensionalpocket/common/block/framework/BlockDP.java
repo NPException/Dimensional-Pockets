@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.block;
+package net.gtn.dimensionalpocket.common.block.framework;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.IBlockNotifier;

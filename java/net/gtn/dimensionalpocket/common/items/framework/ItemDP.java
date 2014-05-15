@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.items;
+package net.gtn.dimensionalpocket.common.items.framework;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;

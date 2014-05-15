@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.items;
+package net.gtn.dimensionalpocket.common.items.framework;
 
 import java.util.List;
 

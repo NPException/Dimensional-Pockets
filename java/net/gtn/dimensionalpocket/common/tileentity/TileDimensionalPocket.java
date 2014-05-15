@@ -38,7 +38,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void genChunkSet() {
         if (hasChunkSet)
             return;
-        chunkSet = TeleportingRegistry.genNewChunkSet();
+        chunkSet = TeleportingRegistry.genNewChunkSet(worldObj.provider.dimensionId, getCoordSet());
         hasChunkSet = true;
     }
 

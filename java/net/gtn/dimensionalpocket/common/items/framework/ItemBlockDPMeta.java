@@ -1,8 +1,8 @@
-package net.gtn.dimensionalpocket.common.items;
+package net.gtn.dimensionalpocket.common.items.framework;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.gtn.dimensionalpocket.common.block.BlockDPMeta;
+import net.gtn.dimensionalpocket.common.block.framework.BlockDPMeta;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
