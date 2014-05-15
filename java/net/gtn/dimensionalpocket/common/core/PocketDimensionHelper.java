@@ -16,16 +16,13 @@ public class PocketDimensionHelper {
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
         int dimID = player.dimension;
+        
+        PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), targetSet);
 
         if (dimID != Reference.DIMENSION_ID) {
-            PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), targetSet);
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         } else {
-            double posX = targetSet.getX() * 16;
-            double posY = targetSet.getY() * 16;
-            double posZ = targetSet.getZ() * 16;
-
-            player.playerNetServerHandler.setPlayerLocation(posX + 8, posY + 1, posZ + 8, player.rotationYaw, player.rotationPitch);
+           teleporter.placeInPortal(player, 0, 0, 0, 0);
         }
     }
 
