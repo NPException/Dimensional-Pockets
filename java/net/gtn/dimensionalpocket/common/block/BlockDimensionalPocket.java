@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 
 public class BlockDimensionalPocket extends BlockDPMeta {
 
+    private static final String[] names = new String[] { "pocketDimension", "pocketDimensionFrame" };
+
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
@@ -22,12 +24,15 @@ public class BlockDimensionalPocket extends BlockDPMeta {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
+        int meta = world.getBlockMetadata(x, y, z);
         if (!world.isRemote) {
-            player.travelToDimension(Reference.DIMENSION_ID);
-            // MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
+            if (meta == 0) {
+                player.travelToDimension(Reference.DIMENSION_ID);
+            } else {
+                if (player.dimension == Reference.DIMENSION_ID)
+                    player.travelToDimension(0);
+            }
         }
-        // player.travelToDimension(Reference.DIMENSION_ID);
-        // DPLogger.info(world.provider.dimensionId);
         return true;
     }
 
@@ -43,7 +48,7 @@ public class BlockDimensionalPocket extends BlockDPMeta {
 
     @Override
     public String[] getNames() {
-        return null;
+        return names;
     }
 
     @Override

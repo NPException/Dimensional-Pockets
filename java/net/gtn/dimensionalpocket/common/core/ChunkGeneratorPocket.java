@@ -39,17 +39,13 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     public void populateChunk(int x, int z, Block[] blocks) {
 
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < worldObj.getHeight(); j++) {
-                for (int k = 0; k < 16; k++) {
-                    for (int l = 0; l < 8; ++l) {
-                        for (int p = 0; p < 4; ++p) {
+        for (int i = 0; i < 16; i++)
+            for (int j = 0; j < worldObj.getHeight(); j++)
+                for (int k = 0; k < 16; k++)
+                    for (int l = 0; l < 8; ++l)
+                        for (int p = 0; p < 4; ++p)
                             blocks[p + l * 4 << 11 | 0 + k * 4 << 7 | z * 8 + i] = ModBlocks.dimensionalPocket;
-                        }
-                    }
-                }
-            }
-        }
+
     }
 
     @Override
