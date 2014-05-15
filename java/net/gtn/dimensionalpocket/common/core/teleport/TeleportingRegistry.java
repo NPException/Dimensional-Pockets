@@ -27,7 +27,7 @@ public class TeleportingRegistry {
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
     private static final int MAX_HEIGHT = 16;
-    private static CoordSet currentChunk = new CoordSet(-100, 0, 0);
+    private static CoordSet currentChunk = new CoordSet(0, 0, 0);
     
     public static TeleportLink getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
         return backLinkMap.get(pocketChunkCoords);

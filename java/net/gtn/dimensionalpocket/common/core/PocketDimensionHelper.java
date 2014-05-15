@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.core;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportLink;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -24,7 +25,7 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
         
-        PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), chunkSet);
+        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet);
 
         if (dimID != Reference.DIMENSION_ID) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -33,6 +34,10 @@ public class PocketDimensionHelper {
         }
 
         generatePocketIfNecessary(player, chunkSet);
+    }
+    
+    private static PocketTeleporter createTeleporter(int dimID, CoordSet chunkSet) {
+        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), chunkSet);
     }
     
     /**
@@ -93,6 +98,13 @@ public class PocketDimensionHelper {
         // adjust to chunk coordinates
         
         TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
+        int dimID = link.getBlockDim();
         
+        if (dimID != Reference.DIMENSION_ID) {
+            transferPlayerToDimension(player, dimID, MinecraftServer.getServer().worldServerForDimension(dimID).getDefaultTeleporter());
+        }
+        
+        CoordSet pos = link.getBlockCoords();
+        player.setPosition(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5);
     }
 }
