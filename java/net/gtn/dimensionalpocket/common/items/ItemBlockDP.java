@@ -2,12 +2,14 @@ package net.gtn.dimensionalpocket.common.items;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.gtn.dimensionalpocket.common.block.BlockDPMeta;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 
-public class ItemBlockDP extends ItemBlock {
+public abstract class ItemBlockDP extends ItemBlock {
 
     private Block block;
 
@@ -28,11 +30,13 @@ public class ItemBlockDP extends ItemBlock {
     public int getMetadata(int meta) {
         return meta;
     }
-    
+
     @Override
-    public String getUnlocalizedName(ItemStack par1ItemStack) {
-        // TODO Auto-generated method stub
-        return super.getUnlocalizedName(par1ItemStack);
+    public String getUnlocalizedName(ItemStack itemStack) {
+        if (!(block instanceof BlockDPMeta))
+            super.getUnlocalizedName(itemStack);
+        String[] names = ((BlockDPMeta) block).getNames();
+        return "item." + names[MathHelper.clamp_int(itemStack.getItemDamage(), 0, names.length - 1)];
     }
 
 }

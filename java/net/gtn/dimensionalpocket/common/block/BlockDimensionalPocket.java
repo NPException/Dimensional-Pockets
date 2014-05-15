@@ -6,12 +6,13 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockDimensionalPocket extends BlockDP {
+public class BlockDimensionalPocket extends BlockDPMeta {
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
@@ -36,6 +37,18 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public TileEntity getTileEntity(int metadata) {
+        return null;
+    }
+
+    @Override
+    public String[] getNames() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected Class<? extends ItemBlock> getItemBlockClass() {
+        // TODO Auto-generated method stub
         return null;
     }
 
