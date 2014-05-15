@@ -9,6 +9,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -23,15 +24,6 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;
-
-        // for (int x = 0; x < 16; x++)
-        // for (int z = 0; z < 16; z++)
-        // for (int y = 0; y <= 255; y++) {
-        // Block block = Blocks.air;
-        // if (x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
-        // block = ModBlocks.dimensionalPocketFrame;
-        // this.baseArray[((x * 16 + z) * 256 + y)] = block;
-        // }
     }
 
     @Override
@@ -63,7 +55,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
                     }
 
                     Block block = Blocks.air;
-                    if (i == 0 || i == 15 || j == 0 || j == 15 || k == 255 || (k & 15) == 0)
+                    if (i == 0 || i == 15 || j == 0 || j == 15 || (k % 16) == 0 || (k % 16) == 15)
                         block = ModBlocks.dimensionalPocketFrame;
                     tempArray[((i * 16 + j) * 256 + k)] = block;
 
@@ -73,6 +65,10 @@ public class ChunkGeneratorPocket implements IChunkProvider {
                 }
             }
         }
+
+//        chunk.generateSkylightMap();
+
+//        chunk.setBiomeArray(new byte[] { (byte) BiomeHelper.getPocketBiome().biomeID });
 
         chunk.generateSkylightMap();
         return chunk;

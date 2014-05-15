@@ -5,9 +5,11 @@ import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
+import net.gtn.dimensionalpocket.common.core.biome.BiomeHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -44,9 +46,14 @@ public class DimensionalPockets {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        proxy.runServerSide();
+
         DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, true);
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
+        BiomeHelper.init();
+
+        BiomeHelper.registerAll();
     }
 
     @EventHandler

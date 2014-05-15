@@ -7,7 +7,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Teleporter;
 
 public class PocketDimensionHelper {
-
     public static double[] getRelativeBlockCoords(CoordSet coordSet) {
         double[] tempLoc = new double[3];
 
@@ -24,8 +23,8 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
 
-        if (dimID != Reference.DIMENSION_ID)
-            transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID, new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID)));
+        // if (dimID != Reference.DIMENSION_ID)
+        transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID, new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID)));
     }
 
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
