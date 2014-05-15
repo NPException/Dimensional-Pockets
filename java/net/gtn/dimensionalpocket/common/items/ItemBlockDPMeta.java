@@ -15,11 +15,11 @@ import net.minecraft.util.MathHelper;
  * @author Jeremy
  *
  */
-public abstract class ItemBlockDP extends ItemBlock {
+public abstract class ItemBlockDPMeta extends ItemBlock {
 
     private Block block;
 
-    public ItemBlockDP(Block block) {
+    public ItemBlockDPMeta(Block block) {
         super(block);
         this.block = block;
         setMaxDamage(0);

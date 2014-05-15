@@ -56,7 +56,9 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
                     Block block = Blocks.air;
                     if (i == 0 || i == 15 || j == 0 || j == 15 || (k % 16) == 0 || (k % 16) == 15)
-                        block = ModBlocks.dimensionalPocketFrame;
+                        if (!((i == 0 && z == 0) || (i == 0 && z == 15) || (i == 15 && z == 15) || (i == 15 && z == 0)))
+                            block = ModBlocks.dimensionalPocketFrame;
+
                     tempArray[((i * 16 + j) * 256 + k)] = block;
 
                     extendedBlockStorage.setExtSkylightValue(i, k & 0x0F, j, 1);
@@ -66,9 +68,9 @@ public class ChunkGeneratorPocket implements IChunkProvider {
             }
         }
 
-//        chunk.generateSkylightMap();
+        // chunk.generateSkylightMap();
 
-//        chunk.setBiomeArray(new byte[] { (byte) BiomeHelper.getPocketBiome().biomeID });
+        // chunk.setBiomeArray(new byte[] { (byte) BiomeHelper.getPocketBiome().biomeID });
 
         chunk.generateSkylightMap();
         return chunk;
