@@ -11,6 +11,7 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraft.world.gen.ChunkProviderFlat;
 
 import com.google.common.collect.Lists;
@@ -18,7 +19,7 @@ import com.google.common.collect.Lists;
 public class ChunkGeneratorPocket implements IChunkProvider {
 
     private World worldObj;
-    private Block[] base_array = new Block[65536];
+    private Block[] baseArray = new Block[65536];
 
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;
@@ -29,7 +30,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
                     Block block = Blocks.air;
                     if (x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
                         block = ModBlocks.dimensionalPocketFrame;
-                    this.base_array[((x * 16 + z) * 256 + y)] = block;
+                    this.baseArray[((x * 16 + z) * 256 + y)] = block;
                 }
     }
 
@@ -44,8 +45,22 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     }
 
     @Override
-    public Chunk provideChunk(int var1, int var2) {
-        return null;
+    public Chunk provideChunk(int x, int z) {
+        Chunk chunk = new Chunk(worldObj, x, z);
+
+        Block[] tempArray = baseArray.clone();
+
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                for (int y = 0; y <= 255; y++) {
+                    int l = y >> 4;
+                    ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
+                    
+                }
+            }
+        }
+
+        return chunk;
     }
 
     @Override

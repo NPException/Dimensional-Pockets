@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.block;
 
 import cpw.mods.fml.client.ExtendedServerListData;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.gtn.dimensionalpocket.common.core.PocketTeleporter;
 import net.gtn.dimensionalpocket.common.items.ItemBlockHolder;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.material.Material;
@@ -23,13 +24,15 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-        int meta = world.getBlockMetadata(x, y, z);
+        if (player == null)
+            return true;
+
         if (!world.isRemote) {
             // TODO, ID shit
-            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID);
-            // player.travelToDimension(Reference.DIMENSION_ID);
-            if (player.dimension == Reference.DIMENSION_ID)
-                player.travelToDimension(0);
+            int dimID = player.dimension;
+
+            if (dimID != Reference.DIMENSION_ID)
+                MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID, new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID)));
         }
         return true;
     }
