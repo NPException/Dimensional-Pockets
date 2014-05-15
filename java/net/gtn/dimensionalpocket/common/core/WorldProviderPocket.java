@@ -10,7 +10,7 @@ public class WorldProviderPocket extends WorldProvider {
     public IChunkProvider createChunkGenerator() {
         return new ChunkGeneratorPocket(worldObj);
     }
-
+    
     @Override
     public boolean canRespawnHere() {
         return true;

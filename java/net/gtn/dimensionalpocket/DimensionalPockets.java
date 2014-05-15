@@ -34,13 +34,12 @@ public class DimensionalPockets {
     public void preInit(FMLPreInitializationEvent event) {
         DPLogger.init();
         ModBlocks.init();
-
-        DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, true);
-        DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, true);
+        DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
     }
 

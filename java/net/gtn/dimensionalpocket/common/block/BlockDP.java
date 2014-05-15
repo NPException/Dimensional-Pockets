@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BlockDP extends Block {
 
-    protected BlockDP(Material material, String name) {
+    public BlockDP(Material material, String name) {
         super(material);
         setBlockName(name);
         setCreativeTab(DimensionalPockets.creativeTab);

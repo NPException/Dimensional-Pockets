@@ -11,15 +11,26 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.ChunkProviderFlat;
 
 import com.google.common.collect.Lists;
 
 public class ChunkGeneratorPocket implements IChunkProvider {
 
-    World worldObj;
+    private World worldObj;
+    private Block[] base_array = new Block[65536];
 
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;
+
+        for (int x = 0; x < 16; x++)
+            for (int z = 0; z < 16; z++)
+                for (int y = 0; y <= 255; y++) {
+                    Block block = Blocks.air;
+                    if (x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
+                        block = ModBlocks.dimensionalPocketFrame;
+                    this.base_array[((x * 16 + z) * 256 + y)] = block;
+                }
     }
 
     @Override
@@ -28,29 +39,13 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     }
 
     @Override
-    public Chunk provideChunk(int x, int z) {
-        Block[] blocks = new Block[65536];
-
-        populateChunk(x, z, blocks);
-
-        Chunk chunk = new Chunk(worldObj, blocks, x, z);
-        return chunk;
-    }
-
-    public void populateChunk(int x, int z, Block[] blocks) {
-
-        for (int i = 0; i < 16; i++)
-            for (int j = 0; j < worldObj.getHeight(); j++)
-                for (int k = 0; k < 16; k++)
-                    for (int l = 0; l < 8; ++l)
-                        for (int p = 0; p < 4; ++p)
-                            blocks[p + l * 4 << 11 | 0 + k * 4 << 7 | z * 8 + i] = ModBlocks.dimensionalPocket;
-
+    public Chunk loadChunk(int x, int z) {
+        return provideChunk(x, z);
     }
 
     @Override
-    public Chunk loadChunk(int x, int z) {
-        return provideChunk(x, z);
+    public Chunk provideChunk(int var1, int var2) {
+        return null;
     }
 
     @Override
@@ -102,5 +97,4 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     public void saveExtraData() {
 
     }
-
 }

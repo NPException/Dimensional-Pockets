@@ -7,15 +7,14 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockDimensionalPocket extends BlockDPMeta {
-
-    private static final String[] names = new String[] { "pocketDimension", "pocketDimensionFrame" };
+public class BlockDimensionalPocket extends BlockDP {
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
@@ -26,12 +25,11 @@ public class BlockDimensionalPocket extends BlockDPMeta {
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         int meta = world.getBlockMetadata(x, y, z);
         if (!world.isRemote) {
-            if (meta == 0) {
-                player.travelToDimension(Reference.DIMENSION_ID);
-            } else {
-                if (player.dimension == Reference.DIMENSION_ID)
-                    player.travelToDimension(0);
-            }
+            // TODO, ID shit
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) player, Reference.DIMENSION_ID);
+            // player.travelToDimension(Reference.DIMENSION_ID);
+            if (player.dimension == Reference.DIMENSION_ID)
+                player.travelToDimension(0);
         }
         return true;
     }
@@ -45,15 +43,4 @@ public class BlockDimensionalPocket extends BlockDPMeta {
     public TileEntity getTileEntity(int metadata) {
         return null;
     }
-
-    @Override
-    public String[] getNames() {
-        return names;
-    }
-
-    @Override
-    protected Class<? extends ItemBlock> getItemBlockClass() {
-        return ItemBlockHolder.class;
-    }
-
 }
