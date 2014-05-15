@@ -14,7 +14,7 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 public class PocketDimensionHelper {
 
-    public static void teleportPlayerToPocket(EntityPlayer entityPlayer, CoordSet targetSet) {
+    public static void teleportPlayerToPocket(EntityPlayer entityPlayer, CoordSet chunkSet) {
         if (entityPlayer.worldObj.isRemote)
             return;
 
@@ -22,7 +22,7 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
         
-        PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), targetSet);
+        PocketTeleporter teleporter = new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), chunkSet);
 
         if (dimID != Reference.DIMENSION_ID) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -30,12 +30,16 @@ public class PocketDimensionHelper {
             teleporter.placeInPortal(player, 0, 0, 0, 0);
         }
         
-        if (player.worldObj.getBlock(targetSet.getX()*16, targetSet.getY()*16, targetSet.getZ()*16) != ModBlocks.dimensionalPocketFrame) {
-            generatePocket(player.worldObj, targetSet);
+        if (player.worldObj.getBlock(chunkSet.getX()*16, chunkSet.getY()*16, chunkSet.getZ()*16) != ModBlocks.dimensionalPocketFrame) {
+            generatePocket(player.worldObj, chunkSet);
         }
     }
     
-    private static void generatePocket(World world, CoordSet targetSet) {
+    private static void generatePocket(World world, CoordSet chunkSet) {
+        
+        int worldX = chunkSet.getX()*16;
+        int worldY = chunkSet.getY()*16;
+        int worldZ = chunkSet.getZ()*16;
         
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
@@ -43,7 +47,7 @@ public class PocketDimensionHelper {
                     if (!(x == 0 || x == 15 || y == 0 || y == 15 || z == 0 || z == 15)) {
                         continue;
                     }
-                    // set block
+                    world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
             }
         }
