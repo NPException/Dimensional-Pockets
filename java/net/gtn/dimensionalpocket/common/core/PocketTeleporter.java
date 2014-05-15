@@ -12,7 +12,8 @@ public class PocketTeleporter extends Teleporter {
 
     public PocketTeleporter(WorldServer worldServer, CoordSet targetSet, boolean intoPocket) {
         super(worldServer);
-        this.targetSet = targetSet;
+        this.targetSet = targetSet.copy();
+        this.intoPocket = intoPocket;
     }
 
     @Override
@@ -28,11 +29,11 @@ public class PocketTeleporter extends Teleporter {
         
         if (intoPocket) {
             posX = posX * 16 + 8;
-            posY = posY * 16 + 1;
+            posY = posY * 16;
             posZ = posZ * 16 + 8;
         }
         
-        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY, posZ + 0.5, player.rotationYaw, player.rotationPitch);
+        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY+1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
 
 }

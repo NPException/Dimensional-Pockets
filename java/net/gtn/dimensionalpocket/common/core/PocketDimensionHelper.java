@@ -100,11 +100,12 @@ public class PocketDimensionHelper {
         TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
         int dimID = link.getBlockDim();
         
+        PocketTeleporter teleporter = createTeleporter(dimID, link.getBlockCoords(), false);
+
         if (dimID != Reference.DIMENSION_ID) {
-            transferPlayerToDimension(player, dimID, MinecraftServer.getServer().worldServerForDimension(dimID).getDefaultTeleporter());
+            transferPlayerToDimension(player, dimID, teleporter);
+        } else {
+            teleporter.placeInPortal(player, 0, 0, 0, 0);
         }
-        
-        CoordSet pos = link.getBlockCoords();
-        player.setPosition(pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5);
     }
 }
