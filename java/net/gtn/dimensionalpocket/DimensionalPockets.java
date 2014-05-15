@@ -6,6 +6,7 @@ import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
+import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,6 +19,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -58,7 +60,11 @@ public class DimensionalPockets {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-
+        TeleportingRegistry.loadBackLinkMap();
     }
 
+    @EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        TeleportingRegistry.persistBackLinkMap();
+    }
 }

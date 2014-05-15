@@ -1,13 +1,18 @@
 package net.gtn.dimensionalpocket.common.core.teleport;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -15,16 +20,18 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 
 public class TeleportingRegistry {
     
-
-    private static File registryFile = new File("config/dimensionalpockets/teleportregistry.json");
-
     // map of the format <dimensionalPocketCoords, link>
-    private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
+    private static HashMap<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
+    
+    private static Type backLinkMapType = new TypeToken<HashMap<CoordSet, TeleportLink>>() {}.getType();
+    
 
     private static final int MAX_HEIGHT = 16;
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
@@ -66,17 +73,45 @@ public class TeleportingRegistry {
         link.setBlockCoords(newBlockCoords);
     }
     
-    @EventHandler
-    public void onServerStopping(FMLServerStoppingEvent event) {
+    private static File getOrCreateSaveFile() throws IOException {
+        MinecraftServer server = MinecraftServer.getServer();
+        StringBuilder filename = new StringBuilder();
+        
+        if (server.isSinglePlayer()) {
+            filename.append("saves/");
+        }
+        filename.append(server.getWorldName());
+        filename.append("/dimpockets/teleportregistry.json");
+        
+        File savefile = server.getFile(filename.toString());
+        if (!savefile.exists()) {
+            savefile.getParentFile().mkdirs();
+            savefile.createNewFile();
+        }
+        return savefile;
+    }
+    
+    public static void persistBackLinkMap() {
         Gson gson = new Gson();
         
         try {
-            if (!registryFile.exists()) {
-                registryFile.getParentFile().mkdirs();
-                registryFile.createNewFile();
-            }
+            File registryFile = getOrCreateSaveFile();
 
             JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
+            gson.toJson(backLinkMap,backLinkMapType, writer);
+            writer.close();
+        } catch (IOException e) {
+            DPLogger.severe(e);
+        }
+    }
+    
+    public static void loadBackLinkMap() {
+        Gson gson = new Gson();
+        
+        try {
+            File registryFile = getOrCreateSaveFile();
+            JsonReader reader = new JsonReader(new FileReader(registryFile));
+            backLinkMap = gson.fromJson(reader, backLinkMapType);
         } catch (IOException e) {
             DPLogger.severe(e);
         }
