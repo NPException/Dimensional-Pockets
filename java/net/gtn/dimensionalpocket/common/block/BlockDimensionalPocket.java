@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.block;
 
 import cpw.mods.fml.client.ExtendedServerListData;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.gtn.dimensionalpocket.common.items.ItemBlockHolder;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -42,14 +43,12 @@ public class BlockDimensionalPocket extends BlockDPMeta {
 
     @Override
     public String[] getNames() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     protected Class<? extends ItemBlock> getItemBlockClass() {
-        // TODO Auto-generated method stub
-        return null;
+        return ItemBlockHolder.class;
     }
 
 }

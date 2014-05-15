@@ -9,6 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
+/**
+ * You shouldn't need this class at all.
+ * If you think you do, you don't.
+ * @author Jeremy
+ *
+ */
 public abstract class ItemBlockDP extends ItemBlock {
 
     private Block block;
