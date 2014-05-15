@@ -28,9 +28,9 @@ import net.minecraft.tileentity.TileEntity;
 public class TeleportingRegistry {
     
     // map of the format <dimensionalPocketCoords, link>
-    private static HashMap<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
+    private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
     
-    private static Type backLinkMapType = new TypeToken<HashMap<CoordSet, TeleportLink>>() {}.getType();
+    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {}.getType();
     
 
     private static final int MAX_HEIGHT = 16;
@@ -92,28 +92,31 @@ public class TeleportingRegistry {
     }
     
     public static void persistBackLinkMap() {
-        Gson gson = new Gson();
-        
-        try {
-            File registryFile = getOrCreateSaveFile();
-
-            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
-            gson.toJson(backLinkMap,backLinkMapType, writer);
-            writer.close();
-        } catch (IOException e) {
-            DPLogger.severe(e);
-        }
+//        Gson gson = new Gson();
+//        
+//        try {
+//            File registryFile = getOrCreateSaveFile();
+//
+//            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
+//            gson.toJson(backLinkMap,backLinkMapType, writer);
+//            writer.close();
+//        } catch (IOException e) {
+//            DPLogger.severe(e);
+//        }
     }
     
     public static void loadBackLinkMap() {
-        Gson gson = new Gson();
-        
-        try {
-            File registryFile = getOrCreateSaveFile();
-            JsonReader reader = new JsonReader(new FileReader(registryFile));
-            backLinkMap = gson.fromJson(reader, backLinkMapType);
-        } catch (IOException e) {
-            DPLogger.severe(e);
-        }
+//        Gson gson = new Gson();
+//        
+//        try {
+//            File registryFile = getOrCreateSaveFile();
+//            JsonReader reader = new JsonReader(new FileReader(registryFile));
+//            backLinkMap = gson.fromJson(reader,backLinkMapType);
+//            if (backLinkMap == null) {
+//                backLinkMap = new HashMap<CoordSet, TeleportLink>();
+//            }
+//        } catch (IOException e) {
+//            DPLogger.severe(e);
+//        }
     }
 }
