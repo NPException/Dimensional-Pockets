@@ -10,8 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
-    private CoordSet chunkSet = new CoordSet(0, 0, 0);
-    private boolean hasChunkSet = false;
+    private CoordSet chunkSet;
 
     @Override
     public void onBlockPlaced() {
@@ -25,9 +24,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
-        if (!itemStack.hasTagCompound())
-            itemStack.setTagCompound(new NBTTagCompound());
-        chunkSet.writeToNBT(itemStack.getTagCompound());
+        if (hasChunkSet()) {
+            if (!itemStack.hasTagCompound())
+                itemStack.setTagCompound(new NBTTagCompound());
+            chunkSet.writeToNBT(itemStack.getTagCompound());
+        }
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
         entityItem.delayBeforeCanPickup = 0;
@@ -36,14 +37,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     }
 
     public void genChunkSet() {
-        if (hasChunkSet)
+        if (hasChunkSet())
             return;
-        chunkSet = TeleportingRegistry.genNewChunkSet(worldObj.provider.dimensionId, getCoordSet());
-        hasChunkSet = true;
+        chunkSet = TeleportingRegistry.genNewTeleportLink(worldObj.provider.dimensionId, getCoordSet());
     }
 
     public boolean hasChunkSet() {
-        return hasChunkSet;
+        return chunkSet != null;
     }
 
     public void setChunkSet(CoordSet chunkSet) {
@@ -57,7 +57,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        chunkSet.writeToNBT(tag);
+        if (hasChunkSet()) {
+            chunkSet.writeToNBT(tag);
+        }
     }
     
     @Override

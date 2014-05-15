@@ -73,7 +73,10 @@ public class CoordSet {
     }
 
     public static CoordSet readFromNBT(NBTTagCompound tag) {
-        return new CoordSet(tag.getIntArray("coordSet"));
+        int[] array = tag.getIntArray("coordSet");
+        if (array.length == 0)
+            return null;
+        return new CoordSet(array);
     }
 
     @Override

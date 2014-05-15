@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonWriter;
@@ -23,13 +24,12 @@ public class TeleportingRegistry {
     private static File registryFile = new File("config/dimensionalpockets/teleportregistry.json");
 
     // map of the format <dimensionalPocketCoords, link>
-    private static HashMap<CoordSet, HashSet<CoordSet>> tileMap = new HashMap<Integer, HashSet<CoordSet>>();
+    private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
     private static final int MAX_HEIGHT = 16;
-    private static CoordSet currentChunk = new CoordSet(0, 0, 0);
+    private static CoordSet currentChunk = new CoordSet(-100, 0, 0);
 
-    public static CoordSet genNewChunkSet(int dimID, CoordSet coordSet) {
-        currentChunk.addY(1);
+    public static CoordSet genNewTeleportLink(int dimID, CoordSet coordSet) {
         if (currentChunk.getY() == MAX_HEIGHT) {
             currentChunk.setY(0);
             currentChunk.addX(1);
@@ -45,10 +45,21 @@ public class TeleportingRegistry {
         }
         
         TeleportLink link = new TeleportLink(dimID, coordSet, currentChunk.copy());
+        backLinkMap.put(link.getPocketChunkCoords(), link);
 
-        
+        // add one here, so we start at 0 with the first room
+        currentChunk.addY(1);
 
         return link.getPocketChunkCoords();
+    }
+    
+    public static void changeTeleportLink(CoordSet pocketChunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
+        TeleportLink link = backLinkMap.get(pocketChunkCoords);
+        if (link == null) {
+            DPLogger.severe("No TeleportLink for pocketChunkCoords: " + pocketChunkCoords);
+        }
+        link.setBlockDim(newBlockDimID);
+        link.setBlockCoords(newBlockCoords);
     }
     
     @EventHandler
