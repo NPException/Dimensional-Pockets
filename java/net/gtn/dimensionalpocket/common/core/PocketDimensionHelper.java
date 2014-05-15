@@ -30,12 +30,8 @@ public class PocketDimensionHelper {
         } else {
             teleporter.placeInPortal(player, 0, 0, 0, 0);
         }
-        
-        if (player.worldObj.getBlock(chunkSet.getX()*16, chunkSet.getY()*16, chunkSet.getZ()*16) != ModBlocks.dimensionalPocketFrame) {
-            long start = System.currentTimeMillis();
-            generatePocket(player.worldObj, chunkSet);
-            DPLogger.info("Generation took " + (System.currentTimeMillis()-start) + " milliseconds");
-        }
+
+        generatePocketIfNecessary(player, chunkSet);
     }
     
     /**
@@ -44,7 +40,13 @@ public class PocketDimensionHelper {
      * @param world
      * @param chunkSet
      */
-    private static void generatePocket(World world, CoordSet chunkSet) {
+    private static void generatePocketIfNecessary(EntityPlayerMP player, CoordSet chunkSet) {
+        
+        if (player.worldObj.getBlock(chunkSet.getX()*16, chunkSet.getY()*16, chunkSet.getZ()*16) == ModBlocks.dimensionalPocketFrame) {
+            return;
+        }
+        
+        World world = player.worldObj;
         
         int worldX = chunkSet.getX()*16;
         int worldY = chunkSet.getY()*16;
@@ -67,7 +69,8 @@ public class PocketDimensionHelper {
                         continue;
                     }
                     extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
-                  
+                    
+                    world.markBlockForUpdate(worldX+x, worldY+y, worldZ+z); 
                     
                     // use that method if setting things in the chunk will cause problems in the future
 //                    world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);

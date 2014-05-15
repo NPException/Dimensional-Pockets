@@ -53,4 +53,16 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public CoordSet getChunkSet() {
         return chunkSet;
     }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        chunkSet.writeToNBT(tag);
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        chunkSet = CoordSet.readFromNBT(tag);
+    }
 }
