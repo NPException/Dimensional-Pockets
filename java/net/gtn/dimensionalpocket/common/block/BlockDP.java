@@ -76,6 +76,17 @@ public abstract class BlockDP extends Block {
         return renderWithModel() ? -1 : super.getRenderType();
     }
 
+    @Override
+    public TileEntity createTileEntity(World world, int metadata) {
+        return getTileEntity(metadata);
+    }
+
+    @Override
+    public boolean hasTileEntity(int metadata) {
+        return getTileEntity(metadata) != null;
+    }
+
     public abstract boolean renderWithModel();
 
+    public abstract TileEntity getTileEntity(int metadata);
 }
