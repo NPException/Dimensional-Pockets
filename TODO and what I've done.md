@@ -30,9 +30,10 @@ TODO
 - Gel, ask the boys what textures they want for the frame, etc.
 - I don't care what it look like.
 
-### Smoother gen for the dimension.
-- NPE, look at the gen code for the dimension.
-- The code for populating the chunk lies in ChunkGeneratorPocket.provideChunk(int x, int z);
+### ~~Smoother gen for the dimension.~~
+- ~~NPE, look at the gen code for the dimension.~~
+- ~~The code for populating the chunk lies in ChunkGeneratorPocket.provideChunk(int x, int z);~~
+- Done. Just generating rooms as needed. Creating a room takes below 1ms on my machine. - NPE
 
 ### Book thingy, for information on how to use the mod.
 - Nox, I've started making a book or ItemInfoTool, I think.
