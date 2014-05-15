@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket;
 
+import net.gtn.dimensionalpocket.client.ClientProxy;
+import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
@@ -10,6 +12,7 @@ import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -21,6 +24,9 @@ public class DimensionalPockets {
 
     @Instance(Reference.MOD_ID)
     public static DimensionalPockets instance;
+
+    @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+    public static CommonProxy proxy;
 
     public static CreativeTabs creativeTab = new CreativeTabs(Reference.MOD_ID) {
         @Override

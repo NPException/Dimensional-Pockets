@@ -47,6 +47,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     @Override
     public Chunk provideChunk(int x, int z) {
         Chunk chunk = new Chunk(worldObj, x, z);
+        chunk.generateSkylightMap();
 
         Block[] tempArray = baseArray.clone();
 
@@ -62,10 +63,11 @@ public class ChunkGeneratorPocket implements IChunkProvider {
                     }
 
                     Block block = Blocks.air;
-                    if (i == 0 || i == 15 || j == 0 || j == 15 || k == 0 || k == 15)
+                    if (i == 0 || i == 15 || j == 0 || j == 15 || k == 255 || (k & 15) == 0)
                         block = ModBlocks.dimensionalPocketFrame;
                     tempArray[((i * 16 + j) * 256 + k)] = block;
 
+                    extendedBlockStorage.setExtSkylightValue(i, k & 0x0F, j, 1);
                     extendedBlockStorage.func_150818_a(i, k & 0x0F, j, block);
                     extendedBlockStorage.setExtBlockMetadata(i, k & 0x0F, j, 0);
                 }
