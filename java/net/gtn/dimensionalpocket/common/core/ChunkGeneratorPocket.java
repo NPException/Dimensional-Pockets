@@ -2,8 +2,10 @@ package net.gtn.dimensionalpocket.common.core;
 
 import java.util.List;
 
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
@@ -40,11 +42,14 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < worldObj.getHeight(); j++) {
                 for (int k = 0; k < 16; k++) {
-                        blocks[]
+                    for (int l = 0; l < 8; ++l) {
+                        for (int p = 0; p < 4; ++p) {
+                            blocks[p + l * 4 << 11 | 0 + k * 4 << 7 | z * 8 + i] = ModBlocks.dimensionalPocket;
+                        }
+                    }
                 }
             }
         }
-
     }
 
     @Override
