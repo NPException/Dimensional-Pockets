@@ -1,0 +1,31 @@
+
+TODO
+========================
+Exiting the cell.
+	- Probably the hardest.
+	- As you can see inside of TeleporterRegistry, I started making a system for it, and then got REALLY tired, so, all yours. :P
+	- Needs to retain the position of the block that owns that cell, contained within chunkSet of TileDimensionalPocket.
+	- So, you have the position of the block that is clicked to want to go out, if you have a system that registers the position of the tileEntities that HAVE that position, you can reverse engineer the coordSet to get out.
+	- That's really it.
+	- If you didn't understand that.
+	- The chunkSet with TileDimensionalPocket contains the chunk data for the cell.
+	- Now when you're in the cell, and right click a frame block, you pass the coordinates to the method onBlockActivated which I've put in BlockDimensionalPocketFrame already.
+	- You can find the chunk coordinates from that.
+	- And if you retain what tileEntity took what chunk coordinate set, then you should be able to spawn at the block.
+	- Look at my helper class for tips on traversing the world.
+	
+Investigate the frame rate tank.
+Textures for frame block.
+
+Smoother gen for the dimension.
+
+Book thingy, for information on how to use the mod.
+
+What I've done.
+========================
+The dimension is done.
+	- The only thing left is optimisations.
+The main block is done.
+	- You still need to do textures, Gel.
+The frame is done.
+	- Textures for it, and of course, a way out.

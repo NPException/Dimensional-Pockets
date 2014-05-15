@@ -16,7 +16,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-        TileEntity tileEntity = TeleportingRegistry.getRelativeBlock(x, y, z);
+//        TileEntity tileEntity = TeleportingRegistry.getRelativeBlock(x, y, z);
+        // Calculate the way out, by using the teleporting registry.
         return true;
     }
 

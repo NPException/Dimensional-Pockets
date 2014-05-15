@@ -43,17 +43,4 @@ public class TeleportingRegistry {
         if (!tileMap.containsKey(dimID))
             tileMap.put(Integer.valueOf(dimID), new HashSet<CoordSet>());
     }
-
-    public static CoordSet getRelativeBlock(int x, int y, int z) {
-        return null;
-    }
-
-    public static class DimCoordSet extends CoordSet {
-        private int dimID;
-
-        public DimCoordSet(CoordSet coordSet, int dimID) {
-            super(coordSet);
-            this.dimID = dimID;
-        }
-    }
 }
