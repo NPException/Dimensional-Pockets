@@ -8,8 +8,9 @@ import net.minecraft.world.WorldServer;
 public class PocketTeleporter extends Teleporter {
 
     CoordSet targetSet;
+    boolean intoPocket;
 
-    public PocketTeleporter(WorldServer worldServer, CoordSet targetSet) {
+    public PocketTeleporter(WorldServer worldServer, CoordSet targetSet, boolean intoPocket) {
         super(worldServer);
         this.targetSet = targetSet;
     }
@@ -21,11 +22,17 @@ public class PocketTeleporter extends Teleporter {
         
         EntityPlayerMP player = (EntityPlayerMP) entity;
         
-        double posX = targetSet.getX() * 16;
-        double posY = targetSet.getY() * 16;
-        double posZ = targetSet.getZ() * 16;
-
-        player.playerNetServerHandler.setPlayerLocation(posX + 8, posY + 1, posZ + 8, player.rotationYaw, player.rotationPitch);
+        double posX = targetSet.getX();
+        double posY = targetSet.getY();
+        double posZ = targetSet.getZ();
+        
+        if (intoPocket) {
+            posX = posX * 16 + 8;
+            posY = posY * 16 + 1;
+            posZ = posZ * 16 + 8;
+        }
+        
+        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
 
 }

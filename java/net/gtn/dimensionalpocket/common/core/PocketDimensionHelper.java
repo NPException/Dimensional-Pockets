@@ -25,7 +25,7 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
         
-        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet);
+        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, true);
 
         if (dimID != Reference.DIMENSION_ID) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -36,8 +36,8 @@ public class PocketDimensionHelper {
         generatePocketIfNecessary(player, chunkSet);
     }
     
-    private static PocketTeleporter createTeleporter(int dimID, CoordSet chunkSet) {
-        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), chunkSet);
+    private static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, boolean stepIntoPocket) {
+        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, stepIntoPocket);
     }
     
     /**
