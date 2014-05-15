@@ -2,21 +2,13 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.client.ExtendedServerListData;
-import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
-import net.gtn.dimensionalpocket.common.core.PocketTeleporter;
-import net.gtn.dimensionalpocket.common.items.ItemBlockHolder;
-import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -39,11 +31,21 @@ public class BlockDimensionalPocket extends BlockDP {
                 if (!pocket.hasChunkSet())
                     pocket.genChunkSet();
 
+                CoordSet targetSet = pocket.getChunkSet();
                 PocketDimensionHelper.teleportPlayerToPocket(player);
             }
         }
 
         return true;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+
+        if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket)
+            ((TileDimensionalPocket) tileEntity).setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
     }
 
     @Override

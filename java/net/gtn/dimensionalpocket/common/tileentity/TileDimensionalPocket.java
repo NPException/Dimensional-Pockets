@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.IBlockNotifier;
-import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
 import net.gtn.dimensionalpocket.common.core.TeleportingRegistry;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -11,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
-    CoordSet chunkSet = new CoordSet(0, 0, 0);
-    boolean hasChunkSet = false;
+    private CoordSet chunkSet = new CoordSet(0, 0, 0);
+    private boolean hasChunkSet = false;
 
     @Override
     public void onBlockPlaced() {
@@ -21,13 +20,19 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onBlockDestroyed() {
+        if (worldObj.isRemote)
+            return;
+
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
-        if (itemStack.hasTagCompound())
+        if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
         chunkSet.writeToNBT(itemStack.getTagCompound());
 
-        worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack));
+        EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
+        entityItem.delayBeforeCanPickup = 0;
+
+        worldObj.spawnEntityInWorld(entityItem);
     }
 
     public void genChunkSet() {
@@ -43,6 +48,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     public void setChunkSet(CoordSet chunkSet) {
         this.chunkSet = chunkSet;
+    }
+
+    public CoordSet getChunkSet() {
+        return chunkSet;
     }
 
 }
