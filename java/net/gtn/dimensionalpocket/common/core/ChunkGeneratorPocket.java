@@ -24,14 +24,14 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;
 
-//        for (int x = 0; x < 16; x++)
-//            for (int z = 0; z < 16; z++)
-//                for (int y = 0; y <= 255; y++) {
-//                    Block block = Blocks.air;
-//                    if (x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
-//                        block = ModBlocks.dimensionalPocketFrame;
-//                    this.baseArray[((x * 16 + z) * 256 + y)] = block;
-//                }
+        // for (int x = 0; x < 16; x++)
+        // for (int z = 0; z < 16; z++)
+        // for (int y = 0; y <= 255; y++) {
+        // Block block = Blocks.air;
+        // if (x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
+        // block = ModBlocks.dimensionalPocketFrame;
+        // this.baseArray[((x * 16 + z) * 256 + y)] = block;
+        // }
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     public Chunk provideChunk(int x, int z) {
         Chunk chunk = new Chunk(worldObj, x, z);
 
-//        Block[] tempArray = baseArray.clone();
+        Block[] tempArray = baseArray.clone();
 
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
@@ -64,7 +64,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
                     Block block = Blocks.air;
                     if (i == 0 || i == 15 || j == 0 || j == 15 || k == 0 || k == 15)
                         block = ModBlocks.dimensionalPocketFrame;
-                    this.baseArray[((i * 16 + j) * 256 + k)] = block;
+                    tempArray[((i * 16 + j) * 256 + k)] = block;
 
                     extendedBlockStorage.func_150818_a(i, k & 0x0F, j, block);
                     extendedBlockStorage.setExtBlockMetadata(i, k & 0x0F, j, 0);
@@ -72,6 +72,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
             }
         }
 
+        chunk.generateSkylightMap();
         return chunk;
     }
 
