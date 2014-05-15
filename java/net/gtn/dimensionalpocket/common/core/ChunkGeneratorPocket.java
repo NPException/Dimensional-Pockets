@@ -43,7 +43,6 @@ public class ChunkGeneratorPocket implements IChunkProvider {
     @Override
     public Chunk provideChunk(int x, int z) {
         Chunk chunk = new Chunk(worldObj, new Block[]{}, new byte[]{}, x, z);
-        //chunk.generateSkylightMap();
 
         Block[] tempArray = baseArray.clone();
 

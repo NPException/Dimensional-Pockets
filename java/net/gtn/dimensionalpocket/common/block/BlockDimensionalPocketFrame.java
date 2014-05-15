@@ -12,6 +12,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public BlockDimensionalPocketFrame(Material material, String name) {
         super(material, name);
         setBlockUnbreakable();
+        setLightLevel(1);
     }
 
     @Override

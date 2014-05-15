@@ -96,4 +96,8 @@ public class CoordSet {
     public int[] toArray() {
         return new int[] { x, y, z };
     }
+
+    public CoordSet copy() {
+        return new CoordSet(x,y,z);
+    }
 }
