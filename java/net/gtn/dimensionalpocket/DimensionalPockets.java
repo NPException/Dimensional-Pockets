@@ -2,9 +2,11 @@ package net.gtn.dimensionalpocket;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.DimensionManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -31,8 +33,10 @@ public class DimensionalPockets {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         DPLogger.init();
-
         ModBlocks.init();
+
+        DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, true);
+        DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
     }
 
     @EventHandler
