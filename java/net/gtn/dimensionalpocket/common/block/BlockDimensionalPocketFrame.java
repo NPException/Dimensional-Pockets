@@ -8,7 +8,6 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.gtn.dimensionalpocket.common.tileentity.TileDPFrame;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -95,28 +94,9 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public boolean renderWithModel() {
         return false;
     }
-    
-    @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-    
-    /**
-     * The type of render function that is called for this block
-     */
-    public int getRenderType()
-    {
-        return -1;
-    }
 
     @Override
     public TileEntity getTileEntity(int metadata) {
-        return new TileDPFrame();
-    }
-    
-    @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        // TODO Auto-generated method stub
-        return super.createTileEntity(world, metadata);
+        return null;
     }
 }

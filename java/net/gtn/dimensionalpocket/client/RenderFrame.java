@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
-import net.gtn.dimensionalpocket.common.tileentity.TileDPFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
@@ -21,19 +20,19 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class RenderFrame extends TileEntitySpecialRenderer
 {
-    private static final ResourceLocation endSkyRes = new ResourceLocation("textures/environment/end_sky.png");
-    private static final ResourceLocation endPortalRes = new ResourceLocation("textures/entity/end_portal.png");
-    private static final Random rand = new Random(31100L);
-    FloatBuffer floatBuf = GLAllocation.createDirectFloatBuffer(16);
+    private static final ResourceLocation field_147529_c = new ResourceLocation("textures/environment/end_sky.png");
+    private static final ResourceLocation field_147526_d = new ResourceLocation("textures/entity/end_portal.png");
+    private static final Random field_147527_e = new Random(31100L);
+    FloatBuffer field_147528_b = GLAllocation.createDirectFloatBuffer(16);
     private static final String __OBFID = "CL_00000972";
 
-    public void renderTileEntityAt(TileDPFrame tileFrame, double x, double y, double z, float p4)
+    public void renderTileEntityAt(TileEntityEndPortal p_147524_1_, double p_147524_2_, double p_147524_4_, double p_147524_6_, float p_147524_8_)
     {
         float f1 = (float)this.field_147501_a.field_147560_j;
         float f2 = (float)this.field_147501_a.field_147561_k;
         float f3 = (float)this.field_147501_a.field_147558_l;
         GL11.glDisable(GL11.GL_LIGHTING);
-        rand.setSeed(31100L);
+        field_147527_e.setSeed(31100L);
         float f4 = 0.75F;
 
         for (int i = 0; i < 16; ++i)
@@ -45,7 +44,7 @@ public class RenderFrame extends TileEntitySpecialRenderer
 
             if (i == 0)
             {
-                this.bindTexture(endSkyRes);
+                this.bindTexture(field_147529_c);
                 f7 = 0.1F;
                 f5 = 65.0F;
                 f6 = 0.125F;
@@ -55,17 +54,17 @@ public class RenderFrame extends TileEntitySpecialRenderer
 
             if (i == 1)
             {
-                this.bindTexture(endPortalRes);
+                this.bindTexture(field_147526_d);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
                 f6 = 0.5F;
             }
 
-            float f8 = (float)(-(y + (double)f4));
+            float f8 = (float)(-(p_147524_4_ + (double)f4));
             float f9 = f8 + ActiveRenderInfo.objectY;
             float f10 = f8 + f5 + ActiveRenderInfo.objectY;
             float f11 = f9 / f10;
-            f11 += (float)(y + (double)f4);
+            f11 += (float)(p_147524_4_ + (double)f4);
             GL11.glTranslatef(f1, f11, f3);
             GL11.glTexGeni(GL11.GL_S, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
             GL11.glTexGeni(GL11.GL_T, GL11.GL_TEXTURE_GEN_MODE, GL11.GL_OBJECT_LINEAR);
@@ -93,9 +92,9 @@ public class RenderFrame extends TileEntitySpecialRenderer
             GL11.glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -f2);
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
-            f11 = rand.nextFloat() * 0.5F + 0.1F;
-            float f12 = rand.nextFloat() * 0.5F + 0.4F;
-            float f13 = rand.nextFloat() * 0.5F + 0.5F;
+            f11 = field_147527_e.nextFloat() * 0.5F + 0.1F;
+            float f12 = field_147527_e.nextFloat() * 0.5F + 0.4F;
+            float f13 = field_147527_e.nextFloat() * 0.5F + 0.5F;
 
             if (i == 0)
             {
@@ -105,10 +104,10 @@ public class RenderFrame extends TileEntitySpecialRenderer
             }
 
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
-            tessellator.addVertex(x, y + (double)f4, z);
-            tessellator.addVertex(x, y + (double)f4, z + 1.0D);
-            tessellator.addVertex(x + 1.0D, y + (double)f4, z + 1.0D);
-            tessellator.addVertex(x + 1.0D, y + (double)f4, z);
+            tessellator.addVertex(p_147524_2_, p_147524_4_ + (double)f4, p_147524_6_);
+            tessellator.addVertex(p_147524_2_, p_147524_4_ + (double)f4, p_147524_6_ + 1.0D);
+            tessellator.addVertex(p_147524_2_ + 1.0D, p_147524_4_ + (double)f4, p_147524_6_ + 1.0D);
+            tessellator.addVertex(p_147524_2_ + 1.0D, p_147524_4_ + (double)f4, p_147524_6_);
             tessellator.draw();
             GL11.glPopMatrix();
             GL11.glMatrixMode(GL11.GL_MODELVIEW);
@@ -124,14 +123,14 @@ public class RenderFrame extends TileEntitySpecialRenderer
 
     private FloatBuffer func_147525_a(float p_147525_1_, float p_147525_2_, float p_147525_3_, float p_147525_4_)
     {
-        this.floatBuf.clear();
-        this.floatBuf.put(p_147525_1_).put(p_147525_2_).put(p_147525_3_).put(p_147525_4_);
-        this.floatBuf.flip();
-        return this.floatBuf;
+        this.field_147528_b.clear();
+        this.field_147528_b.put(p_147525_1_).put(p_147525_2_).put(p_147525_3_).put(p_147525_4_);
+        this.field_147528_b.flip();
+        return this.field_147528_b;
     }
 
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float p4)
+    public void renderTileEntityAt(TileEntity p_147500_1_, double p_147500_2_, double p_147500_4_, double p_147500_6_, float p_147500_8_)
     {
-        this.renderTileEntityAt((TileDPFrame)tile, x, y, z, p4);
+        this.renderTileEntityAt((TileEntityEndPortal)p_147500_1_, p_147500_2_, p_147500_4_, p_147500_6_, p_147500_8_);
     }
 }
