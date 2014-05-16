@@ -40,16 +40,15 @@ public class PocketTeleporter extends Teleporter {
         }
 
         CoordSet airSet = new CoordSet(posX, posY + 1, posZ);
-        CoordSet temp = airSet.copy();
 
-        int index = 0;
-        while (!(isAirBlocks(world, airSet))) {
-            CoordSet additionSet = getRelativeTries(index++);
-//            if (additionSet == null) {
-//                teleportType = TeleportType.REBOUND;
-//            }
-            airSet.addCoordSet(additionSet);
-        }
+//        int index = 0;
+//        while (!(isAirBlocks(world, airSet))) {
+//            CoordSet additionSet = getRelativeTries(index++);
+////            if (additionSet == null) {
+////                teleportType = TeleportType.REBOUND;
+////            }
+//            airSet.addCoordSet(additionSet);
+//        }
 
         // if (teleportType == TeleportType.REBOUND) {
         // DPLogger.info("REBOUND");

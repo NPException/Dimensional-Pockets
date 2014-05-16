@@ -20,7 +20,7 @@ public class DPLogger {
 		log.dpLogger = LogManager.getLogger("DP");
 	}
 
-	public static void log(Level logLevel, Object object) {
+	private static void log(Level logLevel, Object object) {
 		if (object == null)
 			object = "null";
 		log.dpLogger.log(logLevel, object.toString());

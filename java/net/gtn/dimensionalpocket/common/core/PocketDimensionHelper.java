@@ -4,7 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter;
-import net.gtn.dimensionalpocket.common.core.teleport.TeleportLink;
+import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter.TeleportType;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -45,56 +45,6 @@ public class PocketDimensionHelper {
         return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, teleportType);
     }
 
-    /**
-     * Generates the new room. THATS why you hired me :D
-     * 
-     * @author NPException
-     * @param world
-     * @param chunkSet
-     */
-    private static void generatePocketIfNecessary(World world, CoordSet chunkSet) {
-        if (world.getBlock((chunkSet.getX() * 16) + 1, chunkSet.getY() * 16, (chunkSet.getZ() * 16) + 1) == ModBlocks.dimensionalPocketFrame)
-            return;
-
-        int worldX = chunkSet.getX() * 16;
-        int worldY = chunkSet.getY() * 16;
-        int worldZ = chunkSet.getZ() * 16;
-
-        Chunk chunk = world.getChunkFromChunkCoords(chunkSet.getX(), chunkSet.getZ());
-
-        int l = worldY >> 4;
-        ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
-
-        if (extendedBlockStorage == null) {
-            extendedBlockStorage = new ExtendedBlockStorage(worldY, !world.provider.hasNoSky);
-            chunk.getBlockStorageArray()[l] = extendedBlockStorage;
-        }
-
-        // FULL GEN AVERAGE TIME: 505052.3125 nanoSeconds
-        // EDGED GEN AVERAGE TIME: 318491.4375 nanoSeconds
-
-        for (int x = 0; x < 16; x++) {
-            for (int y = 0; y < 16; y++) {
-                for (int z = 0; z < 16; z++) {
-                    boolean flagX = x == 0 || x == 15;
-                    boolean flagY = y == 0 || y == 15;
-                    boolean flagZ = z == 0 || z == 15;
-
-                    // Made these flags, so I could add these checks, almost halves it in time.
-                    if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
-                        continue;
-
-                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
-
-                    world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
-
-                    // use that method if setting things in the chunk will cause problems in the future
-                    // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
-                }
-            }
-        }
-    }
-
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
     }
@@ -105,7 +55,7 @@ public class PocketDimensionHelper {
 
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
+        Pocket link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
 
         if (link == null)
             return;

@@ -24,12 +24,12 @@ import com.google.gson.stream.JsonWriter;
 public class TeleportingRegistry {
 
     // map of the format <dimensionalPocketCoords, link>
-    private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
+    private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
     // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
-    public static TeleportLink getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
+    public static Pocket getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
         if (backLinkMap.containsKey(pocketChunkCoords))
             return backLinkMap.get(pocketChunkCoords);
         return null;
@@ -39,7 +39,7 @@ public class TeleportingRegistry {
         if (currentChunk.getY() == 16)
             currentChunk.setY(0).addX(1);
 
-        TeleportLink link = new TeleportLink(dimID, coordSet, currentChunk.copy());
+        Pocket link = new Pocket(currentChunk.copy(), dimID, coordSet);
         backLinkMap.put(link.getPocketChunkCoords(), link);
 
         // add one here, so we start at 0 with the first room
@@ -49,7 +49,7 @@ public class TeleportingRegistry {
     }
 
     public static void changeTeleportLink(CoordSet pocketChunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
-        TeleportLink link = backLinkMap.get(pocketChunkCoords);
+        Pocket link = backLinkMap.get(pocketChunkCoords);
         if (link == null)
             DPLogger.severe("No TeleportLink for pocketChunkCoords: " + pocketChunkCoords);
 
@@ -81,7 +81,7 @@ public class TeleportingRegistry {
         try {
             File registryFile = getOrCreateSaveFile();
 
-            TeleportLink[] tempArray = backLinkMap.values().toArray(new TeleportLink[0]);
+            Pocket[] tempArray = backLinkMap.values().toArray(new Pocket[0]);
 
             FileWriter writer = new FileWriter(registryFile);
             gson.toJson(tempArray, writer);
@@ -100,14 +100,14 @@ public class TeleportingRegistry {
 
             final FileReader reader = new FileReader(registryFile);
 
-            TeleportLink[] tempArray = gson.fromJson(reader, TeleportLink[].class);
+            Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
 
             reader.close();
 
             if (backLinkMap == null)
-                backLinkMap = new HashMap<CoordSet, TeleportLink>();
+                backLinkMap = new HashMap<CoordSet, Pocket>();
 
-            for (TeleportLink link : tempArray)
+            for (Pocket link : tempArray)
                 backLinkMap.put(link.getPocketChunkCoords(), link);
 
         } catch (Exception e) {
