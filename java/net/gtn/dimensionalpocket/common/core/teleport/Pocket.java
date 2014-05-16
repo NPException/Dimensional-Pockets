@@ -160,6 +160,10 @@ public class Pocket implements Serializable {
         this.blockCoords = blockCoords;
     }
 
+    public Map<ForgeDirection, SideState> getSideMap() {
+        return sideMap;
+    }
+    
     public static class SideState {
 
         private int redstoneStrength;

@@ -55,6 +55,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         return pocket != null && pocket.getChunkCoords().equals(chunkSet);
     }
 
+    public void updateRedstoneStates(int[] redstoneLevels) {
+        
+    }
+
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);

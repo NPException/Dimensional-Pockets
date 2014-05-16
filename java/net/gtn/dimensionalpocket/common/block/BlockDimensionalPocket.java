@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
 
@@ -38,7 +39,7 @@ public class BlockDimensionalPocket extends BlockDP {
                     tile.generateNewPocket();
 
                 Pocket pocket = tile.getPocket();
-                pocket.teleportTo(player);
+//                pocket.teleportTo(player);
             }
         }
         return true;
@@ -57,7 +58,7 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public boolean canProvidePower() {
-//        DPLogger.info("Can provide power?");
+        // DPLogger.info("Can provide power?");
         return super.canProvidePower();
     }
 
@@ -79,7 +80,17 @@ public class BlockDimensionalPocket extends BlockDP {
      */
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-//        DPLogger.info("Neighbour changed");
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+
+        if (tileEntity instanceof TileDimensionalPocket) {
+            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+            int[] powerLevels = new int[6];
+
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+                powerLevels[dir.ordinal()] = world.getBlockPowerInput(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+
+            tile.updateRedstoneStates(powerLevels);
+        }
     }
 
     @Override
