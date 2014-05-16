@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.core;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
+import net.gtn.dimensionalpocket.common.core.PocketTeleporter.TeleportType;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportLink;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -28,7 +29,7 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
 
-        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, true);
+        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, TeleportType.INWARD);
 
         if (dimID != Reference.DIMENSION_ID) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -39,8 +40,8 @@ public class PocketDimensionHelper {
         generatePocketIfNecessary(player.worldObj, chunkSet);
     }
 
-    private static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, boolean stepIntoPocket) {
-        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, stepIntoPocket);
+    private static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, TeleportType teleportType) {
+        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, teleportType);
     }
 
     /**
@@ -110,7 +111,7 @@ public class PocketDimensionHelper {
 
         int dimID = link.getBlockDim();
 
-        PocketTeleporter teleporter = createTeleporter(dimID, link.getBlockCoords(), false);
+        PocketTeleporter teleporter = createTeleporter(dimID, link.getBlockCoords(), TeleportType.OUTWARD);
 
         if (dimID != Reference.DIMENSION_ID) {
             transferPlayerToDimension(player, dimID, teleporter);

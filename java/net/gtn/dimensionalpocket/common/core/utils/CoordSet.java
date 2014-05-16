@@ -65,6 +65,10 @@ public class CoordSet {
         return this;
     }
 
+    public CoordSet addCoordSet(CoordSet coordSet) {
+        return addX(coordSet.x).addY(coordSet.y).addZ(coordSet.z);
+    }
+
     @Override
     public int hashCode() {
         int hash = this.x;
