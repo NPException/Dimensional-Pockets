@@ -85,14 +85,8 @@ public class Pocket implements Serializable {
 
         int dimID = player.dimension;
 
-        chunkCoords.
-        
-        if (teleportType == TeleportType.INWARD) {
-            posX = (posX * 16) + 8;
-            posY = (posY * 16);
-            posZ = (posZ * 16) + 8;
-        }
-        
+        chunkCoords.toBlockCoords().addCoordSet(spawnSet);
+
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, spawnSet, TeleportType.INWARD);
 
         if (dimID != Reference.DIMENSION_ID)
@@ -109,7 +103,7 @@ public class Pocket implements Serializable {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.asChunkCoords());
+        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.toChunkCoords());
 
         if (pocket == null)
             return false;

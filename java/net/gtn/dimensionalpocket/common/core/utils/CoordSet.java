@@ -127,7 +127,7 @@ public class CoordSet {
         return new CoordSet(newX, y / 16, newZ);
     }
 
-    public CoordSet toBlockCoordS() {
+    public CoordSet toBlockCoords() {
         int newX = x * 16;
         int newY = y * 16;
         int newZ = z * 16;
