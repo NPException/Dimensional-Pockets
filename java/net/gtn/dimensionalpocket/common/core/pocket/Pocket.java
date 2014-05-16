@@ -138,8 +138,11 @@ public class Pocket {
         this.blockDim = blockDim;
     }
 
-    public void setSpawnSet(CoordSet spawnSet) {
-        this.spawnSet = spawnSet.asSpawnPoint();
+    public boolean setSpawnSet(CoordSet spawnSet) {
+        if (spawnSet.getY() <= 1)
+            this.spawnSet = spawnSet;
+
+        return this.spawnSet.equals(spawnSet);
     }
 
     public void setBlockCoords(CoordSet blockCoords) {

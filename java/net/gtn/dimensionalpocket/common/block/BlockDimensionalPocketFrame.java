@@ -9,10 +9,13 @@ import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
@@ -24,6 +27,15 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setLightLevel(1);
         disableStats();
         setCreativeTab(null);
+    }
+
+    @Override
+    public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
+        return false;
+    }
+
+    @Override
+    public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
     }
 
     @Override
@@ -39,16 +51,24 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ItemStack itemStack = player.getCurrentEquippedItem();
 
         if (itemStack != null) {
-            if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
-                return true;
+            if (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1) {
+                if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
+                    return true;
 
-            if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
-                CoordSet spawnSet = new CoordSet(x, y, z);
+                if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
+                    CoordSet coordSet = new CoordSet(x, y, z);
 
-                Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
-                pocket.setSpawnSet(new CoordSet(x, y, z));
+                    Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+                    if (pocket == null) {
+                        return false;
+                    }
 
-                player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    boolean setSpawn = pocket.setSpawnSet(coordSet.asSpawnPoint());
+
+                    if (setSpawn)
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    return true;
+                }
             }
             return false;
         }
