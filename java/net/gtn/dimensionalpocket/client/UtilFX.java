@@ -5,7 +5,7 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 
 public class UtilFX {
 
-    public static void createParticleStream(EntityClientPlayerMP player, CoordSet targetSet) {
+    public static void createParticleStream(EntityClientPlayerMP player, CoordSet targetSet, int ticksToTake) {
 
         
         

@@ -33,11 +33,11 @@ public class PocketRegistry {
         return null;
     }
 
-    public static Pocket generateNewPocket(int dimID, CoordSet coordSet) {
+    public static Pocket generateNewPocket(int dimIDSource, CoordSet coordSetSource) {
         if (currentChunk.getY() == 16)
             currentChunk.setY(0).addX(1);
 
-        Pocket link = new Pocket(currentChunk.copy(), dimID, coordSet);
+        Pocket link = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
         backLinkMap.put(link.getChunkCoords(), link);
 
         // add one here, so we start at 0 with the first room

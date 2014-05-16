@@ -16,11 +16,12 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class Pocket implements Serializable {
+public class Pocket {
 
     private boolean generated = false;
     private int blockDim;
-    private CoordSet blockCoords, chunkCoords, spawnSet;
+    private final CoordSet chunkCoords;
+    private CoordSet blockCoords, spawnSet;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -81,13 +82,8 @@ public class Pocket implements Serializable {
 
         CoordSet tempSet = chunkCoords.copy();
 
-        DPLogger.info("");
-        DPLogger.info(tempSet);
         tempSet.asBlockCoords();
-        DPLogger.info(tempSet);
-        DPLogger.info(spawnSet);
         tempSet.addCoordSet(spawnSet);
-        DPLogger.info(tempSet);
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
