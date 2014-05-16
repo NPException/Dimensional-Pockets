@@ -49,12 +49,11 @@ public class BlockDimensionalPocket extends BlockDP {
         if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket pocket = (TileDimensionalPocket) tileEntity;
             pocket.setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
-            if (pocket.hasChunkSet()) {
+            if (pocket.hasChunkSet())
                 TeleportingRegistry.changeTeleportLink(pocket.getChunkSet(), entityLiving.dimension, pocket.getCoordSet());
-            }
         }
     }
-    
+
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
         return new ArrayList<ItemStack>();

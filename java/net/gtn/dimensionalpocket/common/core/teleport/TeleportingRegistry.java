@@ -29,9 +29,9 @@ public class TeleportingRegistry {
     // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
-    public static Pocket getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
-        if (backLinkMap.containsKey(pocketChunkCoords))
-            return backLinkMap.get(pocketChunkCoords);
+    public static Pocket getLinkForPocketChunkCoords(CoordSet chunkCoords) {
+        if (backLinkMap.containsKey(chunkCoords))
+            return backLinkMap.get(chunkCoords);
         return null;
     }
 
@@ -40,12 +40,12 @@ public class TeleportingRegistry {
             currentChunk.setY(0).addX(1);
 
         Pocket link = new Pocket(currentChunk.copy(), dimID, coordSet);
-        backLinkMap.put(link.getPocketChunkCoords(), link);
+        backLinkMap.put(link.getChunkCoords(), link);
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
 
-        return link.getPocketChunkCoords();
+        return link.getChunkCoords();
     }
 
     public static void changeTeleportLink(CoordSet pocketChunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
@@ -57,61 +57,11 @@ public class TeleportingRegistry {
         link.setBlockCoords(newBlockCoords);
     }
 
-    private static File getOrCreateSaveFile() throws IOException {
-        MinecraftServer server = MinecraftServer.getServer();
-        StringBuilder filename = new StringBuilder();
-
-        if (server.isSinglePlayer())
-            filename.append("saves/");
-
-        filename.append(server.getWorldName());
-        filename.append("/dimpockets/teleportRegistry.json");
-
-        File savefile = server.getFile(filename.toString());
-        if (!savefile.exists()) {
-            savefile.getParentFile().mkdirs();
-            savefile.createNewFile();
-        }
-        return savefile;
-    }
-
     public static void saveBackLinkMap() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        try {
-            File registryFile = getOrCreateSaveFile();
-
-            Pocket[] tempArray = backLinkMap.values().toArray(new Pocket[0]);
-
-            FileWriter writer = new FileWriter(registryFile);
-            gson.toJson(tempArray, writer);
-            writer.close();
-
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
+        TeleportingConfig.saveBackLinkMap(backLinkMap);
     }
 
     public static void loadBackLinkMap() {
-        Gson gson = new Gson();
-
-        try {
-            File registryFile = getOrCreateSaveFile();
-
-            final FileReader reader = new FileReader(registryFile);
-
-            Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
-
-            reader.close();
-
-            if (backLinkMap == null)
-                backLinkMap = new HashMap<CoordSet, Pocket>();
-
-            for (Pocket link : tempArray)
-                backLinkMap.put(link.getPocketChunkCoords(), link);
-
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
+        TeleportingConfig.loadBackLinkMap(backLinkMap);
     }
 }

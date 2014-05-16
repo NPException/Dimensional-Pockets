@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -77,5 +78,9 @@ public class PocketTeleporter extends Teleporter {
 
     public static enum TeleportType {
         INWARD, OUTWARD, REBOUND;
+    }
+    
+    public static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, TeleportType teleportType) {
+        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, teleportType);
     }
 }

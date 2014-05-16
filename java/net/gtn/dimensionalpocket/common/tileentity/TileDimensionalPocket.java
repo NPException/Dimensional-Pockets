@@ -14,7 +14,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onBlockPlaced() {
-
     }
 
     @Override
@@ -53,15 +52,14 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public CoordSet getChunkSet() {
         return chunkSet;
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (hasChunkSet()) {
+        if (hasChunkSet())
             chunkSet.writeToNBT(tag);
-        }
     }
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
