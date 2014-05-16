@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.teleport;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -100,11 +101,16 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
 
             String jsonFile = gson.toJson(backLinkMap);
-            
-            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
-            gson.toJson(backLinkMap, backLinkMapType, writer);
+
+            for (CoordSet coordSet : backLinkMap.keySet()) {
+                DPLogger.info(coordSet);
+            }
+
+            FileWriter writer = new FileWriter(registryFile);
+            writer.write(jsonFile);
+            // gson.toJson(backLinkMap, backLinkMapType, writer);
             writer.close();
-            
+
         } catch (IOException e) {
             DPLogger.severe(e);
         }
@@ -115,14 +121,19 @@ public class TeleportingRegistry {
 
         try {
             File registryFile = getOrCreateSaveFile();
-            if (registryFile != null)
-                DPLogger.info(registryFile.toPath());
-            JsonReader reader = new JsonReader(new FileReader(registryFile));
-            backLinkMap = gson.fromJson(reader, backLinkMapType);
+
+            BufferedReader reader = new BufferedReader(new FileReader(registryFile));
+            // backLinkMap = gson.fromJson(reader, backLinkMapType);
+
+            backLinkMap = gson.fromJson(reader, backLinkMap.getClass());
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
+            for (CoordSet coordSet : backLinkMap.keySet())
+                DPLogger.severe(coordSet);
+
+            reader.close();
         } catch (IOException e) {
             DPLogger.severe(e);
         }
