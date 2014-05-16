@@ -42,7 +42,6 @@ public class TeleportingRegistry {
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
-        DPLogger.info(currentChunk);
         return link;
     }
 

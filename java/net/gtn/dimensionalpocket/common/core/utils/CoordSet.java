@@ -128,10 +128,10 @@ public class CoordSet {
     }
 
     public CoordSet toBlockCoords() {
-        int newX = x * 16;
-        int newY = y * 16;
-        int newZ = z * 16;
+        x *= 16;
+        y *= 16;
+        z *= 16;
 
-        return new CoordSet(newX, newY, newZ);
+        return this;
     }
 }
