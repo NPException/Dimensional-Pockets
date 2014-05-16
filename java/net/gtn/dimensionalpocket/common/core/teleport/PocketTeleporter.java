@@ -42,14 +42,14 @@ public class PocketTeleporter extends Teleporter {
 
         CoordSet airSet = new CoordSet(posX, posY + 1, posZ);
 
-//        int index = 0;
-//        while (!(isAirBlocks(world, airSet))) {
-//            CoordSet additionSet = getRelativeTries(index++);
-////            if (additionSet == null) {
-////                teleportType = TeleportType.REBOUND;
-////            }
-//            airSet.addCoordSet(additionSet);
-//        }
+        // int index = 0;
+        // while (!(isAirBlocks(world, airSet))) {
+        // CoordSet additionSet = getRelativeTries(index++);
+        // // if (additionSet == null) {
+        // // teleportType = TeleportType.REBOUND;
+        // // }
+        // airSet.addCoordSet(additionSet);
+        // }
 
         // if (teleportType == TeleportType.REBOUND) {
         // DPLogger.info("REBOUND");
@@ -79,8 +79,12 @@ public class PocketTeleporter extends Teleporter {
     public static enum TeleportType {
         INWARD, OUTWARD, REBOUND;
     }
-    
+
     public static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, TeleportType teleportType) {
         return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, teleportType);
+    }
+
+    public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
+        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
     }
 }

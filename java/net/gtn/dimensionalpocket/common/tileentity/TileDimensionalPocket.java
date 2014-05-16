@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
@@ -10,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
-    private CoordSet chunkSet;
+    private Pocket pocket;
 
     @Override
     public void onBlockPlaced() {
@@ -23,10 +24,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
-        if (hasChunkSet()) {
+        if (hasPocket()) {
             if (!itemStack.hasTagCompound())
                 itemStack.setTagCompound(new NBTTagCompound());
-            chunkSet.writeToNBT(itemStack.getTagCompound());
+            pocket.getChunkCoords().writeToNBT(itemStack.getTagCompound());
         }
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
@@ -35,34 +36,36 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         worldObj.spawnEntityInWorld(entityItem);
     }
 
-    public void genChunkSet() {
-        if (hasChunkSet())
+    public void generateNewPocket() {
+        if (hasPocket())
             return;
-        chunkSet = TeleportingRegistry.genNewTeleportLink(worldObj.provider.dimensionId, getCoordSet());
+        pocket = TeleportingRegistry.genNewTeleportLink(worldObj.provider.dimensionId, getCoordSet());
     }
 
-    public boolean hasChunkSet() {
-        return chunkSet != null;
+    public boolean hasPocket() {
+        return pocket != null;
     }
 
-    public void setChunkSet(CoordSet chunkSet) {
-        this.chunkSet = chunkSet;
+    public Pocket getPocket() {
+        return pocket;
     }
 
-    public CoordSet getChunkSet() {
-        return chunkSet;
+    public boolean setPocket(CoordSet chunkSet) {
+        pocket = TeleportingRegistry.getPocket(chunkSet);
+        return pocket != null && pocket.getChunkCoords().equals(chunkSet);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (hasChunkSet())
-            chunkSet.writeToNBT(tag);
+        if (hasPocket())
+            pocket.getChunkCoords().writeToNBT(tag);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        chunkSet = CoordSet.readFromNBT(tag);
+        CoordSet tempSet = CoordSet.readFromNBT(tag);
+        pocket = TeleportingRegistry.getPocket(tempSet);
     }
 }

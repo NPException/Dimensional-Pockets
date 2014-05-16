@@ -18,12 +18,15 @@ public class Pocket implements Serializable {
 
     private boolean generated = false;
     private int blockDim;
-    private CoordSet blockCoords, chunkCoords;
+    private CoordSet blockCoords, chunkCoords, spawnSet;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
+
+        // spawnSets are shifted to 14*14*14
+        spawnSet = new CoordSet(0, 0, 0);
     }
 
     /**
@@ -50,9 +53,6 @@ public class Pocket implements Serializable {
             extendedBlockStorage = new ExtendedBlockStorage(worldY, !world.provider.hasNoSky);
             chunk.getBlockStorageArray()[l] = extendedBlockStorage;
         }
-
-        // FULL GEN AVERAGE TIME: 505052.3125 nanoSeconds
-        // EDGED GEN AVERAGE TIME: 318491.4375 nanoSeconds
 
         for (int x = 0; x < 16; x++)
             for (int y = 0; y < 16; y++)
@@ -86,7 +86,7 @@ public class Pocket implements Serializable {
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, chunkCoords, TeleportType.INWARD);
 
         if (dimID != Reference.DIMENSION_ID)
-            transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
+            PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
 
@@ -98,7 +98,7 @@ public class Pocket implements Serializable {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = TeleportingRegistry.getLinkForPocketChunkCoords(chunkCoords.copyDividedBy16());
+        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.copyDividedBy16());
 
         if (pocket == null)
             return false;
@@ -108,19 +108,23 @@ public class Pocket implements Serializable {
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords(), TeleportType.OUTWARD);
 
         if (dimID != Reference.DIMENSION_ID)
-            transferPlayerToDimension(player, dimID, teleporter);
+            PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
 
         return true;
     }
 
-    public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
-        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(player, dimID, teleporter);
-    }
-
     public int getBlockDim() {
         return blockDim;
+    }
+
+    public void setSpawnSet(CoordSet spawnSet) {
+        this.spawnSet = spawnSet;
+    }
+
+    public CoordSet getSpawnSet() {
+        return spawnSet;
     }
 
     public CoordSet getBlockCoords() {

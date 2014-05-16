@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
+import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -29,12 +30,11 @@ public class BlockDimensionalPocket extends BlockDP {
         if (!world.isRemote) {
             TileEntity tileEntity = world.getTileEntity(x, y, z);
             if (tileEntity instanceof TileDimensionalPocket) {
-                TileDimensionalPocket pocket = (TileDimensionalPocket) tileEntity;
-                if (!pocket.hasChunkSet())
-                    pocket.genChunkSet();
+                TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+                if (!tile.hasPocket())
+                    tile.generateNewPocket();
 
-                CoordSet targetSet = pocket.getChunkSet();
-                PocketDimensionHelper.teleportPlayerToPocket(player, targetSet);
+                tile.getPocket().teleportTo(player);
             }
         }
 
@@ -47,10 +47,12 @@ public class BlockDimensionalPocket extends BlockDP {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
-            TileDimensionalPocket pocket = (TileDimensionalPocket) tileEntity;
-            pocket.setChunkSet(CoordSet.readFromNBT(itemStack.getTagCompound()));
-            if (pocket.hasChunkSet())
-                TeleportingRegistry.changeTeleportLink(pocket.getChunkSet(), entityLiving.dimension, pocket.getCoordSet());
+
+            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+            tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+
+            if (tile.hasPocket())
+                TeleportingRegistry.changeTeleportLink(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
         }
     }
 
