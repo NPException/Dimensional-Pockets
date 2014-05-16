@@ -10,7 +10,7 @@ public class WorldProviderPocket extends WorldProvider {
     public IChunkProvider createChunkGenerator() {
         return new ChunkGeneratorPocket(worldObj);
     }
-    
+
     @Override
     public boolean canRespawnHere() {
         return true;
@@ -29,6 +29,11 @@ public class WorldProviderPocket extends WorldProvider {
     @Override
     public boolean canSnowAt(int x, int y, int z, boolean checkLight) {
         return false;
+    }
+
+    @Override
+    public boolean shouldMapSpin(String entity, double x, double y, double z) {
+        return true;
     }
 
     @Override
