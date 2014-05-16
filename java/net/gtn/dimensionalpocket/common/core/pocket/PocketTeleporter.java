@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.teleport;
+package net.gtn.dimensionalpocket.common.core.pocket;
 
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.minecraft.entity.Entity;

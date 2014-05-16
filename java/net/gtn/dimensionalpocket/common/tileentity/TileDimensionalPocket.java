@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
-import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.minecraft.entity.item.EntityItem;
@@ -39,7 +39,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void generateNewPocket() {
         if (hasPocket())
             return;
-        pocket = TeleportingRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet());
+        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet());
     }
 
     public boolean hasPocket() {
@@ -51,7 +51,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     }
 
     public boolean setPocket(CoordSet chunkSet) {
-        pocket = TeleportingRegistry.getPocket(chunkSet);
+        pocket = PocketRegistry.getPocket(chunkSet);
         return pocket != null && pocket.getChunkCoords().equals(chunkSet);
     }
 
@@ -66,6 +66,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
-        pocket = TeleportingRegistry.getPocket(tempSet);
+        pocket = PocketRegistry.getPocket(tempSet);
     }
 }

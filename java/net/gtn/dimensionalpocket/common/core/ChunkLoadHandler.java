@@ -7,7 +7,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableSet;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;

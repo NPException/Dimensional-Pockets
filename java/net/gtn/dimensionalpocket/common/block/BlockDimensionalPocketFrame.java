@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
-import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -35,7 +35,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             if (player.dimension != Reference.DIMENSION_ID)
                 return true;
 
-            Pocket pocket = TeleportingRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+            Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
                 return true;
 

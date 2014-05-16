@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.teleport;
+package net.gtn.dimensionalpocket.common.core.pocket;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -100,7 +100,7 @@ public class Pocket implements Serializable {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords);
+        Pocket pocket = PocketRegistry.getPocket(chunkCoords);
 
         if (pocket == null)
             return false;

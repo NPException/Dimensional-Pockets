@@ -8,7 +8,7 @@ import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.ChunkLoadHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.config.ConfigHandler;
-import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
@@ -75,12 +75,12 @@ public class DimensionalPockets {
 
     @EventHandler
     public void onServerStarted(FMLServerStartingEvent event) {
-        TeleportingRegistry.loadData();
+        PocketRegistry.loadData();
     }
 
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        TeleportingRegistry.saveData();
+        PocketRegistry.saveData();
         ChunkLoadHandler.ticketMap.clear();
     }
 }

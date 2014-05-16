@@ -3,8 +3,8 @@ package net.gtn.dimensionalpocket.common.block;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
-import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -81,6 +81,9 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+        if (world.isRemote)
+            return;
+
         TileEntity tileEntity = world.getTileEntity(x, y, z);
 
         if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
@@ -88,8 +91,15 @@ public class BlockDimensionalPocket extends BlockDP {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
             tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
 
-            if (tile.hasPocket())
-                TeleportingRegistry.changePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
+            if (tile.hasPocket()) {
+                DPLogger.info(tile.getPocket().getBlockCoords());
+                DPLogger.info(tile.getPocket().getBlockDim());
+                DPLogger.info(tile.getPocket().getChunkCoords());
+                PocketRegistry.changePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
+            }
+            DPLogger.info(tile.getPocket().getBlockCoords());
+            DPLogger.info(tile.getPocket().getBlockDim());
+            DPLogger.info(tile.getPocket().getChunkCoords());
         }
     }
 

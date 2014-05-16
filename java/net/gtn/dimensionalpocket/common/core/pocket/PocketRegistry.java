@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.teleport;
+package net.gtn.dimensionalpocket.common.core.pocket;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,7 +21,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
-public class TeleportingRegistry {
+public class PocketRegistry {
 
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
@@ -47,20 +47,32 @@ public class TeleportingRegistry {
 
     public static void changePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
         Pocket link = backLinkMap.get(chunkCoords);
-        if (link == null)
+        if (link == null) {
             DPLogger.severe("No TeleportLink for pocketChunkCoords: " + chunkCoords);
+            return;
+        }
 
         link.setBlockDim(newBlockDimID);
         link.setBlockCoords(newBlockCoords);
     }
 
+    public static void changePocketSpawn(CoordSet chunkCoords, CoordSet spawnSet) {
+        Pocket link = backLinkMap.get(chunkCoords);
+        if (link == null) {
+            DPLogger.severe("No TeleportLink for pocketChunkCoords: " + chunkCoords);
+            return;
+        }
+
+        link.setSpawnSet(spawnSet);
+    }
+
     public static void saveData() {
-        TeleportingConfig.saveBackLinkMap(backLinkMap);
-        TeleportingConfig.saveCurrentChunk(currentChunk);
+        PocketConfig.saveBackLinkMap(backLinkMap);
+        PocketConfig.saveCurrentChunk(currentChunk);
     }
 
     public static void loadData() {
-        TeleportingConfig.loadBackLinkMap(backLinkMap);
-        currentChunk = TeleportingConfig.loadCurrentChunk();
+        PocketConfig.loadBackLinkMap(backLinkMap);
+        currentChunk = PocketConfig.loadCurrentChunk();
     }
 }

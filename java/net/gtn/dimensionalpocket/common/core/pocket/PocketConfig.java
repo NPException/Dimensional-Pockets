@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.teleport;
+package net.gtn.dimensionalpocket.common.core.pocket;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class TeleportingConfig {
+public class PocketConfig {
 
     private static final String backLinkFile = "teleportRegistry";
     private static final String currentChunkFile = "currentChunk";
