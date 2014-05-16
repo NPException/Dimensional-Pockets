@@ -116,6 +116,12 @@ public class CoordSet {
     }
 
     public CoordSet copyDividedBy16() {
-        return new CoordSet(x / 16, y / 16, z / 16);
+        int newX = x/16;
+		if (x<0) newX -= 1;
+		
+		int newZ = z/16;
+		if (z<0) newZ -= 1;
+		
+		return new CoordSet(newX, y / 16, newZ);
     }
 }
