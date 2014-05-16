@@ -11,6 +11,7 @@ TODO
 ### Portal code.
 - The portal code works, but barely.
 - Doesn't spawn you in any desirable position.
+ - Need to make sure that the teleporter searchs a little bit, and possibly even make it a custom position.
  
 ### The Lights. (very low priority)
 - The blocks are supposed to have light given the light from the world.

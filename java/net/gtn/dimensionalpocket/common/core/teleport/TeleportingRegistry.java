@@ -1,38 +1,29 @@
 package net.gtn.dimensionalpocket.common.core.teleport;
 
-import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
+import net.gtn.dimensionalpocket.common.core.CoordSet;
+import net.gtn.dimensionalpocket.common.core.DPLogger;
+import net.minecraft.server.MinecraftServer;
+
 import com.google.gson.Gson;
-import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import net.gtn.dimensionalpocket.common.core.CoordSet;
-import net.gtn.dimensionalpocket.common.core.DPLogger;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 
 public class TeleportingRegistry {
 
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
+    private static Type backLinkMapType = new TypeToken<HashMap<CoordSet, TeleportLink>>() {
     }.getType();
 
     private static final int MAX_HEIGHT = 16;
@@ -44,19 +35,8 @@ public class TeleportingRegistry {
     }
 
     public static CoordSet genNewTeleportLink(int dimID, CoordSet coordSet) {
-        if (currentChunk.getY() == MAX_HEIGHT) {
-            currentChunk.setY(0);
-            currentChunk.addX(1);
-            // We don't need that, we are just giving out the coordsets in one line.
-            // I don't think there will ever be enough pockets on a server to reach
-            // the "jittery" coordinate range in that dimension
-            // if (currentChunk.getX() % MAX_HEIGHT == 0) {
-            // currentChunk.setX(0);
-            // currentChunk.addZ(1);
-            // if (currentChunk.getZ() % MAX_HEIGHT == 0)
-            // currentChunk.setZ(0);
-            // }
-        }
+        if (currentChunk.getY() == MAX_HEIGHT)
+            currentChunk.setY(0).addX(1);
 
         TeleportLink link = new TeleportLink(dimID, coordSet, currentChunk.copy());
         backLinkMap.put(link.getPocketChunkCoords(), link);
@@ -100,18 +80,10 @@ public class TeleportingRegistry {
         try {
             File registryFile = getOrCreateSaveFile();
 
-            String jsonFile = gson.toJson(backLinkMap);
+            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
+            gson.toJson(backLinkMap, backLinkMapType.getClass(), writer);
 
-            for (CoordSet coordSet : backLinkMap.keySet()) {
-                DPLogger.info(coordSet);
-            }
-
-            FileWriter writer = new FileWriter(registryFile);
-            writer.write(jsonFile);
-            // gson.toJson(backLinkMap, backLinkMapType, writer);
-            writer.close();
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             DPLogger.severe(e);
         }
     }
@@ -123,13 +95,13 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
             JsonReader reader = new JsonReader(new FileReader(registryFile));
 
-            backLinkMap = gson.fromJson(reader, backLinkMapType);
+            backLinkMap = gson.fromJson(reader, backLinkMapType.getClass());
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
             reader.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             DPLogger.severe(e);
         }
     }

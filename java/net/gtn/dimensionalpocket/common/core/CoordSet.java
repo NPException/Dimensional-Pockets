@@ -21,16 +21,19 @@ public class CoordSet {
         this((int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
     }
 
-    public void setX(int x) {
+    public CoordSet setX(int x) {
         this.x = x;
+        return this;
     }
 
-    public void setY(int y) {
+    public CoordSet setY(int y) {
         this.y = y;
+        return this;
     }
 
-    public void setZ(int z) {
+    public CoordSet setZ(int z) {
         this.z = z;
+        return this;
     }
 
     public int getX() {
