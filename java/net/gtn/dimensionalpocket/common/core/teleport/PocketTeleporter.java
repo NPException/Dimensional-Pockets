@@ -21,6 +21,9 @@ public class PocketTeleporter extends Teleporter {
 
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
+        DPLogger.info(teleportType.name());
+        DPLogger.info(targetSet);
+
         if (!(entity instanceof EntityPlayerMP))
             return;
 
