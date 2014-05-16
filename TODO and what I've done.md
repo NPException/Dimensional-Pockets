@@ -1,31 +1,21 @@
 TODO
 ====
 
-### Exiting the cell.
-- Probably the hardest.
-- As you can see inside of TeleporterRegistry, I started making a system for it, and then got REALLY tired, so, all yours. :P
-- Needs to retain the position of the block that owns that cell, contained within chunkSet of TileDimensionalPocket.
-- So, you have the position of the block that is clicked to want to go out, if you have a system that registers the position of the tileEntities that HAVE that position, you can reverse engineer the coordSet to get out.
-- That's really it.
-- If you didn't understand that.
-- The chunkSet with TileDimensionalPocket contains the chunk data for the cell.
-- Now when you're in the cell, and right click a frame block, you pass the coordinates to the method onBlockActivated which I've put in BlockDimensionalPocketFrame already.
-- You can find the chunk coordinates from that.
-- And if you retain what tileEntity took what chunk coordinate set, then you should be able to spawn at the block.
-- Look at my helper class for tips on traversing the world.
-	
+### ~~Exiting the cell.~~
+- Done. breaking the block, placing it elsewhere, going in and back out works fine, too.
+
+### Persisting the backLinkMap of the TeleportingRegistry
+- the methods already exist, but the way i tried it it just derped out.
+ - I try tackle that tomorrow - NPE
+
 ### Portal code.
 - The portal code works, but barely.
 - Doesn't spawn you in any desirable position.
  
-### The Lights.
+### The Lights. (very low priority)
 - The blocks are supposed to have light given the light from the world.
-- Good luck. :P
-	
-### ~~Investigate the frame rate tank.~~
-- Jezza, you derp. Think about what could have caused your fps drop
- - Hint: it's not your codes fault
-	
+ - right now they just emit the maximum possible amount of light
+
 ### Textures for frame block.
 - Gel, ask the boys what textures they want for the frame, etc.
 - I don't care what it look like.
