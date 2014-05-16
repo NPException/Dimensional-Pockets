@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
+import net.gtn.dimensionalpocket.common.core.ChunkLoadHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.config.ConfigHandler;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
@@ -15,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -63,6 +65,8 @@ public class DimensionalPockets {
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
         BiomeHelper.init();
+
+        ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadHandler());
     }
 
     @EventHandler
@@ -77,5 +81,6 @@ public class DimensionalPockets {
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         TeleportingRegistry.saveData();
+        ChunkLoadHandler.ticketMap.clear();
     }
 }

@@ -29,13 +29,6 @@ public class Pocket implements Serializable {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    /**
-     * Generates the new room. THATS why you hired me :D
-     * 
-     * @author NPException
-     * @param world
-     * @param chunkSet
-     */
     public void generatePocket(World world) {
         if (generated)
             return;
