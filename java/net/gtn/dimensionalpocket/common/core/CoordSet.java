@@ -1,9 +1,11 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import java.io.Serializable;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CoordSet {
+public class CoordSet implements Serializable {
 
     private int x, y, z;
 

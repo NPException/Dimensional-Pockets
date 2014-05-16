@@ -81,7 +81,7 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
 
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
-            gson.toJson(backLinkMap, backLinkMap.getClass(), writer);
+            gson.toJson(backLinkMap, backLinkMapType, writer);
 
         } catch (Exception e) {
             DPLogger.severe(e);
@@ -95,7 +95,7 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
             JsonReader reader = new JsonReader(new FileReader(registryFile));
 
-            backLinkMap = gson.fromJson(reader, backLinkMap.getClass());
+            backLinkMap = gson.fromJson(reader, backLinkMapType);
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
