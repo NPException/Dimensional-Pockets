@@ -56,11 +56,11 @@ public class TeleportingRegistry {
         link.setBlockCoords(newBlockCoords);
     }
 
-    public static void saveBackLinkMap() {
+    public static void saveData() {
         TeleportingConfig.saveBackLinkMap(backLinkMap);
     }
 
-    public static void loadBackLinkMap() {
+    public static void loadData() {
         TeleportingConfig.loadBackLinkMap(backLinkMap);
     }
 }

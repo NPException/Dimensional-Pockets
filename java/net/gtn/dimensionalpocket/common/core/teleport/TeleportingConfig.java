@@ -16,17 +16,28 @@ import com.google.gson.GsonBuilder;
 
 public class TeleportingConfig {
 
-    private static File getOrCreateSaveFile() throws IOException {
+    private static final String backLinkFile = "teleportRegistry";
+    private static final String currentChunkFile = "currentChunk";
+
+    /**
+     * Adds .json to it.
+     * 
+     * @param fileName
+     * @return
+     */
+    private static File getConfig(String fileName) throws IOException {
         MinecraftServer server = MinecraftServer.getServer();
-        StringBuilder filename = new StringBuilder();
+        StringBuilder pathName = new StringBuilder();
 
         if (server.isSinglePlayer())
-            filename.append("saves/");
+            pathName.append("saves/");
 
-        filename.append(server.getWorldName());
-        filename.append("/dimpockets/teleportRegistry.json");
+        pathName.append(server.getWorldName());
+        pathName.append("/dimpockets/");
+        pathName.append(fileName);
+        pathName.append(".json");
 
-        File savefile = server.getFile(filename.toString());
+        File savefile = server.getFile(pathName.toString());
         if (!savefile.exists()) {
             savefile.getParentFile().mkdirs();
             savefile.createNewFile();
@@ -38,7 +49,7 @@ public class TeleportingConfig {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         try {
-            File registryFile = getOrCreateSaveFile();
+            File registryFile = getConfig(backLinkFile);
 
             Pocket[] tempArray = backLinkMap.values().toArray(new Pocket[0]);
 
@@ -55,12 +66,11 @@ public class TeleportingConfig {
         Gson gson = new Gson();
 
         try {
-            File registryFile = getOrCreateSaveFile();
+            File registryFile = getConfig(backLinkFile);
 
             final FileReader reader = new FileReader(registryFile);
 
             Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
-
             reader.close();
 
             if (backLinkMap == null)
@@ -73,4 +83,42 @@ public class TeleportingConfig {
             DPLogger.severe(e);
         }
     }
+
+    public static void saveCurrentChunk(CoordSet currentChunk) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        try {
+            File registryFile = getConfig(currentChunkFile);
+
+            FileWriter writer = new FileWriter(registryFile);
+            gson.toJson(currentChunk, writer);
+            writer.close();
+
+        } catch (Exception e) {
+            DPLogger.severe(e);
+        }
+    }
+
+    public static void loadCurrentChunk() {
+        Gson gson = new Gson();
+
+        try {
+            File registryFile = getConfig(backLinkFile);
+
+            final FileReader reader = new FileReader(registryFile);
+
+            Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
+            reader.close();
+
+            if (backLinkMap == null)
+                backLinkMap = new HashMap<CoordSet, Pocket>();
+
+            for (Pocket link : tempArray)
+                backLinkMap.put(link.getChunkCoords(), link);
+
+        } catch (Exception e) {
+            DPLogger.severe(e);
+        }
+    }
+
 }

@@ -3,14 +3,10 @@ package net.gtn.dimensionalpocket.common.core.teleport;
 import java.io.Serializable;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter.TeleportType;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -26,8 +22,7 @@ public class Pocket implements Serializable {
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
 
-        // spawnSets are shifted to 14*14*14
-        spawnSet = new CoordSet(0, 0, 0);
+        spawnSet = new CoordSet(1, 1, 1);
     }
 
     /**
@@ -87,7 +82,7 @@ public class Pocket implements Serializable {
 
         chunkCoords.toBlockCoords().addCoordSet(spawnSet);
 
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, spawnSet, TeleportType.INWARD);
+        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, spawnSet);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -110,7 +105,7 @@ public class Pocket implements Serializable {
 
         int dimID = pocket.getBlockDim();
 
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords(), TeleportType.OUTWARD);
+        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);

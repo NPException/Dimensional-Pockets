@@ -71,11 +71,11 @@ public class DimensionalPockets {
 
     @EventHandler
     public void onServerStarted(FMLServerStartingEvent event) {
-        TeleportingRegistry.loadBackLinkMap();
+        TeleportingRegistry.loadData();
     }
 
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        TeleportingRegistry.saveBackLinkMap();
+        TeleportingRegistry.saveData();
     }
 }
