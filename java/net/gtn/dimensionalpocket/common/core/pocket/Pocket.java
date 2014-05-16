@@ -81,8 +81,13 @@ public class Pocket implements Serializable {
 
         CoordSet tempSet = chunkCoords.copy();
 
+        DPLogger.info("");
+        DPLogger.info(tempSet);
         tempSet.asBlockCoords();
+        DPLogger.info(tempSet);
+        DPLogger.info(spawnSet);
         tempSet.addCoordSet(spawnSet);
+        DPLogger.info(tempSet);
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
@@ -138,7 +143,7 @@ public class Pocket implements Serializable {
     }
 
     public void setSpawnSet(CoordSet spawnSet) {
-        this.spawnSet = spawnSet;
+        this.spawnSet = spawnSet.asSpawnPoint();
     }
 
     public void setBlockCoords(CoordSet blockCoords) {

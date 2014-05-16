@@ -138,4 +138,12 @@ public class CoordSet {
     public CoordSet toBlockCoords() {
         return new CoordSet(x * 16, y * 16, z * 16);
     }
+
+    public CoordSet asSpawnPoint() {
+        x = x % 16;
+        y = y % 16;
+        z = z % 16;
+
+        return this;
+    }
 }

@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.block;
 
+import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -35,7 +37,23 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return true;
 
         ItemStack itemStack = player.getCurrentEquippedItem();
-        if (!player.isSneaking() || itemStack != null)
+
+        if (itemStack != null) {
+            if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
+                return true;
+
+            if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
+                CoordSet spawnSet = new CoordSet(x, y, z);
+
+                Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
+                pocket.setSpawnSet(new CoordSet(x, y, z));
+
+                player.inventory.decrStackSize(player.inventory.currentItem, 1);
+            }
+            return true;
+        }
+
+        if (!player.isSneaking())
             return true;
 
         if (!world.isRemote) {
@@ -49,6 +67,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             pocket.teleportFrom(player);
         }
 
+        return true;
+    }
+
+    @Override
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
         return true;
     }
 
