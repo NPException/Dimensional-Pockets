@@ -21,7 +21,7 @@ public class PocketTeleporter extends Teleporter {
 
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
-        DPLogger.info(teleportType);
+        DPLogger.info(teleportType.getType());
         DPLogger.info(targetSet);
         if (!(entity instanceof EntityPlayerMP))
             return;
@@ -29,7 +29,7 @@ public class PocketTeleporter extends Teleporter {
         EntityPlayerMP player = (EntityPlayerMP) entity;
         World world = player.worldObj;
 
-        if (teleportType.isInternalBlock()) {
+        if (teleportType.isInternalInward() || teleportType.isInternalOutward()) {
             int index = 0;
 
             while (!(isAirBlocks(world, targetSet)))
@@ -40,15 +40,17 @@ public class PocketTeleporter extends Teleporter {
         double posY = targetSet.getY();
         double posZ = targetSet.getZ();
 
-        if (!(teleportType.isOutward())) {
-            posX = posX * 16 + 8;
-            posY = posY * 16;
-            posZ = posZ * 16 + 8;
+        DPLogger.info(teleportType.isInward() || teleportType.isInternalInward());
+        
+        if (teleportType.isInward() || teleportType.isInternalInward()) {
+            posX = (posX * 16) + 8;
+            posY = (posY * 16);
+            posZ = (posZ * 16) + 8;
         }
 
-        DPLogger.info(posX);
-        DPLogger.info(posY);
-        DPLogger.info(posZ);
+        DPLogger.info(posX + 0.5F);
+        DPLogger.info(posY + 1);
+        DPLogger.info(posZ + 0.5F);
 
         player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY + 1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
@@ -73,9 +75,10 @@ public class PocketTeleporter extends Teleporter {
 
     public static enum TeleportType {
         //@formatter:off
-        INTERNAL(0),
-        OUTWARD(1),
-        INWARD(2);
+        INTERNAL_INWARD(0),
+        INTERNAL_OUTWARD(1),
+        OUTWARD(2),
+        INWARD(3);
         //@formatter:on
 
         int type = 0;
@@ -84,21 +87,24 @@ public class PocketTeleporter extends Teleporter {
             this.type = type;
         }
 
-        public boolean isInternalBlock() {
+        public boolean isInternalInward() {
             return type == 0;
         }
 
-        public boolean isOutward() {
+        public boolean isInternalOutward() {
             return type == 1;
         }
 
-        public boolean isInward() {
+        public boolean isOutward() {
             return type == 2;
         }
 
-        @Override
-        public String toString() {
-            return type == 0 ? "[Internal]" : type == 1 ? "[Outward]" : "[Inward]";
+        public boolean isInward() {
+            return type == 3;
+        }
+        
+        public int getType() {
+            return type;
         }
 
     }

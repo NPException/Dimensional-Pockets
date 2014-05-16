@@ -16,6 +16,7 @@ import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.server.MinecraftServer;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -75,15 +76,17 @@ public class TeleportingRegistry {
     }
 
     public static void saveBackLinkMap() {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         try {
             File registryFile = getOrCreateSaveFile();
 
             TeleportLink[] tempArray = backLinkMap.values().toArray(new TeleportLink[0]);
 
-            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
-            gson.toJson(tempArray, TeleportLink[].class, writer);
+            FileWriter writer = new FileWriter(registryFile);
+            gson.toJson(tempArray, writer);
+            writer.close();
+
         } catch (Exception e) {
             DPLogger.severe(e);
         }
@@ -94,18 +97,19 @@ public class TeleportingRegistry {
 
         try {
             File registryFile = getOrCreateSaveFile();
-            JsonReader reader = new JsonReader(new FileReader(registryFile));
+
+            final FileReader reader = new FileReader(registryFile);
 
             TeleportLink[] tempArray = gson.fromJson(reader, TeleportLink[].class);
+
+            reader.close();
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-            for (TeleportLink link : tempArray) {
+            for (TeleportLink link : tempArray)
                 backLinkMap.put(link.getPocketChunkCoords(), link);
-            }
 
-            reader.close();
         } catch (Exception e) {
             DPLogger.severe(e);
         }
