@@ -25,9 +25,6 @@ public class TeleportingRegistry {
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
-    }.getType();
-
     // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
@@ -86,7 +83,7 @@ public class TeleportingRegistry {
             TeleportLink[] tempArray = backLinkMap.values().toArray(new TeleportLink[0]);
 
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
-            gson.toJson(SerializationUtils.serialize(tempArray), TeleportLink[].class, writer);
+            gson.toJson(tempArray, TeleportLink[].class, writer);
         } catch (Exception e) {
             DPLogger.severe(e);
         }
@@ -104,7 +101,7 @@ public class TeleportingRegistry {
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-            for (TeleportLink link : tempArray){
+            for (TeleportLink link : tempArray) {
                 backLinkMap.put(link.getPocketChunkCoords(), link);
             }
 

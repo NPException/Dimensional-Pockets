@@ -40,7 +40,7 @@ public class PocketTeleporter extends Teleporter {
         }
 
         if (!(isAirBlocks(world, airSet))) {
-            
+
         }
 
         player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY + 1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
@@ -48,6 +48,28 @@ public class PocketTeleporter extends Teleporter {
 
     private boolean isAirBlocks(World world, CoordSet airSet) {
         return (world.isAirBlock(airSet.getX(), airSet.getY(), airSet.getZ()) && world.isAirBlock(airSet.getX(), airSet.getY() + 1, airSet.getZ()));
+    }
+
+    private CoordSet getRelativeTries(int tryCount) {
+        switch (tryCount) {
+            case 0:
+                return new CoordSet(0, -2, 0);
+            case 1:
+                return new CoordSet(-1, -2, -1);
+            case 2:
+                return new CoordSet(-1, -2, 0);
+            case 3:
+                return new CoordSet(-1, -2, 1);
+            case 4:
+                return new CoordSet(0, -2, -1);
+            case 5:
+                return new CoordSet(0, -2, 0);
+            case 6:
+                return new CoordSet(0, -2, 1);
+            case 7:
+                return new CoordSet(-1, -2, 1);
+        }
+        return null;
     }
 
 }

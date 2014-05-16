@@ -5,7 +5,7 @@ import java.io.Serializable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class CoordSet implements Serializable {
+public class CoordSet {
 
     private int x, y, z;
 
