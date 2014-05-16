@@ -39,35 +39,30 @@ public class PocketTeleporter extends Teleporter {
             posZ = (posZ * 16) + 8;
         }
 
-        CoordSet airSet = new CoordSet((int) posX, (int) posY, (int) posZ);
-        CoordSet tempSet = airSet.copy();
+        CoordSet airSet = new CoordSet(posX, posY + 1, posZ);
+        CoordSet temp = airSet.copy();
 
         int index = 0;
-
-        while (!(isAirBlocks(world, tempSet))) {
-            tempSet = airSet.copy();
+        while (!(isAirBlocks(world, airSet))) {
             CoordSet additionSet = getRelativeTries(index++);
-            // if (additionSet == null) {
-            // teleportType = TeleportType.REBOUND;
-            // break;
-            // }
-            tempSet.addCoordSet(additionSet);
+//            if (additionSet == null) {
+//                teleportType = TeleportType.REBOUND;
+//                break;
+//            }
+            airSet.addCoordSet(additionSet);
         }
 
-        if (teleportType == TeleportType.REBOUND) {
-            DPLogger.info("REBOUND");
-            return;
-        }
+        // if (teleportType == TeleportType.REBOUND) {
+        // DPLogger.info("REBOUND");
+        // return;
+        // }
 
-        player.playerNetServerHandler.setPlayerLocation(tempSet.getX() - 0.5F, tempSet.getY() + 1, tempSet.getZ() - 0.5F, player.rotationYaw, player.rotationPitch);
+        player.playerNetServerHandler.setPlayerLocation(airSet.getX() + 0.5F, airSet.getY(), airSet.getZ() + 0.5F, player.rotationYaw, player.rotationPitch);
     }
 
     private boolean isAirBlocks(World world, CoordSet tempSet) {
-        DPLogger.info(tempSet);
-        if(tempSet.getY() + 1 < 0){
-            DPLogger.info("WRONGONWONONON");
+        if (tempSet.getY() < 0)
             return false;
-        }
         return (world.isAirBlock(tempSet.getX(), tempSet.getY(), tempSet.getZ()) && world.isAirBlock(tempSet.getX(), tempSet.getY() + 1, tempSet.getZ()));
     }
 

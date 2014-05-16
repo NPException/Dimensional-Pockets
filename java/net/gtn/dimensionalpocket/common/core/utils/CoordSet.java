@@ -14,6 +14,12 @@ public class CoordSet {
         this.y = y;
         this.z = z;
     }
+    
+    public CoordSet(double x, double y, double z){
+        this.x = (int) Math.round(x);
+        this.y = (int) Math.round(y);
+        this.z = (int) Math.round(z);
+    }
 
     public CoordSet(int[] array) {
         this(array[0], array[1], array[2]);
