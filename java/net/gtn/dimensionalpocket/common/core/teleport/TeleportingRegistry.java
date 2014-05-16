@@ -58,9 +58,11 @@ public class TeleportingRegistry {
 
     public static void saveData() {
         TeleportingConfig.saveBackLinkMap(backLinkMap);
+        TeleportingConfig.saveCurrentChunk(currentChunk);
     }
 
     public static void loadData() {
         TeleportingConfig.loadBackLinkMap(backLinkMap);
+        currentChunk = TeleportingConfig.loadCurrentChunk();
     }
 }

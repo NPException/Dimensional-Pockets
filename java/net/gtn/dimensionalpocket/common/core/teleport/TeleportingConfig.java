@@ -99,26 +99,25 @@ public class TeleportingConfig {
         }
     }
 
-    public static void loadCurrentChunk() {
+    public static CoordSet loadCurrentChunk() {
         Gson gson = new Gson();
 
         try {
-            File registryFile = getConfig(backLinkFile);
+            File registryFile = getConfig(currentChunkFile);
 
             final FileReader reader = new FileReader(registryFile);
 
-            Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
+            CoordSet tempSet = gson.fromJson(reader, CoordSet.class);
             reader.close();
 
-            if (backLinkMap == null)
-                backLinkMap = new HashMap<CoordSet, Pocket>();
+            if (tempSet == null)
+                tempSet = new CoordSet(0, 0, 0);
 
-            for (Pocket link : tempArray)
-                backLinkMap.put(link.getChunkCoords(), link);
-
+            return tempSet;
         } catch (Exception e) {
             DPLogger.severe(e);
         }
+        return new CoordSet(0, 0, 0);
     }
 
 }
