@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.core.teleport;
 
 import java.io.Serializable;
-
-import cpw.mods.fml.client.ExtendedServerListData;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -13,12 +13,23 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket implements Serializable {
 
+    private Map<ForgeDirection, SideState> sideMap = new HashMap<ForgeDirection, SideState>();
     private boolean generated = false;
     private int blockDim;
     private CoordSet blockCoords, chunkCoords, spawnSet;
+
+    {
+        sideMap.put(ForgeDirection.DOWN, new SideState(0));
+        sideMap.put(ForgeDirection.UP, new SideState(0));
+        sideMap.put(ForgeDirection.NORTH, new SideState(0));
+        sideMap.put(ForgeDirection.SOUTH, new SideState(0));
+        sideMap.put(ForgeDirection.WEST, new SideState(0));
+        sideMap.put(ForgeDirection.EAST, new SideState(0));
+    }
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -104,7 +115,7 @@ public class Pocket implements Serializable {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.toChunkCoords());
+        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords);
 
         if (pocket == null)
             return false;
@@ -127,10 +138,6 @@ public class Pocket implements Serializable {
         return blockDim;
     }
 
-    public void setSpawnSet(CoordSet spawnSet) {
-        this.spawnSet = spawnSet;
-    }
-
     public CoordSet getSpawnSet() {
         return spawnSet;
     }
@@ -147,7 +154,28 @@ public class Pocket implements Serializable {
         this.blockDim = blockDim;
     }
 
+    public void setSpawnSet(CoordSet spawnSet) {
+        this.spawnSet = spawnSet;
+    }
+
     public void setBlockCoords(CoordSet blockCoords) {
         this.blockCoords = blockCoords;
+    }
+
+    public static class SideState {
+
+        private int redstoneStrength;
+
+        public SideState(int redstoneStrength) {
+            this.redstoneStrength = redstoneStrength;
+        }
+
+        public int getRedstoneStrength() {
+            return redstoneStrength;
+        }
+
+        public void setRedstoneStrength(int redstoneStrength) {
+            this.redstoneStrength = redstoneStrength;
+        }
     }
 }

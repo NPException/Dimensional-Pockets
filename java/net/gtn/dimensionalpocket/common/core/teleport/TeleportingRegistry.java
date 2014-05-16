@@ -28,7 +28,6 @@ public class TeleportingRegistry {
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
     public static Pocket getPocket(CoordSet chunkCoords) {
-        DPLogger.info(chunkCoords);
         if (backLinkMap.containsKey(chunkCoords))
             return backLinkMap.get(chunkCoords);
         return null;
