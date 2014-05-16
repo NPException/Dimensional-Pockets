@@ -12,11 +12,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
 
@@ -41,6 +43,33 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
         return null;
+    }
+    
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return true;
+    }
+
+    @Override
+    public boolean canProvidePower() {
+        return true;
+    }
+    
+    @Override
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        CoordSet coordSet = new CoordSet(x, y, z);
+        Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+        
+        if (pocket == null)
+            return 0;
+        
+        World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
+        
+        
+        
+        ForgeDirection direction = ForgeDirection.getOrientation(side);
+        // TODO
+        return 0;
     }
 
     @Override

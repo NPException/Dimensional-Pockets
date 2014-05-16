@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
 
@@ -44,38 +45,39 @@ public class BlockDimensionalPocket extends BlockDP {
     }
 
     @Override
-    public int getComparatorInputOverride(World world, int p_149736_2_, int p_149736_3_, int p_149736_4_, int p_149736_5_) {
-        DPLogger.info("Comparator");
-        return super.getComparatorInputOverride(world, p_149736_2_, p_149736_3_, p_149736_4_, p_149736_5_);
-    }
-
-    @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
         return true;
     }
 
     @Override
     public boolean canProvidePower() {
-        // DPLogger.info("Can provide power?");
-        return super.canProvidePower();
+        return true;
     }
 
-    @Override
-    public int isProvidingStrongPower(IBlockAccess world, int p_149748_2_, int p_149748_3_, int p_149748_4_, int p_149748_5_) {
-        DPLogger.info("Called Strong");
-        return super.isProvidingStrongPower(world, p_149748_2_, p_149748_3_, p_149748_4_, p_149748_5_);
-    }
-
+    // @formatter:off
+    /**
+     * This methods basically asks: is the Dimensional Pocket at the specified coordinates
+     * providing power to side on an adjacent block.
+     * So for an adjacent block to the south of the DP, side will be NORTH.
+     * Everything is upside down. Jezza, you should feel right home here.
+     */
+    // @formatter:on
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        DPLogger.info(side);
-        DPLogger.info("Called Weak");
-        return super.isProvidingWeakPower(world, x, y, z, side);
+        ForgeDirection direction = ForgeDirection.getOrientation(side);
+        // TODO
+        return 0;
     }
-
+    
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-
+    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        return super.shouldCheckWeakPower(world, x, y, z, side);
+    }
+    
+    @Override
+    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+        // TODO Auto-generated method stub
+        super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);
     }
 
     @Override
