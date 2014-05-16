@@ -1,11 +1,9 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket.SideState;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -15,11 +13,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
 
@@ -41,10 +37,7 @@ public class BlockDimensionalPocket extends BlockDP {
                     tile.generateNewPocket();
 
                 Pocket pocket = tile.getPocket();
-                // pocket.teleportTo(player);
-                Map<ForgeDirection, SideState> sideMap = pocket.getSideMap();
-                for (SideState sideState : sideMap.values())
-                    DPLogger.info(sideState.getRedstoneStrength());
+                pocket.teleportTo(player);
             }
         }
         return true;
@@ -82,7 +75,7 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        
+
     }
 
     @Override

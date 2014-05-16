@@ -17,19 +17,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket implements Serializable {
 
-    private Map<ForgeDirection, SideState> sideMap = new HashMap<ForgeDirection, SideState>();
     private boolean generated = false;
     private int blockDim;
     private CoordSet blockCoords, chunkCoords, spawnSet;
-
-    {
-        sideMap.put(ForgeDirection.DOWN, new SideState(0));
-        sideMap.put(ForgeDirection.UP, new SideState(0));
-        sideMap.put(ForgeDirection.NORTH, new SideState(0));
-        sideMap.put(ForgeDirection.SOUTH, new SideState(0));
-        sideMap.put(ForgeDirection.WEST, new SideState(0));
-        sideMap.put(ForgeDirection.EAST, new SideState(0));
-    }
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -158,26 +148,5 @@ public class Pocket implements Serializable {
 
     public void setBlockCoords(CoordSet blockCoords) {
         this.blockCoords = blockCoords;
-    }
-
-    public Map<ForgeDirection, SideState> getSideMap() {
-        return sideMap;
-    }
-    
-    public static class SideState {
-
-        private int redstoneStrength;
-
-        public SideState(int redstoneStrength) {
-            this.redstoneStrength = redstoneStrength;
-        }
-
-        public int getRedstoneStrength() {
-            return redstoneStrength;
-        }
-
-        public void setRedstoneStrength(int redstoneStrength) {
-            this.redstoneStrength = redstoneStrength;
-        }
     }
 }

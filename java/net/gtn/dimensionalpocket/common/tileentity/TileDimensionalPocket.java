@@ -2,15 +2,12 @@ package net.gtn.dimensionalpocket.common.tileentity;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
-import net.gtn.dimensionalpocket.common.core.teleport.Pocket.SideState;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
