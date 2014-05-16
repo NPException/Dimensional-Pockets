@@ -47,7 +47,6 @@ public class PocketTeleporter extends Teleporter {
             CoordSet additionSet = getRelativeTries(index++);
 //            if (additionSet == null) {
 //                teleportType = TeleportType.REBOUND;
-//                break;
 //            }
             airSet.addCoordSet(additionSet);
         }
