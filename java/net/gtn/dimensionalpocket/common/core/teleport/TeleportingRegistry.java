@@ -29,7 +29,9 @@ public class TeleportingRegistry {
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
     public static TeleportLink getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
-        return backLinkMap.get(pocketChunkCoords);
+        if (backLinkMap.containsKey(pocketChunkCoords))
+            return backLinkMap.get(pocketChunkCoords);
+        return null;
     }
 
     public static CoordSet genNewTeleportLink(int dimID, CoordSet coordSet) {

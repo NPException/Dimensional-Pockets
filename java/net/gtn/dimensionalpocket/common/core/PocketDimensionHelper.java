@@ -102,8 +102,6 @@ public class PocketDimensionHelper {
 
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        // adjust to chunk coordinates
-
         TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
 
         if (link == null)

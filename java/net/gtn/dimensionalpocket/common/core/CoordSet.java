@@ -90,13 +90,9 @@ public class CoordSet {
         return other.x == x && other.y == y && other.z == z;
     }
 
-    public String toPacketString() {
-        return x + ":" + y + ":" + z;
-    }
-
     @Override
     public String toString() {
-        return " @ " + toPacketString();
+        return x + ":" + y + ":" + z;
     }
 
     public int[] toArray() {
