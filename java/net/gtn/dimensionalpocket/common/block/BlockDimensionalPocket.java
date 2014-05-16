@@ -95,7 +95,7 @@ public class BlockDimensionalPocket extends BlockDP {
                 DPLogger.info(tile.getPocket().getBlockCoords());
                 DPLogger.info(tile.getPocket().getBlockDim());
                 DPLogger.info(tile.getPocket().getChunkCoords());
-                PocketRegistry.changePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
+                PocketRegistry.updatePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
             }
             DPLogger.info(tile.getPocket().getBlockCoords());
             DPLogger.info(tile.getPocket().getBlockDim());

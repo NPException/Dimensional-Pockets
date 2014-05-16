@@ -124,7 +124,7 @@ public class CoordSet {
     }
 
     public CoordSet toChunkCoords() {
-        return new CoordSet(x >> 4, y >> 4, z >> 4);
+        return copy().asChunkCoords();
     }
 
     public CoordSet asBlockCoords() {
@@ -136,7 +136,7 @@ public class CoordSet {
     }
 
     public CoordSet toBlockCoords() {
-        return new CoordSet(x * 16, y * 16, z * 16);
+        return copy().asBlockCoords();
     }
 
     public CoordSet asSpawnPoint() {

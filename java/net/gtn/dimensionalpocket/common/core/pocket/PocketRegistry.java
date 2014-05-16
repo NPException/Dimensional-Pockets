@@ -45,10 +45,10 @@ public class PocketRegistry {
         return link;
     }
 
-    public static void changePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
+    public static void updatePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null) {
-            DPLogger.severe("No TeleportLink for pocketChunkCoords: " + chunkCoords);
+            DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);
             return;
         }
 
@@ -56,10 +56,10 @@ public class PocketRegistry {
         link.setBlockCoords(newBlockCoords);
     }
 
-    public static void changePocketSpawn(CoordSet chunkCoords, CoordSet spawnSet) {
+    public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnSet) {
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null) {
-            DPLogger.severe("No TeleportLink for pocketChunkCoords: " + chunkCoords);
+            DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);
             return;
         }
 
