@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core;
+package net.gtn.dimensionalpocket.common.core.utils;
 
 import java.io.Serializable;
 

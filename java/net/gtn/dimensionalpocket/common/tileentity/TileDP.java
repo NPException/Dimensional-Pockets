@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import net.gtn.dimensionalpocket.common.core.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileDP extends TileEntity {

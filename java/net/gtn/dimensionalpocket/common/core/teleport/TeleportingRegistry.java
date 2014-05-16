@@ -9,8 +9,10 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.gtn.dimensionalpocket.common.core.CoordSet;
-import net.gtn.dimensionalpocket.common.core.DPLogger;
+import org.apache.commons.lang3.SerializationUtils;
+
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.server.MinecraftServer;
 
 import com.google.gson.Gson;
@@ -23,7 +25,8 @@ public class TeleportingRegistry {
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {}.getType();
+    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
+    }.getType();
 
     // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
@@ -80,9 +83,10 @@ public class TeleportingRegistry {
         try {
             File registryFile = getOrCreateSaveFile();
 
-            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
-            gson.toJson(backLinkMap, backLinkMapType, writer);
+            TeleportLink[] tempArray = backLinkMap.values().toArray(new TeleportLink[0]);
 
+            JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
+            gson.toJson(SerializationUtils.serialize(tempArray), TeleportLink[].class, writer);
         } catch (Exception e) {
             DPLogger.severe(e);
         }
@@ -95,10 +99,14 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
             JsonReader reader = new JsonReader(new FileReader(registryFile));
 
-            backLinkMap = gson.fromJson(reader, backLinkMapType);
+            TeleportLink[] tempArray = gson.fromJson(reader, TeleportLink[].class);
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
+
+            for (TeleportLink link : tempArray){
+                backLinkMap.put(link.getPocketChunkCoords(), link);
+            }
 
             reader.close();
         } catch (Exception e) {

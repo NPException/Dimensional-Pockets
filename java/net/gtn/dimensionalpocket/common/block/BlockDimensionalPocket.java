@@ -3,9 +3,9 @@ package net.gtn.dimensionalpocket.common.block;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;

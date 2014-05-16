@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common.core.teleport;
 
 import java.io.Serializable;
 
-import net.gtn.dimensionalpocket.common.core.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 
 public class TeleportLink implements Serializable {
     private int blockDim;

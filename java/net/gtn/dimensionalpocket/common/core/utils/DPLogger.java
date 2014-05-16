@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core;
+package net.gtn.dimensionalpocket.common.core.utils;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
