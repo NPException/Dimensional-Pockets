@@ -19,14 +19,11 @@ public class BiomeHelper {
                 return false;
             }
         }.setBiomeName("Pocket Dimension").setDisableRain();
+
+        BiomeDictionary.registerBiomeType(pocketBiome, Type.MAGICAL);
     }
 
     public static BiomeGenBase getPocketBiome() {
         return pocketBiome;
     }
-
-    public static void registerAll() {
-        BiomeDictionary.registerBiomeType(pocketBiome, Type.MAGICAL);
-    }
-
 }

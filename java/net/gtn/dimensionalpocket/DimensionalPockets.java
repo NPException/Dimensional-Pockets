@@ -57,14 +57,12 @@ public class DimensionalPockets {
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
         BiomeHelper.init();
-
-        BiomeHelper.registerAll();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
     }
-    
+
     @EventHandler
     public void onServerStarted(FMLServerStartingEvent event) {
         TeleportingRegistry.loadBackLinkMap();

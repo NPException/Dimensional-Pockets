@@ -26,16 +26,16 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 
 public class TeleportingRegistry {
-    
+
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
-    
-    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {}.getType();
-    
+
+    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
+    }.getType();
 
     private static final int MAX_HEIGHT = 16;
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
-    
+
     public static TeleportLink getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
         return backLinkMap.get(pocketChunkCoords);
     }
@@ -47,14 +47,14 @@ public class TeleportingRegistry {
             // We don't need that, we are just giving out the coordsets in one line.
             // I don't think there will ever be enough pockets on a server to reach
             // the "jittery" coordinate range in that dimension
-//            if (currentChunk.getX() % MAX_HEIGHT == 0) {
-//                currentChunk.setX(0);
-//                currentChunk.addZ(1);
-//                if (currentChunk.getZ() % MAX_HEIGHT == 0)
-//                    currentChunk.setZ(0);
-//            }
+            // if (currentChunk.getX() % MAX_HEIGHT == 0) {
+            // currentChunk.setX(0);
+            // currentChunk.addZ(1);
+            // if (currentChunk.getZ() % MAX_HEIGHT == 0)
+            // currentChunk.setZ(0);
+            // }
         }
-        
+
         TeleportLink link = new TeleportLink(dimID, coordSet, currentChunk.copy());
         backLinkMap.put(link.getPocketChunkCoords(), link);
 
@@ -63,7 +63,7 @@ public class TeleportingRegistry {
 
         return link.getPocketChunkCoords();
     }
-    
+
     public static void changeTeleportLink(CoordSet pocketChunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
         TeleportLink link = backLinkMap.get(pocketChunkCoords);
         if (link == null) {
@@ -72,17 +72,17 @@ public class TeleportingRegistry {
         link.setBlockDim(newBlockDimID);
         link.setBlockCoords(newBlockCoords);
     }
-    
+
     private static File getOrCreateSaveFile() throws IOException {
         MinecraftServer server = MinecraftServer.getServer();
         StringBuilder filename = new StringBuilder();
-        
-        if (server.isSinglePlayer()) {
+
+        if (server.isSinglePlayer())
             filename.append("saves/");
-        }
+
         filename.append(server.getWorldName());
-        filename.append("/dimpockets/teleportregistry.json");
-        
+        filename.append("/dimpockets/teleportRegistry.json");
+
         File savefile = server.getFile(filename.toString());
         if (!savefile.exists()) {
             savefile.getParentFile().mkdirs();
@@ -90,33 +90,34 @@ public class TeleportingRegistry {
         }
         return savefile;
     }
-    
+
     public static void persistBackLinkMap() {
 //        Gson gson = new Gson();
-//        
+//
 //        try {
 //            File registryFile = getOrCreateSaveFile();
 //
 //            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
-//            gson.toJson(backLinkMap,backLinkMapType, writer);
+//            gson.toJson(backLinkMap, backLinkMapType, writer);
 //            writer.close();
 //        } catch (IOException e) {
 //            DPLogger.severe(e);
 //        }
     }
-    
+
     public static void loadBackLinkMap() {
-//        Gson gson = new Gson();
-//        
-//        try {
-//            File registryFile = getOrCreateSaveFile();
-//            JsonReader reader = new JsonReader(new FileReader(registryFile));
-//            backLinkMap = gson.fromJson(reader,backLinkMapType);
-//            if (backLinkMap == null) {
-//                backLinkMap = new HashMap<CoordSet, TeleportLink>();
-//            }
-//        } catch (IOException e) {
-//            DPLogger.severe(e);
-//        }
+        DPLogger.info("");
+        // Gson gson = new Gson();
+        //
+        // try {
+        // File registryFile = getOrCreateSaveFile();
+        // JsonReader reader = new JsonReader(new FileReader(registryFile));
+        // backLinkMap = gson.fromJson(reader,backLinkMapType);
+        // if (backLinkMap == null) {
+        // backLinkMap = new HashMap<CoordSet, TeleportLink>();
+        // }
+        // } catch (IOException e) {
+        // DPLogger.severe(e);
+        // }
     }
 }
