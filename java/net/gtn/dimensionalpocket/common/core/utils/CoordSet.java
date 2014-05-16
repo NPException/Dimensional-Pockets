@@ -115,7 +115,7 @@ public class CoordSet {
         return new CoordSet(x, y, z);
     }
 
-    public CoordSet asChunkCoords() {
+    public CoordSet toChunkCoords() {
         int newX = x / 16;
         if (x < 0)
             newX -= 1;
@@ -125,5 +125,13 @@ public class CoordSet {
             newZ -= 1;
 
         return new CoordSet(newX, y / 16, newZ);
+    }
+
+    public CoordSet toBlockCoordS() {
+        int newX = x * 16;
+        int newY = y * 16;
+        int newZ = z * 16;
+
+        return new CoordSet(newX, newY, newZ);
     }
 }

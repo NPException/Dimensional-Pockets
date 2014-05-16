@@ -85,13 +85,22 @@ public class Pocket implements Serializable {
 
         int dimID = player.dimension;
 
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, chunkCoords, TeleportType.INWARD);
+        chunkCoords.
+        
+        if (teleportType == TeleportType.INWARD) {
+            posX = (posX * 16) + 8;
+            posY = (posY * 16);
+            posZ = (posZ * 16) + 8;
+        }
+        
+        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, spawnSet, TeleportType.INWARD);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
 
+        generatePocket(player.worldObj);
         return true;
     }
 

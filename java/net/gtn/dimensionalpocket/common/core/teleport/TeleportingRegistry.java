@@ -35,7 +35,7 @@ public class TeleportingRegistry {
         return null;
     }
 
-    public static Pocket genNewTeleportLink(int dimID, CoordSet coordSet) {
+    public static Pocket generateNewPocket(int dimID, CoordSet coordSet) {
         if (currentChunk.getY() == 16)
             currentChunk.setY(0).addX(1);
 
@@ -44,11 +44,10 @@ public class TeleportingRegistry {
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
-
         return link;
     }
 
-    public static void changeTeleportLink(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
+    public static void changePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null)
             DPLogger.severe("No TeleportLink for pocketChunkCoords: " + chunkCoords);

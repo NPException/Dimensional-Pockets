@@ -39,7 +39,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void generateNewPocket() {
         if (hasPocket())
             return;
-        pocket = TeleportingRegistry.genNewTeleportLink(worldObj.provider.dimensionId, getCoordSet());
+        pocket = TeleportingRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet());
     }
 
     public boolean hasPocket() {

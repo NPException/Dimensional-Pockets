@@ -33,28 +33,7 @@ public class PocketTeleporter extends Teleporter {
         double posY = targetSet.getY();
         double posZ = targetSet.getZ();
 
-        // Converting from chunk to blocks.
-        if (teleportType == TeleportType.INWARD) {
-            posX = (posX * 16) + 8;
-            posY = (posY * 16);
-            posZ = (posZ * 16) + 8;
-        }
-
         CoordSet airSet = new CoordSet(posX, posY + 1, posZ);
-
-        // int index = 0;
-        // while (!(isAirBlocks(world, airSet))) {
-        // CoordSet additionSet = getRelativeTries(index++);
-        // // if (additionSet == null) {
-        // // teleportType = TeleportType.REBOUND;
-        // // }
-        // airSet.addCoordSet(additionSet);
-        // }
-
-        // if (teleportType == TeleportType.REBOUND) {
-        // DPLogger.info("REBOUND");
-        // return;
-        // }
 
         player.playerNetServerHandler.setPlayerLocation(airSet.getX() + 0.5F, airSet.getY(), airSet.getZ() + 0.5F, player.rotationYaw, player.rotationPitch);
     }

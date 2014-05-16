@@ -35,7 +35,6 @@ public class BlockDimensionalPocket extends BlockDP {
                     tile.generateNewPocket();
 
                 Pocket pocket = tile.getPocket();
-                pocket.generatePocket(MinecraftServer.getServer().getEntityWorld());
                 pocket.teleportTo(player);
             }
         }
@@ -54,7 +53,7 @@ public class BlockDimensionalPocket extends BlockDP {
             tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
 
             if (tile.hasPocket())
-                TeleportingRegistry.changeTeleportLink(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
+                TeleportingRegistry.changePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
         }
     }
 
