@@ -55,6 +55,8 @@ public class DimensionalPockets {
 
         ModBlocks.init();
         ModItems.init();
+
+        ModItems.initRecipes();
     }
 
     @EventHandler
