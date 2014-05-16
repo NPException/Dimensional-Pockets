@@ -99,32 +99,30 @@ public class TeleportingRegistry {
         try {
             File registryFile = getOrCreateSaveFile();
 
+            String jsonFile = gson.toJson(backLinkMap);
+            
             JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
             gson.toJson(backLinkMap, backLinkMapType, writer);
             writer.close();
+            
         } catch (IOException e) {
             DPLogger.severe(e);
         }
     }
 
     public static void loadBackLinkMap() {
-        File registryFile = null;
-        try {
-            registryFile = getOrCreateSaveFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (registryFile != null)
-            DPLogger.info(registryFile.toPath());
         Gson gson = new Gson();
 
         try {
             File registryFile = getOrCreateSaveFile();
+            if (registryFile != null)
+                DPLogger.info(registryFile.toPath());
             JsonReader reader = new JsonReader(new FileReader(registryFile));
             backLinkMap = gson.fromJson(reader, backLinkMapType);
-            if (backLinkMap == null) {
+
+            if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
-            }
+
         } catch (IOException e) {
             DPLogger.severe(e);
         }
