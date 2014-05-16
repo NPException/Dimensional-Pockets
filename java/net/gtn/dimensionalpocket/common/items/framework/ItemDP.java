@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.items.framework;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
@@ -11,6 +12,7 @@ public abstract class ItemDP extends Item {
 
     public ItemDP(String name) {
         setUnlocalizedName(name);
+        setCreativeTab(DimensionalPockets.creativeTab);
         register(name);
     }
 

@@ -29,7 +29,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (!world.isRemote) {
             if (player.dimension != Reference.DIMENSION_ID)
                 return true;
-            
+
             PocketDimensionHelper.teleportPlayerFromPocket(player, new CoordSet(x, y, z));
         }
 

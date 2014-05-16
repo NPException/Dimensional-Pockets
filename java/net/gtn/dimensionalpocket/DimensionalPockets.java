@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket;
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
@@ -47,6 +48,7 @@ public class DimensionalPockets {
     public void preInit(FMLPreInitializationEvent event) {
         DPLogger.init();
         ModBlocks.init();
+        ModItems.init();
     }
 
     @EventHandler

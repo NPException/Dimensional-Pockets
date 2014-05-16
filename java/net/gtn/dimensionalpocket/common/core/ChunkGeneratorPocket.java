@@ -42,37 +42,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     @Override
     public Chunk provideChunk(int x, int z) {
-        Chunk chunk = new Chunk(worldObj, new Block[]{}, new byte[]{}, x, z);
-
-//        Block[] tempArray = baseArray.clone();
-//
-//        for (int i = 0; i < 16; i++) {
-//            for (int j = 0; j < 16; j++) {
-//                for (int k = 0; k <= 255; k++) {
-//                    if (!(i == 0 || i == 15 || j == 0 || j == 15 || (k % 16) == 0 || (k % 16) == 15)) {
-//                        continue;
-//                    }
-//                    
-//                    int l = k >> 4;
-//                    ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
-//
-//                    if (extendedBlockStorage == null) {
-//                        extendedBlockStorage = new ExtendedBlockStorage(k, !worldObj.provider.hasNoSky);
-//                        chunk.getBlockStorageArray()[l] = extendedBlockStorage;
-//                    }
-//
-//                    Block block = ModBlocks.dimensionalPocketFrame;
-//
-//                    tempArray[((i * 16 + j) * 256 + k)] = block;
-//
-//                    extendedBlockStorage.setExtSkylightValue(i, k & 0x0F, j, 1);
-//                    extendedBlockStorage.func_150818_a(i, k & 0x0F, j, block);
-//                    extendedBlockStorage.setExtBlockMetadata(i, k & 0x0F, j, 0);
-//                }
-//            }
-//        }
-//
-//        chunk.generateSkylightMap();
+        Chunk chunk = new Chunk(worldObj, new Block[] {}, new byte[] {}, x, z);
 
         byte[] byteArray = new byte[256];
         Arrays.fill(byteArray, (byte) BiomeHelper.getPocketBiome().biomeID);

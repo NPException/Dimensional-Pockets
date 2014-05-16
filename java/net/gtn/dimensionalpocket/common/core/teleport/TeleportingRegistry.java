@@ -23,7 +23,7 @@ public class TeleportingRegistry {
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-    private static Type backLinkMapType = new TypeToken<HashMap<CoordSet, TeleportLink>>() {
+    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
     }.getType();
 
     private static final int MAX_HEIGHT = 16;
@@ -81,7 +81,7 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
 
             JsonWriter writer = new JsonWriter(new BufferedWriter(new FileWriter(registryFile)));
-            gson.toJson(backLinkMap, backLinkMapType.getClass(), writer);
+            gson.toJson(backLinkMap, backLinkMap.getClass(), writer);
 
         } catch (Exception e) {
             DPLogger.severe(e);
@@ -95,7 +95,7 @@ public class TeleportingRegistry {
             File registryFile = getOrCreateSaveFile();
             JsonReader reader = new JsonReader(new FileReader(registryFile));
 
-            backLinkMap = gson.fromJson(reader, backLinkMapType.getClass());
+            backLinkMap = gson.fromJson(reader, backLinkMap.getClass());
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();

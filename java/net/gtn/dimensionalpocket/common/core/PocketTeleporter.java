@@ -33,7 +33,7 @@ public class PocketTeleporter extends Teleporter {
             posZ = posZ * 16 + 8;
         }
         
-        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY+1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
+        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY + 1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
 
 }
