@@ -23,10 +23,8 @@ import com.google.gson.stream.JsonWriter;
 
 public class TeleportingRegistry {
 
-    // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
-    // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
     public static Pocket getPocket(CoordSet chunkCoords) {
@@ -44,6 +42,7 @@ public class TeleportingRegistry {
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
+        DPLogger.info(currentChunk);
         return link;
     }
 

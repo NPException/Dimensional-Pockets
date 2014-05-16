@@ -2,8 +2,11 @@ package net.gtn.dimensionalpocket.common.core.teleport;
 
 import java.io.Serializable;
 
+import cpw.mods.fml.client.ExtendedServerListData;
+
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -80,9 +83,12 @@ public class Pocket implements Serializable {
 
         int dimID = player.dimension;
 
-        chunkCoords.toBlockCoords().addCoordSet(spawnSet);
+        CoordSet tempSet = chunkCoords.copy();
 
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, spawnSet);
+        tempSet.toBlockCoords();
+        tempSet.addCoordSet(spawnSet);
+
+        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);

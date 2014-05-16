@@ -32,7 +32,7 @@ public class TeleportingConfig {
         if (server.isSinglePlayer())
             pathName.append("saves/");
 
-        pathName.append(server.getWorldName());
+        pathName.append(server.getFolderName());
         pathName.append("/dimpockets/");
         pathName.append(fileName);
         pathName.append(".json");
