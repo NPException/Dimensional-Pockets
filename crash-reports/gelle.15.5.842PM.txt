@@ -1,0 +1,126 @@
+---- Minecraft Crash Report ----
+// Oh - I know what I did wrong!
+
+Time: 5/15/14 8:37 PM
+Description: Invalid Biome id
+
+java.lang.NullPointerException: Invalid Biome id
+	at net.minecraft.world.biome.WorldChunkManager.getRainfall(WorldChunkManager.java:88)
+	at net.minecraft.world.biome.BiomeCache$Block.<init>(BiomeCache.java:109)
+	at net.minecraft.world.biome.BiomeCache.getBiomeCacheBlock(BiomeCache.java:39)
+	at net.minecraft.world.biome.BiomeCache.getBiomeGenAt(BiomeCache.java:53)
+	at net.minecraft.world.biome.WorldChunkManager.getBiomeGenAt(WorldChunkManager.java:67)
+	at net.minecraft.world.chunk.Chunk.getBiomeGenForWorldCoords(Chunk.java:1411)
+	at net.minecraft.world.World.getBiomeGenForCoordsBody(World.java:182)
+	at net.minecraft.world.WorldProvider.getBiomeGenForCoords(WorldProvider.java:427)
+	at net.minecraft.world.World.getBiomeGenForCoords(World.java:171)
+	at net.minecraftforge.client.ForgeHooksClient.getSkyBlendColour(ForgeHooksClient.java:394)
+	at net.minecraft.world.World.getSkyColorBody(World.java:1752)
+	at net.minecraft.world.WorldProvider.getSkyColor(WorldProvider.java:438)
+	at net.minecraft.world.World.getSkyColor(World.java:1730)
+	at net.minecraft.client.renderer.EntityRenderer.updateFogColor(EntityRenderer.java:1748)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1226)
+	at net.minecraft.client.renderer.EntityRenderer.updateCameraAndRender(EntityRenderer.java:1094)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1022)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:910)
+	at net.minecraft.client.main.Main.main(Main.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:134)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.world.biome.WorldChunkManager.getRainfall(WorldChunkManager.java:88)
+
+-- DownfallBlock --
+Details:
+	biome id: 2
+	downfalls[] size: 256
+	x: 0
+	z: 0
+	w: 16
+	h: 16
+Stacktrace:
+	at net.minecraft.world.biome.WorldChunkManager.getRainfall(WorldChunkManager.java:88)
+	at net.minecraft.world.biome.BiomeCache$Block.<init>(BiomeCache.java:109)
+	at net.minecraft.world.biome.BiomeCache.getBiomeCacheBlock(BiomeCache.java:39)
+	at net.minecraft.world.biome.BiomeCache.getBiomeGenAt(BiomeCache.java:53)
+	at net.minecraft.world.biome.WorldChunkManager.getBiomeGenAt(WorldChunkManager.java:67)
+	at net.minecraft.world.chunk.Chunk.getBiomeGenForWorldCoords(Chunk.java:1411)
+
+-- Coordinates of biome request --
+Details:
+	Location: World: (59,0,229), Chunk: (at 11,0,5 in 3,14; contains blocks 48,0,224 to 63,255,239), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+Stacktrace:
+	at net.minecraft.world.World.getBiomeGenForCoordsBody(World.java:182)
+	at net.minecraft.world.WorldProvider.getBiomeGenForCoords(WorldProvider.java:427)
+	at net.minecraft.world.World.getBiomeGenForCoords(World.java:171)
+	at net.minecraftforge.client.ForgeHooksClient.getSkyBlendColour(ForgeHooksClient.java:394)
+	at net.minecraft.world.World.getSkyColorBody(World.java:1752)
+	at net.minecraft.world.WorldProvider.getSkyColor(WorldProvider.java:438)
+	at net.minecraft.world.World.getSkyColor(World.java:1730)
+	at net.minecraft.client.renderer.EntityRenderer.updateFogColor(EntityRenderer.java:1748)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1226)
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 1 total; [EntityClientPlayerMP['Player671'/119, l='MpServer', x=85.50, y=66.62, z=255.50]]
+	Chunk stats: MultiplayerChunkCache: 0, 0
+	Level seed: 0
+	Level generator: ID 00 - default, ver 1. Features enabled: false
+	Level generator options: 
+	Level spawn location: World: (8,64,8), Chunk: (at 8,4,8 in 0,0; contains blocks 0,0,0 to 15,255,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 1 game time, 1 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: survival (ID 0). Hardcore: false. Cheats: false
+	Forced entities: 1 total; [EntityClientPlayerMP['Player671'/119, l='MpServer', x=85.50, y=66.62, z=255.50]]
+	Retry entities: 0 total; []
+	Server brand: fml,forge
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:412)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2521)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:932)
+	at net.minecraft.client.main.Main.main(Main.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:134)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.2
+	Operating System: Windows 8.1 (amd64) version 6.3
+	Java Version: 1.7.0_55, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 953991560 bytes (909 MB) / 1056309248 bytes (1007 MB) up to 1056309248 bytes (1007 MB)
+	JVM Flags: 3 total; -Xincgc -Xmx1024M -Xms1024M
+	AABB Pool Size: 10007 (560392 bytes; 0 MB) allocated, 10007 (560392 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 118
+	FML: MCP v9.01-pre FML v7.2.156.1060 Minecraft Forge 10.12.1.1060 4 mods loaded, 4 mods active
+	mcp{8.09} [Minecraft Coder Pack] (minecraft.jar) Unloaded->Constructed->Pre-initialized->Initialized->Post-initialized->Available->Available->Available->Available
+	FML{7.2.156.1060} [Forge Mod Loader] (forgeSrc-1.7.2-10.12.1.1060.jar) Unloaded->Constructed->Pre-initialized->Initialized->Post-initialized->Available->Available->Available->Available
+	Forge{10.12.1.1060} [Minecraft Forge] (forgeSrc-1.7.2-10.12.1.1060.jar) Unloaded->Constructed->Pre-initialized->Initialized->Post-initialized->Available->Available->Available->Available
+	dimensionalPockets{1.0} [Dimensional Pockets] (bin) Unloaded->Constructed->Pre-initialized->Initialized->Post-initialized->Available->Available->Available->Available
+	Launched Version: 1.6
+	LWJGL: 2.9.0
+	OpenGL: Intel(R) HD Graphics GL version 4.0.0 - Build 10.18.10.3412, Intel
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
+	Type: Client (map_client.txt)
+	Resource Packs: []
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 22 (1232 bytes; 0 MB) allocated, 22 (1232 bytes; 0 MB) used
+	Anisotropic Filtering: Off (1)
