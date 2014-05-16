@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -49,10 +50,8 @@ public class PocketDimensionHelper {
      * @param chunkSet
      */
     private static void generatePocketIfNecessary(World world, CoordSet chunkSet) {
-
-        if (world.getBlock(chunkSet.getX() * 16, chunkSet.getY() * 16, chunkSet.getZ() * 16) == ModBlocks.dimensionalPocketFrame) {
+        if (world.getBlock((chunkSet.getX() * 16) + 1, chunkSet.getY() * 16, (chunkSet.getZ() * 16) + 1) == ModBlocks.dimensionalPocketFrame)
             return;
-        }
 
         int worldX = chunkSet.getX() * 16;
         int worldY = chunkSet.getY() * 16;
@@ -69,9 +68,7 @@ public class PocketDimensionHelper {
         }
 
         // FULL GEN AVERAGE TIME: 505052.3125 nanoSeconds
-        
-        DPLogger.info("Starting For CUSTOM GEN");
-        long systemTime = System.nanoTime();
+        // EDGED GEN AVERAGE TIME: 318491.4375 nanoSeconds
 
         for (int x = 0; x < 16; x++) {
             for (int y = 0; y < 16; y++) {
@@ -80,10 +77,8 @@ public class PocketDimensionHelper {
                     boolean flagY = y == 0 || y == 15;
                     boolean flagZ = z == 0 || z == 15;
 
-                    if (!(flagX || flagY || flagZ))
-                        continue;
-
-                    if ((flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
+                    // Made these flags, so I could add these checks, almost halves it in time.
+                    if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
                     extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
@@ -95,8 +90,6 @@ public class PocketDimensionHelper {
                 }
             }
         }
-
-        DPLogger.info("Time to gen chunk: " + (System.nanoTime() - systemTime));
     }
 
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {
@@ -113,10 +106,8 @@ public class PocketDimensionHelper {
 
         TeleportLink link = TeleportingRegistry.getLinkForPocketChunkCoords(frameCoords.copyDividedBy16());
 
-        if (link == null) {
-            DPLogger.severe("OH SHIT SON");
+        if (link == null)
             return;
-        }
 
         int dimID = link.getBlockDim();
 

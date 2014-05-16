@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -12,8 +14,14 @@ public class WorldProviderPocket extends WorldProvider {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public boolean getWorldHasVoidParticles() {
+        return false;
+    }
+
+    @Override
     public boolean canRespawnHere() {
-        return true;
+        return false;
     }
 
     @Override

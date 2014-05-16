@@ -7,6 +7,7 @@ import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
+import net.gtn.dimensionalpocket.common.core.config.ConfigHandler;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.creativetab.CreativeTabs;
@@ -47,6 +48,9 @@ public class DimensionalPockets {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         DPLogger.init();
+
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
+
         ModBlocks.init();
         ModItems.init();
     }

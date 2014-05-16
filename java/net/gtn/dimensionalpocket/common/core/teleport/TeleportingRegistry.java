@@ -23,10 +23,8 @@ public class TeleportingRegistry {
     // map of the format <dimensionalPocketCoords, link>
     private static Map<CoordSet, TeleportLink> backLinkMap = new HashMap<CoordSet, TeleportLink>();
 
-    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {
-    }.getType();
+    private static Type backLinkMapType = new TypeToken<Map<CoordSet, TeleportLink>>() {}.getType();
 
-    private static final int MAX_HEIGHT = 16;
     // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
@@ -35,7 +33,7 @@ public class TeleportingRegistry {
     }
 
     public static CoordSet genNewTeleportLink(int dimID, CoordSet coordSet) {
-        if (currentChunk.getY() == MAX_HEIGHT)
+        if (currentChunk.getY() == 16)
             currentChunk.setY(0).addX(1);
 
         TeleportLink link = new TeleportLink(dimID, coordSet, currentChunk.copy());

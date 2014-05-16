@@ -104,10 +104,10 @@ public class CoordSet {
     }
 
     public CoordSet copy() {
-        return new CoordSet(x,y,z);
+        return new CoordSet(x, y, z);
     }
-    
+
     public CoordSet copyDividedBy16() {
-        return new CoordSet(x/16,y/16,z/16);
+        return new CoordSet(x / 16, y / 16, z / 16);
     }
 }

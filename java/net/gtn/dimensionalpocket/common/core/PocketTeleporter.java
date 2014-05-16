@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.core;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.Teleporter;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class PocketTeleporter extends Teleporter {
@@ -22,6 +23,7 @@ public class PocketTeleporter extends Teleporter {
         if (! (entity instanceof EntityPlayerMP)) return;
         
         EntityPlayerMP player = (EntityPlayerMP) entity;
+        World world = player.worldObj;
         
         double posX = targetSet.getX();
         double posY = targetSet.getY();

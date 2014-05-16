@@ -26,6 +26,7 @@ TODO
 - ~~The code for populating the chunk lies in ChunkGeneratorPocket.provideChunk(int x, int z);~~
 - Done. Just generating rooms as needed. Creating a room takes below 1ms on my machine. - NPE
  - also fixed an anoying bug
+ - Also added a line of checks, makes the gen time half.
 
 ### Book thingy, for information on how to use the mod.
 - Nox, I've started making a book or ItemInfoTool, I think.
