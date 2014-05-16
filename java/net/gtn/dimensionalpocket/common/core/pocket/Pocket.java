@@ -14,9 +14,13 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
@@ -110,13 +114,20 @@ public class Pocket {
             return false;
 
         int dimID = pocket.getBlockDim();
-
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
-
-        if (dimID != Reference.DIMENSION_ID)
-            PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);
-        else
-            teleporter.placeInPortal(player, 0, 0, 0, 0);
+        
+        if (isSourceBlockPlaced(dimID, blockCoords)) {
+            PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
+    
+            if (dimID != Reference.DIMENSION_ID)
+                PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);
+            else
+                teleporter.placeInPortal(player, 0, 0, 0, 0);
+        
+        } else {
+            ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped");
+            comp.getChatStyle().setItalic(true);
+            entityPlayer.addChatMessage(comp);
+        }
 
         return true;
     }

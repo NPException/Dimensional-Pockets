@@ -4,3 +4,5 @@ tile.dimensionalPocket.name=Dimensional Pocket
 tile.dimensionalPocketFrame.name=Outside Of The Block
 
 item.infoTool.name=Guide To Dimensional Pockets
+
+info.trapped=You're trapped! Maybe someone broke the Dimensional Pocket...
