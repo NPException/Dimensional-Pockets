@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core;
+package net.gtn.dimensionalpocket.common.core.teleport;
 
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -38,7 +38,7 @@ public class PocketTeleporter extends Teleporter {
         double posY = targetSet.getY();
         double posZ = targetSet.getZ();
 
-        if (teleportType == TeleportType.INTERNAL) {
+        if (teleportType == TeleportType.INTERNAL || teleportType == TeleportType.INWARD) {
             posX = (posX * 16) + 7.5F;
             posY = (posY * 16);
             posZ = (posZ * 16) + 7.5F;
@@ -66,6 +66,6 @@ public class PocketTeleporter extends Teleporter {
     }
 
     public static enum TeleportType {
-        INTERNAL, OUTWARD;
+        INTERNAL, EXTERNAL, INWARD, OUTWARD;
     }
 }

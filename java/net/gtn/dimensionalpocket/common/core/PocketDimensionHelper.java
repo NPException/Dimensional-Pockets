@@ -3,9 +3,10 @@ package net.gtn.dimensionalpocket.common.core;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
-import net.gtn.dimensionalpocket.common.core.PocketTeleporter.TeleportType;
+import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportLink;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
+import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter.TeleportType;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -29,9 +30,11 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
 
-        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, TeleportType.INTERNAL);
+        boolean flag = dimID != Reference.DIMENSION_ID;
 
-        if (dimID != Reference.DIMENSION_ID) {
+        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, flag ? TeleportType.INWARD : TeleportType.INTERNAL);
+
+        if (flag) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         } else {
             teleporter.placeInPortal(player, 0, 0, 0, 0);
