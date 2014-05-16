@@ -29,9 +29,11 @@ public class PocketDimensionHelper {
 
         int dimID = player.dimension;
 
-        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, TeleportType.INWARD);
+        boolean flag = dimID != Reference.DIMENSION_ID;
 
-        if (dimID != Reference.DIMENSION_ID) {
+        PocketTeleporter teleporter = createTeleporter(dimID, chunkSet, flag ? TeleportType.INWARD : TeleportType.INTERNAL);
+
+        if (flag) {
             transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         } else {
             teleporter.placeInPortal(player, 0, 0, 0, 0);
@@ -111,9 +113,11 @@ public class PocketDimensionHelper {
 
         int dimID = link.getBlockDim();
 
-        PocketTeleporter teleporter = createTeleporter(dimID, link.getBlockCoords(), TeleportType.OUTWARD);
+        boolean flag = dimID != Reference.DIMENSION_ID;
 
-        if (dimID != Reference.DIMENSION_ID) {
+        PocketTeleporter teleporter = createTeleporter(dimID, link.getBlockCoords(), flag ? TeleportType.OUTWARD : TeleportType.INTERNAL);
+
+        if (flag) {
             transferPlayerToDimension(player, dimID, teleporter);
         } else {
             teleporter.placeInPortal(player, 0, 0, 0, 0);

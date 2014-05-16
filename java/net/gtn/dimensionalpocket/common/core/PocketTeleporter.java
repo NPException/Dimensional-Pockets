@@ -21,29 +21,36 @@ public class PocketTeleporter extends Teleporter {
 
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
-
+        DPLogger.info(teleportType);
+        DPLogger.info(targetSet);
         if (!(entity instanceof EntityPlayerMP))
             return;
 
         EntityPlayerMP player = (EntityPlayerMP) entity;
         World world = player.worldObj;
 
-        int index = 0;
+        if (teleportType.isInternalBlock()) {
+            int index = 0;
 
-        while (!(isAirBlocks(world, targetSet)))
-            targetSet.addCoordSet(getRelativeTries(index++));
+            while (!(isAirBlocks(world, targetSet)))
+                targetSet.addCoordSet(getRelativeTries(index++));
+        }
 
         double posX = targetSet.getX();
-        double posY = targetSet.getY() + 1;
+        double posY = targetSet.getY();
         double posZ = targetSet.getZ();
 
-        if (teleportType.isInward()) {
+        if (!(teleportType.isOutward())) {
             posX = posX * 16 + 8;
-            posY = (posY * 16) + 1;
+            posY = posY * 16;
             posZ = posZ * 16 + 8;
         }
 
-        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY, posZ + 0.5, player.rotationYaw, player.rotationPitch);
+        DPLogger.info(posX);
+        DPLogger.info(posY);
+        DPLogger.info(posZ);
+
+        player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY + 1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
 
     private boolean isAirBlocks(World world, CoordSet airSet) {
@@ -77,7 +84,7 @@ public class PocketTeleporter extends Teleporter {
             this.type = type;
         }
 
-        public boolean isInternal() {
+        public boolean isInternalBlock() {
             return type == 0;
         }
 
@@ -87,6 +94,11 @@ public class PocketTeleporter extends Teleporter {
 
         public boolean isInward() {
             return type == 2;
+        }
+
+        @Override
+        public String toString() {
+            return type == 0 ? "[Internal]" : type == 1 ? "[Outward]" : "[Inward]";
         }
 
     }
