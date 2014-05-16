@@ -1,9 +1,11 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
+import net.gtn.dimensionalpocket.common.core.teleport.Pocket.SideState;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -39,7 +41,10 @@ public class BlockDimensionalPocket extends BlockDP {
                     tile.generateNewPocket();
 
                 Pocket pocket = tile.getPocket();
-//                pocket.teleportTo(player);
+                // pocket.teleportTo(player);
+                Map<ForgeDirection, SideState> sideMap = pocket.getSideMap();
+                for (SideState sideState : sideMap.values())
+                    DPLogger.info(sideState.getRedstoneStrength());
             }
         }
         return true;
@@ -75,22 +80,9 @@ public class BlockDimensionalPocket extends BlockDP {
         return super.isProvidingWeakPower(world, x, y, z, side);
     }
 
-    /**
-     * It's passed it's own coords, that's annoying.
-     */
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-
-        if (tileEntity instanceof TileDimensionalPocket) {
-            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            int[] powerLevels = new int[6];
-
-            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
-                powerLevels[dir.ordinal()] = world.getBlockPowerInput(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
-
-            tile.updateRedstoneStates(powerLevels);
-        }
+        
     }
 
     @Override
