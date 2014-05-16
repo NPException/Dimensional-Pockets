@@ -121,17 +121,12 @@ public class TeleportingRegistry {
 
         try {
             File registryFile = getOrCreateSaveFile();
+            JsonReader reader = new JsonReader(new FileReader(registryFile));
 
-            BufferedReader reader = new BufferedReader(new FileReader(registryFile));
-            // backLinkMap = gson.fromJson(reader, backLinkMapType);
-
-            backLinkMap = gson.fromJson(reader, backLinkMap.getClass());
+            backLinkMap = gson.fromJson(reader, backLinkMapType);
 
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, TeleportLink>();
-
-            for (CoordSet coordSet : backLinkMap.keySet())
-                DPLogger.severe(coordSet);
 
             reader.close();
         } catch (IOException e) {
