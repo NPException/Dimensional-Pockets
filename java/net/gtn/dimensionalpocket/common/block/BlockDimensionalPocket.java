@@ -45,20 +45,41 @@ public class BlockDimensionalPocket extends BlockDP {
     }
 
     @Override
-    public int isProvidingStrongPower(IBlockAccess p_149748_1_, int p_149748_2_, int p_149748_3_, int p_149748_4_, int p_149748_5_) {
-        DPLogger.info("Called Strong");
-        return super.isProvidingStrongPower(p_149748_1_, p_149748_2_, p_149748_3_, p_149748_4_, p_149748_5_);
+    public int getComparatorInputOverride(World world, int p_149736_2_, int p_149736_3_, int p_149736_4_, int p_149736_5_) {
+        DPLogger.info("Comparator");
+        return super.getComparatorInputOverride(world, p_149736_2_, p_149736_3_, p_149736_4_, p_149736_5_);
     }
 
     @Override
-    public int isProvidingWeakPower(IBlockAccess p_149709_1_, int p_149709_2_, int p_149709_3_, int p_149709_4_, int p_149709_5_) {
-        DPLogger.info("Called Weak");
-        return super.isProvidingWeakPower(p_149709_1_, p_149709_2_, p_149709_3_, p_149709_4_, p_149709_5_);
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return true;
     }
 
+    @Override
+    public boolean canProvidePower() {
+//        DPLogger.info("Can provide power?");
+        return super.canProvidePower();
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int p_149748_2_, int p_149748_3_, int p_149748_4_, int p_149748_5_) {
+        DPLogger.info("Called Strong");
+        return super.isProvidingStrongPower(world, p_149748_2_, p_149748_3_, p_149748_4_, p_149748_5_);
+    }
+
+    @Override
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        DPLogger.info(side);
+        DPLogger.info("Called Weak");
+        return super.isProvidingWeakPower(world, x, y, z, side);
+    }
+
+    /**
+     * It's passed it's own coords, that's annoying.
+     */
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-
+//        DPLogger.info("Neighbour changed");
     }
 
     @Override
