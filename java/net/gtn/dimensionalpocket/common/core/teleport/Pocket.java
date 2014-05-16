@@ -5,6 +5,7 @@ import java.io.Serializable;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.teleport.PocketTeleporter.TeleportType;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -79,6 +80,7 @@ public class Pocket implements Serializable {
     public boolean teleportTo(EntityPlayer entityPlayer) {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
             return false;
+
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
         int dimID = player.dimension;
@@ -98,7 +100,7 @@ public class Pocket implements Serializable {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.copyDividedBy16());
+        Pocket pocket = TeleportingRegistry.getPocket(chunkCoords.asChunkCoords());
 
         if (pocket == null)
             return false;

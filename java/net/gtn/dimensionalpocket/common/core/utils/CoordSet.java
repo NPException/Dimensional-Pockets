@@ -14,8 +14,8 @@ public class CoordSet {
         this.y = y;
         this.z = z;
     }
-    
-    public CoordSet(double x, double y, double z){
+
+    public CoordSet(double x, double y, double z) {
         this.x = (int) Math.round(x);
         this.y = (int) Math.round(y);
         this.z = (int) Math.round(z);
@@ -115,13 +115,15 @@ public class CoordSet {
         return new CoordSet(x, y, z);
     }
 
-    public CoordSet copyDividedBy16() {
-        int newX = x/16;
-		if (x<0) newX -= 1;
-		
-		int newZ = z/16;
-		if (z<0) newZ -= 1;
-		
-		return new CoordSet(newX, y / 16, newZ);
+    public CoordSet asChunkCoords() {
+        int newX = x / 16;
+        if (x < 0)
+            newX -= 1;
+
+        int newZ = z / 16;
+        if (z < 0)
+            newZ -= 1;
+
+        return new CoordSet(newX, y / 16, newZ);
     }
 }

@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.common.block;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.PocketDimensionHelper;
 import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
 import net.gtn.dimensionalpocket.common.core.teleport.TeleportingRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -12,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -34,7 +34,9 @@ public class BlockDimensionalPocket extends BlockDP {
                 if (!tile.hasPocket())
                     tile.generateNewPocket();
 
-                tile.getPocket().teleportTo(player);
+                Pocket pocket = tile.getPocket();
+                pocket.generatePocket(MinecraftServer.getServer().getEntityWorld());
+                pocket.teleportTo(player);
             }
         }
 
