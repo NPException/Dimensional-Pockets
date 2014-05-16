@@ -21,23 +21,24 @@ public class ModItems {
 
     public static void initRecipes() {
         CraftingManager crafting = CraftingManager.getInstance();
+
         //@formatter:off
         crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), new Object[] { "#N#",
                                                                                          "IDI",
                                                                                          "#E#",
-                                                                                         
+
                                                                                          Character.valueOf('#'),
                                                                                          new ItemStack(Blocks.stonebrick, 1, 3),
-                                                                                      
+
                                                                                          Character.valueOf('I'),
                                                                                          Blocks.iron_block,
-                                                                                      
+
                                                                                          Character.valueOf('D'),
                                                                                          Blocks.diamond_block,
-                                                                                      
+
                                                                                          Character.valueOf('N'),
                                                                                          new ItemStack(ModItems.craftingItems, 1, 1),
-                                                                                      
+
                                                                                          Character.valueOf('E'),
                                                                                          new ItemStack(ModItems.craftingItems, 1, 0)
         });
@@ -45,10 +46,10 @@ public class ModItems {
         crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,1), new Object[] { "TTT",
                                                                                      "TRT",
                                                                                      "TTT",
-                                                                                     
+
                                                                                      Character.valueOf('T'),
                                                                                      Items.ghast_tear,
-                                                                                     
+
                                                                                      Character.valueOf('R'),
                                                                                      Blocks.redstone_block
         });
@@ -56,10 +57,10 @@ public class ModItems {
         crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,0), new Object[] { "EEE",
                                                                                      "EGE",
                                                                                      "EEE",
-                                                                                     
+
                                                                                      Character.valueOf('E'),
                                                                                      Items.ender_eye,
-                                                                                     
+
                                                                                      Character.valueOf('G'),
                                                                                      Blocks.glass
         });

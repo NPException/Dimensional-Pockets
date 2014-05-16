@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
@@ -20,6 +21,12 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setResistance(6000000.0F);
         setLightLevel(1);
         disableStats();
+        setCreativeTab(null);
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
+        return null;
     }
 
     @Override
