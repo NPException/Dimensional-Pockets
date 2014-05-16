@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
@@ -116,6 +119,12 @@ public class Pocket {
             teleporter.placeInPortal(player, 0, 0, 0, 0);
 
         return true;
+    }
+    
+    private boolean isSourceBlockPlaced(int dimID, CoordSet blockCoords) {
+        Block block = MinecraftServer.getServer().worldServerForDimension(dimID).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        
+        return (block instanceof BlockDimensionalPocket);
     }
 
     public int getBlockDim() {
