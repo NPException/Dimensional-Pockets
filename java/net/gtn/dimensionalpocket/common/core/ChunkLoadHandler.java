@@ -81,7 +81,7 @@ public class ChunkLoadHandler implements LoadingCallback {
         ticketMap.remove(ticket);
     }
 
-    public static boolean isChunkLoadedAlready(Pocket pocket, ChunkCoordIntPair pocketPair) {
+    private static boolean isChunkLoadedAlready(Pocket pocket, ChunkCoordIntPair pocketPair) {
         if (ticketMap.containsKey(pocket))
             return true;
 

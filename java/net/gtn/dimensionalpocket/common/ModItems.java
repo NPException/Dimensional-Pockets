@@ -11,6 +11,9 @@ import net.minecraft.item.crafting.CraftingManager;
 
 public class ModItems {
 
+    private static int ENDER_CRYSTAL_META = 0;
+    private static int NETHER_CRYSTAL_META = 1;
+    
     public static Item infoTool;
     public static Item craftingItems;
 
@@ -23,46 +26,49 @@ public class ModItems {
         CraftingManager crafting = CraftingManager.getInstance();
 
         //@formatter:off
-        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), new Object[] { "#N#",
-                                                                                         "IDI",
-                                                                                         "#E#",
+        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
+                new Object[] { "#N#",
+                               "IDI",
+                               "#E#",
 
-                                                                                         Character.valueOf('#'),
-                                                                                         new ItemStack(Blocks.stonebrick, 1, 3),
+                               Character.valueOf('#'),
+                               new ItemStack(Blocks.stonebrick, 1, 3),
 
-                                                                                         Character.valueOf('I'),
-                                                                                         Blocks.iron_block,
+                               Character.valueOf('I'),
+                               Blocks.iron_block,
 
-                                                                                         Character.valueOf('D'),
-                                                                                         Blocks.diamond_block,
+                               Character.valueOf('D'),
+                               Blocks.diamond_block,
 
-                                                                                         Character.valueOf('N'),
-                                                                                         new ItemStack(ModItems.craftingItems, 1, 1),
+                               Character.valueOf('N'),
+                               new ItemStack(ModItems.craftingItems, 1, NETHER_CRYSTAL_META),
 
-                                                                                         Character.valueOf('E'),
-                                                                                         new ItemStack(ModItems.craftingItems, 1, 0)
+                               Character.valueOf('E'),
+                               new ItemStack(ModItems.craftingItems, 1, ENDER_CRYSTAL_META)
         });
         
-        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,1), new Object[] { "TTT",
-                                                                                     "TRT",
-                                                                                     "TTT",
+        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,NETHER_CRYSTAL_META),
+                new Object[] { "TTT",
+                               "TRT",
+                               "TTT",
 
-                                                                                     Character.valueOf('T'),
-                                                                                     Items.ghast_tear,
+                               Character.valueOf('T'),
+                               Items.ghast_tear,
 
-                                                                                     Character.valueOf('R'),
-                                                                                     Blocks.redstone_block
+                               Character.valueOf('R'),
+                               Blocks.redstone_block
         });
         
-        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,0), new Object[] { "EEE",
-                                                                                     "EGE",
-                                                                                     "EEE",
+        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,ENDER_CRYSTAL_META),
+                new Object[] { "EEE",
+                               "EGE",
+                               "EEE",
 
-                                                                                     Character.valueOf('E'),
-                                                                                     Items.ender_eye,
+                               Character.valueOf('E'),
+                               Items.ender_eye,
 
-                                                                                     Character.valueOf('G'),
-                                                                                     Blocks.glass
+                               Character.valueOf('G'),
+                               Blocks.glass
         });
         //@formatter:on
     }
