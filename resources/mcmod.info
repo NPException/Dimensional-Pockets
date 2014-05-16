@@ -2,13 +2,13 @@
 {
   "modid": "dimensionalPocket",
   "name": "Dimensional Pockets",
-  "description": "Example placeholder mod.",
+  "description": "Compacting to a whole new dimension.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authors": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authors": ["Jezza", "NPException", "ASB2", "Gellegbs"],
+  "credits": "The MCP team for hosting an awesome comp, and everyone on the team!",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
