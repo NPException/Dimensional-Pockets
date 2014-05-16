@@ -110,6 +110,8 @@ public class Pocket implements Serializable {
             return false;
 
         int dimID = pocket.getBlockDim();
+        DPLogger.info(dimID);
+        DPLogger.info(pocket.getBlockCoords());
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
 

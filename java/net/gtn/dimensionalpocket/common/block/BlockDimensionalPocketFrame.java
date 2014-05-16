@@ -28,11 +28,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return true;
 
         ItemStack itemStack = player.getCurrentEquippedItem();
-        DPLogger.info(itemStack == null);
-        DPLogger.info(player.isSneaking());
-        if (itemStack == null && player.isSneaking()){
+        if (!player.isSneaking() || itemStack != null)
             return true;
-        }
 
         if (!world.isRemote) {
             if (player.dimension != Reference.DIMENSION_ID)
