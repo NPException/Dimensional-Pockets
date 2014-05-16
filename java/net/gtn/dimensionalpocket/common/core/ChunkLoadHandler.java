@@ -11,6 +11,7 @@ import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -48,7 +49,7 @@ public class ChunkLoadHandler implements LoadingCallback {
         }
     }
 
-    public static void addPocketChunkToLoad(Pocket pocket) {
+    public static void addPocketChunkToLoader(World world, Pocket pocket) {
         if (pocket == null)
             return;
 
@@ -62,6 +63,22 @@ public class ChunkLoadHandler implements LoadingCallback {
         if (ticket == null)
             ticket = ForgeChunkManager.requestTicket(DimensionalPockets.instance, world, ForgeChunkManager.Type.NORMAL);
 
+        if (ticket != null) {
+            NBTTagCompound tag = ticket.getModData();
+            pocket.getChunkCoords().writeToNBT(tag);
+            ForgeChunkManager.forceChunk(ticket, chunkPair);
+        }
+
+        ticketMap.put(pocket, ticket);
+    }
+
+    public static void removePocketChunkFromLoader(Pocket pocket) {
+        if (!ticketMap.containsKey(pocket))
+            return;
+
+        Ticket ticket = ticketMap.get(pocket);
+        ForgeChunkManager.releaseTicket(ticket);
+        ticketMap.remove(ticket);
     }
 
     public static boolean isChunkLoadedAlready(Pocket pocket, ChunkCoordIntPair pocketPair) {

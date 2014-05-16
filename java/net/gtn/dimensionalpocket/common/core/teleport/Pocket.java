@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.core.ChunkLoadHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -66,6 +67,7 @@ public class Pocket implements Serializable {
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
 
+        ChunkLoadHandler.addPocketChunkToLoader(world, this);
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) == ModBlocks.dimensionalPocketFrame;
     }
 
