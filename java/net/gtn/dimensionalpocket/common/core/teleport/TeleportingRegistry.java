@@ -17,6 +17,7 @@ import com.google.gson.stream.JsonWriter;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import net.gtn.dimensionalpocket.common.core.CoordSet;
 import net.gtn.dimensionalpocket.common.core.DPLogger;
@@ -34,6 +35,7 @@ public class TeleportingRegistry {
     }.getType();
 
     private static final int MAX_HEIGHT = 16;
+    // TODO Record this value. We don't want to gen a new set.
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
 
     public static TeleportLink getLinkForPocketChunkCoords(CoordSet pocketChunkCoords) {
@@ -66,9 +68,9 @@ public class TeleportingRegistry {
 
     public static void changeTeleportLink(CoordSet pocketChunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
         TeleportLink link = backLinkMap.get(pocketChunkCoords);
-        if (link == null) {
+        if (link == null)
             DPLogger.severe("No TeleportLink for pocketChunkCoords: " + pocketChunkCoords);
-        }
+
         link.setBlockDim(newBlockDimID);
         link.setBlockCoords(newBlockCoords);
     }
@@ -91,33 +93,40 @@ public class TeleportingRegistry {
         return savefile;
     }
 
-    public static void persistBackLinkMap() {
-//        Gson gson = new Gson();
-//
-//        try {
-//            File registryFile = getOrCreateSaveFile();
-//
-//            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
-//            gson.toJson(backLinkMap, backLinkMapType, writer);
-//            writer.close();
-//        } catch (IOException e) {
-//            DPLogger.severe(e);
-//        }
+    public static void saveBackLinkMap() {
+        Gson gson = new Gson();
+
+        try {
+            File registryFile = getOrCreateSaveFile();
+
+            JsonWriter writer = new JsonWriter(new FileWriter(registryFile));
+            gson.toJson(backLinkMap, backLinkMapType, writer);
+            writer.close();
+        } catch (IOException e) {
+            DPLogger.severe(e);
+        }
     }
 
     public static void loadBackLinkMap() {
-        DPLogger.info("");
-        // Gson gson = new Gson();
-        //
-        // try {
-        // File registryFile = getOrCreateSaveFile();
-        // JsonReader reader = new JsonReader(new FileReader(registryFile));
-        // backLinkMap = gson.fromJson(reader,backLinkMapType);
-        // if (backLinkMap == null) {
-        // backLinkMap = new HashMap<CoordSet, TeleportLink>();
-        // }
-        // } catch (IOException e) {
-        // DPLogger.severe(e);
-        // }
+        File registryFile = null;
+        try {
+            registryFile = getOrCreateSaveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (registryFile != null)
+            DPLogger.info(registryFile.toPath());
+        Gson gson = new Gson();
+
+        try {
+            File registryFile = getOrCreateSaveFile();
+            JsonReader reader = new JsonReader(new FileReader(registryFile));
+            backLinkMap = gson.fromJson(reader, backLinkMapType);
+            if (backLinkMap == null) {
+                backLinkMap = new HashMap<CoordSet, TeleportLink>();
+            }
+        } catch (IOException e) {
+            DPLogger.severe(e);
+        }
     }
 }

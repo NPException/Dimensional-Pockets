@@ -70,6 +70,6 @@ public class DimensionalPockets {
 
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
-        TeleportingRegistry.persistBackLinkMap();
+        TeleportingRegistry.saveBackLinkMap();
     }
 }
