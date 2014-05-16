@@ -21,15 +21,13 @@ public class PocketTeleporter extends Teleporter {
 
     @Override
     public void placeInPortal(Entity entity, double x, double y, double z, float par8) {
-        DPLogger.info(teleportType.getType());
-        DPLogger.info(targetSet);
         if (!(entity instanceof EntityPlayerMP))
             return;
 
         EntityPlayerMP player = (EntityPlayerMP) entity;
         World world = player.worldObj;
 
-        if (teleportType.isInternalInward() || teleportType.isInternalOutward()) {
+        if (teleportType == TeleportType.INTERNAL) {
             int index = 0;
 
             while (!(isAirBlocks(world, targetSet)))
@@ -40,17 +38,11 @@ public class PocketTeleporter extends Teleporter {
         double posY = targetSet.getY();
         double posZ = targetSet.getZ();
 
-        DPLogger.info(teleportType.isInward() || teleportType.isInternalInward());
-        
-        if (teleportType.isInward() || teleportType.isInternalInward()) {
-            posX = (posX * 16) + 8;
+        if (teleportType == TeleportType.INTERNAL) {
+            posX = (posX * 16) + 7.5F;
             posY = (posY * 16);
-            posZ = (posZ * 16) + 8;
+            posZ = (posZ * 16) + 7.5F;
         }
-
-        DPLogger.info(posX + 0.5F);
-        DPLogger.info(posY + 1);
-        DPLogger.info(posZ + 0.5F);
 
         player.playerNetServerHandler.setPlayerLocation(posX + 0.5, posY + 1, posZ + 0.5, player.rotationYaw, player.rotationPitch);
     }
@@ -74,39 +66,6 @@ public class PocketTeleporter extends Teleporter {
     }
 
     public static enum TeleportType {
-        //@formatter:off
-        INTERNAL_INWARD(0),
-        INTERNAL_OUTWARD(1),
-        OUTWARD(2),
-        INWARD(3);
-        //@formatter:on
-
-        int type = 0;
-
-        private TeleportType(int type) {
-            this.type = type;
-        }
-
-        public boolean isInternalInward() {
-            return type == 0;
-        }
-
-        public boolean isInternalOutward() {
-            return type == 1;
-        }
-
-        public boolean isOutward() {
-            return type == 2;
-        }
-
-        public boolean isInward() {
-            return type == 3;
-        }
-        
-        public int getType() {
-            return type;
-        }
-
+        INTERNAL, OUTWARD;
     }
-
 }
