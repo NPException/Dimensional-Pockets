@@ -79,7 +79,7 @@ public class Pocket implements Serializable {
 
         CoordSet tempSet = chunkCoords.copy();
 
-        tempSet.toBlockCoords();
+        tempSet.asBlockCoords();
         tempSet.addCoordSet(spawnSet);
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);

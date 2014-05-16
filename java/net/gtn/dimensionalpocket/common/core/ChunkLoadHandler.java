@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.core.teleport.Pocket;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -33,8 +34,9 @@ public class ChunkLoadHandler implements LoadingCallback {
                         ForgeChunkManager.releaseTicket(ticket);
 
                     ticketMap.put(pocket, ticket);
+
                     CoordSet chunkSet = pocket.getChunkCoords().copy();
-                    ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(par1, par2));
+                    ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ()));
                 } else {
                     ForgeChunkManager.releaseTicket(ticket);
                 }
@@ -45,6 +47,9 @@ public class ChunkLoadHandler implements LoadingCallback {
     public static void addPocketChunkToLoad(Pocket pocket) {
         if (pocket == null)
             return;
+
+        CoordSet chunkSet = pocket.getChunkCoords();
+        ChunkCoordIntPair chunkPair = new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ());
 
     }
 

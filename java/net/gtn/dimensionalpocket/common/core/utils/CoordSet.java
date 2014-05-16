@@ -115,23 +115,27 @@ public class CoordSet {
         return new CoordSet(x, y, z);
     }
 
-    public CoordSet toChunkCoords() {
-        int newX = x / 16;
-        if (x < 0)
-            newX -= 1;
+    public CoordSet asChunkCoords() {
+        x = x >> 4;
+        y = y >> 4;
+        z = z >> 4;
 
-        int newZ = z / 16;
-        if (z < 0)
-            newZ -= 1;
-
-        return new CoordSet(newX, y / 16, newZ);
+        return this;
     }
 
-    public CoordSet toBlockCoords() {
+    public CoordSet toChunkCoords() {
+        return new CoordSet(x >> 4, y >> 4, z >> 4);
+    }
+
+    public CoordSet asBlockCoords() {
         x *= 16;
         y *= 16;
         z *= 16;
 
         return this;
+    }
+
+    public CoordSet toBlockCoords() {
+        return new CoordSet(x * 16, y * 16, z * 16);
     }
 }

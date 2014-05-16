@@ -35,7 +35,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             if (player.dimension != Reference.DIMENSION_ID)
                 return true;
 
-            Pocket pocket = TeleportingRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
+            Pocket pocket = TeleportingRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
                 return true;
 
