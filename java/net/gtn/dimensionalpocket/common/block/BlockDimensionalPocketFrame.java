@@ -50,7 +50,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
                 player.inventory.decrStackSize(player.inventory.currentItem, 1);
             }
-            return true;
+            return false;
         }
 
         if (!player.isSneaking())

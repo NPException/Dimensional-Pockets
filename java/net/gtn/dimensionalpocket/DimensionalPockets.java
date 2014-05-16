@@ -5,7 +5,7 @@ import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
-import net.gtn.dimensionalpocket.common.core.ChunkLoadHandler;
+import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.config.ConfigHandler;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -68,7 +68,7 @@ public class DimensionalPockets {
 
         BiomeHelper.init();
 
-        ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoadHandler());
+        ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
     }
 
     @EventHandler
@@ -83,6 +83,6 @@ public class DimensionalPockets {
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         PocketRegistry.saveData();
-        ChunkLoadHandler.ticketMap.clear();
+        ChunkLoaderHandler.ticketMap.clear();
     }
 }
