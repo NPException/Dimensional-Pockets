@@ -71,11 +71,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     }
 
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
-        return true;
-    }
-
-    @Override
     public boolean renderWithModel() {
         return false;
     }

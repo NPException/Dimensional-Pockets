@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableSet;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -27,19 +28,18 @@ public class ChunkLoaderHandler implements LoadingCallback {
     public void ticketsLoaded(List<Ticket> tickets, World world) {
         for (Ticket ticket : tickets) {
             if (ticket != null) {
-//                CoordSet
-//                    Pocket pocket = tile.getPocket();
-//
-//                    if (ticketMap.containsKey(pocket))
-//                        ForgeChunkManager.releaseTicket(ticket);
-//
-//                    ticketMap.put(pocket, ticket);
-//
-//                    CoordSet chunkSet = pocket.getChunkCoords().copy();
-//                    ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ()));
-//                } else {
-//                    ForgeChunkManager.releaseTicket(ticket);
-//                }
+                CoordSet chunkSet = CoordSet.readFromNBT(ticket.getModData());
+                Pocket pocket = PocketRegistry.getPocket(chunkSet);
+
+                if (pocket != null) {
+                    if (ticketMap.containsKey(pocket))
+                        ForgeChunkManager.releaseTicket(ticket);
+
+                    ticketMap.put(pocket, ticket);
+                    ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ()));
+                } else {
+                    ForgeChunkManager.releaseTicket(ticket);
+                }
             }
         }
     }

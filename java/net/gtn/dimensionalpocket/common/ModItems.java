@@ -32,7 +32,7 @@ public class ModItems {
                                "#E#",
 
                                Character.valueOf('#'),
-                               new ItemStack(Blocks.stonebrick, 1, 3),
+                               new ItemStack(Blocks.stonebrick, 1, 2),
 
                                Character.valueOf('I'),
                                Blocks.iron_block,
