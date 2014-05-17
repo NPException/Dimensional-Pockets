@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.client.particles;
 
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.particle.EntityFX;
@@ -22,19 +23,20 @@ public class PlayerStreamFX extends EntityFX {
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake) {
         super(world, player.posX, player.posY, player.posZ);
         this.finalTargetSet = targetSet.copy();
-
-        y = (targetSet.getY() - player.posY) / 2;
-
         noClip = true;
+
+        x = (targetSet.getX() + 0.5F) + (targetSet.getX() - player.posX);
+        y = (targetSet.getY() + 0.5F) + 1;
+        z = (targetSet.getZ() + 0.5F) + (targetSet.getZ() - player.posZ);
 
         setParticleIcon(ModItems.craftingItems.getIconFromDamage(0));
 
         particleAge = 0;
         particleMaxAge = ticksToTake;
 
-        motionX = ((targetSet.getX() + 0.5F) - player.posX) / ticksToTake;
-        motionY = ((targetSet.getY() + 0.5F) - player.posY) / ticksToTake;
-        motionZ = ((targetSet.getZ() + 0.5F) - player.posZ) / ticksToTake;
+        motionX = (x - player.posX) / ticksToTake;
+        motionY = (y - player.posY) / ticksToTake;
+        motionZ = (z - player.posZ) / ticksToTake;
     }
 
     @Override
@@ -46,11 +48,7 @@ public class PlayerStreamFX extends EntityFX {
         if (this.particleAge++ >= this.particleMaxAge)
             this.setDead();
 
-        // this.motionY -= 0.04D * (double) this.particleGravity;
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
-        // this.motionX *= 0.9800000190734863D;
-        // this.motionY *= 0.9800000190734863D;
-        // this.motionZ *= 0.9800000190734863D;
     }
 
     @Override
