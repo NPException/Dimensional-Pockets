@@ -31,6 +31,7 @@ public class BlockDimensionalPocket extends BlockDP {
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
+        setResistance(15F);
     }
 
     @Override

@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.utils.Colour;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.GuiSheet;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,12 +14,11 @@ import net.minecraft.util.StatCollector;
 
 public class GuiInfoBook extends GuiContainer {
 
-    ItemStack itemStack;
+    private GuiArrow arrow1;
+    private GuiArrow arrow2;
 
-    GuiArrow arrow1;
-    GuiArrow arrow2;
-
-    int currentPage;
+    private int currentPage;
+    private int MAX_NUM;
 
     public GuiInfoBook() {
         super(new Container() {
@@ -32,6 +32,14 @@ public class GuiInfoBook extends GuiContainer {
 
         xSize = 154;
         ySize = 180;
+
+        String num = StatCollector.translateToLocal("info.page.maxPage");
+        try {
+            MAX_NUM = Integer.parseInt(num);
+        } catch (NumberFormatException exception) {
+            DPLogger.severe("Error in current .lang file. Please correct the info.page.maxPage to a proper number.");
+            MAX_NUM = 5;
+        }
     }
 
     @Override
@@ -72,21 +80,15 @@ public class GuiInfoBook extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        String[] pageContents = getPageContents();
-
         glPushMatrix();
 
         float scale = 0.75F;
         glScalef(scale, scale, scale);
 
-        drawCentredString(pageContents[0], 0, 0, 500, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
-        glPopMatrix();
-    }
-
-    public String[] getPageContents() {
         String tempString = StatCollector.translateToLocal("info.page." + currentPage);
 
-        return tempString.split("<br>");
+        drawCentredString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
+        glPopMatrix();
     }
 
     @Override
@@ -95,17 +97,20 @@ public class GuiInfoBook extends GuiContainer {
             currentPage++;
         if (arrow2.onClick(mouseX, mouseY))
             currentPage--;
-        
+
         if (currentPage < 0)
             currentPage = 0;
-        if (currentPage > 10)
-            currentPage = 10;
+        if (currentPage > MAX_NUM)
+            currentPage = MAX_NUM;
     }
 
     protected void drawCentredString(String string, int xOffset, int yOffset, int length, Colour colour) {
-        int x = (xSize - fontRendererObj.getStringWidth(string)) / 2 + 30;
-        int y = ySize / 2;
+        int index = 0;
+        for (String str : string.split("<br>")) {
+            int x = (xSize - 135) / 2 + 30;
+            int y = ySize / 2 - 70;
 
-        fontRendererObj.drawSplitString(string, x, y, length, colour.getInt());
+            fontRendererObj.drawSplitString(str, x + xOffset, y + xOffset + (fontRendererObj.FONT_HEIGHT * index++), length, colour.getInt());
+        }
     }
 }

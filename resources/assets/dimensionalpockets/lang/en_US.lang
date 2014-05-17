@@ -1,5 +1,7 @@
 itemGroup.dimensionalPockets=Dimensional Pockets
 
+"info.page.maxPage"
+
 tile.dimensionalPocket.name=Dimensional Pocket
 tile.dimensionalPocketFrame.name=Outside Of The Block
 
@@ -9,7 +11,8 @@ item.netherCrystal.name=Nether Crystal
 
 info.trapped=You're trapped! Maybe someone broke the Dimensional Pocket...
 
-info.page.0=So, hopefully this works.<br>This Might WORK NOW
-info.page.1=This might not even work.
+info.page.maxPage=5
+info.page.0=So, hopefully this works. This Might WORK NOW.
+info.page.1=This might not even work. Now without a break, let's see if it wraps it properly.This might not even work. Now without a break, let's see if it wraps it properly.This might not even work.
 info.page.2=If it doesn't I don't know why.
 info.page.3=Anyway, it should.
