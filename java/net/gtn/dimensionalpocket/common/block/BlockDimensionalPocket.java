@@ -59,8 +59,9 @@ public class BlockDimensionalPocket extends BlockDP {
     // @formatter:on
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
-        ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
-        return blockAccess.isBlockProvidingPowerTo(x, y, z, direction.ordinal());
+//        ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
+//        return blockAccess.isBlockProvidingPowerTo(x, y, z, direction.ordinal());
+        return 0;
     }
 
     @Override

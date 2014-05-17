@@ -1,10 +1,12 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +24,12 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
+    private Map<ForgeDirection, PocketWall> wallMap = new HashMap<ForgeDirection, PocketWall>();
+
+    {
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+            wallMap.put(direction, new PocketWall(direction));
+    }
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
