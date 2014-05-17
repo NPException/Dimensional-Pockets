@@ -5,11 +5,14 @@ import java.util.Map;
 
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,5 +39,13 @@ public class UtilsFX {
         }
 
         Minecraft.getMinecraft().renderEngine.bindTexture(resource);
+    }
+
+    public static ResourceLocation getParticleTexture() {
+        try {
+            return (ResourceLocation) ReflectionHelper.getPrivateValue(EffectRenderer.class, null, new String[] { "particleTextures", "b", "field_110737_b" });
+        } catch (Exception e) {
+        }
+        return null;
     }
 }
