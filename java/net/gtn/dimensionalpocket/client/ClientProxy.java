@@ -22,7 +22,7 @@ public class ClientProxy extends CommonProxy {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case 0:
-                return new GuiInfoBook();
+                return new GuiInfoBook(player.getCurrentEquippedItem());
         }
         return null;
     }
