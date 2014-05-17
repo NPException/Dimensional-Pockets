@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -21,7 +22,7 @@ public class ClientProxy extends CommonProxy {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case 0:
-                break;
+                return new GuiInfoBook();
         }
         return null;
     }

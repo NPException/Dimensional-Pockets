@@ -32,6 +32,7 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -68,8 +69,10 @@ public class DimensionalPockets {
     public void init(FMLInitializationEvent event) {
         proxy.runServerSide();
         proxy.runClientSide();
-        
+
         MinecraftForge.EVENT_BUS.register(proxy);
+
+        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
         DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, false);
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);

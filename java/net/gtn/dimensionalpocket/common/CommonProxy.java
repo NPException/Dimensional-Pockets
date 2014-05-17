@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;

@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.items.framework.ItemDP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,18 +15,12 @@ public class ItemInfoTool extends ItemDP {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        onRightClick(player);
+        if (world.isRemote)
+            onRightClick(world, player);
         return super.onItemRightClick(itemStack, world, player);
     }
 
-    @Override
-    public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        onRightClick(player);
-        return super.onItemUseFirst(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ);
+    public void onRightClick(World world, EntityPlayer player) {
+        player.openGui(DimensionalPockets.instance, 0, world, 0, 0, 0);
     }
-
-    public void onRightClick(EntityPlayer player) {
-        DPLogger.info("ONRIGHT");
-    }
-
 }
