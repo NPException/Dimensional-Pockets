@@ -1,9 +1,8 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
-import java.io.Serializable;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class CoordSet {
 
@@ -73,6 +72,26 @@ public class CoordSet {
 
     public CoordSet addCoordSet(CoordSet coordSet) {
         return addX(coordSet.x).addY(coordSet.y).addZ(coordSet.z);
+    }
+
+    public CoordSet swapAxis(Axis first, Axis second) {
+        if (first == Axis.UNKNOWN || second == Axis.UNKNOWN || (first == second))
+            return copy();
+
+        int temp = 0;
+
+        switch(first){
+            case X:
+                break;
+            case Y:
+                break;
+            case Z:
+                break;
+            default:
+                break;
+        }
+
+        return copy();
     }
 
     @Override
@@ -145,5 +164,20 @@ public class CoordSet {
         z = z % 16;
 
         return this;
+    }
+
+    public static enum Axis {
+        X, Y, Z, UNKNOWN;
+
+        public static Axis getAxisFromDirection(ForgeDirection direction) {
+            if (direction == ForgeDirection.NORTH || direction == ForgeDirection.SOUTH)
+                return Z;
+            if (direction == ForgeDirection.EAST || direction == ForgeDirection.WEST)
+                return X;
+            if (direction == ForgeDirection.UP || direction == ForgeDirection.DOWN)
+                return Y;
+            return UNKNOWN;
+        }
+
     }
 }
