@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.block;
 
+import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
@@ -101,9 +102,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return false;
 
         if (player.dimension == Reference.DIMENSION_ID) {
-            if (world.isRemote) {
+            if (world.isRemote)
                 return true;
-            }
 
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)

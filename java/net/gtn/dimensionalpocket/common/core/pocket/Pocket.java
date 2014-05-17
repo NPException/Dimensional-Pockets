@@ -110,7 +110,7 @@ public class Pocket {
 
         int dimID = pocket.getBlockDim();
 
-        if (isSourceBlockPlaced(dimID, blockCoords)) {
+        if (isSourceBlockPlaced()) {
             PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
 
             if (dimID != Reference.DIMENSION_ID)
@@ -127,8 +127,8 @@ public class Pocket {
         return true;
     }
 
-    private boolean isSourceBlockPlaced(int dimID, CoordSet blockCoords) {
-        Block block = MinecraftServer.getServer().worldServerForDimension(dimID).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+    public boolean isSourceBlockPlaced() {
+        Block block = MinecraftServer.getServer().worldServerForDimension(blockDim).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
 
         return (block instanceof BlockDimensionalPocket);
     }
