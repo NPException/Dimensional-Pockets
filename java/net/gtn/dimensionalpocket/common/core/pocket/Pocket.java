@@ -24,6 +24,7 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
+    private float lightLevel;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -164,5 +165,13 @@ public class Pocket {
 
     public void setBlockCoords(CoordSet blockCoords) {
         this.blockCoords = blockCoords;
+    }
+
+    public float getLightLevel() {
+        return lightLevel;
+    }
+
+    public void setLightLevel(float lightLevel) {
+        this.lightLevel = lightLevel;
     }
 }

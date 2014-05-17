@@ -28,9 +28,17 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         super(material, name);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightLevel(1);
         disableStats();
         setCreativeTab(null);
+    }
+    
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z) {
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
+        if (pocket == null) {
+            return 15;
+        }
+        return (int) (pocket.getLightLevel() * 15.0f);
     }
 
     @Override

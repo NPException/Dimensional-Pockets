@@ -25,7 +25,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
     
-//    @SideOnly(Side.SERVER)
+    private int ticksSinceLastLightCheck = 0;
+    
     private PocketTeleportPreparation telePrep;
     
     @Override
@@ -35,6 +36,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
                 if (telePrep.doPrepareTick()) {
                     telePrep = null;
                 }
+            }
+            if (ticksSinceLastLightCheck++ > 200) {
+                ticksSinceLastLightCheck = 0;
+                
             }
         }
     }
@@ -66,6 +71,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         if (hasPocket())
             return;
         pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet());
+        pocket.setLightLevel(worldObj.getLightBrightness(xCoord, yCoord, zCoord));
     }
 
     public boolean hasPocket() {
