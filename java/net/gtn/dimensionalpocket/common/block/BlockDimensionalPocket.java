@@ -49,10 +49,10 @@ public class BlockDimensionalPocket extends BlockDP {
         return true;
     }
 
-    // @Override
-    // public boolean canProvidePower() {
-    // return true;
-    // }
+//    @Override
+//    public boolean canProvidePower() {
+//        return true;
+//    }
 
     // @formatter:off
     /**
@@ -67,24 +67,25 @@ public class BlockDimensionalPocket extends BlockDP {
         ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
         // TODO
 
+        DPLogger.info("WELL, ARE YOU?!");
+
         Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
         if (pocket == null)
             return 0;
 
-        int redstoneLevel = pocket.getSideState((World) world, direction);
-        return redstoneLevel;
+        return pocket.getSideState((World) world, direction);
     }
 
     @Override
-    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        DPLogger.info("Calledchecj");
-        // return super.shouldCheckWeakPower(world, x, y, z, side);
-        return true;
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
     }
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        DPLogger.info("CalledChane");
+        // TODO Deal with this shit.
+        DPLogger.info("DEALING");
+        
         super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);
     }
 

@@ -34,17 +34,7 @@ public class Pocket {
     public int getSideState(World world, ForgeDirection side) {
         CoordSet tempSet = chunkCoords.toBlockCoords();
 
-        
-        
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                for (int k = 0; k < 16; k++) {
-                    
-                }
-            }
-        }
-
-        return 0;
+        return 15;
     }
 
     public void generatePocket(World world) {
