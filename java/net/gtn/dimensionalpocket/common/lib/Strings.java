@@ -9,5 +9,4 @@ public class Strings {
     public static final String ITEM_CRAFTING = "craftingItems";
 
     public static final String DIMENSIONAL_POCKET_PARTICLE = "dimensionalParticle";
-
 }
