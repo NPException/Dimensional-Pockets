@@ -64,16 +64,16 @@ public class BlockDimensionalPocket extends BlockDP {
     // @formatter:on
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
+        ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
         // TODO
         return 0;
     }
-    
+
     @Override
     public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         return super.shouldCheckWeakPower(world, x, y, z, side);
     }
-    
+
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
         super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);

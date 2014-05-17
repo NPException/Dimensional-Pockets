@@ -38,6 +38,14 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
+    public int getSideState(World world, ForgeDirection side) {
+        int powerLevel = world.isBlockProvidingPowerTo(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ(), side.getOpposite().ordinal());
+
+        DPLogger.info(powerLevel);
+
+        return powerLevel;
+    }
+
     public void generatePocket(World world) {
         if (generated)
             return;
@@ -114,15 +122,15 @@ public class Pocket {
             return false;
 
         int dimID = pocket.getBlockDim();
-        
+
         if (isSourceBlockPlaced(dimID, blockCoords)) {
             PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
-    
+
             if (dimID != Reference.DIMENSION_ID)
                 PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);
             else
                 teleporter.placeInPortal(player, 0, 0, 0, 0);
-        
+
         } else {
             ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped");
             comp.getChatStyle().setItalic(true);
@@ -131,10 +139,10 @@ public class Pocket {
 
         return true;
     }
-    
+
     private boolean isSourceBlockPlaced(int dimID, CoordSet blockCoords) {
         Block block = MinecraftServer.getServer().worldServerForDimension(dimID).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
-        
+
         return (block instanceof BlockDimensionalPocket);
     }
 

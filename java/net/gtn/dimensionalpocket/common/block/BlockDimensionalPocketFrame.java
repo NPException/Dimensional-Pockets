@@ -44,7 +44,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z) {
         return null;
     }
-    
+
     @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
         return true;
@@ -54,64 +54,68 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public boolean canProvidePower() {
         return true;
     }
-    
+
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         CoordSet coordSet = new CoordSet(x, y, z);
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-        
+
         if (pocket == null)
             return 0;
-        
+
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
-        
-        
-        
         ForgeDirection direction = ForgeDirection.getOrientation(side);
-        // TODO
-        return 0;
+
+        DPLogger.info("Called");
+        int power = pocket.getSideState(srcWorld, direction);
+        DPLogger.info(power);
+        return power;
     }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
+        boolean tru = true;
+        if(tru)
+            return false;
+        
         if (player == null)
-            return true;
+            return false;
 
         ItemStack itemStack = player.getCurrentEquippedItem();
 
         if (itemStack != null) {
             if (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1) {
                 if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
-                    return true;
+                    return false;
 
                 if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
                     CoordSet coordSet = new CoordSet(x, y, z);
 
                     Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-                    if (pocket == null) {
+                    if (pocket == null) 
                         return false;
-                    }
 
                     boolean setSpawn = pocket.setSpawnSet(coordSet.asSpawnPoint());
 
                     if (setSpawn)
                         player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                    return true;
+                    return false;
                 }
             }
+            DPLogger.info("Called here");
             return false;
         }
 
         if (!player.isSneaking())
-            return true;
+            return false;
 
         if (!world.isRemote) {
             if (player.dimension != Reference.DIMENSION_ID)
-                return true;
+                return false;
 
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
-                return true;
+                return false;
 
             pocket.teleportFrom(player);
         }
