@@ -48,8 +48,8 @@ public class BlockDimensionalPocket extends BlockDP {
                 // Pocket pocket = tile.getPocket();
                 // pocket.teleportTo(player);
             } else {
-                // for (int i = 0; i < 10; i++)
-                UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 50);
+                for (int i = 0; i < 10; i++)
+                    UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 50);
             }
         }
         return true;

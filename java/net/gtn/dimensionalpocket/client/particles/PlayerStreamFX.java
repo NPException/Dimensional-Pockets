@@ -2,6 +2,8 @@ package net.gtn.dimensionalpocket.client.particles;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.Random;
+
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -21,16 +23,23 @@ public class PlayerStreamFX extends EntityFX {
     private static final Colour COLOUR = new Colour(1.0F, 1.0F, 1.0F, 0.5F);
 
     private boolean canMove = false;
-    
-    public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        super(world, player.posX, player.posY, player.posZ);
+
+    private double targetMotionX, targetMotionY, targetMotionZ;
+
+    public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand) {
+        super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.5F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.5F));
         noClip = true;
-        particleMaxAge = ticksToTake;
         particleScale = 1.0F;
 
-        motionX = (targetSet.getX() + 0.5F - player.posX) / ticksToTake;
-        motionY = (targetSet.getY() + 0.5F - player.posY) / ticksToTake;
-        motionZ = (targetSet.getZ() + 0.5F - player.posZ) / ticksToTake;
+        targetMotionX = (targetSet.getX() + 0.5F - player.posX) / ticksToTake;
+        targetMotionY = (targetSet.getY() + 0.5F - player.posY) / ticksToTake;
+        targetMotionZ = (targetSet.getZ() + 0.5F - player.posZ) / ticksToTake;
+
+        motionX = targetMotionX + (rand.nextDouble() * targetMotionX * 8);
+        motionY = targetMotionY + (rand.nextDouble() * targetMotionY * 8);
+        motionZ = targetMotionZ + (rand.nextDouble() * targetMotionZ * 8);
+
+        particleMaxAge = (int) (Math.round((targetSet.getX() + 0.5F - player.posX) / motionX));
     }
 
     @Override
@@ -38,11 +47,29 @@ public class PlayerStreamFX extends EntityFX {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        
+
         canMove = particleAge >= particleMaxAge / 4;
 
-        DPLogger.info(canMove);
-        
+        float step = 0.01F;
+
+        if (canMove) {
+            if (motionX < targetMotionX)
+                motionX += step;
+            if (motionX > targetMotionX)
+                motionX -= step;
+
+            if (motionY < targetMotionY)
+                motionY += step;
+            if (motionY > targetMotionY)
+                motionY -= step;
+
+            if (motionZ < targetMotionZ)
+                motionZ += step;
+            if (motionZ > targetMotionZ)
+                motionZ -= step;
+
+        }
+
         if (this.particleAge++ >= this.particleMaxAge)
             this.setDead();
 

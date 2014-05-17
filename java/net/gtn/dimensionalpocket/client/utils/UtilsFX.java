@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.client.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
@@ -22,7 +23,7 @@ public class UtilsFX {
     static Map<String, ResourceLocation> boundTextures = new HashMap();
 
     public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake);
+        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random());
 
         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
     }
