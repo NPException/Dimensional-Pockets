@@ -37,12 +37,12 @@ public class PocketRegistry {
         if (currentChunk.getY() == 16)
             currentChunk.setY(0).addX(1);
 
-        Pocket link = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
-        backLinkMap.put(link.getChunkCoords(), link);
+        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
+        backLinkMap.put(pocket.getChunkCoords(), pocket);
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
-        return link;
+        return pocket;
     }
 
     public static void updatePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
