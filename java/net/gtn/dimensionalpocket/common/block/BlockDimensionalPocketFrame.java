@@ -50,6 +50,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         CoordSet coordSet = new CoordSet(x, y, z);
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
 
+        DPLogger.info("HALPs");
         if (pocket == null)
             return 0;
 
@@ -57,6 +58,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ForgeDirection direction = ForgeDirection.getOrientation(side);
 
         int power = pocket.getSideState(srcWorld, direction);
+        
 
         return power;
     }
@@ -69,23 +71,21 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ItemStack itemStack = player.getCurrentEquippedItem();
 
         if (itemStack != null) {
-            if (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1) {
+            if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
                 if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
                     return false;
 
-                if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
-                    CoordSet coordSet = new CoordSet(x, y, z);
+                CoordSet coordSet = new CoordSet(x, y, z);
 
-                    Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-                    if (pocket == null)
-                        return false;
-
-                    boolean setSpawn = pocket.setSpawnSet(coordSet.asSpawnPoint());
-
-                    if (setSpawn)
-                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+                if (pocket == null)
                     return false;
-                }
+
+                boolean setSpawn = pocket.setSpawnSet(coordSet.asSpawnPoint());
+
+                if (setSpawn)
+                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                return true;
             }
             return false;
         }

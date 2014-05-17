@@ -49,11 +49,11 @@ public class BlockDimensionalPocket extends BlockDP {
         return true;
     }
 
-    @Override
-    public boolean canProvidePower() {
-        return true;
-    }
-
+//    @Override
+//    public boolean canProvidePower() {
+//        return true;
+//    }
+    
     // @formatter:off
     /**
      * This methods basically asks: is the Dimensional Pocket at the specified coordinates
@@ -66,6 +66,9 @@ public class BlockDimensionalPocket extends BlockDP {
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
         // TODO
+        
+        DPLogger.info("Called");
+        
         return 0;
     }
 

@@ -1,9 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
@@ -15,12 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
@@ -170,7 +163,11 @@ public class Pocket {
         if (spawnSet.getY() <= 1)
             this.spawnSet = spawnSet;
 
-        return this.spawnSet.equals(spawnSet);
+        boolean flag = this.spawnSet.equals(spawnSet);
+        
+        
+        
+        return flag;
     }
 
     public void setBlockCoords(CoordSet blockCoords) {
