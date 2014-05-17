@@ -17,26 +17,28 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
-    private double x, y, z;
-    private CoordSet finalTargetSet;
+    private double x, y, z, distance, constantY;
+    private CoordSet targetSet;
 
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake) {
         super(world, player.posX, player.posY, player.posZ);
-        this.finalTargetSet = targetSet.copy();
+        this.targetSet = targetSet;
         noClip = true;
-
-        x = (targetSet.getX() + 0.5F) + (targetSet.getX() - player.posX);
-        y = (targetSet.getY() + 0.5F) + 1;
-        z = (targetSet.getZ() + 0.5F) + (targetSet.getZ() - player.posZ);
 
         setParticleIcon(ModItems.craftingItems.getIconFromDamage(0));
 
         particleAge = 0;
-        particleMaxAge = ticksToTake;
+        particleMaxAge = ticksToTake + 1;
 
-        motionX = (x - player.posX) / ticksToTake;
-        motionY = (y - player.posY) / ticksToTake;
-        motionZ = (z - player.posZ) / ticksToTake;
+        double diffX = (targetSet.getX() + 0.5F) - player.posX;
+        double diffY = (targetSet.getY() - 1F) - player.posY;
+        double diffZ = (targetSet.getZ() + 0.5F) - player.posZ;
+
+        distance = Math.sqrt(diffX * diffX + diffY * diffY + diffZ * diffZ);
+
+        motionX = diffX / ticksToTake;
+        motionY = constantY = diffY / ticksToTake;
+        motionZ = diffZ / ticksToTake;
     }
 
     @Override
@@ -45,10 +47,16 @@ public class PlayerStreamFX extends EntityFX {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
+        motionY = constantY * getVerticleMovement();
+
         if (this.particleAge++ >= this.particleMaxAge)
             this.setDead();
 
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
+    }
+
+    public double getVerticleMovement() {
+        return 8 * Math.sin((Math.PI * particleAge) / (distance / 2));
     }
 
     @Override
