@@ -16,7 +16,6 @@ public class GuiArrow extends Gui {
 
     private int id, x, y, timeTicked;
     private boolean clicked = false;
-    private boolean action = false;
 
     public GuiArrow(int id, int x, int y) {
         this.id = id;
@@ -31,6 +30,7 @@ public class GuiArrow extends Gui {
     public boolean onClick(int mouseX, int mouseY) {
         boolean flag = canClick(mouseX, mouseY);
         clicked = flag;
+        timeTicked = 20;
         return flag;
     }
 
@@ -44,14 +44,13 @@ public class GuiArrow extends Gui {
 
         if (canClick(mouseX, mouseY)) {
             tempX += INCREMENTAL_WIDTH;
-            if (clicked)
+            if (clicked) {
                 tempX += INCREMENTAL_WIDTH;
+                if (--timeTicked <= 0)
+                    clicked = false;
+            }
         }
 
         drawTexturedModalRect(x, y, tempX, tempY, WIDTH, HEIGHT);
-    }
-
-    public boolean canStartAction() {
-        return action;
     }
 }

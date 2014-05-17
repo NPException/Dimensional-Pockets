@@ -13,15 +13,11 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class ClientProxy extends CommonProxy {
 
-    private static int currentPage = 0;
+    public static int currentPage = 0;
 
     @Override
     public void runClientSide() {
 
-    }
-
-    public static int getCurrentPage() {
-        return currentPage;
     }
 
     @Override

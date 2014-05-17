@@ -1,14 +1,15 @@
 package net.gtn.dimensionalpocket.client.gui;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import net.gtn.dimensionalpocket.client.ClientProxy;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.common.lib.GuiSheet;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 
 public class GuiInfoBook extends GuiContainer {
 
@@ -16,7 +17,7 @@ public class GuiInfoBook extends GuiContainer {
 
     GuiArrow arrow1;
     GuiArrow arrow2;
-    
+
     int currentPage;
 
     public GuiInfoBook() {
@@ -27,7 +28,7 @@ public class GuiInfoBook extends GuiContainer {
             }
         });
 
-        currentPage = ClientProxy.getCurrentPage();
+        currentPage = ClientProxy.currentPage;
 
         xSize = 154;
         ySize = 180;
@@ -53,6 +54,11 @@ public class GuiInfoBook extends GuiContainer {
     }
 
     @Override
+    public void onGuiClosed() {
+        ClientProxy.currentPage = currentPage;
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
@@ -62,7 +68,25 @@ public class GuiInfoBook extends GuiContainer {
         drawTexturedModalRect(x, y, 12, 1, xSize, ySize);
         arrow1.renderArrow(mouseX, mouseY);
         arrow2.renderArrow(mouseX, mouseY);
-        DPLogger.info(currentPage);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        String[] pageContents = getPageContents();
+
+        glPushMatrix();
+
+        float scale = 0.8F;
+        glScalef(scale, scale, scale);
+
+        drawString(fontRendererObj, pageContents[0], guiLeft - 50, guiTop, Colour.getInt(0.2F, 0.2F, 0.2F, 1.0F));
+        glPopMatrix();
+    }
+
+    public String[] getPageContents() {
+        String tempString = StatCollector.translateToLocal("info.page." + currentPage);
+
+        return tempString.split("<br>");
     }
 
     @Override
@@ -71,15 +95,5 @@ public class GuiInfoBook extends GuiContainer {
             currentPage++;
         if (arrow2.onClick(mouseX, mouseY))
             currentPage--;
-    }
-
-    @Override
-    public void updateScreen() {
-
-    }
-
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int lastButtonClicked, long timeSinceMouseClick) {
-
     }
 }
