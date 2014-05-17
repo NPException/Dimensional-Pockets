@@ -1,12 +1,11 @@
-package net.gtn.dimensionalpocket.common.core.utils;
+package net.gtn.dimensionalpocket.common.core.pocket;
 
-import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.SERVER)
-public class TeleportPreparation {
+public class PocketTeleportPreparation {
     public enum Direction {
         INTO_POCKET,
         OUT_OF_POCKET
@@ -17,7 +16,7 @@ public class TeleportPreparation {
     private final Pocket pocket;
     private final Direction direction;
     
-    public TeleportPreparation(EntityPlayer player, int ticksBeforeTeleport, Pocket pocket, Direction direction) {
+    public PocketTeleportPreparation(EntityPlayer player, int ticksBeforeTeleport, Pocket pocket, Direction direction) {
         this.player = player;
         this.ticksBeforeTeleport = ticksBeforeTeleport;
         this.pocket = pocket;
