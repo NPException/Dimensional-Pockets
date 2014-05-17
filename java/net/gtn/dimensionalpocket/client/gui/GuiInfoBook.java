@@ -76,10 +76,10 @@ public class GuiInfoBook extends GuiContainer {
 
         glPushMatrix();
 
-        float scale = 0.8F;
+        float scale = 0.75F;
         glScalef(scale, scale, scale);
 
-        drawString(fontRendererObj, pageContents[0], guiLeft - 50, guiTop, Colour.getInt(0.2F, 0.2F, 0.2F, 1.0F));
+        drawCentredString(pageContents[0], 0, 0, 500, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
         glPopMatrix();
     }
 
@@ -95,5 +95,17 @@ public class GuiInfoBook extends GuiContainer {
             currentPage++;
         if (arrow2.onClick(mouseX, mouseY))
             currentPage--;
+        
+        if (currentPage < 0)
+            currentPage = 0;
+        if (currentPage > 10)
+            currentPage = 10;
+    }
+
+    protected void drawCentredString(String string, int xOffset, int yOffset, int length, Colour colour) {
+        int x = (xSize - fontRendererObj.getStringWidth(string)) / 2 + 30;
+        int y = ySize / 2;
+
+        fontRendererObj.drawSplitString(string, x, y, length, colour.getInt());
     }
 }

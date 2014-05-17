@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@SideOnly(Side.SERVER)
+//@SideOnly(Side.SERVER)
 public class PocketTeleportPreparation {
     public enum Direction {
         INTO_POCKET,

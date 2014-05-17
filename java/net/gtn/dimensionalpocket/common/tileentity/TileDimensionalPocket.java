@@ -25,12 +25,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
     
-    @SideOnly(Side.SERVER)
+//    @SideOnly(Side.SERVER)
     private PocketTeleportPreparation telePrep;
     
     @Override
     public void updateEntity() {
-        super.updateEntity();
         if (!worldObj.isRemote) {
             if (telePrep != null) {
                 if (telePrep.doPrepareTick()) {
