@@ -81,6 +81,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onNeighbourBlockChanged() {
+        // TODO This searches around and updates the strengthMap
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
             strengthMap.put(direction, worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal()));
 
