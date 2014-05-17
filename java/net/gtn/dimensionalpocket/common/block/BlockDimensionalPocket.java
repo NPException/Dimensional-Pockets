@@ -42,14 +42,14 @@ public class BlockDimensionalPocket extends BlockDP {
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
             if (!world.isRemote) {
-                // if (!tile.hasPocket())
-                // tile.generateNewPocket();
+                if (!tile.hasPocket())
+                    tile.generateNewPocket();
 
-                // Pocket pocket = tile.getPocket();
-                // pocket.teleportTo(player);
+                Pocket pocket = tile.getPocket();
+                pocket.teleportTo(player);
             } else {
-                for (int i = 0; i < 10; i++)
-                    UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 50);
+                for (int i = 0; i < 40; i++)
+                    UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 15);
             }
         }
         return true;

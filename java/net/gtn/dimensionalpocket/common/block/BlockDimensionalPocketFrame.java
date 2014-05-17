@@ -100,9 +100,10 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (!player.isSneaking())
             return false;
 
-        if (!world.isRemote) {
-            if (player.dimension != Reference.DIMENSION_ID)
-                return false;
+        if (player.dimension == Reference.DIMENSION_ID) {
+            if (world.isRemote) {
+                return true;
+            }
 
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
@@ -113,7 +114,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         return true;
     }
-    
+
     @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
         return side != -1;

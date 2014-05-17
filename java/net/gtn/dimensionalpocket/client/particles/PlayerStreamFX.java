@@ -20,26 +20,21 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
-    private static final Colour COLOUR = new Colour(1.0F, 1.0F, 1.0F, 0.5F);
+    private static final Colour COLOUR = new Colour(0.5F, 0.5F, 0.5F, 0.5F);
 
-    private boolean canMove = false;
-
-    private double targetMotionX, targetMotionY, targetMotionZ;
+    private CoordSet targetSet;
 
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.5F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.5F));
         noClip = true;
-        particleScale = 1.0F;
-
-        targetMotionX = (targetSet.getX() + 0.5F - player.posX) / ticksToTake;
-        targetMotionY = (targetSet.getY() + 0.5F - player.posY) / ticksToTake;
-        targetMotionZ = (targetSet.getZ() + 0.5F - player.posZ) / ticksToTake;
-
-        motionX = targetMotionX + (rand.nextDouble() * targetMotionX * 8);
-        motionY = targetMotionY + (rand.nextDouble() * targetMotionY * 8);
-        motionZ = targetMotionZ + (rand.nextDouble() * targetMotionZ * 8);
-
-        particleMaxAge = (int) (Math.round((targetSet.getX() + 0.5F - player.posX) / motionX));
+        particleScale = 0.5F;
+        this.targetSet = targetSet;
+        particleMaxAge = ticksToTake;
+        
+        
+        motionX = (targetSet.getX() + 0.5F - posX) / ticksToTake;
+        motionY = (targetSet.getY() + 0.5F - posY) / ticksToTake;
+        motionZ = (targetSet.getZ() + 0.5F - posZ) / ticksToTake;
     }
 
     @Override
@@ -47,28 +42,6 @@ public class PlayerStreamFX extends EntityFX {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-
-        canMove = particleAge >= particleMaxAge / 4;
-
-        float step = 0.01F;
-
-        if (canMove) {
-            if (motionX < targetMotionX)
-                motionX += step;
-            if (motionX > targetMotionX)
-                motionX -= step;
-
-            if (motionY < targetMotionY)
-                motionY += step;
-            if (motionY > targetMotionY)
-                motionY -= step;
-
-            if (motionZ < targetMotionZ)
-                motionZ += step;
-            if (motionZ > targetMotionZ)
-                motionZ -= step;
-
-        }
 
         if (this.particleAge++ >= this.particleMaxAge)
             this.setDead();
