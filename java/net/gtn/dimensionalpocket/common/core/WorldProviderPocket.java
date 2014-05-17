@@ -14,7 +14,7 @@ public class WorldProviderPocket extends WorldProvider {
     public IChunkProvider createChunkGenerator() {
         return new ChunkGeneratorPocket(worldObj);
     }
-
+    
     @Override
     @SideOnly(Side.CLIENT)
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks) {
