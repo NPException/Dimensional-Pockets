@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
@@ -17,17 +18,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
-    private static final Colour colour = new Colour(1.0F, 1.0F, 1.0F, 0.5F);
+    private static final Colour COLOUR = new Colour(1.0F, 1.0F, 1.0F, 0.5F);
 
+    private boolean canMove = false;
+    
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake) {
         super(world, player.posX, player.posY, player.posZ);
         noClip = true;
         particleMaxAge = ticksToTake;
         particleScale = 1.0F;
 
-        motionX = (targetSet.getX() - player.posX) / ticksToTake;
-        motionY = (targetSet.getY() - player.posY) / ticksToTake;
-        motionZ = (targetSet.getZ() - player.posZ) / ticksToTake;
+        motionX = (targetSet.getX() + 0.5F - player.posX) / ticksToTake;
+        motionY = (targetSet.getY() + 0.5F - player.posY) / ticksToTake;
+        motionZ = (targetSet.getZ() + 0.5F - player.posZ) / ticksToTake;
     }
 
     @Override
@@ -35,7 +38,11 @@ public class PlayerStreamFX extends EntityFX {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+        
+        canMove = particleAge >= particleMaxAge / 4;
 
+        DPLogger.info(canMove);
+        
         if (this.particleAge++ >= this.particleMaxAge)
             this.setDead();
 
@@ -58,13 +65,13 @@ public class PlayerStreamFX extends EntityFX {
 
         UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE);
 
-        colour.doGL();
+        COLOUR.doGL();
         float interpX = (float) (prevPosX + (posX - prevPosX) * tick - interpPosX);
         float interpY = (float) (prevPosY + (posY - prevPosY) * tick - interpPosY);
         float interpZ = (float) (prevPosZ + (posZ - prevPosZ) * tick - interpPosZ);
 
         float tempScale = particleScale * 0.1F;
-        
+
         tessellator.startDrawingQuads();
         tessellator.setBrightness(240);
 

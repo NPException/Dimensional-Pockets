@@ -34,8 +34,7 @@ public class UtilsFX {
         if (boundTextures.containsKey(key)) {
             resource = boundTextures.get(key);
         } else {
-            resource = new ResourceLocation(Reference.MOD_ID, key);
-            boundTextures.put(key, resource);
+            resource = new ResourceLocation(Reference.MOD_IDENTIFIER + key);
         }
 
         Minecraft.getMinecraft().renderEngine.bindTexture(resource);
