@@ -4,5 +4,7 @@ tile.dimensionalPocket.name=Dimensional Pocket
 tile.dimensionalPocketFrame.name=Outside Of The Block
 
 item.infoTool.name=Guide To Dimensional Pockets
+item.enderCrystal.name=Ender Crystal
+item.netherCrystal.name=Nether Crystal
 
 info.trapped=You're trapped! Maybe someone broke the Dimensional Pocket...
