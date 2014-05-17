@@ -24,12 +24,6 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
-    private Map<ForgeDirection, PocketWall> wallMap = new HashMap<ForgeDirection, PocketWall>();
-
-    {
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            wallMap.put(direction, new PocketWall(direction));
-    }
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);

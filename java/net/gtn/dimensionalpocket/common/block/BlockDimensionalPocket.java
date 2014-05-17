@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
+import net.gtn.dimensionalpocket.client.UtilFX;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -30,15 +31,17 @@ public class BlockDimensionalPocket extends BlockDP {
         if (player == null)
             return true;
 
-        if (!world.isRemote) {
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
-            if (tileEntity instanceof TileDimensionalPocket) {
-                TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-                if (!tile.hasPocket())
-                    tile.generateNewPocket();
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileDimensionalPocket) {
+            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+            if (!world.isRemote) {
+//                if (!tile.hasPocket())
+//                    tile.generateNewPocket();
 
-                Pocket pocket = tile.getPocket();
-                pocket.teleportTo(player);
+//                Pocket pocket = tile.getPocket();
+//                pocket.teleportTo(player);
+            } else {
+                UtilFX.createParticleStream(player, new CoordSet(x, y, z), 50);
             }
         }
         return true;
@@ -59,8 +62,8 @@ public class BlockDimensionalPocket extends BlockDP {
     // @formatter:on
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
-//        ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
-//        return blockAccess.isBlockProvidingPowerTo(x, y, z, direction.ordinal());
+        // ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
+        // return blockAccess.isBlockProvidingPowerTo(x, y, z, direction.ordinal());
         return 0;
     }
 
