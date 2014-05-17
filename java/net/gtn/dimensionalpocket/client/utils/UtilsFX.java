@@ -23,9 +23,13 @@ public class UtilsFX {
     static Map<String, ResourceLocation> boundTextures = new HashMap();
 
     public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random());
+        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), new Colour(0.4F, 0.4F, 0.4F, 0.5F));
 
         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+    }
+
+    public static void createPlayerExplosion(EntityPlayer player) {
+
     }
 
     public static void bindTexture(String texture) {

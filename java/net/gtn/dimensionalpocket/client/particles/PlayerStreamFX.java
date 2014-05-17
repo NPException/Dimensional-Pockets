@@ -20,18 +20,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
-    private static final Colour COLOUR = new Colour(0.5F, 0.5F, 0.5F, 0.5F);
+    private Colour colour;
 
     private CoordSet targetSet;
 
-    public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand) {
+    public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand, Colour colour) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.5F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.5F));
         noClip = true;
         particleScale = 0.5F;
         this.targetSet = targetSet;
+        this.colour = colour;
         particleMaxAge = ticksToTake;
-        
-        
+
         motionX = (targetSet.getX() + 0.5F - posX) / ticksToTake;
         motionY = (targetSet.getY() + 0.5F - posY) / ticksToTake;
         motionZ = (targetSet.getZ() + 0.5F - posZ) / ticksToTake;
@@ -65,7 +65,7 @@ public class PlayerStreamFX extends EntityFX {
 
         UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE);
 
-        COLOUR.doGL();
+        colour.doGL();
         float interpX = (float) (prevPosX + (posX - prevPosX) * tick - interpPosX);
         float interpY = (float) (prevPosY + (posY - prevPosY) * tick - interpPosY);
         float interpZ = (float) (prevPosZ + (posZ - prevPosZ) * tick - interpPosZ);
@@ -75,7 +75,7 @@ public class PlayerStreamFX extends EntityFX {
         tessellator.startDrawingQuads();
         tessellator.setBrightness(240);
 
-        tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, 0.5F);
+        tessellator.setColorRGBA_F((float) colour.r, (float) colour.g, (float) colour.b, (float) colour.a);
         tessellator.addVertexWithUV(interpX - par3 * tempScale - par6 * tempScale, interpY - par4 * tempScale, interpZ - par5 * tempScale - par7 * tempScale, 0.0D, 1.0D);
         tessellator.addVertexWithUV(interpX - par3 * tempScale + par6 * tempScale, interpY + par4 * tempScale, interpZ - par5 * tempScale + par7 * tempScale, 1.0D, 1.0D);
         tessellator.addVertexWithUV(interpX + par3 * tempScale + par6 * tempScale, interpY + par4 * tempScale, interpZ + par5 * tempScale + par7 * tempScale, 1.0D, 0.0D);
