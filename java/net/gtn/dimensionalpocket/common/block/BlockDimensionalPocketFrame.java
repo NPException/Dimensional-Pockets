@@ -50,17 +50,13 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         CoordSet coordSet = new CoordSet(x, y, z);
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
 
-        DPLogger.info("HALPs");
         if (pocket == null)
             return 0;
 
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
         ForgeDirection direction = ForgeDirection.getOrientation(side);
 
-        int power = pocket.getSideState(srcWorld, direction);
-        
-
-        return power;
+        return 15;
     }
 
     @Override

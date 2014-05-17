@@ -49,11 +49,11 @@ public class BlockDimensionalPocket extends BlockDP {
         return true;
     }
 
-//    @Override
-//    public boolean canProvidePower() {
-//        return true;
-//    }
-    
+    // @Override
+    // public boolean canProvidePower() {
+    // return true;
+    // }
+
     // @formatter:off
     /**
      * This methods basically asks: is the Dimensional Pocket at the specified coordinates
@@ -66,19 +66,25 @@ public class BlockDimensionalPocket extends BlockDP {
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
         // TODO
-        
-        DPLogger.info("Called");
-        
-        return 0;
+
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+        if (pocket == null)
+            return 0;
+
+        int redstoneLevel = pocket.getSideState((World) world, direction);
+        return redstoneLevel;
     }
 
     @Override
     public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        return super.shouldCheckWeakPower(world, x, y, z, side);
+        DPLogger.info("Calledchecj");
+        // return super.shouldCheckWeakPower(world, x, y, z, side);
+        return true;
     }
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+        DPLogger.info("CalledChane");
         super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);
     }
 

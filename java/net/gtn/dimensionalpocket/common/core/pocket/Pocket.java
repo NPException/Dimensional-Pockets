@@ -32,9 +32,15 @@ public class Pocket {
     }
 
     public int getSideState(World world, ForgeDirection side) {
-        int powerLevel = world.isBlockProvidingPowerTo(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ(), side.getOpposite().ordinal());
+        CoordSet tempSet = chunkCoords.toBlockCoords();
 
-        DPLogger.info(powerLevel);
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 16; j++) {
+                for (int k = 0; k < 16; k++) {
+                    
+                }
+            }
+        }
 
         return powerLevel;
     }
@@ -164,9 +170,7 @@ public class Pocket {
             this.spawnSet = spawnSet;
 
         boolean flag = this.spawnSet.equals(spawnSet);
-        
-        
-        
+
         return flag;
     }
 
