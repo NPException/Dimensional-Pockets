@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-import net.gtn.dimensionalpocket.client.UtilFX;
+import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -28,9 +28,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
 
-    @SideOnly(Side.CLIENT)
-    public IIcon particle;
-
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
@@ -51,8 +48,8 @@ public class BlockDimensionalPocket extends BlockDP {
                 // Pocket pocket = tile.getPocket();
                 // pocket.teleportTo(player);
             } else {
-//                for (int i = 0; i < 10; i++)
-                    UtilFX.createPlayerStream(player, new CoordSet(x, y, z), 100);
+                // for (int i = 0; i < 10; i++)
+                UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 100);
             }
         }
         return true;
@@ -126,12 +123,5 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        super.registerBlockIcons(iconRegister);
-        particle = iconRegister.registerIcon(Reference.MOD_IDENTIFIER + Strings.DIMENSIONAL_POCKET_PARTICLE);
     }
 }

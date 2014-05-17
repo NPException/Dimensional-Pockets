@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket;
 
 import net.gtn.dimensionalpocket.client.ClientProxy;
+import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
@@ -11,12 +12,15 @@ import net.gtn.dimensionalpocket.common.core.config.ConfigHandler;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,6 +31,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -62,6 +67,9 @@ public class DimensionalPockets {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.runServerSide();
+        proxy.runClientSide();
+        
+        MinecraftForge.EVENT_BUS.register(proxy);
 
         DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, false);
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
