@@ -85,8 +85,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
             strengthMap.put(direction, worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal()));
 
-//        DPLogger.info("");
-//        for (Integer i : strengthMap.values())
-//            DPLogger.info(i);
+        DPLogger.info("");
+        for (Integer i : strengthMap.values())
+            DPLogger.info(i);
     }
 }

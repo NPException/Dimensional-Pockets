@@ -27,22 +27,16 @@ public class GuiInfoBook extends GuiContainer {
 
         xSize = 154;
         ySize = 180;
-        
+
         initArrows();
     }
-    
+
     private void initArrows() {
-        int x = (width - tempXSize) / 2 + 2;
-        int y = (height - tempYSize) / 2 - 2 + (ySize / 2) - tempXSize;
-
-        int translateX = 44 * direction;
-        x += translateX;
-
-        int yPos = 194;
-        if (direction == -1)
-            yPos += 13;
+        int x = (width - xSize) / 2;
+        int y = (height - ySize) / 2;
         
-        
+        arrow1 = new GuiArrow(1, x + 50, y);
+        arrow2 = new GuiArrow(2, x, y + 20);
     }
 
     @Override
@@ -50,16 +44,15 @@ public class GuiInfoBook extends GuiContainer {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseZ) {
+    protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
-
-        DPLogger.info(mouseX);
-        DPLogger.info(mouseZ);
 
         mc.renderEngine.bindTexture(GuiSheet.GUI_INFO_BOOK);
 
         drawTexturedModalRect(x, y, 12, 1, xSize, ySize);
+        arrow1.renderArrow(mouseX, mouseY, 0);
+        arrow2.renderArrow(mouseX, mouseY, 0);
     }
 
     @Override
