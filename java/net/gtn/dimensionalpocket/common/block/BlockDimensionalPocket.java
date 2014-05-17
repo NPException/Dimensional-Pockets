@@ -11,6 +11,8 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -19,11 +21,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
+
+    @SideOnly(Side.CLIENT)
+    public IIcon particle;
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
@@ -39,13 +45,14 @@ public class BlockDimensionalPocket extends BlockDP {
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
             if (!world.isRemote) {
-//                if (!tile.hasPocket())
-//                    tile.generateNewPocket();
+                // if (!tile.hasPocket())
+                // tile.generateNewPocket();
 
-//                Pocket pocket = tile.getPocket();
-//                pocket.teleportTo(player);
+                // Pocket pocket = tile.getPocket();
+                // pocket.teleportTo(player);
             } else {
-                UtilFX.createParticleStream(player, new CoordSet(x, y, z), 50);
+//                for (int i = 0; i < 10; i++)
+                    UtilFX.createPlayerStream(player, new CoordSet(x, y, z), 100);
             }
         }
         return true;
@@ -120,11 +127,11 @@ public class BlockDimensionalPocket extends BlockDP {
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
         super.registerBlockIcons(iconRegister);
-//        iconRegister.registerIcon(var1);
+        particle = iconRegister.registerIcon(Reference.MOD_IDENTIFIER + Strings.DIMENSIONAL_POCKET_PARTICLE);
     }
 }

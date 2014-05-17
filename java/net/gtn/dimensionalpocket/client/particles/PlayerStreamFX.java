@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.client.particles;
 
+import net.gtn.dimensionalpocket.client.UtilFX;
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -20,20 +22,22 @@ public class PlayerStreamFX extends EntityFX {
 
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake) {
         super(world, player.posX, player.posY, player.posZ);
+        setParticleIcon(UtilFX.getDimensionalParticle());
+        noClip = true;
+        particleMaxAge = ticksToTake;
+
     }
 
     @Override
     public void onUpdate() {
-        
+        if (this.particleAge++ >= this.particleMaxAge)
+            this.setDead();
+
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
     }
 
     @Override
     public int getFXLayer() {
         return 2;
-    }
-
-    @Override
-    public void renderParticle(Tessellator tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
-        super.renderParticle(tessellator, par2, par3, par4, par5, par6, par7);
     }
 }
