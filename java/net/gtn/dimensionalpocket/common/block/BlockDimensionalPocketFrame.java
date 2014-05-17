@@ -67,21 +67,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     }
 
     @Override
-    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        DPLogger.info(x);
-        DPLogger.info(y);
-        DPLogger.info(z);
-
-        return super.canPlaceBlockAt(world, x, y, z);
-    }
-
-    @Override
-    public boolean canPlaceBlockOnSide(World p_149707_1_, int p_149707_2_, int p_149707_3_, int p_149707_4_, int p_149707_5_) {
-        DPLogger.info("CALELDELDLELD");
-        return super.canPlaceBlockOnSide(p_149707_1_, p_149707_2_, p_149707_3_, p_149707_4_, p_149707_5_);
-    }
-
-    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         boolean tru = true;
         if (tru)
@@ -111,7 +96,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             // return false;
             // }
             // }
-            DPLogger.info("Called here");
+            DPLogger.info("BEUG");
             return false;
         }
 

@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.items.framework.ItemDP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -24,7 +25,7 @@ public class ItemInfoTool extends ItemDP {
     }
 
     public void onRightClick(EntityPlayer player) {
-        
+
     }
 
 }
