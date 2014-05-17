@@ -13,16 +13,22 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class ClientProxy extends CommonProxy {
 
+    private static int currentPage = 0;
+
     @Override
     public void runClientSide() {
 
+    }
+
+    public static int getCurrentPage() {
+        return currentPage;
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case 0:
-                return new GuiInfoBook(player.getCurrentEquippedItem());
+                return new GuiInfoBook();
         }
         return null;
     }
