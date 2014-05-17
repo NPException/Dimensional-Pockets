@@ -25,7 +25,7 @@ public class ItemInfoTool extends ItemDP {
     }
 
     public void onRightClick(EntityPlayer player) {
-
+        DPLogger.info("ONRIGHT");
     }
 
 }

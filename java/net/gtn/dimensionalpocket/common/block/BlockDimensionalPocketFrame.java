@@ -43,11 +43,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     }
 
     @Override
-    public boolean isNormalCube() {
-        return true;
-    }
-
-    @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection direction = ForgeDirection.getOrientation(side);
         CoordSet coordSet = new CoordSet(x, y, z);

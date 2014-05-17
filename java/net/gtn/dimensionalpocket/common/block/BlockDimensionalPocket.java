@@ -48,6 +48,7 @@ public class BlockDimensionalPocket extends BlockDP {
                 Pocket pocket = tile.getPocket();
                 pocket.teleportTo(player);
             } else {
+                // TODO Sync for all clients.
                 for (int i = 0; i < 40; i++)
                     UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 15);
             }
@@ -98,15 +99,8 @@ public class BlockDimensionalPocket extends BlockDP {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
             tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
 
-            if (tile.hasPocket()) {
-                DPLogger.info(tile.getPocket().getBlockCoords());
-                DPLogger.info(tile.getPocket().getBlockDim());
-                DPLogger.info(tile.getPocket().getChunkCoords());
+            if (tile.hasPocket())
                 PocketRegistry.updatePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
-            }
-            DPLogger.info(tile.getPocket().getBlockCoords());
-            DPLogger.info(tile.getPocket().getBlockDim());
-            DPLogger.info(tile.getPocket().getChunkCoords());
         }
     }
 

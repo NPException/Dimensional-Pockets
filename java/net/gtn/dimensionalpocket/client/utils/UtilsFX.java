@@ -20,10 +20,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class UtilsFX {
 
-    static Map<String, ResourceLocation> boundTextures = new HashMap();
+    private static Map<String, ResourceLocation> boundTextures = new HashMap();
 
     public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), new Colour(0.4F, 0.4F, 0.4F, 0.5F));
+        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), new Colour(0.1F, 0.1F, 0.1F, 0.5F));
 
         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
     }
