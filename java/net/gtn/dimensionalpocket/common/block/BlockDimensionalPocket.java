@@ -58,22 +58,19 @@ public class BlockDimensionalPocket extends BlockDP {
      */
     // @formatter:on
     @Override
-    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
         ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
-        // TODO
-
-        DPLogger.info("WELL, ARE YOU?!");
-
-        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-        if (pocket == null)
-            return 0;
-
-        return pocket.getSideState((World) world, direction);
+        return blockAccess.isBlockProvidingPowerTo(x, y, z, direction.ordinal());
     }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
         return isProvidingWeakPower(world, x, y, z, side);
+    }
+
+    @Override
+    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        return false;
     }
 
     @Override

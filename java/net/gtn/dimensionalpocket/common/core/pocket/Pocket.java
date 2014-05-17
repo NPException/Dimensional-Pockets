@@ -31,12 +31,6 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    public int getSideState(World world, ForgeDirection side) {
-        CoordSet tempSet = chunkCoords.toBlockCoords();
-
-        return 15;
-    }
-
     public void generatePocket(World world) {
         if (generated)
             return;
