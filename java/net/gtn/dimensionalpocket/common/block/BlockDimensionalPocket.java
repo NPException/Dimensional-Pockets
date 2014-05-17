@@ -76,7 +76,6 @@ public class BlockDimensionalPocket extends BlockDP {
     
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        // TODO Auto-generated method stub
         super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);
     }
 

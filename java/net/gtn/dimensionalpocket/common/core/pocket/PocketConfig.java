@@ -76,8 +76,9 @@ public class PocketConfig {
             if (backLinkMap == null)
                 backLinkMap = new HashMap<CoordSet, Pocket>();
 
-            for (Pocket link : tempArray)
-                backLinkMap.put(link.getChunkCoords(), link);
+            if (tempArray != null)
+                for (Pocket link : tempArray)
+                    backLinkMap.put(link.getChunkCoords(), link);
 
         } catch (Exception e) {
             DPLogger.severe(e);
