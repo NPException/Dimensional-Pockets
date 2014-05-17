@@ -3,13 +3,19 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -18,6 +24,21 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
+    
+    @SideOnly(Side.SERVER)
+    private PocketTeleportPreparation telePrep;
+    
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        if (!worldObj.isRemote) {
+            if (telePrep != null) {
+                if (telePrep.doPrepareTick()) {
+                    telePrep = null;
+                }
+            }
+        }
+    }
 
     @Override
     public void onBlockPlaced() {
@@ -88,5 +109,19 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         DPLogger.info("");
         for (Integer i : strengthMap.values())
             DPLogger.info(i);
+    }
+
+    public void prepareTeleportIntoPocket(EntityPlayer player) {
+        int ticksToTake = 15;
+        if (!worldObj.isRemote) {
+            if (!hasPocket())
+                generateNewPocket();
+            // create a teleport preparation, which will then tick for the given amount of time, and then teleport the player
+            telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
+        } else {
+            // TODO Sync for all clients.
+            for (int i = 0; i < 40; i++)
+                UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
+        }
     }
 }
