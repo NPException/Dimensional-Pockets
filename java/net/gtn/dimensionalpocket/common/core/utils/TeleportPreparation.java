@@ -25,14 +25,25 @@ public class TeleportPreparation {
     }
     
     /**
-     * Returns true, when the preparation is done, and the teleport has been done
+     * Returns true, when the preparation is finished and the teleport has been done, so this can be cleaned up afterwards
      * @return
      */
-    boolean prepareTick() {
+    public boolean doPrepareTick() {
+        if (ticksBeforeTeleport < 0)
+            return true;
+        
+        ticksBeforeTeleport--;
+        
+        if (ticksBeforeTeleport <= 0) {
+            if (direction == Direction.INTO_POCKET) {
+                pocket.teleportTo(player);
+            } else {
+                pocket.teleportFrom(player);
+            }
+            return true;
+        }
+        
+        
         return false;
-    }
-    
-    private void teleportIntoPocket(EntityPlayer player) {
-        pocket.teleportTo(player);
     }
 }

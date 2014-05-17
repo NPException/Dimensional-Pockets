@@ -41,17 +41,7 @@ public class BlockDimensionalPocket extends BlockDP {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            if (!world.isRemote) {
-                if (!tile.hasPocket())
-                    tile.generateNewPocket();
-
-                Pocket pocket = tile.getPocket();
-                pocket.teleportTo(player);
-            } else {
-                // TODO Sync for all clients.
-                for (int i = 0; i < 40; i++)
-                    UtilsFX.createPlayerStream(player, new CoordSet(x, y, z), 15);
-            }
+            tile.prepareTeleportIntoPocket(player);
         }
         return true;
     }
