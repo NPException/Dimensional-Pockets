@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,6 +48,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        ForgeDirection direction = ForgeDirection.getOrientation(side);
         CoordSet coordSet = new CoordSet(x, y, z);
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
 
@@ -54,9 +56,18 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return 0;
 
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
-        ForgeDirection direction = ForgeDirection.getOrientation(side);
+        CoordSet blockSet = pocket.getBlockCoords();
 
-        return 15;
+        TileEntity tile = srcWorld.getTileEntity(blockSet.getY(), blockSet.getY(), blockSet.getZ());
+
+        if (tile instanceof TileDimensionalPocket)
+            return ((TileDimensionalPocket) tile).getStrength(direction);
+        return 0;
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
     }
 
     @Override
@@ -101,6 +112,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         }
 
         return true;
+    }
+    
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return side != -1;
     }
 
     @Override

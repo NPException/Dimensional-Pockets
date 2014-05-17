@@ -1,16 +1,22 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
+    private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
 
     @Override
@@ -67,5 +73,19 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
         pocket = PocketRegistry.getPocket(tempSet);
+    }
+
+    public int getStrength(ForgeDirection direction) {
+        return strengthMap.get(direction);
+    }
+
+    @Override
+    public void onNeighbourBlockChanged() {
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+            strengthMap.put(direction, worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal()));
+
+        DPLogger.info("");
+        for (Integer i : strengthMap.values())
+            DPLogger.info(i);
     }
 }

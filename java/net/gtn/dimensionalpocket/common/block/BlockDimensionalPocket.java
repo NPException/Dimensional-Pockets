@@ -46,13 +46,8 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        return true;
+        return side != -1;
     }
-
-//    @Override
-//    public boolean canProvidePower() {
-//        return true;
-//    }
 
     // @formatter:off
     /**
@@ -79,14 +74,6 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
         return isProvidingWeakPower(world, x, y, z, side);
-    }
-
-    @Override
-    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        // TODO Deal with this shit.
-        DPLogger.info("DEALING");
-        
-        super.onNeighborChange(world, x, y, z, tileX, tileY, tileZ);
     }
 
     @Override
