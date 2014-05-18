@@ -24,7 +24,6 @@ public class RedstoneHelper {
             int strength = Math.max(weak, strong);
 
             TileEntity tileEntity = world.getTileEntity(x, y, z);
-
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
 
             tile.getPocket().setInputSignal(direction.ordinal(), strength);
@@ -47,6 +46,9 @@ public class RedstoneHelper {
         int strength = Math.max(weak, strong);
 
         Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+
+        if (pocket == null)
+            return;
 
         pocket.setOutputSignal(wallSide.ordinal(), strength);
         DPLogger.info("Changed outputsignal: " + wallSide.name() + " to " + strength);
