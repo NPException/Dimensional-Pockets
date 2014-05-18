@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
@@ -11,18 +10,12 @@ import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.client.ForgeHooksClient;
 
 public class GuiInfoBook extends GuiContainer {
-
-    private static RenderBlocks renderBlocksInstance = new RenderBlocks();
 
     private GuiArrow arrow1;
     private GuiArrow arrow2;
