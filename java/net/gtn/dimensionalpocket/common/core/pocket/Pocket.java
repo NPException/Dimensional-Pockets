@@ -33,8 +33,8 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    public void generatePocketRoom(boolean forceRegen) {
-        if (generated && !forceRegen)
+    public void generatePocketRoom(boolean isRelight) {
+        if (generated && !isRelight)
             return;
 
         World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
@@ -64,9 +64,12 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
-                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrames[lightLevel]);
-
-                    world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
+                    if (isRelight) {
+                        world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrames[lightLevel]);
+                    } else {
+                        extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrames[lightLevel]);
+                        world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
+                    }
 
                     // use that method if setting things in the chunk will cause problems in the future
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);

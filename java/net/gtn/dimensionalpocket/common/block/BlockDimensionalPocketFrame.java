@@ -105,15 +105,15 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return false;
         }
 
-        boolean tru = true;
-        if (tru) {
-            if (world.isRemote)
-                return false;
-
-            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
-            DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
-            return false;
-        }
+//        boolean tru = true;
+//        if (tru) {
+//            if (world.isRemote)
+//                return false;
+//
+//            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
+//            DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
+//            return false;
+//        }
 
         if (!player.isSneaking())
             return false;
