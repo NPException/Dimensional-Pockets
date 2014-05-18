@@ -111,23 +111,7 @@ public class BlockDimensionalPocket extends BlockDP {
     
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {        
-        int offX = tileX - x;
-        int offY = tileY - y;
-        int offZ = tileZ - z;
-        
-        ForgeDirection direction = ForgeDirection.UNKNOWN;
-        
-        for (int i = 0; i<6; i++) {
-            ForgeDirection dir = ForgeDirection.values()[i];
-            if (dir.offsetX == offX && dir.offsetY == offY && dir.offsetZ == offZ) {
-                direction = dir;
-                break;
-            }
-        }
-        
-        if (direction != ForgeDirection.UNKNOWN) {
-            checkNeighbourAndUpdateInputStrength(world, x, y, z, tileX, tileY, tileZ, direction);
-        }
+        checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
     
     @Override
@@ -135,31 +119,32 @@ public class BlockDimensionalPocket extends BlockDP {
         if (block == Blocks.air)
             return;
         
+        checkNeighboursAndUpdateInputStrength(world, x, y, z);
+    }
+    
+    private void checkNeighboursAndUpdateInputStrength(IBlockAccess world, int x, int y, int z) {
         for (ForgeDirection direction : ForgeDirection.values()) {
             int neighbourX = x+direction.offsetX;
             int neighbourY = y+direction.offsetY;
             int neighbourZ = z+direction.offsetZ;
             
-            if (direction == ForgeDirection.UNKNOWN || world.getBlock(neighbourX, neighbourY, neighbourZ) != block)
+            Block neighbourBlock = world.getBlock(neighbourX, neighbourY, neighbourZ);
+            
+            if (direction == ForgeDirection.UNKNOWN)
                 continue;
             
-            checkNeighbourAndUpdateInputStrength(world, x, y, z, neighbourX, neighbourY, neighbourZ, direction);
-        }
-    }
-    
-    private void checkNeighbourAndUpdateInputStrength(IBlockAccess world, int x, int y, int z, int neighbourX, int neighbourY, int neighbourZ, ForgeDirection direction) {
-        Block block = world.getBlock(neighbourX, neighbourY, neighbourZ);
-        int weak = block.isProvidingWeakPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
-        int strong = block.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
-        int strength = Math.max(weak, strong);
+            int weak = neighbourBlock.isProvidingWeakPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
+            int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
+            int strength = Math.max(weak, strong);
 
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
 
-        if (tile.hasPocket()) {
-            tile.getPocket().setInputSignal(direction.ordinal(), strength);
-            DPLogger.info("Changed inputsignal: " + direction.name() + " to " + strength);
+            if (tile.hasPocket()) {
+                tile.getPocket().setInputSignal(direction.ordinal(), strength);
+                DPLogger.info("Changed inputsignal: " + direction.name() + " to " + strength);
+            }
         }
     }
 }
