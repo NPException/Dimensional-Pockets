@@ -45,7 +45,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     private int fetchLightLevel() {
         float highestLevel = 0f;
         worldObj.getLightBrightness(xCoord, yCoord+1, zCoord);
-        return 0;
+        return 15;
     }
 
     @Override

@@ -29,14 +29,14 @@ public class Pocket {
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
         lightLevel = initialLightLevel;
-        
+
         spawnSet = new CoordSet(1, 1, 1);
     }
 
     public void generatePocketRoom(boolean forceRegen) {
         if (generated && !forceRegen)
             return;
-        
+
         World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
         int worldX = chunkCoords.getX() * 16;
@@ -74,10 +74,10 @@ public class Pocket {
 
         if (!generated)
             ChunkLoaderHandler.addPocketChunkToLoader(world, this);
-        
+
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
-    
+
     public int getSideState(int side) {
         return 0;
     }
@@ -96,14 +96,14 @@ public class Pocket {
         tempSet.addCoordSet(spawnSet);
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
-        
+
         generatePocketRoom(false);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
-        
+
         return true;
     }
 
@@ -180,5 +180,24 @@ public class Pocket {
             this.lightLevel = lightLevel;
             generatePocketRoom(true);
         }
+    }
+
+    public ForgeDirection getSideForBlock(CoordSet coordSet) {
+        ForgeDirection direction = ForgeDirection.UNKNOWN;
+
+        if (coordSet.getX() == 0)
+            return ForgeDirection.WEST;
+        if (coordSet.getX() == 15)
+            return ForgeDirection.EAST;
+        if (coordSet.getY() == 0)
+            return ForgeDirection.DOWN;
+        if (coordSet.getY() == 15)
+            return ForgeDirection.UP;
+        if (coordSet.getZ() == 0)
+            return ForgeDirection.NORTH;
+        if (coordSet.getZ() == 15)
+            return ForgeDirection.SOUTH;
+
+        return direction;
     }
 }
