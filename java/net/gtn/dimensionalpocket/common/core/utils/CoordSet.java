@@ -144,4 +144,8 @@ public class CoordSet {
 
         return this;
     }
+
+    public CoordSet toSpawnPoint() {
+        return copy().asSpawnPoint();
+    }
 }

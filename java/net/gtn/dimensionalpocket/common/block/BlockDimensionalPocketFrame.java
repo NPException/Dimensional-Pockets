@@ -6,7 +6,9 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,17 +48,15 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-        
+
         Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-        
+
         if (pocket == null)
             return 0;
 
         DPLogger.info("Side of pocket: " + pocketSide);
         DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + pocket.getInputSignal(side));
-        //DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
-        //return getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal());
-        
+
         return pocket.getInputSignal(pocketSide.ordinal());
     }
 
@@ -107,6 +107,16 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         }
 
         return true;
+    }
+
+    @Override
+    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+        RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
     }
 
     @Override
