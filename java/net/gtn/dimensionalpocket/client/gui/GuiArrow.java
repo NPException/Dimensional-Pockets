@@ -46,7 +46,7 @@ public class GuiArrow extends Gui {
             tempX += INCREMENTAL_WIDTH;
             if (clicked) {
                 tempX += INCREMENTAL_WIDTH;
-                if (System.currentTimeMillis() - timeClicked > 150)
+                if (System.currentTimeMillis() - timeClicked > 125)
                     clicked = false;
             }
         }

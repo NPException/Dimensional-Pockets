@@ -104,17 +104,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         return strengthMap.get(direction).intValue();
     }
 
-    @Override
-    public void onNeighbourBlockChanged() {
-        // TODO This searches around and updates the strengthMap
-        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            strengthMap.put(direction, Integer.valueOf(worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal())));
-
-        DPLogger.info("");
-        for (Integer i : strengthMap.values())
-            DPLogger.info(i);
-    }
-
     public void prepareTeleportIntoPocket(EntityPlayer player) {
         int ticksToTake = 15;
         if (!worldObj.isRemote) {

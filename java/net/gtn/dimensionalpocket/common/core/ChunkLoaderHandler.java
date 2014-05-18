@@ -71,7 +71,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
 
         Ticket ticket = ticketMap.get(pocket);
         ForgeChunkManager.releaseTicket(ticket);
-        ticketMap.remove(ticket);
+        ticketMap.remove(pocket);
     }
 
     private static boolean isChunkLoadedAlready(Pocket pocket, ChunkCoordIntPair pocketPair) {

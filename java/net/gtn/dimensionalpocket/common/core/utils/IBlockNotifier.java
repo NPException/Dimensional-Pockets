@@ -6,6 +6,4 @@ public interface IBlockNotifier {
 	
 	public void onBlockDestroyed();
 	
-	public void onNeighbourBlockChanged();
-	
 }
