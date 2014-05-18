@@ -49,13 +49,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-        ForgeDirection blockSide = ForgeDirection.getOrientation(side);
 
         DPLogger.info("Side of pocket: " + pocketSide);
-        DPLogger.info("PowerLevel for " + blockSide + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
+        DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
 
-        int sidePower = getPowerForSideOfPocket(x, y, z, pocketSide.ordinal());
-        return sidePower;
+        return getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal());
     }
 
     public int getPowerForSideOfPocket(int x, int y, int z, int side) {
@@ -69,12 +67,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         Block block = srcWorld.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
 
-        if (block instanceof BlockDimensionalPocket) {
-            BlockDimensionalPocket blockPocket = (BlockDimensionalPocket) block;
-            ForgeDirection dir = ForgeDirection.getOrientation(side);
-
-            return blockPocket.getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), dir.ordinal());
-        }
+        if (block instanceof BlockDimensionalPocket)
+            return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), side);
 
         return 0;
     }
@@ -111,15 +105,15 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return false;
         }
 
-        // boolean tru = true;
-        // if (tru) {
-        // if (world.isRemote)
-        // return false;
-        //
-        // DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
-        // DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
-        // return false;
-        // }
+        boolean tru = true;
+        if (tru) {
+            if (world.isRemote)
+                return false;
+
+            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
+            DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
+            return false;
+        }
 
         if (!player.isSneaking())
             return false;

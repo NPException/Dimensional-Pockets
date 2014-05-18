@@ -56,10 +56,6 @@ public class GuiInfoBook extends GuiContainer {
     }
 
     @Override
-    public void drawDefaultBackground() {
-    }
-
-    @Override
     public void onGuiClosed() {
         ClientProxy.currentPage = currentPage;
     }
