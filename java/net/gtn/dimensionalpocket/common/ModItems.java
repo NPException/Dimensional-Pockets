@@ -32,7 +32,7 @@ public class ModItems {
                                "#E#",
 
                                Character.valueOf('#'),
-                               new ItemStack(Blocks.stonebrick, 1, 2),
+                               new ItemStack(Blocks.stonebrick, 1, 0),
 
                                Character.valueOf('I'),
                                Blocks.iron_block,
@@ -43,6 +43,27 @@ public class ModItems {
                                Character.valueOf('N'),
                                new ItemStack(ModItems.craftingItems, 1, NETHER_CRYSTAL_META),
 
+                               Character.valueOf('E'),
+                               new ItemStack(ModItems.craftingItems, 1, ENDER_CRYSTAL_META)
+        });
+
+        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
+                new Object[] { "#E#",
+                               "IDI",
+                               "#N#",
+            
+                               Character.valueOf('#'),
+                               new ItemStack(Blocks.stonebrick, 1, 0),
+            
+                               Character.valueOf('I'),
+                               Blocks.iron_block,
+            
+                               Character.valueOf('D'),
+                               Blocks.diamond_block,
+            
+                               Character.valueOf('N'),
+                               new ItemStack(ModItems.craftingItems, 1, NETHER_CRYSTAL_META),
+            
                                Character.valueOf('E'),
                                new ItemStack(ModItems.craftingItems, 1, ENDER_CRYSTAL_META)
         });
