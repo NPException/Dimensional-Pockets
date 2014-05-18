@@ -9,6 +9,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class WorldProviderPocket extends WorldProvider {
+    
+    public WorldProviderPocket() {
+        hasNoSky = true;
+    }
 
     @Override
     public IChunkProvider createChunkGenerator() {

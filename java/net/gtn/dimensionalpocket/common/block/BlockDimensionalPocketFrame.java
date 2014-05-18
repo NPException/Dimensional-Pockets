@@ -40,6 +40,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         }
         return (int) (pocket.getLightLevel() * 15.0f);
     }
+    
+    @Override
+    public int getLightOpacity() {
+        return 15;
+    }
 
     @Override
     public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {

@@ -24,11 +24,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
-    
+
     private int ticksSinceLastLightCheck = 0;
-    
+
     private PocketTeleportPreparation telePrep;
-    
+
     @Override
     public void updateEntity() {
         if (!worldObj.isRemote) {
@@ -39,7 +39,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             }
             if (ticksSinceLastLightCheck++ > 200) {
                 ticksSinceLastLightCheck = 0;
-                
+                if (hasPocket())
+                    pocket.setLightLevel(worldObj.getLightBrightness(xCoord, yCoord, zCoord));
             }
         }
     }

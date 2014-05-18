@@ -24,7 +24,7 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
-    private float lightLevel;
+    private float lightLevel = 1f;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -89,13 +89,14 @@ public class Pocket {
         tempSet.addCoordSet(spawnSet);
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
+        
+        generatePocket(MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID));
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
-
-        generatePocket(player.worldObj);
+        
         return true;
     }
 
