@@ -6,7 +6,6 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
 
@@ -43,22 +41,22 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
     }
 
-    @Override
-    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+    // @Override
+    // public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+    // // ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+    //
+    // // Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+    //
+    // // if (pocket == null)
+    // return 0;
+    //
+    // // return pocket.getInputSignal(pocketSide.ordinal());
+    // }
 
-        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-
-        if (pocket == null)
-            return 0;
-
-        return pocket.getInputSignal(pocketSide.ordinal());
-    }
-
-    @Override
-    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-        return isProvidingWeakPower(world, x, y, z, side);
-    }
+//    @Override
+//    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+//        return isProvidingWeakPower(world, x, y, z, side);
+//    }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
@@ -105,20 +103,20 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         return true;
     }
 
-    @Override
-    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
-    }
+    // @Override
+    // public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+    // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
+    // }
 
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
-    }
+    // @Override
+    // public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+    // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
+    // }
 
-    @Override
-    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        return side != -1;
-    }
+    // @Override
+    // public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+    // return side != -1;
+    // }
 
     @Override
     public boolean renderWithModel() {

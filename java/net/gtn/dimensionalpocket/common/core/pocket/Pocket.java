@@ -24,8 +24,8 @@ public class Pocket {
     private CoordSet blockCoords, spawnSet;
     private int lightLevel;
 
-    private int[] outputSignals;
-    private int[] inputSignals;
+//    private int[] outputSignals;
+//    private int[] inputSignals;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords, int initialLightLevel) {
         setBlockDim(blockDim);
@@ -36,39 +36,39 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    private int[] getOutputSignals() {
-        if (outputSignals == null)
-            outputSignals = new int[6];
-        return outputSignals;
-    }
+//    private int[] getOutputSignals() {
+//        if (outputSignals == null)
+//            outputSignals = new int[6];
+//        return outputSignals;
+//    }
+//
+//    private int[] getInputSignals() {
+//        if (inputSignals == null)
+//            inputSignals = new int[6];
+//        return inputSignals;
+//    }
 
-    private int[] getInputSignals() {
-        if (inputSignals == null)
-            inputSignals = new int[6];
-        return inputSignals;
-    }
-
-    public void setOutputSignal(int side, int strength) {
-        getOutputSignals()[side] = strength;
-    }
-
-    public void setInputSignal(int side, int strength) {
-        getInputSignals()[side] = strength;
-    }
-
-    public int getOutputSignal(int side) {
-        if (side > 5)
-            return 0;
-
-        return getOutputSignals()[side];
-    }
-
-    public int getInputSignal(int side) {
-        if (side > 5)
-            return 0;
-
-        return getInputSignals()[side];
-    }
+//    public void setOutputSignal(int side, int strength) {
+//        getOutputSignals()[side] = strength;
+//    }
+//
+//    public void setInputSignal(int side, int strength) {
+//        getInputSignals()[side] = strength;
+//    }
+//
+//    public int getOutputSignal(int side) {
+//        if (side > 5)
+//            return 0;
+//
+//        return getOutputSignals()[side];
+//    }
+//
+//    public int getInputSignal(int side) {
+//        if (side > 5)
+//            return 0;
+//
+//        return getInputSignals()[side];
+//    }
 
     public void generatePocketRoom(boolean isRelight) {
         if (generated && !isRelight)
