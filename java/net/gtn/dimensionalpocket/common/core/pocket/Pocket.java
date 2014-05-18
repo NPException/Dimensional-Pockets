@@ -181,8 +181,8 @@ public class Pocket {
             generatePocketRoom(true);
         }
     }
-
-    public ForgeDirection getSideForBlock(CoordSet coordSet) {
+    
+    public static ForgeDirection getSideForBlock(CoordSet coordSet) {
         ForgeDirection direction = ForgeDirection.UNKNOWN;
 
         if (coordSet.getX() == 0)

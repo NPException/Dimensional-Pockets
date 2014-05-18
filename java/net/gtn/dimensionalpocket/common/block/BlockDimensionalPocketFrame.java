@@ -57,7 +57,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         int sidePower = getPowerForSideOfPocket(x, y, z, pocketSide.ordinal());
         
-        DPLogger.info("Side of pocket: " + pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
+        DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
         DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
         
         return sidePower;
@@ -120,12 +120,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (tru) {
             if (world.isRemote)
                 return false;
-            Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
 
-            if (pocket == null)
-                return false;
-
-            DPLogger.info("Side of pocket: " + pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
+            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
 
             DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
             return false;
