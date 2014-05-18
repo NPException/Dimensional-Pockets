@@ -25,20 +25,22 @@ public class ChunkLoaderHandler implements LoadingCallback {
     @Override
     public void ticketsLoaded(List<Ticket> tickets, World world) {
         for (Ticket ticket : tickets) {
-            if (ticket != null) {
-                CoordSet chunkSet = CoordSet.readFromNBT(ticket.getModData());
-                Pocket pocket = PocketRegistry.getPocket(chunkSet);
+            if (ticket == null)
+                continue;
+            CoordSet chunkSet = CoordSet.readFromNBT(ticket.getModData());
+            Pocket pocket = PocketRegistry.getPocket(chunkSet);
 
-                if (pocket != null) {
-                    if (ticketMap.containsKey(pocket))
-                        ForgeChunkManager.releaseTicket(ticket);
+            if (pocket != null && pocket.isSourceBlockPlaced()) {
+                Ticket tempTicket = ticketMap.get(pocket);
+                if (tempTicket != null)
+                    ForgeChunkManager.releaseTicket(tempTicket);
 
-                    ticketMap.put(pocket, ticket);
-                    ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ()));
-                } else {
-                    ForgeChunkManager.releaseTicket(ticket);
-                }
+                ticketMap.put(pocket, ticket);
+                ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(chunkSet.getX(), chunkSet.getZ()));
+            } else {
+                ForgeChunkManager.releaseTicket(ticket);
             }
+
         }
     }
 

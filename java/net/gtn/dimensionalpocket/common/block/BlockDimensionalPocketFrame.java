@@ -92,6 +92,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return false;
 
         if (player.dimension == Reference.DIMENSION_ID) {
+            player.setSneaking(false);
             if (world.isRemote)
                 return true;
 
