@@ -5,21 +5,12 @@ import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.tileentity.SharedTileDPFrame;
 
 public class PocketRegistry {
 
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
-    
-    private static SharedTileDPFrame sharedFrameTile;
-    
-    public static SharedTileDPFrame getSharedFrameTile() {
-        if (sharedFrameTile == null)
-            sharedFrameTile = new SharedTileDPFrame();
-        return sharedFrameTile;           
-    }
 
     public static Pocket getPocket(CoordSet chunkCoords) {
         if (backLinkMap.containsKey(chunkCoords))
@@ -27,11 +18,11 @@ public class PocketRegistry {
         return null;
     }
 
-    public static Pocket generateNewPocket(int dimIDSource, CoordSet coordSetSource) {
-        if (currentChunk.getY() == 16)
+    public static Pocket generateNewPocket(int dimIDSource, CoordSet coordSetSource, int initialLightLevel) {
+        if (currentChunk.getY() >= 16)
             currentChunk.setY(0).addX(1);
 
-        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
+        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource, initialLightLevel);
         backLinkMap.put(pocket.getChunkCoords(), pocket);
 
         // add one here, so we start at 0 with the first room

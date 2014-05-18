@@ -20,24 +20,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
 
-    public BlockDimensionalPocketFrame(Material material, String name) {
+    public BlockDimensionalPocketFrame(Material material, String name, float lightLevel) {
         super(material, name);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightLevel(1f);
+        setLightLevel(lightLevel);
         setLightOpacity(15);
         disableStats();
         setCreativeTab(null);
     }
-    
-//    @Override
-//    public int getLightValue(IBlockAccess world, int x, int y, int z) {
-//        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
-//        if (pocket == null) {
-//            return 15;
-//        }
-//        return (int) (pocket.getLightLevel() * 15.0f);
-//    }
 
     @Override
     public boolean canEntityDestroy(IBlockAccess world, int x, int y, int z, Entity entity) {
