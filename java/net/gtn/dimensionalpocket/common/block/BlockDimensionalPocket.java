@@ -7,6 +7,7 @@ import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +21,12 @@ public class BlockDimensionalPocket extends BlockDP {
         super(material, name);
         setHardness(4F);
         setResistance(15F);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
+        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+        RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
 
     @Override
@@ -40,7 +47,8 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        return side != -1;
+        return false;
+        // return side != -1;
     }
 
     // @formatter:off
@@ -85,14 +93,14 @@ public class BlockDimensionalPocket extends BlockDP {
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
     }
-    
+
     @Override
-    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {        
+    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
         RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
-    
+
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {        
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
 }

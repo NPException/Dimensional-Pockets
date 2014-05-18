@@ -54,6 +54,6 @@ public class RedstoneHelper {
         DPLogger.info("Changed outputsignal: " + wallSide.name() + " to " + strength);
 
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
-        srcWorld.setBlockMetadataWithNotify(x, y, z, 0, 4);
+        srcWorld.markBlockForUpdate(x, y, z);
     }
 }

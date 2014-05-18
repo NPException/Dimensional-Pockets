@@ -23,7 +23,7 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
     private int lightLevel;
-    
+
     private int[] outputSignals;
     private int[] inputSignals;
 
@@ -32,27 +32,36 @@ public class Pocket {
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
         lightLevel = initialLightLevel;
-        
-        outputSignals = new int[6];
-        inputSignals = new int[6];
 
         spawnSet = new CoordSet(1, 1, 1);
     }
-    
+
+    private int[] getOutputSignals() {
+        if (outputSignals == null)
+            outputSignals = new int[6];
+        return outputSignals;
+    }
+
+    private int[] getInputSignals() {
+        if (inputSignals == null)
+            inputSignals = new int[6];
+        return inputSignals;
+    }
+
     public void setOutputSignal(int side, int strength) {
-        outputSignals[side] = strength;
+        getOutputSignals()[side] = strength;
     }
-    
+
     public void setInputSignal(int side, int strength) {
-        inputSignals[side] = strength;
+        getInputSignals()[side] = strength;
     }
-    
+
     public int getOutputSignal(int side) {
-        return outputSignals[side];
+        return getOutputSignals()[side];
     }
-    
+
     public int getInputSignal(int side) {
-        return inputSignals[side];
+        return getInputSignals()[side];
     }
 
     public void generatePocketRoom(boolean isRelight) {
@@ -87,7 +96,7 @@ public class Pocket {
                         continue;
 
                     if (isRelight) {
-                        world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrames[lightLevel]);
+                        world.setBlock(worldX + x, worldY + y, worldZ + z, ModBlocks.dimensionalPocketFrames[lightLevel]);
                     } else {
                         extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrames[lightLevel]);
                         world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
@@ -202,7 +211,7 @@ public class Pocket {
             generatePocketRoom(true);
         }
     }
-    
+
     public static ForgeDirection getSideForBlock(CoordSet coordSet) {
         ForgeDirection direction = ForgeDirection.UNKNOWN;
 
