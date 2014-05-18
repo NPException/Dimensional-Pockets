@@ -55,7 +55,6 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
         TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
-
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
             if (tile.hasPocket())
