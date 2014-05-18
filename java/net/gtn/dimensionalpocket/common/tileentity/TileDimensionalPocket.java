@@ -1,8 +1,5 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -10,13 +7,11 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
@@ -34,7 +29,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
                     telePrep = null;
                 }
             }
-            if (ticksSinceLastLightCheck++ > 20000) {
+            if (ticksSinceLastLightCheck++ > 200) {
                 ticksSinceLastLightCheck = 0;
                 if (hasPocket())
                     pocket.setLightLevel(fetchLightLevel());
@@ -44,8 +39,25 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     
     private int fetchLightLevel() {
         float highestLevel = 0f;
-        worldObj.getLightBrightness(xCoord, yCoord+1, zCoord);
-        return 15;
+        float level = worldObj.getLightBrightness(xCoord+1, yCoord, zCoord);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        level = worldObj.getLightBrightness(xCoord-1, yCoord, zCoord);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        level = worldObj.getLightBrightness(xCoord, yCoord+1, zCoord);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        level = worldObj.getLightBrightness(xCoord, yCoord-1, zCoord);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord+1);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord-1);
+        highestLevel = (level>highestLevel) ? level : highestLevel;
+        
+        return Math.round(highestLevel * 15f);
     }
 
     @Override
