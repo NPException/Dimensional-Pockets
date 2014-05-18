@@ -27,6 +27,9 @@ public class PocketRegistry {
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
+        
+        saveData();
+        
         return pocket;
     }
 
@@ -39,6 +42,8 @@ public class PocketRegistry {
 
         link.setBlockDim(newBlockDimID);
         link.setBlockCoords(newBlockCoords);
+        
+        saveData();
     }
 
     public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnSet) {
@@ -49,6 +54,8 @@ public class PocketRegistry {
         }
 
         link.setSpawnSet(spawnSet);
+        
+        saveData();
     }
 
     public static void saveData() {
