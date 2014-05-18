@@ -29,6 +29,9 @@ public class BlockDimensionalPocket extends BlockDP {
         if (player == null)
             return true;
 
+        if (player.getCurrentEquippedItem() != null)
+            return false;
+
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
