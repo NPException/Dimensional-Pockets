@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -61,9 +62,20 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     }
 
     @Override
-    public void onBlockPlaced() {
-        if (!worldObj.isRemote)
-            getPocket().generatePocketRoom(false);
+    public void onBlockPlaced(EntityLivingBase entityLiving, ItemStack itemStack) {
+        if (worldObj.isRemote)
+            return;
+
+        getPocket().generatePocketRoom(false);
+
+        if (itemStack.hasTagCompound()) {
+            boolean success = setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+
+            if (!success)
+                throw new RuntimeException("YOU DESERVED THIS!");
+
+            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
+        }
     }
 
     @Override

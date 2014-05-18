@@ -3,13 +3,10 @@ package net.gtn.dimensionalpocket.common.block;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -72,27 +69,6 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         return false;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-        if (world.isRemote)
-            return;
-
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
-
-        if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
-
-            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            boolean success = tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
-            
-            if (!success) {
-                throw new RuntimeException("YOU DESERVED THIS!");
-            }
-
-            PocketRegistry.updatePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
-        }
     }
 
     @Override

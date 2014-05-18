@@ -33,8 +33,7 @@ public abstract class BlockDP extends Block {
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof IBlockNotifier)
-            ((IBlockNotifier) tileEntity).onBlockPlaced();
-        super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
+            ((IBlockNotifier) tileEntity).onBlockPlaced(entityLiving, itemStack);
     }
 
     @Override
