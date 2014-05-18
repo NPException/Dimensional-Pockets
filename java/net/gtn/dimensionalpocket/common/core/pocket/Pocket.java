@@ -23,14 +23,36 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
     private int lightLevel;
+    
+    private int[] outputSignals;
+    private int[] inputSignals;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords, int initialLightLevel) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
         lightLevel = initialLightLevel;
+        
+        outputSignals = new int[6];
+        inputSignals = new int[6];
 
         spawnSet = new CoordSet(1, 1, 1);
+    }
+    
+    public void setOutputSignal(int side, int strength) {
+        outputSignals[side] = strength;
+    }
+    
+    public void setInputSignal(int side, int strength) {
+        inputSignals[side] = strength;
+    }
+    
+    public int getOutputSignal(int side) {
+        return outputSignals[side];
+    }
+    
+    public int getInputSignal(int side) {
+        return inputSignals[side];
     }
 
     public void generatePocketRoom(boolean isRelight) {
