@@ -22,7 +22,7 @@ public class BiomeHelper {
         }
         init = true;
 
-        pocketBiome = new BiomeGenBase(98) {
+        pocketBiome = new BiomeGenBase(99) {
             @Override
             public boolean canSpawnLightningBolt() {
                 return false;
