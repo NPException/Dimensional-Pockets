@@ -5,12 +5,21 @@ import java.util.Map;
 
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.tileentity.SharedTileDPFrame;
 
 public class PocketRegistry {
 
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
+    
+    private static SharedTileDPFrame sharedFrameTile;
+    
+    public static SharedTileDPFrame getSharedFrameTile() {
+        if (sharedFrameTile == null)
+            sharedFrameTile = new SharedTileDPFrame();
+        return sharedFrameTile;           
+    }
 
     public static Pocket getPocket(CoordSet chunkCoords) {
         if (backLinkMap.containsKey(chunkCoords))
