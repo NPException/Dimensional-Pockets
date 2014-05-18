@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -111,40 +111,11 @@ public class BlockDimensionalPocket extends BlockDP {
     
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {        
-        checkNeighboursAndUpdateInputStrength(world, x, y, z);
+        RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
     
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        if (block == Blocks.air)
-            return;
-        
-        checkNeighboursAndUpdateInputStrength(world, x, y, z);
-    }
-    
-    private void checkNeighboursAndUpdateInputStrength(IBlockAccess world, int x, int y, int z) {
-        for (ForgeDirection direction : ForgeDirection.values()) {
-            int neighbourX = x+direction.offsetX;
-            int neighbourY = y+direction.offsetY;
-            int neighbourZ = z+direction.offsetZ;
-            
-            Block neighbourBlock = world.getBlock(neighbourX, neighbourY, neighbourZ);
-            
-            if (direction == ForgeDirection.UNKNOWN)
-                continue;
-            
-            int weak = neighbourBlock.isProvidingWeakPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
-            int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
-            int strength = Math.max(weak, strong);
-
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
-
-            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-
-            if (tile.hasPocket()) {
-                tile.getPocket().setInputSignal(direction.ordinal(), strength);
-                DPLogger.info("Changed inputsignal: " + direction.name() + " to " + strength);
-            }
-        }
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {        
+        RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
     }
 }
