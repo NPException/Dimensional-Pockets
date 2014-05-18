@@ -48,18 +48,13 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+        ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+        ForgeDirection blockSide = ForgeDirection.getOrientation(side);
 
-        if (pocket == null)
-            return 0;
-
-        ForgeDirection pocketSide = pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+        DPLogger.info("Side of pocket: " + pocketSide);
+        DPLogger.info("PowerLevel for " + blockSide + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
 
         int sidePower = getPowerForSideOfPocket(x, y, z, pocketSide.ordinal());
-        
-        DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
-        DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
-        
         return sidePower;
     }
 
@@ -116,16 +111,15 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return false;
         }
 
-        boolean tru = true;
-        if (tru) {
-            if (world.isRemote)
-                return false;
-
-            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
-
-            DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
-            return false;
-        }
+        // boolean tru = true;
+        // if (tru) {
+        // if (world.isRemote)
+        // return false;
+        //
+        // DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
+        // DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
+        // return false;
+        // }
 
         if (!player.isSneaking())
             return false;
