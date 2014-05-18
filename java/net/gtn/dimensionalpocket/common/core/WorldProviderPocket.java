@@ -3,13 +3,14 @@ package net.gtn.dimensionalpocket.common.core;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class WorldProviderPocket extends WorldProvider {
-    
+
     public WorldProviderPocket() {
         hasNoSky = true;
     }
@@ -18,7 +19,7 @@ public class WorldProviderPocket extends WorldProvider {
     public IChunkProvider createChunkGenerator() {
         return new ChunkGeneratorPocket(worldObj);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks) {
@@ -45,6 +46,17 @@ public class WorldProviderPocket extends WorldProvider {
     @Override
     public String getWelcomeMessage() {
         return "Entering the block...";
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float getStarBrightness(float par1) {
+        return 0.0F;
+    }
+
+    @Override
+    public BiomeGenBase getBiomeGenForCoords(int x, int z) {
+        return BiomeHelper.getPocketBiome();
     }
 
     @Override

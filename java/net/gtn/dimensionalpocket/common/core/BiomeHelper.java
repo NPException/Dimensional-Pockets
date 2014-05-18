@@ -1,9 +1,14 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import java.util.List;
+
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+
+import com.google.common.collect.Lists;
 
 public class BiomeHelper {
 
@@ -17,10 +22,15 @@ public class BiomeHelper {
         }
         init = true;
 
-        pocketBiome = new BiomeGenBase(99) {
+        pocketBiome = new BiomeGenBase(98) {
             @Override
             public boolean canSpawnLightningBolt() {
                 return false;
+            }
+
+            @Override
+            public List getSpawnableList(EnumCreatureType par1EnumCreatureType) {
+                return Lists.newArrayList();
             }
         }.setBiomeName("Pocket Dimension").setDisableRain();
 
