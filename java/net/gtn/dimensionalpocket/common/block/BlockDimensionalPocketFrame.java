@@ -5,7 +5,6 @@ import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -108,12 +107,12 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
+        // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
+        // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
     }
 
     @Override

@@ -102,23 +102,23 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        CoordSet coords = new CoordSet(x, y, z);
-        if (blocksCurrentlyUpdatedByTiles.contains(coords))
-            return;
-
-        blocksCurrentlyUpdatedByTiles.add(coords);
-        RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
-        blocksCurrentlyUpdatedByTiles.remove(coords);
+        // CoordSet coords = new CoordSet(x, y, z);
+        // if (blocksCurrentlyUpdatedByTiles.contains(coords))
+        // return;
+        //
+        // blocksCurrentlyUpdatedByTiles.add(coords);
+        // RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
+        // blocksCurrentlyUpdatedByTiles.remove(coords);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        CoordSet coords = new CoordSet(x, y, z);
-        if (blocksCurrentlyUpdatedByBlocks.contains(coords))
-            return;
-
-        blocksCurrentlyUpdatedByBlocks.add(coords);
-        RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
-        blocksCurrentlyUpdatedByBlocks.remove(coords);
+        // CoordSet coords = new CoordSet(x, y, z);
+        // if (blocksCurrentlyUpdatedByBlocks.contains(coords))
+        // return;
+        //
+        // blocksCurrentlyUpdatedByBlocks.add(coords);
+        // RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
+        // blocksCurrentlyUpdatedByBlocks.remove(coords);
     }
 }
