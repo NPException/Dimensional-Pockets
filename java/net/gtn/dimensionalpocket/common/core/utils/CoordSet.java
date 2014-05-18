@@ -2,7 +2,6 @@ package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class CoordSet {
 

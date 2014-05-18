@@ -3,18 +3,13 @@ package net.gtn.dimensionalpocket.common.core;
 import java.util.Arrays;
 import java.util.List;
 
-import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraft.world.gen.ChunkProviderFlat;
 
 import com.google.common.collect.Lists;
 
@@ -77,6 +72,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List getPossibleCreatures(EnumCreatureType var1, int var2, int var3, int var4) {
         return Lists.newArrayList();

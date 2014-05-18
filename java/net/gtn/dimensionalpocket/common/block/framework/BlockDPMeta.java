@@ -29,6 +29,7 @@ public abstract class BlockDPMeta extends BlockDP {
         GameRegistry.registerBlock(this, getItemBlockClass(), name);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item item, CreativeTabs tab, List list) {

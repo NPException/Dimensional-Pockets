@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.common;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -24,9 +23,9 @@ public class CommonProxy implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
-            case 0:
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override

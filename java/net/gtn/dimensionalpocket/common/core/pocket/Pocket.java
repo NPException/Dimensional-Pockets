@@ -1,8 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
@@ -16,7 +13,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
 
@@ -123,7 +119,7 @@ public class Pocket {
 
         } else {
             ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped");
-            comp.getChatStyle().setItalic(true);
+            comp.getChatStyle().setItalic(Boolean.TRUE);
             entityPlayer.addChatMessage(comp);
         }
 

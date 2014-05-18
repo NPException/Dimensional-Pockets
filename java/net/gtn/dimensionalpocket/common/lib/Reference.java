@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.common.lib;
 
-import net.gtn.dimensionalpocket.client.ClientProxy;
-import net.gtn.dimensionalpocket.common.CommonProxy;
 
 public class Reference {
 

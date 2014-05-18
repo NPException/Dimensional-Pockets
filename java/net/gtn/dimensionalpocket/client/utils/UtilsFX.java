@@ -6,7 +6,6 @@ import java.util.Random;
 
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -20,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class UtilsFX {
 
-    private static Map<String, ResourceLocation> boundTextures = new HashMap();
+    private static Map<String, ResourceLocation> boundTextures = new HashMap<String, ResourceLocation>();
 
     public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
         EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), new Colour(0.1F, 0.1F, 0.1F, 0.5F));

@@ -3,8 +3,6 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -103,14 +101,14 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     }
 
     public int getStrength(ForgeDirection direction) {
-        return strengthMap.get(direction);
+        return strengthMap.get(direction).intValue();
     }
 
     @Override
     public void onNeighbourBlockChanged() {
         // TODO This searches around and updates the strengthMap
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-            strengthMap.put(direction, worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal()));
+            strengthMap.put(direction, Integer.valueOf(worldObj.getIndirectPowerLevelTo(xCoord, yCoord, zCoord, direction.ordinal())));
 
         DPLogger.info("");
         for (Integer i : strengthMap.values())

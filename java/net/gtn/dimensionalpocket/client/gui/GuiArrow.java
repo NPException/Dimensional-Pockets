@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.client.gui;
 
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.client.gui.Gui;
 
 public class GuiArrow extends Gui {

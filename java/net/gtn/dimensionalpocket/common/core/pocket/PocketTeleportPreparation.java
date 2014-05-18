@@ -1,8 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
 import net.minecraft.entity.player.EntityPlayer;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 //@SideOnly(Side.SERVER)
 public class PocketTeleportPreparation {

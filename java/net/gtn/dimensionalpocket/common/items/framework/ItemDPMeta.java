@@ -21,6 +21,7 @@ public abstract class ItemDPMeta extends ItemDP {
         setHasSubtypes(true);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
