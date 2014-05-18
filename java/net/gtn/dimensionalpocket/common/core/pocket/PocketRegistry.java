@@ -3,8 +3,12 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 
 public class PocketRegistry {
 
@@ -19,13 +23,12 @@ public class PocketRegistry {
     }
 
     public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource, int initialLightLevel) {
-        
+
         for (Pocket pocket : backLinkMap.values()) {
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
                 return pocket;
         }
-        
-        
+
         if (currentChunk.getY() >= 16)
             currentChunk.setY(0).addX(1);
 
@@ -34,9 +37,9 @@ public class PocketRegistry {
 
         // add one here, so we start at 0 with the first room
         currentChunk.addY(1);
-        
+
         saveData();
-        
+
         return pocket;
     }
 
@@ -49,7 +52,7 @@ public class PocketRegistry {
 
         link.setBlockDim(newBlockDimID);
         link.setBlockCoords(newBlockCoords);
-        
+
         saveData();
     }
 
@@ -61,7 +64,7 @@ public class PocketRegistry {
         }
 
         link.setSpawnSet(spawnSet);
-        
+
         saveData();
     }
 
@@ -73,5 +76,10 @@ public class PocketRegistry {
     public static void loadData() {
         PocketConfig.loadBackLinkMap(backLinkMap);
         currentChunk = PocketConfig.loadCurrentChunk();
+
+        World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
+        for (Pocket pocket : backLinkMap.values()) {
+            ChunkLoaderHandler.addPocketChunkToLoader(world, pocket);
+        }
     }
 }

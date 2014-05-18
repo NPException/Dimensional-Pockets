@@ -57,10 +57,16 @@ public class Pocket {
     }
 
     public int getOutputSignal(int side) {
+        if (side > 5)
+            return 0;
+
         return getOutputSignals()[side];
     }
 
     public int getInputSignal(int side) {
+        if (side > 5)
+            return 0;
+
         return getInputSignals()[side];
     }
 

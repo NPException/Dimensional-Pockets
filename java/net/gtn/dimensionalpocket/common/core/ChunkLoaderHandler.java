@@ -40,7 +40,6 @@ public class ChunkLoaderHandler implements LoadingCallback {
             } else {
                 ForgeChunkManager.releaseTicket(ticket);
             }
-
         }
     }
 

@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -54,6 +55,7 @@ public class RedstoneHelper {
         DPLogger.info("Changed outputsignal: " + wallSide.name() + " to " + strength);
 
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
-        srcWorld.markBlockForUpdate(x, y, z);
+        srcWorld.func_147453_f(x, y, z, ModBlocks.dimensionalPocket);
+        srcWorld.notifyBlocksOfNeighborChange(x, y, z, ModBlocks.dimensionalPocket);
     }
 }
