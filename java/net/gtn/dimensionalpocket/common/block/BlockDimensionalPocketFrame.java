@@ -29,6 +29,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setResistance(6000000.0F);
         setLightLevel(lightLevel);
         setLightOpacity(15);
+        useNeighborBrightness = false;
         disableStats();
         setCreativeTab(null);
 
