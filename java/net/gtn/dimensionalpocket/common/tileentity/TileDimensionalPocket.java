@@ -31,8 +31,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             }
             if (ticksSinceLastLightCheck++ > 200) {
                 ticksSinceLastLightCheck = 0;
-                if (hasPocket())
-                    pocket.setLightLevel(fetchLightLevel());
+                getPocket().setLightLevel(fetchLightLevel());
             }
         }
     }
@@ -71,11 +70,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
-        if (hasPocket()) {
-            if (!itemStack.hasTagCompound())
+        if (!itemStack.hasTagCompound())
                 itemStack.setTagCompound(new NBTTagCompound());
-            pocket.getChunkCoords().writeToNBT(itemStack.getTagCompound());
-        }
+        getPocket().getChunkCoords().writeToNBT(itemStack.getTagCompound());
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
         entityItem.delayBeforeCanPickup = 0;
@@ -83,44 +80,39 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         worldObj.spawnEntityInWorld(entityItem);
     }
 
-    public void generateNewPocket() {
-        if (hasPocket())
-            return;
-        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet(), fetchLightLevel());
-    }
-
-    public boolean hasPocket() {
-        return pocket != null;
-    }
-
     public Pocket getPocket() {
+        if (pocket == null) {
+            pocket = PocketRegistry.getOrCreatePocket(worldObj.provider.dimensionId, getCoordSet(), fetchLightLevel());
+        }
         return pocket;
     }
 
     public boolean setPocket(CoordSet chunkSet) {
-        pocket = PocketRegistry.getPocket(chunkSet);
-        return pocket != null && pocket.getChunkCoords().equals(chunkSet);
+        Pocket newPocket = PocketRegistry.getPocket(chunkSet);
+        
+        if (newPocket != null)
+            pocket = newPocket;
+        
+        return newPocket != null && newPocket.getChunkCoords().equals(chunkSet);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (hasPocket())
-            pocket.getChunkCoords().writeToNBT(tag);
+        getPocket().getChunkCoords().writeToNBT(tag);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
+        
         pocket = PocketRegistry.getPocket(tempSet);
     }
 
     public void prepareTeleportIntoPocket(EntityPlayer player) {
         int ticksToTake = 15;
         if (!worldObj.isRemote) {
-            if (!hasPocket())
-                generateNewPocket();
             // create a teleport preparation, which will then tick for the given amount of time, and then teleport the player
             telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
         } else {

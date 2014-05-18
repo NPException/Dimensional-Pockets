@@ -18,7 +18,14 @@ public class PocketRegistry {
         return null;
     }
 
-    public static Pocket generateNewPocket(int dimIDSource, CoordSet coordSetSource, int initialLightLevel) {
+    public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource, int initialLightLevel) {
+        
+        for (Pocket pocket : backLinkMap.values()) {
+            if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
+                return pocket;
+        }
+        
+        
         if (currentChunk.getY() >= 16)
             currentChunk.setY(0).addX(1);
 

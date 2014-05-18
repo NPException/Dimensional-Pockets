@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
@@ -60,8 +59,7 @@ public class BlockDimensionalPocket extends BlockDP {
         TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            if (tile.hasPocket())
-                return tile.getPocket().getOutputSignal(ForgeDirection.getOrientation(side).getOpposite().ordinal());
+            return tile.getPocket().getOutputSignal(ForgeDirection.getOrientation(side).getOpposite().ordinal());
         }
         return 0;
     }
@@ -87,10 +85,13 @@ public class BlockDimensionalPocket extends BlockDP {
         if (itemStack.hasTagCompound() && tileEntity instanceof TileDimensionalPocket) {
 
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+            boolean success = tile.setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+            
+            if (!success) {
+                throw new RuntimeException("YOU DESERVED THIS!");
+            }
 
-            if (tile.hasPocket())
-                PocketRegistry.updatePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
+            PocketRegistry.updatePocket(tile.getPocket().getChunkCoords(), entityLiving.dimension, tile.getCoordSet());
         }
     }
 

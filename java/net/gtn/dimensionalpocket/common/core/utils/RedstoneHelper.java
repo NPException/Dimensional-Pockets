@@ -8,15 +8,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class RedstoneHelper {
     public static void checkNeighboursAndUpdateInputStrength(IBlockAccess world, int x, int y, int z) {
-        for (ForgeDirection direction : ForgeDirection.values()) {
+        for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
             int neighbourX = x+direction.offsetX;
             int neighbourY = y+direction.offsetY;
             int neighbourZ = z+direction.offsetZ;
             
             Block neighbourBlock = world.getBlock(neighbourX, neighbourY, neighbourZ);
-            
-            if (direction == ForgeDirection.UNKNOWN)
-                continue;
             
             int weak = neighbourBlock.isProvidingWeakPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
             int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
@@ -26,10 +23,8 @@ public class RedstoneHelper {
 
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
 
-            if (tile.hasPocket()) {
-                tile.getPocket().setInputSignal(direction.ordinal(), strength);
-                DPLogger.info("Changed inputsignal: " + direction.name() + " to " + strength);
-            }
+            tile.getPocket().setInputSignal(direction.ordinal(), strength);
+            DPLogger.info("Changed inputsignal: " + direction.name() + " to " + strength);
         }
     }
 }
