@@ -103,9 +103,9 @@ public class Pocket {
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
 
-    public int getSideState(int side) {
-        return 0;
-    }
+//    public int getSideState(int side) {
+//        return 0;
+//    }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))

@@ -48,29 +48,36 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-
-        DPLogger.info("Side of pocket: " + pocketSide);
-        DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
-
-        return getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal());
-    }
-
-    public int getPowerForSideOfPocket(int x, int y, int z, int side) {
+        
         Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-
+        
         if (pocket == null)
             return 0;
 
-        World srcWorld = DimensionManager.getWorld(pocket.getBlockDim());
-        CoordSet blockSet = pocket.getBlockCoords();
-
-        Block block = srcWorld.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
-
-        if (block instanceof BlockDimensionalPocket)
-            return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), side);
-
-        return 0;
+        DPLogger.info("Side of pocket: " + pocketSide);
+        DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + pocket.getInputSignal(side));
+        //DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal()));
+        //return getPowerForSideOfPocket(x, y, z, pocketSide.getOpposite().ordinal());
+        
+        return pocket.getInputSignal(pocketSide.ordinal());
     }
+
+//    public int getPowerForSideOfPocket(int x, int y, int z, int side) {
+//        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+//
+//        if (pocket == null)
+//            return 0;
+//
+//        World srcWorld = DimensionManager.getWorld(pocket.getBlockDim());
+//        CoordSet blockSet = pocket.getBlockCoords();
+//
+//        Block block = srcWorld.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
+//
+//        if (block instanceof BlockDimensionalPocket)
+//            return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), side);
+//
+//        return 0;
+//    }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
