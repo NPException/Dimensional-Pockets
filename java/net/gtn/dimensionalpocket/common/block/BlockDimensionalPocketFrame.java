@@ -5,7 +5,6 @@ import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -53,9 +52,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         if (pocket == null)
             return 0;
-
-        DPLogger.info("Side of pocket: " + pocketSide);
-        DPLogger.info("PowerLevel for " + pocketSide.getOpposite() + ": " + pocket.getInputSignal(side));
 
         return pocket.getInputSignal(pocketSide.ordinal());
     }

@@ -4,8 +4,10 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class RedstoneHelper {
@@ -44,7 +46,12 @@ public class RedstoneHelper {
         int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, neighbourSide.ordinal());
         int strength = Math.max(weak, strong);
 
-        PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords()).setOutputSignal(wallSide.ordinal(), strength);
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+
+        pocket.setOutputSignal(wallSide.ordinal(), strength);
         DPLogger.info("Changed outputsignal: " + wallSide.name() + " to " + strength);
+
+        World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
+        srcWorld.setBlockMetadataWithNotify(x, y, z, 0, 4);
     }
 }
