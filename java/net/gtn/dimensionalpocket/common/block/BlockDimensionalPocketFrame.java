@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -47,8 +48,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         ForgeDirection direction = ForgeDirection.getOrientation(side);
-        CoordSet coordSet = new CoordSet(x, y, z);
-        Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
 
         if (pocket == null)
             return 0;
@@ -58,8 +58,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         Block block = world.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
 
-        if (block instanceof BlockDimensionalPocket)
+        if (block instanceof BlockDimensionalPocket){
+            
             return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), direction.ordinal());
+        }
+        DPLogger.info("HALP");
         return 0;
     }
 

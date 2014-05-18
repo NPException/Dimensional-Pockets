@@ -20,7 +20,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
-    private Map<ForgeDirection, Integer> strengthMap = new HashMap<ForgeDirection, Integer>();
     private Pocket pocket;
 
     private int ticksSinceLastLightCheck = 0;
@@ -103,10 +102,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
         pocket = PocketRegistry.getPocket(tempSet);
-    }
-
-    public int getStrength(ForgeDirection direction) {
-        return strengthMap.get(direction).intValue();
     }
 
     public void prepareTeleportIntoPocket(EntityPlayer player) {
