@@ -4,11 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.utils.Colour;
+import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.client.utils.RecipeHelper;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.lib.GuiSheet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.EntityRenderer;

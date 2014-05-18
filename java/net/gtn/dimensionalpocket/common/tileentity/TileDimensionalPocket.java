@@ -35,27 +35,28 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             }
         }
     }
-    
+
     private int fetchLightLevel() {
         float highestLevel = 0f;
-        float level = worldObj.getLightBrightness(xCoord+1, yCoord, zCoord);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
-        level = worldObj.getLightBrightness(xCoord-1, yCoord, zCoord);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
-        level = worldObj.getLightBrightness(xCoord, yCoord+1, zCoord);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
-        level = worldObj.getLightBrightness(xCoord, yCoord-1, zCoord);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
-        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord+1);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
-        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord-1);
-        highestLevel = (level>highestLevel) ? level : highestLevel;
-        
+
+        float level = worldObj.getLightBrightness(xCoord + 1, yCoord, zCoord);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
+        level = worldObj.getLightBrightness(xCoord - 1, yCoord, zCoord);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
+        level = worldObj.getLightBrightness(xCoord, yCoord + 1, zCoord);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
+        level = worldObj.getLightBrightness(xCoord, yCoord - 1, zCoord);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
+        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord + 1);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
+        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord - 1);
+        highestLevel = (level > highestLevel) ? level : highestLevel;
+
         return Math.round(highestLevel * 15f);
     }
 
@@ -71,7 +72,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
         if (!itemStack.hasTagCompound())
-                itemStack.setTagCompound(new NBTTagCompound());
+            itemStack.setTagCompound(new NBTTagCompound());
         getPocket().getChunkCoords().writeToNBT(itemStack.getTagCompound());
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
@@ -89,10 +90,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     public boolean setPocket(CoordSet chunkSet) {
         Pocket newPocket = PocketRegistry.getPocket(chunkSet);
-        
+
         if (newPocket != null)
             pocket = newPocket;
-        
+
         return newPocket != null && newPocket.getChunkCoords().equals(chunkSet);
     }
 
@@ -106,7 +107,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
-        
+
         pocket = PocketRegistry.getPocket(tempSet);
     }
 
