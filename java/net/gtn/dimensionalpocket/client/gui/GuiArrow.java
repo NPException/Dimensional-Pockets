@@ -14,7 +14,8 @@ public class GuiArrow extends Gui {
     public static final int INCREMENTAL_WIDTH = 23;
     public static final int INCREMENTAL_HEIGHT = 13;
 
-    private int id, x, y, timeTicked;
+    private int id, x, y;
+    private long timeClicked;
     private boolean clicked = false;
 
     public GuiArrow(int id, int x, int y) {
@@ -30,7 +31,7 @@ public class GuiArrow extends Gui {
     public boolean onClick(int mouseX, int mouseY) {
         boolean flag = canClick(mouseX, mouseY);
         clicked = flag;
-        timeTicked = 20;
+        timeClicked = System.currentTimeMillis();
         return flag;
     }
 
@@ -42,11 +43,11 @@ public class GuiArrow extends Gui {
         int tempX = xPos;
         int tempY = yPos;
 
-        if (canClick(mouseX, mouseY)) {
+        if (canClick(mouseX, mouseY) || clicked) {
             tempX += INCREMENTAL_WIDTH;
             if (clicked) {
                 tempX += INCREMENTAL_WIDTH;
-                if (--timeTicked <= 0)
+                if (System.currentTimeMillis() - timeClicked > 150)
                     clicked = false;
             }
         }

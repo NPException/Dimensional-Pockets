@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -9,7 +8,6 @@ import net.gtn.dimensionalpocket.common.lib.GuiSheet;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
 public class GuiInfoBook extends GuiContainer {
