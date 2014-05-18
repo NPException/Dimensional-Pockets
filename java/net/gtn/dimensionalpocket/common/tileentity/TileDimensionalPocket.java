@@ -38,9 +38,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             if (ticksSinceLastLightCheck++ > 20000) {
                 ticksSinceLastLightCheck = 0;
                 if (hasPocket())
-                    pocket.setLightLevel((int) (worldObj.getLightBrightness(xCoord, yCoord, zCoord) * 15));
+                    pocket.setLightLevel(fetchLightLevel());
             }
         }
+    }
+    
+    private int fetchLightLevel() {
+        return 0;
     }
 
     @Override
@@ -69,8 +73,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void generateNewPocket() {
         if (hasPocket())
             return;
-        int initialLightLevel = (worldObj.getFullBlockLightValue(xCoord, yCoord, zCoord));
-        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet(),initialLightLevel);
+        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet(), fetchLightLevel());
     }
 
     public boolean hasPocket() {
