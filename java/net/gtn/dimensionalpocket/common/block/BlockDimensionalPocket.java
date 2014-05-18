@@ -63,7 +63,6 @@ public class BlockDimensionalPocket extends BlockDP {
     }
 
     public int getSurroundingPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
-        DPLogger.info("CALLED");
         ForgeDirection direction = ForgeDirection.getOrientation(side).getOpposite();
         return blockAccess.isBlockProvidingPowerTo(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ, direction.ordinal());
     }

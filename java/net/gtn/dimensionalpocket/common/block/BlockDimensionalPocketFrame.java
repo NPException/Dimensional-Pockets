@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
@@ -53,16 +54,14 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (pocket == null)
             return 0;
 
-        World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
+        World srcWorld = DimensionManager.getWorld(pocket.getBlockDim());
         CoordSet blockSet = pocket.getBlockCoords();
 
-        Block block = world.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
+        Block block = srcWorld.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
 
-        if (block instanceof BlockDimensionalPocket){
-            
+        if (block instanceof BlockDimensionalPocket)
             return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), direction.ordinal());
-        }
-        DPLogger.info("HALP");
+
         return 0;
     }
 
