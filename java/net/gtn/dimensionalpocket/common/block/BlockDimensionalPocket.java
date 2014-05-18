@@ -1,8 +1,11 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -16,6 +19,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
+
+    private Set<CoordSet> blocksCurrentlyUpdatedByTiles = new HashSet<CoordSet>();
+    private Set<CoordSet> blocksCurrentlyUpdatedByBlocks = new HashSet<CoordSet>();
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
@@ -96,11 +102,23 @@ public class BlockDimensionalPocket extends BlockDP {
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+        CoordSet coords = new CoordSet(x, y, z);
+        if (blocksCurrentlyUpdatedByTiles.contains(coords))
+            return;
+
+        blocksCurrentlyUpdatedByTiles.add(coords);
         RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
+        blocksCurrentlyUpdatedByTiles.remove(coords);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        CoordSet coords = new CoordSet(x, y, z);
+        if (blocksCurrentlyUpdatedByBlocks.contains(coords))
+            return;
+
+        blocksCurrentlyUpdatedByBlocks.add(coords);
         RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
+        blocksCurrentlyUpdatedByBlocks.remove(coords);
     }
 }
