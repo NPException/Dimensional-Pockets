@@ -62,6 +62,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onBlockPlaced() {
+        if (!worldObj.isRemote)
+            getPocket().generatePocketRoom(false);
     }
 
     @Override
