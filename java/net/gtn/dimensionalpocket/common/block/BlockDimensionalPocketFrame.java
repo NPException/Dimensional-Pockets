@@ -7,7 +7,6 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +15,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
@@ -61,23 +59,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         
         return pocket.getInputSignal(pocketSide.ordinal());
     }
-
-//    public int getPowerForSideOfPocket(int x, int y, int z, int side) {
-//        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-//
-//        if (pocket == null)
-//            return 0;
-//
-//        World srcWorld = DimensionManager.getWorld(pocket.getBlockDim());
-//        CoordSet blockSet = pocket.getBlockCoords();
-//
-//        Block block = srcWorld.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
-//
-//        if (block instanceof BlockDimensionalPocket)
-//            return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), side);
-//
-//        return 0;
-//    }
 
     @Override
     public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
