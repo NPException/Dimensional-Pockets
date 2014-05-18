@@ -21,13 +21,10 @@ public class PlayerStreamFX extends EntityFX {
 
     private Colour colour;
 
-    private CoordSet targetSet;
-
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand, Colour colour) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.6F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.6F));
         noClip = true;
         particleScale = 0.5F;
-        this.targetSet = targetSet;
         this.colour = colour;
         particleMaxAge = ticksToTake;
 

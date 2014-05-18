@@ -7,13 +7,11 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -105,16 +103,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             }
             return false;
         }
-
-//        boolean tru = true;
-//        if (tru) {
-//            if (world.isRemote)
-//                return false;
-//
-//            DPLogger.info("Side of pocket: " + Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint()));
-//            DPLogger.info("PowerLevel for " + ForgeDirection.getOrientation(side).name() + ": " + getPowerForSideOfPocket(x, y, z, side));
-//            return false;
-//        }
 
         if (!player.isSneaking())
             return false;

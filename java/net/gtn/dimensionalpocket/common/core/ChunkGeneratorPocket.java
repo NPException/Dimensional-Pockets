@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 public class ChunkGeneratorPocket implements IChunkProvider {
 
     private World worldObj;
-    private Block[] baseArray = new Block[65536];
 
     public ChunkGeneratorPocket(World worldObj) {
         this.worldObj = worldObj;

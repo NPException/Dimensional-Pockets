@@ -13,13 +13,11 @@ public class GuiArrow extends Gui {
     public static final int INCREMENTAL_WIDTH = 23;
     public static final int INCREMENTAL_HEIGHT = 13;
 
-    private int id, x, y;
+    private int x, y;
     private long timeClicked;
     private boolean clicked = false;
 
     public GuiArrow(int id, int x, int y) {
-        this.id = id;
-
         if (id == 2)
             yPos += 13;
 
