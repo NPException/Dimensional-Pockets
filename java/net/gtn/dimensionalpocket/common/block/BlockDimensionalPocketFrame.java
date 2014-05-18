@@ -7,6 +7,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +29,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setLightOpacity(15);
         disableStats();
         setCreativeTab(null);
-        
+
         String sharedName = name.substring(0, name.lastIndexOf("_"));
         setBlockTextureName(sharedName);
         setBlockName(sharedName);
@@ -55,10 +56,10 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         World srcWorld = MinecraftServer.getServer().worldServerForDimension(pocket.getBlockDim());
         CoordSet blockSet = pocket.getBlockCoords();
 
-        TileEntity tile = srcWorld.getTileEntity(blockSet.getY(), blockSet.getY(), blockSet.getZ());
+        Block block = world.getBlock(blockSet.getX(), blockSet.getY(), blockSet.getZ());
 
-        if (tile instanceof TileDimensionalPocket)
-            return ((TileDimensionalPocket) tile).getStrength(direction);
+        if (block instanceof BlockDimensionalPocket)
+            return ((BlockDimensionalPocket) block).getSurroundingPower(srcWorld, blockSet.getX(), blockSet.getY(), blockSet.getZ(), direction.ordinal());
         return 0;
     }
 

@@ -14,6 +14,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
 
@@ -75,6 +76,10 @@ public class Pocket {
             ChunkLoaderHandler.addPocketChunkToLoader(world, this);
         
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+    }
+    
+    public int getSideState(int side) {
+        return 0;
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
