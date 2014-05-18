@@ -35,10 +35,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
                     telePrep = null;
                 }
             }
-            if (ticksSinceLastLightCheck++ > 200) {
+            if (ticksSinceLastLightCheck++ > 20000) {
                 ticksSinceLastLightCheck = 0;
                 if (hasPocket())
-                    pocket.setLightLevel(worldObj.getLightBrightness(xCoord, yCoord, zCoord));
+                    pocket.setLightLevel((int) (worldObj.getLightBrightness(xCoord, yCoord, zCoord) * 15));
             }
         }
     }
@@ -69,8 +69,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void generateNewPocket() {
         if (hasPocket())
             return;
-        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet());
-        pocket.setLightLevel(worldObj.getLightBrightness(xCoord, yCoord, zCoord));
+        int initialLightLevel = (worldObj.getFullBlockLightValue(xCoord, yCoord, zCoord));
+        pocket = PocketRegistry.generateNewPocket(worldObj.provider.dimensionId, getCoordSet(),initialLightLevel);
     }
 
     public boolean hasPocket() {

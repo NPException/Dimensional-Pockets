@@ -28,6 +28,10 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setLightOpacity(15);
         disableStats();
         setCreativeTab(null);
+        
+        String sharedName = name.substring(0, name.lastIndexOf("_"));
+        setBlockTextureName(sharedName);
+        setBlockName(sharedName);
     }
 
     @Override

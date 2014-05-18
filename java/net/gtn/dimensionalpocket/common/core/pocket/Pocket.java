@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
+import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -20,19 +21,22 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
-    private float lightLevel = 1f;
+    private int lightLevel;
 
-    public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
+    public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords, int initialLightLevel) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
-
+        lightLevel = initialLightLevel;
+        
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    public void generatePocketRoom(World world) {
-        if (generated)
+    public void generatePocketRoom(boolean forceRegen) {
+        if (generated && !forceRegen)
             return;
+        
+        World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
         int worldX = chunkCoords.getX() * 16;
         int worldY = chunkCoords.getY() * 16;
@@ -59,7 +63,7 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
-                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrames[lightLevel]);
 
                     world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
 
@@ -67,8 +71,10 @@ public class Pocket {
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
 
-        ChunkLoaderHandler.addPocketChunkToLoader(world, this);
-        generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) == ModBlocks.dimensionalPocketFrame;
+        if (!generated)
+            ChunkLoaderHandler.addPocketChunkToLoader(world, this);
+        
+        generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
@@ -86,8 +92,7 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
         
-        World pocketWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
-        generatePocketRoom(pocketWorld);
+        generatePocketRoom(false);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -165,11 +170,10 @@ public class Pocket {
         this.blockCoords = blockCoords;
     }
 
-    public float getLightLevel() {
-        return lightLevel;
-    }
-
-    public void setLightLevel(float lightLevel) {
-        this.lightLevel = lightLevel;
+    public void setLightLevel(int lightLevel) {
+        if (this.lightLevel != lightLevel) {
+            this.lightLevel = lightLevel;
+            generatePocketRoom(true);
+        }
     }
 }
