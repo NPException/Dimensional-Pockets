@@ -13,7 +13,7 @@ public class ModItems {
 
     private static int ENDER_CRYSTAL_META = 0;
     private static int NETHER_CRYSTAL_META = 1;
-    
+
     public static Item infoTool;
     public static Item craftingItems;
 
@@ -69,6 +69,10 @@ public class ModItems {
 
                                Character.valueOf('G'),
                                Blocks.glass
+        });
+        
+        crafting.addShapelessRecipe(new ItemStack(ModItems.infoTool),
+                new Object[]{ Items.book, Items.leather
         });
         //@formatter:on
     }
