@@ -34,7 +34,7 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    public void generatePocket(World world) {
+    public void generatePocketRoom(World world) {
         if (generated)
             return;
 
@@ -90,7 +90,8 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
         
-        generatePocket(MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID));
+        World pocketWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
+        generatePocketRoom(pocketWorld);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
