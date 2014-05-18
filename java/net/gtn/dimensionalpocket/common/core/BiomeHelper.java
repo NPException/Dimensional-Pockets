@@ -12,6 +12,7 @@ public class BiomeHelper {
     public static void init() {
         if (init)
             return;
+        init = true;
 
         pocketBiome = new BiomeGenBase(99) {
             @Override
