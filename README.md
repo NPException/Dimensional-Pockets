@@ -1,29 +1,13 @@
 **Current Release:** https://github.com/NPException42/Modjam-4/releases/tag/0.6
 
-Modjam-4
-=======
 
-So this is our repo for Modjam 4.
+
+So this is the repo for our Modjam 4 entry. Dimensional Pockets
 
 participants are: (in ranking of awesome)
 Jezza, Nox, gellegbs, NPException
 
-The team name is: (copy the following for modjam-registration!)
+The team name is:
 ```
 Team team = new Team("GTN");
 ```
-
-
-Repo-link for modjam signup is this:
-```
-https://github.com/NPException42/Modjam-4
-```
-
-
-Tools to use:
-```
-https://github.com/msysgit/msysgit/releases/download/Git-1.9.2-preview20140411/Git-1.9.2-preview20140411.exe
-
-https://github-windows.s3.amazonaws.com/GitHubSetup.exe
-```
-
