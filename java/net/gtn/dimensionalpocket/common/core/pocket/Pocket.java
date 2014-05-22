@@ -3,9 +3,7 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
-import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -15,10 +13,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
@@ -75,7 +71,7 @@ public class Pocket {
 
     public int getExternalLight() {
         if (isSourceBlockPlaced()) {
-            World world = DimensionManager.getWorld(blockDim);
+            World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
             TileEntity tileEntity = world.getTileEntity(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
 
             if (tileEntity instanceof TileDimensionalPocket)
@@ -88,7 +84,7 @@ public class Pocket {
         if (generated)
             return;
 
-        World world = getWorldForPocket();
+        World world = PocketRegistry.getWorldForPockets();
 
         int worldX = chunkCoords.getX() * 16;
         int worldY = chunkCoords.getY() * 16;
@@ -121,9 +117,6 @@ public class Pocket {
                     // use that method if setting things in the chunk will cause problems in the future
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
-
-        if (!generated)
-            ChunkLoaderHandler.addPocketChunkToLoader(world, this);
 
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
@@ -177,7 +170,8 @@ public class Pocket {
     }
 
     public boolean isSourceBlockPlaced() {
-        Block block = DimensionManager.getWorld(blockDim).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
+        Block block = world.getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
         return (block instanceof BlockDimensionalPocket);
     }
 
@@ -214,12 +208,8 @@ public class Pocket {
         this.blockCoords = blockCoords;
     }
 
-    private WorldServer getWorldForPocket() {
-        return DimensionManager.getWorld(Reference.DIMENSION_ID);
-    }
-
     public void forcePocketUpdate() {
-        World world = getWorldForPocket();
+        World world = PocketRegistry.getWorldForPockets();
 
         int x = chunkCoords.getX();
         int y = chunkCoords.getY();
@@ -234,7 +224,7 @@ public class Pocket {
      * @param direction
      */
     public void forceChunkUpdate() {
-        World world = getWorldForPocket();
+        World world = PocketRegistry.getWorldForPockets();
 
         int x = chunkCoords.getX();
         int z = chunkCoords.getZ();

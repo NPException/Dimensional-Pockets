@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.tileentity;
 
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
@@ -13,7 +14,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
@@ -36,8 +36,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         if (worldObj.isRemote)
             return;
 
-        getPocket().generatePocketRoom();
-
         if (itemStack.hasTagCompound()) {
             boolean success = setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
 
@@ -46,6 +44,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
             PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
         }
+
+        getPocket().generatePocketRoom();
+
+        ChunkLoaderHandler.addPocketToChunkLoader(getPocket());
     }
 
     public int getLightForPocket() {
@@ -97,6 +99,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         entityItem.delayBeforeCanPickup = 0;
 
         worldObj.spawnEntityInWorld(entityItem);
+
+        ChunkLoaderHandler.removePocketFromChunkLoader(getPocket());
     }
 
     public Pocket getPocket() {

@@ -8,13 +8,17 @@ import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class PocketRegistry {
 
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
     private static CoordSet currentChunk = new CoordSet(0, 0, 0);
+
+    public static WorldServer getWorldForPockets() {
+        return MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
+    }
 
     public static Pocket getPocket(CoordSet chunkCoords) {
         if (backLinkMap.containsKey(chunkCoords))
@@ -74,12 +78,12 @@ public class PocketRegistry {
     }
 
     public static void loadData() {
-        PocketConfig.loadBackLinkMap(backLinkMap);
+        backLinkMap = PocketConfig.loadBackLinkMap();
         currentChunk = PocketConfig.loadCurrentChunk();
 
-        World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
         for (Pocket pocket : backLinkMap.values()) {
-            ChunkLoaderHandler.addPocketChunkToLoader(world, pocket);
+            if (pocket.isSourceBlockPlaced())
+                ChunkLoaderHandler.addPocketToChunkLoader(pocket);
         }
     }
 }

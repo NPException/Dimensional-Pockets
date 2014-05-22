@@ -62,7 +62,8 @@ public class PocketConfig {
         }
     }
 
-    public static void loadBackLinkMap(Map<CoordSet, Pocket> backLinkMap) {
+    public static Map<CoordSet, Pocket> loadBackLinkMap() {
+        Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
         Gson gson = new Gson();
 
         try {
@@ -73,9 +74,6 @@ public class PocketConfig {
             Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
             reader.close();
 
-            if (backLinkMap == null)
-                backLinkMap = new HashMap<CoordSet, Pocket>();
-
             if (tempArray != null)
                 for (Pocket link : tempArray)
                     backLinkMap.put(link.getChunkCoords(), link);
@@ -83,6 +81,8 @@ public class PocketConfig {
         } catch (Exception e) {
             DPLogger.severe(e);
         }
+
+        return backLinkMap;
     }
 
     public static void saveCurrentChunk(CoordSet currentChunk) {
