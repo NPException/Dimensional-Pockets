@@ -13,31 +13,45 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     private Pocket pocket;
 
     private int ticksSinceLastLightCheck = 0;
+    private int prevLightLevel = 0;
 
     private PocketTeleportPreparation telePrep;
 
     @Override
     public void updateEntity() {
-        if (!worldObj.isRemote) {
-            if (telePrep != null) {
-                if (telePrep.doPrepareTick()) {
-                    telePrep = null;
-                }
-            }
-            if (ticksSinceLastLightCheck++ > 200) {
-                ticksSinceLastLightCheck = 0;
-                getPocket().setLightLevel(fetchLightLevel());
-            }
+        if (!worldObj.isRemote && telePrep != null)
+            if (telePrep.doPrepareTick())
+                telePrep = null;
+    }
+
+    @Override
+    public void onBlockPlaced(EntityLivingBase entityLiving, ItemStack itemStack) {
+        if (worldObj.isRemote)
+            return;
+
+        getPocket().generatePocketRoom();
+
+        if (itemStack.hasTagCompound()) {
+            boolean success = setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+
+            if (!success)
+                throw new RuntimeException("YOU DESERVED THIS!");
+
+            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
         }
     }
 
-    private int fetchLightLevel() {
+    public int getLightForPocket() {
+        if (pocket == null || !pocket.isSourceBlockPlaced())
+            return 0;
+
         float highestLevel = 0f;
 
         float level = worldObj.getLightBrightness(xCoord + 1, yCoord, zCoord);
@@ -58,24 +72,14 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         level = worldObj.getLightBrightness(xCoord, yCoord, zCoord - 1);
         highestLevel = (level > highestLevel) ? level : highestLevel;
 
-        return Math.round(highestLevel * 15f);
-    }
+        int currentLightLevel = Math.round(highestLevel * 15f);
 
-    @Override
-    public void onBlockPlaced(EntityLivingBase entityLiving, ItemStack itemStack) {
-        if (worldObj.isRemote)
-            return;
-
-        getPocket().generatePocketRoom(false);
-
-        if (itemStack.hasTagCompound()) {
-            boolean success = setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
-
-            if (!success)
-                throw new RuntimeException("YOU DESERVED THIS!");
-
-            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
+        if (prevLightLevel != currentLightLevel) {
+            prevLightLevel = currentLightLevel;
+            pocket.forcePocketUpdate();
         }
+
+        return currentLightLevel;
     }
 
     @Override
@@ -96,9 +100,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     }
 
     public Pocket getPocket() {
-        if (pocket == null) {
-            pocket = PocketRegistry.getOrCreatePocket(worldObj.provider.dimensionId, getCoordSet(), fetchLightLevel());
-        }
+        if (pocket == null)
+            pocket = PocketRegistry.getOrCreatePocket(worldObj.provider.dimensionId, getCoordSet());
         return pocket;
     }
 
@@ -128,7 +131,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void prepareTeleportIntoPocket(EntityPlayer player) {
         int ticksToTake = 15;
         if (!worldObj.isRemote) {
-            // create a teleport preparation, which will then tick for the given amount of time, and then teleport the player
             telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
         } else {
             // TODO Sync for all clients.

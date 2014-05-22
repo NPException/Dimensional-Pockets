@@ -12,20 +12,11 @@ import net.minecraft.world.World;
 
 public class BlockDimensionalPocket extends BlockDP {
 
-    // private Set<CoordSet> blocksCurrentlyUpdatedByTiles = new HashSet<CoordSet>();
-    // private Set<CoordSet> blocksCurrentlyUpdatedByBlocks = new HashSet<CoordSet>();
-
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
         setResistance(15F);
     }
-
-    // @Override
-    // public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-    // super.onBlockPlacedBy(world, x, y, z, entityLiving, itemStack);
-    // RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
-    // }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {

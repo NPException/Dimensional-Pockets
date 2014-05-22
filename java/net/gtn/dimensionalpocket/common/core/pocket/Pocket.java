@@ -5,15 +5,20 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class Pocket {
@@ -22,59 +27,68 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
-    private int lightLevel;
 
-//    private int[] outputSignals;
-//    private int[] inputSignals;
+    // private int[] outputSignals;
+    // private int[] inputSignals;
 
-    public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords, int initialLightLevel) {
+    public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
-        lightLevel = initialLightLevel;
 
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-//    private int[] getOutputSignals() {
-//        if (outputSignals == null)
-//            outputSignals = new int[6];
-//        return outputSignals;
-//    }
-//
-//    private int[] getInputSignals() {
-//        if (inputSignals == null)
-//            inputSignals = new int[6];
-//        return inputSignals;
-//    }
+    // private int[] getOutputSignals() {
+    // if (outputSignals == null)
+    // outputSignals = new int[6];
+    // return outputSignals;
+    // }
+    //
+    // private int[] getInputSignals() {
+    // if (inputSignals == null)
+    // inputSignals = new int[6];
+    // return inputSignals;
+    // }
 
-//    public void setOutputSignal(int side, int strength) {
-//        getOutputSignals()[side] = strength;
-//    }
-//
-//    public void setInputSignal(int side, int strength) {
-//        getInputSignals()[side] = strength;
-//    }
-//
-//    public int getOutputSignal(int side) {
-//        if (side > 5)
-//            return 0;
-//
-//        return getOutputSignals()[side];
-//    }
-//
-//    public int getInputSignal(int side) {
-//        if (side > 5)
-//            return 0;
-//
-//        return getInputSignals()[side];
-//    }
+    // public void setOutputSignal(int side, int strength) {
+    // getOutputSignals()[side] = strength;
+    // }
+    //
+    // public void setInputSignal(int side, int strength) {
+    // getInputSignals()[side] = strength;
+    // }
+    //
+    // public int getOutputSignal(int side) {
+    // if (side > 5)
+    // return 0;
+    //
+    // return getOutputSignals()[side];
+    // }
+    //
+    // public int getInputSignal(int side) {
+    // if (side > 5)
+    // return 0;
+    //
+    // return getInputSignals()[side];
+    // }
 
-    public void generatePocketRoom(boolean isRelight) {
-        if (generated && !isRelight)
+    public int getExternalLight() {
+        if (isSourceBlockPlaced()) {
+            World world = DimensionManager.getWorld(blockDim);
+            TileEntity tileEntity = world.getTileEntity(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+
+            if (tileEntity instanceof TileDimensionalPocket)
+                return ((TileDimensionalPocket) tileEntity).getLightForPocket();
+        }
+        return 0;
+    }
+
+    public void generatePocketRoom() {
+        if (generated)
             return;
 
-        World world = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
+        World world = getWorldForPocket();
 
         int worldX = chunkCoords.getX() * 16;
         int worldY = chunkCoords.getY() * 16;
@@ -101,12 +115,8 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
-                    if (isRelight) {
-                        world.setBlock(worldX + x, worldY + y, worldZ + z, ModBlocks.dimensionalPocketFrames[lightLevel]);
-                    } else {
-                        extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrames[lightLevel]);
-                        world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
-                    }
+                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
 
                     // use that method if setting things in the chunk will cause problems in the future
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
@@ -133,7 +143,8 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
-        generatePocketRoom(false);
+        generatePocketRoom();
+        forcePocketUpdate();
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -148,18 +159,11 @@ public class Pocket {
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        Pocket pocket = PocketRegistry.getPocket(chunkCoords);
-
-        if (pocket == null)
-            return false;
-
-        int dimID = pocket.getBlockDim();
-
         if (isSourceBlockPlaced()) {
-            PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, pocket.getBlockCoords());
+            PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, blockCoords);
 
-            if (dimID != Reference.DIMENSION_ID)
-                PocketTeleporter.transferPlayerToDimension(player, dimID, teleporter);
+            if (blockDim != Reference.DIMENSION_ID)
+                PocketTeleporter.transferPlayerToDimension(player, blockDim, teleporter);
             else
                 teleporter.placeInPortal(player, 0, 0, 0, 0);
 
@@ -173,8 +177,7 @@ public class Pocket {
     }
 
     public boolean isSourceBlockPlaced() {
-        Block block = MinecraftServer.getServer().worldServerForDimension(blockDim).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
-
+        Block block = DimensionManager.getWorld(blockDim).getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
         return (block instanceof BlockDimensionalPocket);
     }
 
@@ -211,11 +214,32 @@ public class Pocket {
         this.blockCoords = blockCoords;
     }
 
-    public void setLightLevel(int lightLevel) {
-        if (this.lightLevel != lightLevel) {
-            this.lightLevel = lightLevel;
-            generatePocketRoom(true);
-        }
+    private WorldServer getWorldForPocket() {
+        return DimensionManager.getWorld(Reference.DIMENSION_ID);
+    }
+
+    public void forcePocketUpdate() {
+        World world = getWorldForPocket();
+
+        int x = chunkCoords.getX();
+        int y = chunkCoords.getY();
+        int z = chunkCoords.getZ();
+
+        world.markBlockRangeForRenderUpdate(x * 16, y * 16, z * 16, x * 16 + 15, y * 16 + 15, z * 16 + 15);
+    }
+
+    /**
+     * Mark the chunk for a render update.
+     * 
+     * @param direction
+     */
+    public void forceChunkUpdate() {
+        World world = getWorldForPocket();
+
+        int x = chunkCoords.getX();
+        int z = chunkCoords.getZ();
+
+        world.markBlockRangeForRenderUpdate(x * 16, 0, z * 16, x * 16 + 15, 256, z * 16 + 15);
     }
 
     public static ForgeDirection getSideForBlock(CoordSet coordSet) {

@@ -22,7 +22,7 @@ public class PocketRegistry {
         return null;
     }
 
-    public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource, int initialLightLevel) {
+    public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource) {
 
         for (Pocket pocket : backLinkMap.values()) {
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
@@ -32,7 +32,7 @@ public class PocketRegistry {
         if (currentChunk.getY() >= 16)
             currentChunk.setY(0).addX(1);
 
-        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource, initialLightLevel);
+        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
         backLinkMap.put(pocket.getChunkCoords(), pocket);
 
         // add one here, so we start at 0 with the first room

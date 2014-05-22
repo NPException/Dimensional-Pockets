@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class CoordSet {
 
@@ -90,6 +91,10 @@ public class CoordSet {
         if (array.length == 0)
             return null;
         return new CoordSet(array);
+    }
+
+    public static CoordSet fromForgeDirection(ForgeDirection direction) {
+        return new CoordSet(direction.offsetX, direction.offsetY, direction.offsetZ);
     }
 
     @Override
