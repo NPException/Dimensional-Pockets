@@ -5,22 +5,26 @@ import java.io.File;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class ConfigHandler {
 
-    private static Configuration configuration;
+    private static final String GAMEPLAY = "Gameplay";
+
+    private static Configuration config;
 
     public static void init(File configFile) {
-        configuration = new Configuration(configFile);
+        config = new Configuration(configFile);
 
         try {
 
-            Reference.DIMENSION_ID = configuration.get("Gameplay", "Pocket Dimension ID", Reference.DIMENSION_ID_DEFAULT).getInt();
+            Reference.DIMENSION_ID = config.get(GAMEPLAY, "Pocket Dimension ID", Reference.DIMENSION_ID_DEFAULT).getInt();
+            Reference.SHOULD_SPAWN_WITH_BOOK = config.get(GAMEPLAY, "Spawning with book", true).getBoolean(true);
 
         } catch (Exception e) {
             DPLogger.severe(e);
         } finally {
-            configuration.save();
+            config.save();
         }
     }
 }

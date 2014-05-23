@@ -10,9 +10,9 @@ import net.minecraft.item.crafting.CraftingManager;
 
 public class ModItems {
 
-    private static int ENDER_CRYSTAL_META = 0;
-    private static int NETHER_CRYSTAL_META = 1;
-    private static int INFO_BOOK_META = 2;
+    public static final int ENDER_CRYSTAL_META = 0;
+    public static final int NETHER_CRYSTAL_META = 1;
+    public static final int INFO_BOOK_META = 2;
 
     public static Item miscItems;
 
