@@ -5,7 +5,6 @@ import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.items.framework.ItemDPMeta;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;

@@ -19,7 +19,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     private Pocket pocket;
 
-    private int ticksSinceLastLightCheck = 0;
     private int prevLightLevel = 0;
 
     private PocketTeleportPreparation telePrep;

@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Wrapper of ForgeDirection for the teleporter.
