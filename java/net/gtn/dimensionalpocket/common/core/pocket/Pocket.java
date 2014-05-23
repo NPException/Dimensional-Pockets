@@ -4,6 +4,7 @@ import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -151,10 +152,13 @@ public class Pocket {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
+        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
 
         if (isSourceBlockPlaced()) {
-            if (canTeleportOut()) {
-                PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, blockCoords);
+            TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+            if (teleportSide != TeleportDirection.UNKNOWN) {
+                CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet());
+                PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, tempBlockSet);
 
                 if (blockDim != Reference.DIMENSION_ID)
                     PocketTeleporter.transferPlayerToDimension(player, blockDim, teleporter);
@@ -172,21 +176,6 @@ public class Pocket {
         }
 
         return true;
-    }
-
-    /**
-     * If they're stupid enough to get stuck in it, they deserve it.
-     * 
-     * @return
-     */
-    public boolean canTeleportOut() {
-        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
-
-        int x = blockCoords.getX();
-        int y = blockCoords.getY() + 1;
-        int z = blockCoords.getZ();
-
-        return world.isAirBlock(x, y, z) && world.isAirBlock(x, y + 1, z);
     }
 
     public boolean isSourceBlockPlaced() {
