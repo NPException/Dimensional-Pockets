@@ -75,7 +75,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (!player.isSneaking() || player.getCurrentEquippedItem() != null) {
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
             DPLogger.info(pocket.getExternalLight());
-            return true;
+            return false;
         }
 
         if (player.dimension == Reference.DIMENSION_ID) {
