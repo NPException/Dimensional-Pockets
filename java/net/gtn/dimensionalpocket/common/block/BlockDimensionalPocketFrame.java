@@ -36,7 +36,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         if (pocket != null)
             return pocket.getExternalLight();
-
         return 0;
     }
 
@@ -76,37 +75,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (player == null)
             return false;
 
-//        boolean tru = true;
-//        if (tru) {
-//            Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
-//            DPLogger.info(pocket.getExternalLight());
-//            return true;
-//        }
-
-        ItemStack itemStack = player.getCurrentEquippedItem();
-
-        if (itemStack != null) {
-            if (itemStack.getItem() == ModItems.craftingItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
-                if (player.dimension != Reference.DIMENSION_ID || world.isRemote)
-                    return false;
-
-                CoordSet coordSet = new CoordSet(x, y, z);
-
-                Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-                if (pocket == null)
-                    return false;
-
-                boolean setSpawn = pocket.setSpawnSet(coordSet.asSpawnPoint());
-
-                if (setSpawn)
-                    player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                return true;
-            }
-            return false;
+        if (!player.isSneaking() || player.getCurrentEquippedItem() != null) {
+            Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
+            DPLogger.info(pocket.getExternalLight());
+            return true;
         }
-
-        if (!player.isSneaking())
-            return false;
 
         if (player.dimension == Reference.DIMENSION_ID) {
             player.setSneaking(false);

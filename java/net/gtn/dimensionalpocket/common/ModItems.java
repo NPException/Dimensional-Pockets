@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.common;
 
-import net.gtn.dimensionalpocket.common.items.ItemCrafting;
-import net.gtn.dimensionalpocket.common.items.ItemInfoTool;
+import net.gtn.dimensionalpocket.common.items.ItemMisc;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -13,13 +12,12 @@ public class ModItems {
 
     private static int ENDER_CRYSTAL_META = 0;
     private static int NETHER_CRYSTAL_META = 1;
+    private static int INFO_BOOK_META = 2;
 
-    public static Item infoTool;
-    public static Item craftingItems;
+    public static Item miscItems;
 
     public static void init() {
-        infoTool = new ItemInfoTool(Strings.ITEM_INFO_TOOL);
-        craftingItems = new ItemCrafting(Strings.ITEM_CRAFTING);
+        miscItems = new ItemMisc(Strings.ITEM_MISC);
     }
 
     public static void initRecipes() {
@@ -41,10 +39,10 @@ public class ModItems {
                                Blocks.diamond_block,
 
                                Character.valueOf('N'),
-                               new ItemStack(ModItems.craftingItems, 1, NETHER_CRYSTAL_META),
+                               new ItemStack(ModItems.miscItems, 1, NETHER_CRYSTAL_META),
 
                                Character.valueOf('E'),
-                               new ItemStack(ModItems.craftingItems, 1, ENDER_CRYSTAL_META)
+                               new ItemStack(ModItems.miscItems, 1, ENDER_CRYSTAL_META)
         });
 
         crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
@@ -62,13 +60,13 @@ public class ModItems {
                                Blocks.diamond_block,
             
                                Character.valueOf('N'),
-                               new ItemStack(ModItems.craftingItems, 1, NETHER_CRYSTAL_META),
+                               new ItemStack(ModItems.miscItems, 1, NETHER_CRYSTAL_META),
             
                                Character.valueOf('E'),
-                               new ItemStack(ModItems.craftingItems, 1, ENDER_CRYSTAL_META)
+                               new ItemStack(ModItems.miscItems, 1, ENDER_CRYSTAL_META)
         });
         
-        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,NETHER_CRYSTAL_META),
+        crafting.addRecipe(new ItemStack(ModItems.miscItems,1,NETHER_CRYSTAL_META),
                 new Object[] { "TTT",
                                "TRT",
                                "TTT",
@@ -80,7 +78,7 @@ public class ModItems {
                                Blocks.redstone_block
         });
         
-        crafting.addRecipe(new ItemStack(ModItems.craftingItems,1,ENDER_CRYSTAL_META),
+        crafting.addRecipe(new ItemStack(ModItems.miscItems,1,ENDER_CRYSTAL_META),
                 new Object[] { "EEE",
                                "EGE",
                                "EEE",
@@ -92,7 +90,7 @@ public class ModItems {
                                Blocks.glass
         });
         
-        crafting.addShapelessRecipe(new ItemStack(ModItems.infoTool),
+        crafting.addShapelessRecipe(new ItemStack(ModItems.miscItems,1,INFO_BOOK_META),
                 new Object[]{ Items.book, Items.leather
         });
         //@formatter:on

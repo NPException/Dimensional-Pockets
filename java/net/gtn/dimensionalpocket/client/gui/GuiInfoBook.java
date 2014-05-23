@@ -171,11 +171,11 @@ public class GuiInfoBook extends GuiContainer {
                 break;
             case 1:
                 renderRecipeGrid(RecipeHelper.getEnderRecipe());
-                renderItemStack(new ItemStack(ModItems.craftingItems, 1, 0), 98, 171);
+                renderItemStack(new ItemStack(ModItems.miscItems, 1, 0), 98, 171);
                 break;
             case 2:
                 renderRecipeGrid(RecipeHelper.getNetherRecipe());
-                renderItemStack(new ItemStack(ModItems.craftingItems, 1, 1), 98, 171);
+                renderItemStack(new ItemStack(ModItems.miscItems, 1, 1), 98, 171);
                 break;
             default:
                 break;
