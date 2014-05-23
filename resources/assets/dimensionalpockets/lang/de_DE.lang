@@ -10,6 +10,7 @@ item.enderCrystal.name=Enderkristall
 item.netherCrystal.name=Netherkristall
 
 info.trapped=Du bist gefangen! Jemand hat die Dimensional Pocket abgebaut...
+info.trapped2=Du kannst dich nicht rematerialisieren! Fast als würde irgendetwas den Ausgang blockieren... 
 
 info.page.maxPage=9
 
