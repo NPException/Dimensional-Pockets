@@ -9,6 +9,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +18,10 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
+    private static final String TAG_CUSTOM_DP_NAME = "customDPName";
+
     private Pocket pocket;
+    private String customName;
 
     private int prevLightLevel = 0;
 
@@ -36,12 +40,23 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             return;
 
         if (itemStack.hasTagCompound()) {
-            boolean success = setPocket(CoordSet.readFromNBT(itemStack.getTagCompound()));
+            NBTTagCompound itemCompound = itemStack.getTagCompound();
 
-            if (!success)
-                throw new RuntimeException("YOU DESERVED THIS!");
+            CoordSet chunkSet = CoordSet.readFromNBT(itemCompound);
+            if (chunkSet != null) {
+                boolean success = setPocket(chunkSet);
 
-            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
+                if (!success)
+                    throw new RuntimeException("YOU DESERVED THIS!");
+
+                PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
+            }
+
+            if (itemCompound.hasKey("display")) {
+                String tempString = itemCompound.getCompoundTag("display").getString("Name");
+                if (!tempString.isEmpty())
+                    customName = tempString;
+            }
         }
 
         getPocket().generatePocketRoom();
@@ -92,7 +107,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         if (!itemStack.hasTagCompound())
             itemStack.setTagCompound(new NBTTagCompound());
-        getPocket().getChunkCoords().writeToNBT(itemStack.getTagCompound());
+
+        CoordSet chunkSet = getPocket().getChunkCoords();
+        chunkSet.writeToNBT(itemStack.getTagCompound());
+
+        int id = chunkSet.getX() * 16 + chunkSet.getY();
+
+        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + id + " ~");
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
         entityItem.delayBeforeCanPickup = 0;
@@ -121,14 +142,19 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         getPocket().getChunkCoords().writeToNBT(tag);
+        if (customName != null)
+            tag.setString(TAG_CUSTOM_DP_NAME, customName);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         CoordSet tempSet = CoordSet.readFromNBT(tag);
-
         pocket = PocketRegistry.getPocket(tempSet);
+
+        String tempString = tag.getString(TAG_CUSTOM_DP_NAME);
+        if (!tempString.isEmpty())
+            customName = tempString;
     }
 
     public void prepareTeleportIntoPocket(EntityPlayer player) {
