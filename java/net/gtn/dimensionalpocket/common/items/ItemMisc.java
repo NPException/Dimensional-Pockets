@@ -32,14 +32,33 @@ public class ItemMisc extends ItemDPMeta {
             return false;
 
         if (itemStack.getItem() == ModItems.miscItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
-            CoordSet coordSet = new CoordSet(x, y, z);
+            CoordSet blockSet = new CoordSet(x, y, z);
 
-            Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+            Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
             if (pocket == null)
                 return false;
 
-            CoordSet spawnSet = coordSet.asSpawnPoint();
-            boolean flag = world.isAirBlock(x, y + 1, z) && world.isAirBlock(x, y + 2, z) && spawnSet.getY() <= 13;
+            CoordSet spawnSet = blockSet.asSpawnPoint();
+
+            int sx = spawnSet.getX();
+            int sy = spawnSet.getY();
+            int sz = spawnSet.getZ();
+
+            //@formatter:off
+            // compensate for wall and ceiling
+
+            if      (sx == 0)  blockSet.addX(1).addY(-1);
+            else if (sx == 15) blockSet.addX(-1).addY(-1);
+            else if (sz == 0)  blockSet.addZ(1).addY(-1);
+            else if (sz == 15) blockSet.addZ(-1).addY(-1);
+            else if (sy == 15) blockSet.addY(-3);
+            
+            spawnSet = blockSet.asSpawnPoint();
+
+            boolean flag = world.isAirBlock(blockSet.getX(), blockSet.getY() + 1, blockSet.getZ())
+                            && world.isAirBlock(blockSet.getX(), blockSet.getY() + 2, blockSet.getZ())
+                            && spawnSet.getY() <= 12;
+            //@formatter:on
 
             if (flag) {
                 pocket.setSpawnSet(spawnSet);
