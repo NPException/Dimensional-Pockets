@@ -157,7 +157,7 @@ public class Pocket {
         if (isSourceBlockPlaced()) {
             TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
             if (teleportSide != TeleportDirection.UNKNOWN) {
-                CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet());
+                CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet()).addY(-1);
                 PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, tempBlockSet);
 
                 if (blockDim != Reference.DIMENSION_ID)
