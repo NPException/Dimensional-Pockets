@@ -153,13 +153,18 @@ public class Pocket {
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
         if (isSourceBlockPlaced()) {
-            PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, blockCoords);
+            if (canTeleportOut()) {
+                PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, blockCoords);
 
-            if (blockDim != Reference.DIMENSION_ID)
-                PocketTeleporter.transferPlayerToDimension(player, blockDim, teleporter);
-            else
-                teleporter.placeInPortal(player, 0, 0, 0, 0);
-
+                if (blockDim != Reference.DIMENSION_ID)
+                    PocketTeleporter.transferPlayerToDimension(player, blockDim, teleporter);
+                else
+                    teleporter.placeInPortal(player, 0, 0, 0, 0);
+            } else {
+                ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped2");
+                comp.getChatStyle().setItalic(Boolean.TRUE);
+                entityPlayer.addChatMessage(comp);
+            }
         } else {
             ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped");
             comp.getChatStyle().setItalic(Boolean.TRUE);
@@ -167,6 +172,21 @@ public class Pocket {
         }
 
         return true;
+    }
+
+    /**
+     * If they're stupid enough to get stuck in it, they deserve it.
+     * 
+     * @return
+     */
+    public boolean canTeleportOut() {
+        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
+
+        int x = blockCoords.getX();
+        int y = blockCoords.getY() + 1;
+        int z = blockCoords.getZ();
+
+        return world.isAirBlock(x, y, z) && world.isAirBlock(x, y + 1, z);
     }
 
     public boolean isSourceBlockPlaced() {

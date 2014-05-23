@@ -10,6 +10,7 @@ item.enderCrystal.name=Ender Crystal
 item.netherCrystal.name=Nether Crystal
 
 info.trapped=You're trapped! Maybe someone broke the Dimensional Pocket...
+info.trapped2=For some reason, you can't re-materilize! It's almost like there is something blocking it...
 
 info.page.maxPage=9
 
