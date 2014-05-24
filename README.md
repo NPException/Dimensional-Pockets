@@ -1,4 +1,4 @@
-**Current Release:** https://github.com/NPException42/Modjam-4/releases/tag/0.6
+**Current Release:** https://github.com/NPException42/Modjam-4/releases/tag/0.06
 
 
 
