@@ -285,9 +285,9 @@ public class Pocket {
                 sideState.onSideChange(this, tile);
     }
 
-    public void onNeighbourBlockChangedPocket(ForgeDirection direction) {
+    public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet) {
         ISideState sideState = sideStates[direction.ordinal()];
         if (sideState != null)
-            sideState.onSidePocketChange(this, direction);
+            sideState.onSidePocketChange(this, direction, coordSet);
     }
 }

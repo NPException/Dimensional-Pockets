@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.core.sidestates;
 
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -20,6 +21,6 @@ public interface ISideState {
      * @param pocket
      * @param tile
      */
-    public void onSidePocketChange(Pocket pocket, ForgeDirection direction);
+    public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet);
 
 }

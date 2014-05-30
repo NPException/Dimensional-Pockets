@@ -83,7 +83,7 @@ public class BlockDimensionalPocket extends BlockDP {
 
             RedstoneState redstoneState = (RedstoneState) sideState;
 
-            return redstoneState.getSignal(side);
+            return redstoneState.getOutputSignal(side);
         }
         return 0;
     }

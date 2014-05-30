@@ -67,7 +67,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         RedstoneState redstoneState = (RedstoneState) sideState;
 
-        return redstoneState.getSignal(side);
+        return redstoneState.getInputSignal(side);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
             return;
 
-        pocket.onNeighbourBlockChangedPocket(direction);
+        pocket.onNeighbourBlockChangedPocket(direction, new CoordSet(x, y, z));
     }
 
     @Override
