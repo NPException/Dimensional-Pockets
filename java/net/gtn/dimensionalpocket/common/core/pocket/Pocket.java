@@ -3,7 +3,9 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
+import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -25,8 +27,8 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    // private int[] outputSignals;
-    // private int[] inputSignals;
+    // TODO This needs to persist. Because it doesn't.
+    private ISideState[] sideStates = new ISideState[6];
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -36,43 +38,28 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    // private int[] getOutputSignals() {
-    // if (outputSignals == null)
-    // outputSignals = new int[6];
-    // return outputSignals;
-    // }
-    //
-    // private int[] getInputSignals() {
-    // if (inputSignals == null)
-    // inputSignals = new int[6];
-    // return inputSignals;
-    // }
+    public ISideState getSideState(int side) {
+        if (ForgeDirection.getOrientation(side) == ForgeDirection.UNKNOWN)
+            return null;
 
-    // public void setOutputSignal(int side, int strength) {
-    // getOutputSignals()[side] = strength;
-    // }
-    //
-    // public void setInputSignal(int side, int strength) {
-    // getInputSignals()[side] = strength;
-    // }
-    //
-    // public int getOutputSignal(int side) {
-    // if (side > 5)
-    // return 0;
-    //
-    // return getOutputSignals()[side];
-    // }
-    //
-    // public int getInputSignal(int side) {
-    // if (side > 5)
-    // return 0;
-    //
-    // return getInputSignals()[side];
-    // }
+        return sideStates[side];
+    }
+
+    public ISideState[] getSideStates() {
+        return sideStates;
+    }
+
+    public void setSideStates(ISideState[] sideStates) {
+        this.sideStates = sideStates;
+    }
+
+    public void setSideState(int side, ISideState sideState) {
+        sideStates[side] = sideState;
+    }
 
     public int getExternalLight() {
         if (isSourceBlockPlaced()) {
-            World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
+            World world = getBlockWorld();
             TileEntity tileEntity = world.getTileEntity(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
 
             if (tileEntity instanceof TileDimensionalPocket)
@@ -138,7 +125,6 @@ public class Pocket {
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
         generatePocketRoom();
-        forcePocketUpdate();
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -152,7 +138,7 @@ public class Pocket {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
             return false;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
-        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
+        World world = getBlockWorld();
 
         if (isSourceBlockPlaced()) {
             TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
@@ -178,10 +164,72 @@ public class Pocket {
         return true;
     }
 
+    public void forceSideUpdate(ForgeDirection side) {
+        side = side.getOpposite();
+        getBlockWorld().notifyBlockOfNeighborChange(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, ModBlocks.dimensionalPocket);
+    }
+
+    public void forcePocketSideUpdate(ForgeDirection side) {
+        World world = PocketRegistry.getWorldForPockets();
+        if (world.isRemote)
+            return;
+
+        CoordSet blockSet = chunkCoords.toBlockCoords();
+
+        int MIN = 1;
+        int MAX = 14;
+
+        switch (side) {
+            case DOWN:
+                for (int x = MIN; x <= MAX; x++)
+                    for (int z = MIN; z <= MAX; z++)
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MIN, blockSet.getZ() + z, side);
+                break;
+            case UP:
+                for (int x = MIN; x <= MAX; x++)
+                    for (int z = MIN; z <= MAX; z++)
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MAX, blockSet.getZ() + z, side);
+                break;
+            case NORTH:
+                for (int x = MIN; x <= MAX; x++)
+                    for (int y = MIN; y <= MAX; y++)
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MIN, side);
+                break;
+            case SOUTH:
+                for (int x = MIN; x <= MAX; x++)
+                    for (int y = MIN; y <= MAX; y++)
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MAX, side);
+                break;
+            case WEST:
+                for (int z = MIN; z <= MAX; z++)
+                    for (int y = MIN; y <= MAX; y++)
+                        forcePossibleUpdate(world, blockSet.getX() + MIN, blockSet.getY() + y, blockSet.getZ() + z, side);
+                break;
+            case EAST:
+                for (int z = MIN; z <= MAX; z++)
+                    for (int y = MIN; y <= MAX; y++)
+                        forcePossibleUpdate(world, blockSet.getX() + MAX, blockSet.getY() + y, blockSet.getZ() + z, side);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void forcePossibleUpdate(World world, int x, int y, int z, ForgeDirection side) {
+        // Don't want to notify air...
+        if (world.isAirBlock(x, y, z))
+            return;
+        world.notifyBlockChange(x + side.offsetX, y + side.offsetY, z + side.offsetZ, ModBlocks.dimensionalPocketFrame);
+    }
+
     public boolean isSourceBlockPlaced() {
-        World world = MinecraftServer.getServer().worldServerForDimension(blockDim);
+        World world = getBlockWorld();
         Block block = world.getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
-        return (block instanceof BlockDimensionalPocket);
+        return block instanceof BlockDimensionalPocket;
+    }
+
+    public World getBlockWorld() {
+        return MinecraftServer.getServer().worldServerForDimension(blockDim);
     }
 
     public int getBlockDim() {
@@ -212,30 +260,6 @@ public class Pocket {
         this.blockCoords = blockCoords;
     }
 
-    public void forcePocketUpdate() {
-        World world = PocketRegistry.getWorldForPockets();
-
-        int x = chunkCoords.getX();
-        int y = chunkCoords.getY();
-        int z = chunkCoords.getZ();
-
-        world.markBlockRangeForRenderUpdate(x * 16, y * 16, z * 16, x * 16 + 15, y * 16 + 15, z * 16 + 15);
-    }
-
-    /**
-     * Mark the chunk for a render update.
-     * 
-     * @param direction
-     */
-    public void forceChunkUpdate() {
-        World world = PocketRegistry.getWorldForPockets();
-
-        int x = chunkCoords.getX();
-        int z = chunkCoords.getZ();
-
-        world.markBlockRangeForRenderUpdate(x * 16, 0, z * 16, x * 16 + 15, 256, z * 16 + 15);
-    }
-
     public static ForgeDirection getSideForBlock(CoordSet coordSet) {
         ForgeDirection direction = ForgeDirection.UNKNOWN;
 
@@ -253,5 +277,17 @@ public class Pocket {
             return ForgeDirection.SOUTH;
 
         return direction;
+    }
+
+    public void onNeighbourBlockChanged(TileDimensionalPocket tile) {
+        for (ISideState sideState : sideStates)
+            if (sideState != null)
+                sideState.onSideChange(this, tile);
+    }
+
+    public void onNeighbourBlockChangedPocket(ForgeDirection direction) {
+        ISideState sideState = sideStates[direction.ordinal()];
+        if (sideState != null)
+            sideState.onSidePocketChange(this, direction);
     }
 }

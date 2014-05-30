@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -52,6 +53,13 @@ public abstract class BlockDP extends Block {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof IBlockNotifier)
             ((IBlockNotifier) tileEntity).onBlockDestroyed();
+    }
+
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof IBlockNotifier)
+            ((IBlockNotifier) tileEntity).onNeighbourBlockChanged(world, x, y, z, block);
     }
 
     @Override

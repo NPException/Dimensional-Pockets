@@ -30,6 +30,7 @@ public class PocketTeleporter extends Teleporter {
         double posZ = targetSet.getZ() + 0.5F;
 
         player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
+        player.fallDistance = 0;
     }
 
     public static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet) {

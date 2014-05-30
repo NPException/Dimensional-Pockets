@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Utils {
 
@@ -58,9 +59,8 @@ public class Utils {
 
         if (loreStrings != null && loreStrings.length > 0) {
             NBTTagList lore = new NBTTagList();
-            for (String s : loreStrings) {
+            for (String s : loreStrings)
                 lore.appendTag(new NBTTagString(EnumChatFormatting.GRAY + s));
-            }
             display.setTag("Lore", lore);
         }
 

@@ -14,5 +14,7 @@ public class Reference {
     public static final int DIMENSION_ID_DEFAULT = 33;
     public static int DIMENSION_ID;
 
+    public static final int SIDE_STATE_COUNT = 1;
+
     public static boolean SHOULD_SPAWN_WITH_BOOK;
 }

@@ -54,7 +54,7 @@ public class CommonProxy implements IGuiHandler {
 
             boolean shouldGiveManual = Reference.SHOULD_SPAWN_WITH_BOOK && !persistTag.getBoolean(GIVEN_INFO_BOOK);
             if (shouldGiveManual) {
-                ItemStack infoBook = new ItemStack(ModItems.miscItems, 1, ModItems.INFO_BOOK_META);
+                ItemStack infoBook = new ItemStack(ModItems.book);
                 if (!player.inventory.addItemStackToInventory(infoBook)) {
                     World playerWorld = player.worldObj;
                     EntityItem entityItem = new EntityItem(playerWorld, player.posX, player.posY, player.posZ, infoBook);

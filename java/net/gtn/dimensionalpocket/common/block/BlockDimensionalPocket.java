@@ -2,15 +2,30 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
+import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
+
+    private IIcon[] icons = new IIcon[Reference.SIDE_STATE_COUNT];
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
@@ -23,8 +38,25 @@ public class BlockDimensionalPocket extends BlockDP {
         if (player == null)
             return true;
 
-        if (player.getCurrentEquippedItem() != null)
-            return false;
+        ItemStack itemStack = player.getCurrentEquippedItem();
+
+        if (itemStack != null) {
+            if (world.isRemote)
+                return true;
+
+            if (itemStack.getItem() == ModItems.miscItems && itemStack.getItemDamage() == 2) {
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                if (tileEntity instanceof TileDimensionalPocket) {
+                    TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+                    Pocket pocket = tile.getPocket();
+                    pocket.setSideState(side, new RedstoneState());
+                    DPLogger.info("SET SIDE STATE");
+                    if (!player.capabilities.isCreativeMode)
+                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                }
+            }
+            return true;
+        }
 
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket) {
@@ -34,31 +66,37 @@ public class BlockDimensionalPocket extends BlockDP {
         return true;
     }
 
-    // @Override
-    // public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-    // return false;
-    // // return side != -1;
-    // }
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return side != -1;
+    }
 
-    // @Override
-    // public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
-    // TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
-    // if (tileEntity instanceof TileDimensionalPocket) {
-    // TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-    // return tile.getPocket().getOutputSignal(ForgeDirection.getOrientation(side).getOpposite().ordinal());
-    // }
-    // return 0;
-    // }
+    @Override
+    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
+        TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
+        if (tileEntity instanceof TileDimensionalPocket) {
+            Pocket pocket = ((TileDimensionalPocket) tileEntity).getPocket();
+            ISideState sideState = pocket.getSideState(side);
 
-    // @Override
-    // public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-    // return isProvidingWeakPower(world, x, y, z, side);
-    // }
-    //
-    // @Override
-    // public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-    // return false;
-    // }
+            if (!(sideState instanceof RedstoneState))
+                return 0;
+
+            RedstoneState redstoneState = (RedstoneState) sideState;
+
+            return redstoneState.getSignal(side);
+        }
+        return 0;
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
+    }
+
+    @Override
+    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        return false;
+    }
 
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
@@ -74,26 +112,4 @@ public class BlockDimensionalPocket extends BlockDP {
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
     }
-
-    // @Override
-    // public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-    // CoordSet coords = new CoordSet(x, y, z);
-    // if (blocksCurrentlyUpdatedByTiles.contains(coords))
-    // return;
-    //
-    // blocksCurrentlyUpdatedByTiles.add(coords);
-    // RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
-    // blocksCurrentlyUpdatedByTiles.remove(coords);
-    // }
-
-    // @Override
-    // public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-    // CoordSet coords = new CoordSet(x, y, z);
-    // if (blocksCurrentlyUpdatedByBlocks.contains(coords))
-    // return;
-    //
-    // blocksCurrentlyUpdatedByBlocks.add(coords);
-    // RedstoneHelper.checkNeighboursAndUpdateInputStrength(world, x, y, z);
-    // blocksCurrentlyUpdatedByBlocks.remove(coords);
-    // }
 }

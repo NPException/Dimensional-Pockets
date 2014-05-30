@@ -3,9 +3,12 @@ package net.gtn.dimensionalpocket.common.block;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
+import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocketFrame extends BlockDP {
 
@@ -46,37 +50,38 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     }
 
     @Override
-    public boolean canPlaceBlockAt(World world, int p_149742_2_, int p_149742_3_, int p_149742_4_) {
+    public boolean canPlaceBlockAt(World world, int x, int y, int z) {
         return world.provider.dimensionId == Reference.DIMENSION_ID;
     }
 
-    // @Override
-    // public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-    // // ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-    //
-    // // Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-    //
-    // // if (pocket == null)
-    // return 0;
-    //
-    // // return pocket.getInputSignal(pocketSide.ordinal());
-    // }
+    @Override
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
+        if (pocket == null)
+            return 0;
 
-    // @Override
-    // public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-    // return isProvidingWeakPower(world, x, y, z, side);
-    // }
+        ISideState sideState = pocket.getSideState(side);
+
+        if (!(sideState instanceof RedstoneState))
+            return 0;
+
+        RedstoneState redstoneState = (RedstoneState) sideState;
+
+        return redstoneState.getSignal(side);
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
+    }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null)
             return false;
 
-        if (!player.isSneaking() || player.getCurrentEquippedItem() != null) {
-            Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).toChunkCoords());
-            DPLogger.info(pocket.getExternalLight());
+        if (!player.isSneaking() || player.getCurrentEquippedItem() != null)
             return false;
-        }
 
         if (player.dimension == Reference.DIMENSION_ID) {
             player.setSneaking(false);
@@ -85,7 +90,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
-                return false;
+                return true;
 
             pocket.teleportFrom(player);
         }
@@ -93,20 +98,22 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         return true;
     }
 
-    // @Override
-    // public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-    // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
-    // }
+    @Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+        CoordSet blockSet = new CoordSet(x, y, z);
+        ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
+        Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-    // @Override
-    // public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-    // RedstoneHelper.checkWallNeighbourAndUpdateOutputStrength(world, x, y, z);
-    // }
+        if (world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+            return;
 
-    // @Override
-    // public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-    // return side != -1;
-    // }
+        pocket.onNeighbourBlockChangedPocket(direction);
+    }
+
+    @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return side != -1;
+    }
 
     @Override
     public boolean renderWithModel() {

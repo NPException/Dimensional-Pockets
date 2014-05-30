@@ -8,13 +8,18 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
+import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
@@ -92,7 +97,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         if (prevLightLevel != currentLightLevel) {
             prevLightLevel = currentLightLevel;
-            pocket.forcePocketUpdate();
+            // pocket.forcePocketUpdate();
+            // TODO Force client update levels of the client, because the light is calculated server side, need to find a vanilla way to send a chunk update.
         }
 
         return currentLightLevel;
@@ -113,7 +119,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
         int id = chunkSet.getX() * 16 + chunkSet.getY();
 
-        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + id + " ~");
+        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + (id + 1) + " ~");
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
         entityItem.delayBeforeCanPickup = 0;
@@ -166,5 +172,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             for (int i = 0; i < 40; i++)
                 UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
         }
+    }
+
+    @Override
+    public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
+        if (pocket == null)
+            return;
+
+        pocket.onNeighbourBlockChanged(this);
     }
 }

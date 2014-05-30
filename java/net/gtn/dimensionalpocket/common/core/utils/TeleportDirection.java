@@ -11,22 +11,22 @@ import net.minecraft.world.World;
 public enum TeleportDirection {
 
     //@formatter:off
-    /** -Y */
+    /** -Y  */
     DOWN(0, -2, 0),
 
-    /** +Y */
+    /** +Y  */
     UP(0, 1, 0),
 
-    /** -Z */
+    /** -Z  */
     NORTH(0, 0, -1), NORTH_MINUS_ONE(0, -1, -1),
 
-    /** +Z */
+    /** +Z  */
     SOUTH(0, 0, 1), SOUTH_MINUS_ONE(0, -1, 1),
 
-    /** -X */
+    /** -X  */
     WEST(-1, 0, 0), WEST_MINUS_ONE(-1, -1, 0),
 
-    /** +X */
+    /** +X  */
     EAST(1, 0, 0), EAST_MINUS_ONE(1, -1, 0),
     
     UNKNOWN(0, 0, 0);

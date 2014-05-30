@@ -13,17 +13,10 @@ import net.minecraft.world.World;
 
 public class ItemMisc extends ItemDPMeta {
 
-    private static final String[] names = new String[] { "enderCrystal", "netherCrystal", "infoTool" };
+    private static final String[] names = new String[] { "enderCrystal", "netherCrystal", "sideWrench" };
 
     public ItemMisc(String name) {
         super(name);
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (world.isRemote && itemStack.getItemDamage() == 2)
-            player.openGui(DimensionalPockets.instance, 0, world, 0, 0, 0);
-        return itemStack;
     }
 
     @Override
@@ -31,7 +24,7 @@ public class ItemMisc extends ItemDPMeta {
         if (world.isRemote || player.dimension != Reference.DIMENSION_ID)
             return false;
 
-        if (itemStack.getItem() == ModItems.miscItems && (itemStack.getItemDamage() == 0 || itemStack.getItemDamage() == 1)) {
+        if (itemStack.getItem() == ModItems.miscItems) {
             CoordSet blockSet = new CoordSet(x, y, z);
 
             Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
