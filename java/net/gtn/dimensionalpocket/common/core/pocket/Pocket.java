@@ -4,6 +4,7 @@ import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
+import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
@@ -27,8 +28,7 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    // TODO This needs to persist. Because it doesn't.
-    private ISideState[] sideStates = new ISideState[6];
+    private RedstoneState[] redstoneStates = new RedstoneState[6];
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -38,23 +38,11 @@ public class Pocket {
         spawnSet = new CoordSet(1, 1, 1);
     }
 
-    public ISideState getSideState(int side) {
+    public RedstoneState getSideState(int side) {
         if (ForgeDirection.getOrientation(side) == ForgeDirection.UNKNOWN)
             return null;
 
-        return sideStates[side];
-    }
-
-    public ISideState[] getSideStates() {
-        return sideStates;
-    }
-
-    public void setSideStates(ISideState[] sideStates) {
-        this.sideStates = sideStates;
-    }
-
-    public void setSideState(int side, ISideState sideState) {
-        sideStates[side] = sideState;
+        return redstoneStates[side];
     }
 
     public int getExternalLight() {
@@ -279,15 +267,13 @@ public class Pocket {
         return direction;
     }
 
+    public Block getBlock() {
+        return getBlockWorld().getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+    }
+
     public void onNeighbourBlockChanged(TileDimensionalPocket tile) {
-        for (ISideState sideState : sideStates)
-            if (sideState != null)
-                sideState.onSideChange(this, tile);
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet) {
-        ISideState sideState = sideStates[direction.ordinal()];
-        if (sideState != null)
-            sideState.onSidePocketChange(this, direction, coordSet);
     }
 }

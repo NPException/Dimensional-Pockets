@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class ItemMisc extends ItemDPMeta {
 
-    private static final String[] names = new String[] { "enderCrystal", "netherCrystal", "sideWrench" };
+    private static final String[] names = new String[] { "enderCrystal", "netherCrystal" };
 
     public ItemMisc(String name) {
         super(name);

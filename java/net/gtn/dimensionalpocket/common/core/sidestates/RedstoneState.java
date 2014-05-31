@@ -19,13 +19,18 @@ public class RedstoneState implements ISideState {
     public void onSideChange(Pocket pocket, TileDimensionalPocket tile) {
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
             CoordSet blockSet = tile.getCoordSet();
-            inputSignals[direction.ordinal()] = RedstoneHelper.getCurrentBlockOuputStrength(tile.getWorldObj(), blockSet.getX(), blockSet.getY(), blockSet.getZ(), direction);
+            int strength = RedstoneHelper.getCurrentBlockOuputStrength(tile.getWorldObj(), blockSet.getX(), blockSet.getY(), blockSet.getZ(), direction);
+            if (strength != inputSignals[direction.ordinal()]) {
+                inputSignals[direction.ordinal()] = strength;
+                pocket.forcePocketSideUpdate(direction);
+                DPLogger.info(inputSignals[direction.ordinal()]);
+            }
         }
     }
 
     @Override
     public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet) {
-        
+
     }
 
     public int getInputSignal(int side) {

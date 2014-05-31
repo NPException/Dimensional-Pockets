@@ -44,16 +44,10 @@ public class BlockDimensionalPocket extends BlockDP {
             if (world.isRemote)
                 return true;
 
-            if (itemStack.getItem() == ModItems.miscItems && itemStack.getItemDamage() == 2) {
-                TileEntity tileEntity = world.getTileEntity(x, y, z);
-                if (tileEntity instanceof TileDimensionalPocket) {
-                    TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-                    Pocket pocket = tile.getPocket();
-                    pocket.setSideState(side, new RedstoneState());
-                    DPLogger.info("SET SIDE STATE");
-                    if (!player.capabilities.isCreativeMode)
-                        player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                }
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            if (tileEntity instanceof TileDimensionalPocket) {
+                TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+                Pocket pocket = tile.getPocket();
             }
             return true;
         }
@@ -64,11 +58,6 @@ public class BlockDimensionalPocket extends BlockDP {
             tile.prepareTeleportIntoPocket(player);
         }
         return true;
-    }
-
-    @Override
-    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        return side != -1;
     }
 
     @Override
@@ -89,11 +78,6 @@ public class BlockDimensionalPocket extends BlockDP {
     }
 
     @Override
-    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-        return isProvidingWeakPower(world, x, y, z, side);
-    }
-
-    @Override
     public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         return false;
     }
@@ -101,11 +85,6 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
         return new ArrayList<ItemStack>();
-    }
-
-    @Override
-    public boolean renderWithModel() {
-        return false;
     }
 
     @Override

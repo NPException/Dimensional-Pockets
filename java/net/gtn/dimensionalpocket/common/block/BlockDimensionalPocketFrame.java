@@ -7,11 +7,13 @@ import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
 import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -57,22 +59,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-        if (pocket == null)
+        if (pocket == null || !pocket.isSourceBlockPlaced())
             return 0;
 
-        ISideState sideState = pocket.getSideState(side);
-
-        if (!(sideState instanceof RedstoneState))
-            return 0;
-
-        RedstoneState redstoneState = (RedstoneState) sideState;
-
-        return redstoneState.getInputSignal(side);
-    }
-
-    @Override
-    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
-        return isProvidingWeakPower(world, x, y, z, side);
+        CoordSet coordSet = pocket.getBlockCoords();
+        return RedstoneHelper.getCurrentBlockOuputStrength(pocket.getBlockWorld(), coordSet.getX(), coordSet.getY(), coordSet.getZ(), ForgeDirection.getOrientation(side));
     }
 
     @Override
@@ -98,26 +89,18 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         return true;
     }
 
+    // This might get called if a level is within a 3x3x3, so I return if the only possible block is still air.
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         CoordSet blockSet = new CoordSet(x, y, z);
         ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        if (world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+        // This just stops things like levers updating 2030189230781597293704827340 blocks next to it.
+        if (block != Blocks.air && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
             return;
 
         pocket.onNeighbourBlockChangedPocket(direction, new CoordSet(x, y, z));
-    }
-
-    @Override
-    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-        return side != -1;
-    }
-
-    @Override
-    public boolean renderWithModel() {
-        return false;
     }
 
     @Override

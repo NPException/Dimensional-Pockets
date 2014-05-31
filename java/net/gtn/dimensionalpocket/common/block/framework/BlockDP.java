@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -69,6 +70,16 @@ public abstract class BlockDP extends Block {
     }
 
     @Override
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+        return side != -1;
+    }
+
+    @Override
+    public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int side) {
+        return isProvidingWeakPower(world, x, y, z, side);
+    }
+
+    @Override
     public boolean renderAsNormalBlock() {
         return !renderWithModel();
     }
@@ -93,7 +104,9 @@ public abstract class BlockDP extends Block {
         return getTileEntity(metadata) != null;
     }
 
-    public abstract boolean renderWithModel();
+    public boolean renderWithModel() {
+        return false;
+    }
 
     public abstract TileEntity getTileEntity(int metadata);
 }
