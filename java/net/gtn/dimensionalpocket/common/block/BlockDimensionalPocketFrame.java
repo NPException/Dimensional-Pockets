@@ -3,8 +3,8 @@ package net.gtn.dimensionalpocket.common.block;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
-import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler.RedstoneSideState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
@@ -62,8 +62,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (pocket == null || !pocket.isSourceBlockPlaced())
             return 0;
 
-        CoordSet coordSet = pocket.getBlockCoords();
-        return RedstoneHelper.getCurrentBlockOuputStrength(pocket.getBlockWorld(), coordSet.getX(), coordSet.getY(), coordSet.getZ(), ForgeDirection.getOrientation(side));
+        ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+        return pocket.getRedstoneState().getStrength(pocketSide.ordinal(), RedstoneSideState.INPUT);
     }
 
     @Override
@@ -71,8 +71,14 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (player == null)
             return false;
 
-        if (!player.isSneaking() || player.getCurrentEquippedItem() != null)
+        if (!player.isSneaking() || player.getCurrentEquippedItem() != null) {
+            if (world.isRemote)
+                return false;
+
+            ForgeDirection direction = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
+            DPLogger.info(direction);
             return false;
+        }
 
         if (player.dimension == Reference.DIMENSION_ID) {
             player.setSneaking(false);
@@ -89,18 +95,16 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         return true;
     }
 
-    // This might get called if a level is within a 3x3x3, so I return if the only possible block is still air.
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         CoordSet blockSet = new CoordSet(x, y, z);
         ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        // This just stops things like levers updating 2030189230781597293704827340 blocks next to it.
-        if (block != Blocks.air && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+        if (pocket == null || (block == Blocks.lever && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ)))
             return;
 
-        pocket.onNeighbourBlockChangedPocket(direction, new CoordSet(x, y, z));
+        pocket.onNeighbourBlockChangedPocket(direction, new CoordSet(x, y, z), block);
     }
 
     @Override

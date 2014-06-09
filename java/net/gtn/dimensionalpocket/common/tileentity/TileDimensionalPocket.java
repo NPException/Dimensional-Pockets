@@ -176,9 +176,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-        if (pocket == null)
-            return;
+        DPLogger.info("AM I CALLED ON PLACEMENT");
+//        if (pocket == null)
+//            return;
 
-        pocket.onNeighbourBlockChanged(this);
+//        pocket.onNeighbourBlockChanged(this, new CoordSet(x, y, z), block);
     }
 }

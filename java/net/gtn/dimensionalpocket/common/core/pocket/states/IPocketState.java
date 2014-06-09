@@ -1,11 +1,12 @@
-package net.gtn.dimensionalpocket.common.core.sidestates;
+package net.gtn.dimensionalpocket.common.core.pocket.states;
 
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public interface ISideState {
+public interface IPocketState {
 
     /**
      * Neighbour block change that this sideState is embedded on.
@@ -13,7 +14,7 @@ public interface ISideState {
      * @param pocket
      * @param tile
      */
-    public void onSideChange(Pocket pocket, TileDimensionalPocket tile);
+    public void onSideChange(Pocket pocket, TileDimensionalPocket tile, CoordSet coordSet, Block block);
 
     /**
      * Called when a frame block's neighbour changed.
@@ -21,6 +22,6 @@ public interface ISideState {
      * @param pocket
      * @param tile
      */
-    public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet);
+    public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet, Block block);
 
 }

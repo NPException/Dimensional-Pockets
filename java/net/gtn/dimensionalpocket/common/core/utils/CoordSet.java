@@ -1,7 +1,10 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class CoordSet {
@@ -72,6 +75,14 @@ public class CoordSet {
 
     public CoordSet addCoordSet(CoordSet coordSet) {
         return addX(coordSet.x).addY(coordSet.y).addZ(coordSet.z);
+    }
+
+    public Block getBlock(World world) {
+        return world.getBlock(x, y, z);
+    }
+
+    public TileEntity getTileEntity(World world) {
+        return world.getTileEntity(x, y, z);
     }
 
     @Override

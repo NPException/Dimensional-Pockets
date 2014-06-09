@@ -2,26 +2,19 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
-import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
-import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler.RedstoneSideState;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockDimensionalPocket extends BlockDP {
 
@@ -42,13 +35,19 @@ public class BlockDimensionalPocket extends BlockDP {
 
         if (itemStack != null) {
             if (world.isRemote)
+                // RETURN FALSE
                 return true;
 
             TileEntity tileEntity = world.getTileEntity(x, y, z);
             if (tileEntity instanceof TileDimensionalPocket) {
+                // remove all of this.
                 TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
                 Pocket pocket = tile.getPocket();
+
+                int temp = pocket.getRedstoneState().getStrength(side, RedstoneSideState.INPUT);
+                DPLogger.info(temp);
             }
+            // RETURN FALSE
             return true;
         }
 
@@ -63,17 +62,8 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
         TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
-        if (tileEntity instanceof TileDimensionalPocket) {
-            Pocket pocket = ((TileDimensionalPocket) tileEntity).getPocket();
-            ISideState sideState = pocket.getSideState(side);
-
-            if (!(sideState instanceof RedstoneState))
-                return 0;
-
-            RedstoneState redstoneState = (RedstoneState) sideState;
-
-            return redstoneState.getOutputSignal(side);
-        }
+        if (tileEntity instanceof TileDimensionalPocket)
+            return ((TileDimensionalPocket) tileEntity).getPocket().getRedstoneState().getStrength(side, RedstoneSideState.OUTPUT);
         return 0;
     }
 

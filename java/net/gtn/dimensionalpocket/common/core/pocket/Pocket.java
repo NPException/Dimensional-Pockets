@@ -3,10 +3,8 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
-import net.gtn.dimensionalpocket.common.core.sidestates.ISideState;
-import net.gtn.dimensionalpocket.common.core.sidestates.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -28,7 +26,7 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    private RedstoneState[] redstoneStates = new RedstoneState[6];
+    private RedstoneStateHandler redstoneStateHandler;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -36,13 +34,11 @@ public class Pocket {
         this.chunkCoords = chunkCoords;
 
         spawnSet = new CoordSet(1, 1, 1);
+        redstoneStateHandler = new RedstoneStateHandler();
     }
 
-    public RedstoneState getSideState(int side) {
-        if (ForgeDirection.getOrientation(side) == ForgeDirection.UNKNOWN)
-            return null;
-
-        return redstoneStates[side];
+    public RedstoneStateHandler getRedstoneState() {
+        return redstoneStateHandler;
     }
 
     public int getExternalLight() {
@@ -271,9 +267,11 @@ public class Pocket {
         return getBlockWorld().getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
     }
 
-    public void onNeighbourBlockChanged(TileDimensionalPocket tile) {
+    public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
+        redstoneStateHandler.onSideChange(this, tile, coordSet, block);
     }
 
-    public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet) {
+    public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
+        redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
     }
 }

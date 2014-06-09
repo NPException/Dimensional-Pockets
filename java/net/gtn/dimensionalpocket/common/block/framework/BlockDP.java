@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.block.framework;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
