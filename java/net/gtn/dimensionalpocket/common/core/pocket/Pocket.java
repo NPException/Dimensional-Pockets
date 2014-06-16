@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -135,12 +136,12 @@ public class Pocket {
                 else
                     teleporter.placeInPortal(player, 0, 0, 0, 0);
             } else {
-                ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped2");
+                ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped.2");
                 comp.getChatStyle().setItalic(Boolean.TRUE);
                 entityPlayer.addChatMessage(comp);
             }
         } else {
-            ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped");
+            ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped.1");
             comp.getChatStyle().setItalic(Boolean.TRUE);
             entityPlayer.addChatMessage(comp);
         }
@@ -203,7 +204,9 @@ public class Pocket {
         // Don't want to notify air...
         if (world.isAirBlock(x, y, z))
             return;
-        world.notifyBlockChange(x + side.offsetX, y + side.offsetY, z + side.offsetZ, ModBlocks.dimensionalPocketFrame);
+        DPLogger.info(new CoordSet(x, y, z));
+        // world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
+        world.notifyBlockChange(x, y, z, ModBlocks.dimensionalPocketFrame);
     }
 
     public boolean isSourceBlockPlaced() {

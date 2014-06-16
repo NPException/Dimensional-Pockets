@@ -1,7 +1,14 @@
 package net.gtn.dimensionalpocket.client.gui;
 
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.ResourceLocation;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class GuiArrow extends Gui {
 
     public int xPos = 3;
@@ -13,23 +20,32 @@ public class GuiArrow extends Gui {
     public static final int INCREMENTAL_WIDTH = 23;
     public static final int INCREMENTAL_HEIGHT = 13;
 
+    private ArrowType type;
+
     private int x, y;
     private long timeClicked;
     private boolean clicked = false;
 
-    public GuiArrow(int id, int x, int y) {
-        if (id == 2)
+    public GuiArrow(ArrowType type, int x, int y) {
+        this.type = type;
+        if (type == ArrowType.LEFT)
             yPos += 13;
 
         this.x = x;
         this.y = y;
     }
 
+    public ArrowType getType() {
+        return type;
+    }
+
     public boolean onClick(int mouseX, int mouseY) {
-        boolean flag = canClick(mouseX, mouseY);
-        clicked = flag;
-        timeClicked = System.currentTimeMillis();
-        return flag;
+        clicked = canClick(mouseX, mouseY);
+        if (clicked) {
+            Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+            timeClicked = System.currentTimeMillis();
+        }
+        return clicked;
     }
 
     public boolean canClick(int mouseX, int mouseY) {
@@ -50,5 +66,9 @@ public class GuiArrow extends Gui {
         }
 
         drawTexturedModalRect(x, y, tempX, tempY, WIDTH, HEIGHT);
+    }
+
+    public static enum ArrowType {
+        LEFT, RIGHT;
     }
 }

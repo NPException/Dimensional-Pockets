@@ -34,15 +34,16 @@ public class RedstoneStateHandler implements IPocketState {
 
             int strength = RedstoneHelper.getCurrentOutput(tile.getWorldObj(), tile.getCoordSet(), direction);
 
-            if (redstoneState.setStrength(strength, RedstoneSideState.INPUT))
+            if (redstoneState.setStrength(strength, RedstoneSideState.INPUT)) {
+                DPLogger.info("Strength detected: " + strength);
                 pocket.forcePocketSideUpdate(direction);
+            }
         }
 
     }
 
     @Override
     public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet, Block block) {
-
     }
 
     public int getStrength(int side, RedstoneSideState state) {
@@ -69,13 +70,14 @@ public class RedstoneStateHandler implements IPocketState {
         }
 
         public boolean setStrength(int strength, RedstoneSideState state) {
+            boolean flag = this.strength != strength;
             this.strength = strength;
-            if (state == null || strength <= 0) {
+            if (state != null || strength > 0) {
+                if (sideState == RedstoneSideState.UNUSED)
+                    sideState = state;
+            } else
                 setUnused();
-                return true;
-            }
-            sideState = state;
-            return false;
+            return flag;
         }
 
         public void setUnused() {

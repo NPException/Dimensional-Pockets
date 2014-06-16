@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler.
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,27 +30,10 @@ public class BlockDimensionalPocket extends BlockDP {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null)
-            return true;
+            return false;
 
-        ItemStack itemStack = player.getCurrentEquippedItem();
-
-        if (itemStack != null) {
-            if (world.isRemote)
-                // RETURN FALSE
-                return true;
-
-            TileEntity tileEntity = world.getTileEntity(x, y, z);
-            if (tileEntity instanceof TileDimensionalPocket) {
-                // remove all of this.
-                TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-                Pocket pocket = tile.getPocket();
-
-                int temp = pocket.getRedstoneState().getStrength(side, RedstoneSideState.INPUT);
-                DPLogger.info(temp);
-            }
-            // RETURN FALSE
-            return true;
-        }
+        if (player.getCurrentEquippedItem() != null)
+            return false;
 
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket) {

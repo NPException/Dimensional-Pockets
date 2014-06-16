@@ -71,16 +71,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (player == null)
             return false;
 
-        if (!player.isSneaking() || player.getCurrentEquippedItem() != null) {
-            if (world.isRemote)
-                return false;
-
-            ForgeDirection direction = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-            DPLogger.info(direction);
+        if (!player.isSneaking() || player.getCurrentEquippedItem() != null)
             return false;
-        }
 
         if (player.dimension == Reference.DIMENSION_ID) {
+            // TODO Player sneaking is still buggy.
             player.setSneaking(false);
             if (world.isRemote)
                 return true;
@@ -101,10 +96,12 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        if (pocket == null || (block == Blocks.lever && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ)))
+        // Levers update 349782804789 blocks, but then I realised it's all redstone stuff.. :/
+        // || (block == Blocks.lever && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+        if (pocket == null)
             return;
 
-        pocket.onNeighbourBlockChangedPocket(direction, new CoordSet(x, y, z), block);
+        pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), new CoordSet(x, y, z), block);
     }
 
     @Override
