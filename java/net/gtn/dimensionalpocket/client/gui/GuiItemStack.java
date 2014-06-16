@@ -22,7 +22,6 @@ public class GuiItemStack extends GuiScreen {
 
     public GuiItemStack(ItemStack itemStack, int x, int y) {
         this.itemStack = itemStack;
-        this.itemStack.stackSize = 0;
         this.x = x + 1;
         this.y = y + 1;
     }
