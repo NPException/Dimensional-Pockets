@@ -20,7 +20,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -29,7 +28,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.12.1.1060,)")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.12.1.1060,);after:TConstruct")
 public class DimensionalPockets {
 
     @Instance(Reference.MOD_ID)
@@ -71,8 +70,6 @@ public class DimensionalPockets {
         DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
         BiomeHelper.init();
-
-        proxy.sendInterModComms();
 
         ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
     }

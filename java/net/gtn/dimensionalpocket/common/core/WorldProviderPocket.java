@@ -1,11 +1,15 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.client.IRenderHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -13,6 +17,13 @@ public class WorldProviderPocket extends WorldProvider {
 
     public WorldProviderPocket() {
         hasNoSky = true;
+        setSkyRenderer(new IRenderHandler() {
+
+            @Override
+            @SideOnly(Side.CLIENT)
+            public void render(float partialTicks, WorldClient world, Minecraft mc) {
+            }
+        });
     }
 
     @Override
@@ -94,6 +105,12 @@ public class WorldProviderPocket extends WorldProvider {
     @Override
     public boolean shouldMapSpin(String entity, double x, double y, double z) {
         return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public float[] calcSunriseSunsetColors(float par1, float par2) {
+        return new float[] { 0.0F, 0.0F, 0.0F, 0.0F };
     }
 
     @Override

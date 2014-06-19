@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
+import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -23,6 +24,8 @@ public class CommonProxy implements IGuiHandler {
 
     public void runServerSide() {
         registerTileEntities();
+
+        InterModConfigHandler.initComms();
     }
 
     public void registerTileEntities() {
@@ -30,11 +33,6 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void runClientSide() {
-    }
-
-    public void sendInterModComms() {
-        FMLInterModComms.sendMessage("Thaumcraft", "dimensionBlacklist", Reference.DIMENSION_ID + ":0");
-        FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", BiomeHelper.BIOME_ID + ":0");
     }
 
     @Override

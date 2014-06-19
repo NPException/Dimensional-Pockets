@@ -13,9 +13,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 
 import com.google.common.collect.Lists;
 
-/**
- * Look at this class Optimise, etc.
- */
 public class ChunkGeneratorPocket implements IChunkProvider {
 
     private World worldObj;
@@ -71,7 +68,6 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public List getPossibleCreatures(EnumCreatureType var1, int var2, int var3, int var4) {
         return Lists.newArrayList();
