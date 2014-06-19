@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common;
 
+import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -28,6 +30,11 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void runClientSide() {
+    }
+
+    public void sendInterModComms() {
+        FMLInterModComms.sendMessage("Thaumcraft", "dimensionBlacklist", Reference.DIMENSION_ID + ":0");
+        FMLInterModComms.sendMessage("Thaumcraft", "biomeBlacklist", BiomeHelper.BIOME_ID + ":0");
     }
 
     @Override

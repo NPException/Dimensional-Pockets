@@ -12,6 +12,8 @@ import com.google.common.collect.Lists;
 
 public class BiomeHelper {
 
+    public static final int BIOME_ID = 99;
+
     private static BiomeGenBase pocketBiome;
     static boolean init = false;
 
@@ -22,7 +24,7 @@ public class BiomeHelper {
         }
         init = true;
 
-        pocketBiome = new BiomeGenBase(99) {
+        pocketBiome = new BiomeGenBase(BIOME_ID) {
             @Override
             public boolean canSpawnLightningBolt() {
                 return false;
