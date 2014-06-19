@@ -17,6 +17,8 @@ public class TinkersConstructConfig extends AbstractConfig {
     @Override
     public void runModSpecificComms() {
         try {
+            // Trust me, I tried other ways.
+            // I hate myself just as much.
             Class clazz = Class.forName(clazzName);
             Field field = clazz.getField("blacklistedDims");
 
