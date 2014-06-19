@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui;
 
+import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,12 +23,12 @@ public class GuiItemStack extends GuiScreen {
 
     public GuiItemStack(ItemStack itemStack, int x, int y) {
         this.itemStack = itemStack;
-        this.x = x + 1;
-        this.y = y + 1;
+        this.x = x;
+        this.y = y;
     }
 
     public ItemStack doRender(int mouseX, int mouseY) {
-        RenderUtils.renderItemStackInGUI(itemStack, fontRendererObj, itemRender, x, y, 100.0F);
+        RenderUtils.renderItemStackInGUI(itemStack, fontRendererObj, itemRender, x + 1, y + 1, 100.0F);
 
         if (isMouseover(mouseX, mouseY))
             return itemStack;
@@ -35,6 +36,6 @@ public class GuiItemStack extends GuiScreen {
     }
 
     private boolean isMouseover(int mouseX, int mouseY) {
-        return mouseX >= x && mouseX <= (x + WIDTH) && mouseY >= y && mouseY <= (y + LENGTH);
+        return mouseX >= x && mouseX < (x + WIDTH) && mouseY >= y && mouseY < (y + LENGTH);
     }
 }

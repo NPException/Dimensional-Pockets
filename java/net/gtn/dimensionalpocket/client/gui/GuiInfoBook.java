@@ -211,7 +211,7 @@ public class GuiInfoBook extends GuiContainer {
         int xIndex = 0;
         int yIndex = 0;
 
-        ArrayList<ItemStack> toolTipList = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> toolTipList = new ArrayList<ItemStack>(2);
 
         for (ItemStack itemStack : recipeArray) {
             ItemStack tempStack = new GuiItemStack(itemStack, guiLeft + 52 + (xIndex * 18), guiTop + 37 + (yIndex * 18)).doRender(mouseX, mouseY);
@@ -222,6 +222,7 @@ public class GuiInfoBook extends GuiContainer {
                 yIndex++;
             }
         }
+
         ItemStack tempStack = new GuiItemStack(result, guiLeft + 70, guiTop + 125).doRender(mouseX, mouseY);
         if (tempStack != null)
             toolTipList.add(tempStack);
