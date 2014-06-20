@@ -6,12 +6,14 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
@@ -150,8 +152,10 @@ public class Pocket {
     }
 
     public void forceSideUpdate(ForgeDirection side) {
-        side = side.getOpposite();
-        getBlockWorld().notifyBlockOfNeighborChange(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, ModBlocks.dimensionalPocket);
+        getBlockWorld().setBlock(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, Blocks.wool);
+        int strength = RedstoneHelper.getCurrentOutput(getBlockWorld(), getBlockCoords().copy(), side.getOpposite());
+        getBlockWorld().setBlockMetadataWithNotify(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, strength, 3);
+        // getBlockWorld().notifyBlockOfNeighborChange(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, ModBlocks.dimensionalPocket);
     }
 
     public void forcePocketSideUpdate(ForgeDirection side) {
@@ -168,45 +172,42 @@ public class Pocket {
             case DOWN:
                 for (int x = MIN; x <= MAX; x++)
                     for (int z = MIN; z <= MAX; z++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MIN, blockSet.getZ() + z, side);
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MIN, blockSet.getZ() + z);
                 break;
             case UP:
                 for (int x = MIN; x <= MAX; x++)
                     for (int z = MIN; z <= MAX; z++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MAX, blockSet.getZ() + z, side);
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MAX, blockSet.getZ() + z);
                 break;
             case NORTH:
                 for (int x = MIN; x <= MAX; x++)
                     for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MIN, side);
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MIN);
                 break;
             case SOUTH:
                 for (int x = MIN; x <= MAX; x++)
                     for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MAX, side);
+                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MAX);
                 break;
             case WEST:
                 for (int z = MIN; z <= MAX; z++)
                     for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + MIN, blockSet.getY() + y, blockSet.getZ() + z, side);
+                        forcePossibleUpdate(world, blockSet.getX() + MIN, blockSet.getY() + y, blockSet.getZ() + z);
                 break;
             case EAST:
                 for (int z = MIN; z <= MAX; z++)
                     for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + MAX, blockSet.getY() + y, blockSet.getZ() + z, side);
+                        forcePossibleUpdate(world, blockSet.getX() + MAX, blockSet.getY() + y, blockSet.getZ() + z);
                 break;
             default:
                 break;
         }
     }
 
-    private void forcePossibleUpdate(World world, int x, int y, int z, ForgeDirection side) {
-        // Don't want to notify air...
+    private void forcePossibleUpdate(World world, int x, int y, int z) {
         if (world.isAirBlock(x, y, z))
             return;
-        DPLogger.info(new CoordSet(x, y, z));
-        // world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
-        world.notifyBlockChange(x, y, z, ModBlocks.dimensionalPocketFrame);
+        world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
     }
 
     public boolean isSourceBlockPlaced() {

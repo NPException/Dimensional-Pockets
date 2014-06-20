@@ -10,6 +10,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.block.Block;
@@ -24,9 +25,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
-    // Keep track of the shit that updated it this tick.
-    private static HashSet<Block> blockSet = new HashSet<Block>();
-
     private Pocket pocket;
     private String customName;
 
@@ -39,7 +37,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         if (!worldObj.isRemote && telePrep != null)
             if (telePrep.doPrepareTick())
                 telePrep = null;
-        blockSet = new HashSet<Block>();
     }
 
     @Override
@@ -67,9 +64,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
             }
         }
 
-        getPocket().generatePocketRoom();
+        Pocket pocket = getPocket();
+        pocket.generatePocketRoom();
+        pocket.onNeighbourBlockChanged(this, getCoordSet(), getBlockType());
 
-        ChunkLoaderHandler.addPocketToChunkLoader(getPocket());
+        ChunkLoaderHandler.addPocketToChunkLoader(pocket);
     }
 
     public int getLightForPocket() {
@@ -179,10 +178,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
 
     @Override
     public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-        if (pocket == null || blockSet.contains(block))
+        if (pocket == null)
             return;
 
-        blockSet.add(block);
         pocket.onNeighbourBlockChanged(this, new CoordSet(x, y, z), block);
     }
 }

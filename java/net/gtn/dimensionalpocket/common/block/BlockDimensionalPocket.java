@@ -3,12 +3,9 @@ package net.gtn.dimensionalpocket.common.block;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
-import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler.RedstoneSideState;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.pocket.states.redstone.RedstoneSideState;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -47,7 +44,7 @@ public class BlockDimensionalPocket extends BlockDP {
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
         TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket)
-            return ((TileDimensionalPocket) tileEntity).getPocket().getRedstoneState().getStrength(side, RedstoneSideState.OUTPUT);
+            return ((TileDimensionalPocket) tileEntity).getPocket().getRedstoneState().getOutput(side);
         return 0;
     }
 

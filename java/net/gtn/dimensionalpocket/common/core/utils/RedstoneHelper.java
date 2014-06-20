@@ -28,4 +28,16 @@ public class RedstoneHelper {
         int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
         return Math.max(weak, strong);
     }
+
+    public static int getCurrentInput(World world, CoordSet coordSet, ForgeDirection direction) {
+        int neighbourX = coordSet.getX() + direction.offsetX;
+        int neighbourY = coordSet.getY() + direction.offsetY;
+        int neighbourZ = coordSet.getZ() + direction.offsetZ;
+
+        Block neighbourBlock = world.getBlock(neighbourX, neighbourY, neighbourZ);
+
+        int weak = neighbourBlock.isProvidingWeakPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
+        int strong = neighbourBlock.isProvidingStrongPower(world, neighbourX, neighbourY, neighbourZ, direction.ordinal());
+        return Math.max(weak, strong);
+    }
 }

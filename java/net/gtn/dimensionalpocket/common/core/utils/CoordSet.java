@@ -77,6 +77,13 @@ public class CoordSet {
         return addX(coordSet.x).addY(coordSet.y).addZ(coordSet.z);
     }
 
+    public CoordSet addForgeDirection(ForgeDirection direction) {
+        x += direction.offsetX;
+        y += direction.offsetY;
+        z += direction.offsetZ;
+        return this;
+    }
+
     public Block getBlock(World world) {
         return world.getBlock(x, y, z);
     }

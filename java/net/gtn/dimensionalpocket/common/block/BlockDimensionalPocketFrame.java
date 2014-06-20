@@ -3,17 +3,12 @@ package net.gtn.dimensionalpocket.common.block;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler;
-import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneStateHandler.RedstoneSideState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -29,7 +24,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         setLightOpacity(15);
         useNeighborBrightness = false;
         disableStats();
-        // setCreativeTab(null);
+        setCreativeTab(null);
     }
 
     @Override
@@ -63,7 +58,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return 0;
 
         ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-        return pocket.getRedstoneState().getStrength(pocketSide.ordinal(), RedstoneSideState.INPUT);
+        return pocket.getRedstoneState().getInput(pocketSide.ordinal());
     }
 
     @Override
@@ -96,9 +91,9 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        // Levers update 349782804789 blocks, but then I realised it's all redstone stuff.. :/
+        // Levers update 349782804789 blocks, but then I realised it's all the redstone stuff.. :/
         // || (block == Blocks.lever && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
-        if (pocket == null)
+        if (pocket == null || direction == ForgeDirection.UNKNOWN)
             return;
 
         pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), new CoordSet(x, y, z), block);
