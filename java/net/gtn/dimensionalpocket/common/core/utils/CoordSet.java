@@ -85,6 +85,8 @@ public class CoordSet {
     }
 
     public Block getBlock(World world) {
+        if (world == null)
+            return null;
         return world.getBlock(x, y, z);
     }
 

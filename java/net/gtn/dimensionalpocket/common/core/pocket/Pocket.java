@@ -211,8 +211,7 @@ public class Pocket {
     }
 
     public boolean isSourceBlockPlaced() {
-        World world = getBlockWorld();
-        Block block = world.getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        Block block = getBlockCoords().getBlock(getBlockWorld());
         return block instanceof BlockDimensionalPocket;
     }
 
@@ -272,10 +271,10 @@ public class Pocket {
     }
 
     public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
-        redstoneStateHandler.onSideChange(this, tile, coordSet, block);
+        // redstoneStateHandler.onSideChange(this, tile, coordSet, block);
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
-        redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
+        // redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
     }
 }

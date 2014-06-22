@@ -10,6 +10,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -17,13 +18,14 @@ public class WorldProviderPocket extends WorldProvider {
 
     public WorldProviderPocket() {
         hasNoSky = true;
-        setSkyRenderer(new IRenderHandler() {
-
-            @Override
-            @SideOnly(Side.CLIENT)
-            public void render(float partialTicks, WorldClient world, Minecraft mc) {
-            }
-        });
+        // I'll have to revisit this.
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+            setSkyRenderer(new IRenderHandler() {
+                @Override
+                @SideOnly(Side.CLIENT)
+                public void render(float partialTicks, WorldClient world, Minecraft mc) {
+                }
+            });
     }
 
     @Override

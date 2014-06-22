@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.core;
 import java.util.List;
 
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -11,8 +12,6 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import com.google.common.collect.Lists;
 
 public class BiomeHelper {
-
-    public static final int BIOME_ID = 99;
 
     private static BiomeGenBase pocketBiome;
     static boolean init = false;
@@ -24,7 +23,7 @@ public class BiomeHelper {
         }
         init = true;
 
-        pocketBiome = new BiomeGenBase(BIOME_ID) {
+        pocketBiome = new BiomeGenBase(Reference.BIOME_ID) {
             @Override
             public boolean canSpawnLightningBolt() {
                 return false;

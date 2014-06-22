@@ -19,6 +19,6 @@ public class ThaumcraftConfig extends AbstractConfig {
     @Override
     public void sendInterModComms() {
         sendInterComms("dimensionBlacklist", Reference.DIMENSION_ID + ":0");
-        sendInterComms("biomeBlacklist", BiomeHelper.BIOME_ID + ":0");
+        sendInterComms("biomeBlacklist", Reference.BIOME_ID + ":0");
     }
 }

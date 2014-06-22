@@ -18,6 +18,8 @@ public class ConfigHandler {
         try {
 
             Reference.DIMENSION_ID = config.get(GAMEPLAY, "Pocket Dimension ID", Reference.DIMENSION_ID_DEFAULT).getInt();
+            Reference.BIOME_ID = config.get(GAMEPLAY, "Pocket Biome ID", Reference.BIOME_ID_DEFAULT).getInt();
+
             Reference.SHOULD_SPAWN_WITH_BOOK = config.get(GAMEPLAY, "Spawning with book", true).getBoolean(true);
 
         } catch (Exception e) {
