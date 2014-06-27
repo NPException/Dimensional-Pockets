@@ -81,9 +81,8 @@ public class PocketRegistry {
         backLinkMap = PocketConfig.loadBackLinkMap();
         currentChunk = PocketConfig.loadCurrentChunk();
 
-        for (Pocket pocket : backLinkMap.values()) {
+        for (Pocket pocket : backLinkMap.values())
             if (pocket.isSourceBlockPlaced())
                 ChunkLoaderHandler.addPocketToChunkLoader(pocket);
-        }
     }
 }
