@@ -100,7 +100,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         if (prevLightLevel != currentLightLevel) {
             prevLightLevel = currentLightLevel;
             // pocket.forcePocketUpdate();
-            // TODO Force client update levels of the client, because the light is calculated server side, need to find a vanilla way to send a chunk update.
+            // TODO Force client update levels of the client, because the light is calculated server side and stored per pocket, need to find a vanilla way to send a chunk update.
         }
 
         return currentLightLevel;
