@@ -4,29 +4,21 @@ import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 
 public class RedstoneState {
 
-    private RedstoneSideState sideState;
+    private RedstoneSideState sideState = RedstoneSideState.UNUSED;
     private int strength = 0;
-
-    public RedstoneState() {
-        setUnused();
-    }
 
     public int getStrength() {
         return strength;
     }
 
     public boolean setStrength(int strength, RedstoneSideState state) {
-        boolean flag = this.strength != strength;
-        if (isValid(state)) {
-            if (flag) {
-                this.strength = strength;
-                sideState = state;
-                flag = true;
-            }
-        } else {
-            setUnused();
-            flag = false;
+        boolean flag = this.strength != strength && isValid(state);
+
+        if (flag) {
+            this.strength = strength;
+            sideState = state;
         }
+
         return flag;
     }
 
@@ -36,33 +28,24 @@ public class RedstoneState {
     }
 
     public boolean isValid(RedstoneSideState state) {
-        return sideState != null && (sideState == RedstoneSideState.UNUSED || sideState == state);
+        return isUnused() || isState(state);
     }
 
     public boolean isState(RedstoneSideState state) {
-        if (state == RedstoneSideState.INPUT)
-            return isInput();
-        if (state == RedstoneSideState.OUTPUT)
-            return isOutput();
-        return isUnused();
+        if (strength == 0)
+            setUnused();
+        return sideState == state;
     }
 
     public boolean isUnused() {
-        boolean flag = sideState == RedstoneSideState.UNUSED;
-        if (flag)
-            strength = 0;
-        return flag;
+        return isState(RedstoneSideState.UNUSED);
     }
 
     public boolean isInput() {
-        if (sideState == RedstoneSideState.INPUT && strength == 0)
-            setUnused();
-        return sideState == RedstoneSideState.INPUT;
+        return isState(RedstoneSideState.INPUT);
     }
 
     public boolean isOutput() {
-        if (sideState == RedstoneSideState.OUTPUT && strength == 0)
-            setUnused();
-        return sideState == RedstoneSideState.OUTPUT;
+        return isState(RedstoneSideState.OUTPUT);
     }
 }

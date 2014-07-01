@@ -153,7 +153,7 @@ public class Pocket {
 
     public void forceSideUpdate(ForgeDirection side) {
         getBlockWorld().setBlock(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, Blocks.wool);
-        int strength = RedstoneHelper.getCurrentOutput(getBlockWorld(), getBlockCoords().copy(), side.getOpposite());
+        int strength = RedstoneHelper.getCurrentOutput(getBlockWorld(), getBlockCoords(), side.getOpposite());
         getBlockWorld().setBlockMetadataWithNotify(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, strength, 3);
         // getBlockWorld().notifyBlockOfNeighborChange(blockCoords.getX() + side.offsetX, blockCoords.getY() + side.offsetY, blockCoords.getZ() + side.offsetZ, ModBlocks.dimensionalPocket);
     }
@@ -230,7 +230,7 @@ public class Pocket {
     }
 
     public CoordSet getBlockCoords() {
-        return blockCoords;
+        return blockCoords.copy();
     }
 
     public CoordSet getChunkCoords() {
@@ -273,10 +273,10 @@ public class Pocket {
     }
 
     public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
-        // redstoneStateHandler.onSideChange(this, tile, coordSet, block);
+        redstoneStateHandler.onSideChange(this, tile, coordSet, block);
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
-        // redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
+        redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
     }
 }

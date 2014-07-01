@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -91,12 +92,10 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        // Levers update 349782804789 blocks, but then I realised it's all the redstone stuff.. :/
-        // || (block == Blocks.lever && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
-        if (pocket == null || direction == ForgeDirection.UNKNOWN)
+        if (pocket == null || direction == ForgeDirection.UNKNOWN || block == Blocks.air ? false : world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
             return;
 
-        pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), new CoordSet(x, y, z), block);
+        pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);
     }
 
     @Override

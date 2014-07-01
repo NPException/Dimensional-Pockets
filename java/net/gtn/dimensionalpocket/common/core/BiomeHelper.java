@@ -34,6 +34,15 @@ public class BiomeHelper {
             public List getSpawnableList(EnumCreatureType par1EnumCreatureType) {
                 return Lists.newArrayList();
             }
+
+            @Override
+            public void addDefaultFlowers() {
+            }
+
+            @Override
+            public float getSpawningChance() {
+                return 0.0F;
+            }
         }.setBiomeName("Pocket Dimension").setDisableRain();
 
         BiomeDictionary.registerBiomeType(pocketBiome, Type.MAGICAL);

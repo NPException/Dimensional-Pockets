@@ -96,9 +96,9 @@ public class CoordSet {
 
     @Override
     public int hashCode() {
-        int hash = this.x;
-        hash *= 31 + this.y;
-        hash *= 31 + this.z;
+        int hash = x;
+        hash *= 31 + y;
+        hash *= 31 + z;
         return hash;
     }
 

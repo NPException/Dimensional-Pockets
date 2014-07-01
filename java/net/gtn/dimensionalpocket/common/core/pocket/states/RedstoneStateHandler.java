@@ -32,7 +32,7 @@ public class RedstoneStateHandler implements IPocketState {
         for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
             RedstoneState redstoneState = redstoneStateArray[direction.ordinal()];
             if (redstoneState.isOutput())
-                return;
+                continue;
 
             int strength = RedstoneHelper.getCurrentOutput(world, coordSet, direction);
 
@@ -44,15 +44,11 @@ public class RedstoneStateHandler implements IPocketState {
     @Override
     public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet, Block block) {
         RedstoneState redstoneState = redstoneStateArray[direction.ordinal()];
-        if (redstoneState.isInput())
-            return;
+        if (redstoneState.isValid(RedstoneSideState.OUTPUT)) {
+            int strength = RedstoneHelper.getCurrentOutput(PocketRegistry.getWorldForPockets(), coordSet, direction.getOpposite());
 
-        int strength = RedstoneHelper.getCurrentOutput(PocketRegistry.getWorldForPockets(), coordSet, direction.getOpposite());
-
-        if (redstoneState.setStrength(strength, RedstoneSideState.OUTPUT)) {
-            if (direction == ForgeDirection.NORTH)
-                DPLogger.info(strength);
-            pocket.forceSideUpdate(direction);
+            if (redstoneState.setStrength(strength, RedstoneSideState.OUTPUT))
+                pocket.forceSideUpdate(direction);
         }
     }
 
