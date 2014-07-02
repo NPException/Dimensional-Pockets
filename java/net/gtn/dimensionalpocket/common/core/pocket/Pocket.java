@@ -207,6 +207,7 @@ public class Pocket {
     private void forcePossibleUpdate(World world, int x, int y, int z) {
         if (world.isAirBlock(x, y, z))
             return;
+        DPLogger.info(new CoordSet(x, y, z));
         world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
     }
 
@@ -277,6 +278,9 @@ public class Pocket {
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
+        if (block == ModBlocks.dimensionalPocketFrame || direction == ForgeDirection.UNKNOWN)
+            return;
+
         redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
     }
 }

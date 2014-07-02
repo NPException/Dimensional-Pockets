@@ -1,7 +1,10 @@
 package net.gtn.dimensionalpocket.common.block.framework;
 
+import java.util.ArrayList;
+
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.IBlockInteract;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -34,6 +37,14 @@ public abstract class BlockDP extends Block {
     }
 
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
+        TileEntity tileEntity = world.getTileEntity(x, y, z);
+        if (tileEntity instanceof IBlockInteract)
+            ((IBlockInteract) tileEntity).onBlockActivated(world, x, y, z, player, side, hitVecX, hitVecY, hitVecZ);
+        return false;
+    }
+
+    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof IBlockNotifier)
@@ -63,6 +74,11 @@ public abstract class BlockDP extends Block {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
         if (tileEntity instanceof IBlockNotifier)
             ((IBlockNotifier) tileEntity).onNeighbourBlockChanged(world, x, y, z, block);
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        return new ArrayList<ItemStack>();
     }
 
     @Override

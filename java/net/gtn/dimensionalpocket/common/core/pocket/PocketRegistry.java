@@ -14,7 +14,7 @@ public class PocketRegistry {
 
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
 
-    private static CoordSet currentChunk = new CoordSet(0, 0, 0);
+    private static CoordSet currentChunk = new CoordSet(-100, 0, 0);
 
     public static WorldServer getWorldForPockets() {
         return MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);

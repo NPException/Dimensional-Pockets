@@ -2,6 +2,8 @@ package net.gtn.dimensionalpocket.common.tileentity;
 
 import java.util.HashSet;
 
+import cofh.api.block.IDismantleable;
+
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
@@ -11,6 +13,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.IBlockInteract;
 import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.block.Block;
@@ -19,9 +22,10 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
+public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
@@ -71,6 +75,16 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         ChunkLoaderHandler.addPocketToChunkLoader(pocket);
     }
 
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
+        if (player == null || player.getCurrentEquippedItem() != null)
+            return false;
+
+        prepareTeleportIntoPocket(player);
+        player.swingItem();
+        return true;
+    }
+
     public int getLightForPocket() {
         if (pocket == null || !pocket.isSourceBlockPlaced())
             return 0;
@@ -106,11 +120,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         return currentLightLevel;
     }
 
-    @Override
-    public void onBlockDestroyed() {
-        if (worldObj.isRemote)
-            return;
-
+    public ItemStack generateItemStack() {
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
         if (!itemStack.hasTagCompound())
@@ -122,12 +132,24 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier {
         int id = chunkSet.getX() * 16 + chunkSet.getY();
 
         itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + (id + 1) + " ~");
+        return itemStack;
+    }
+
+    @Override
+    public void onBlockDestroyed() {
+        if (worldObj.isRemote)
+            return;
+
+        ItemStack itemStack = generateItemStack();
 
         EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
         entityItem.delayBeforeCanPickup = 0;
 
         worldObj.spawnEntityInWorld(entityItem);
+        unloadPocket();
+    }
 
+    public void unloadPocket() {
         ChunkLoaderHandler.removePocketFromChunkLoader(getPocket());
     }
 

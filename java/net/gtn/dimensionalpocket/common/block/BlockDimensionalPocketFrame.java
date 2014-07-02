@@ -22,7 +22,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         super(material, name);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightOpacity(15);
+        setLightOpacity(255);
         useNeighborBrightness = false;
         disableStats();
         setCreativeTab(null);
