@@ -1,12 +1,14 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class Utils {
@@ -74,5 +76,15 @@ public class Utils {
         }
 
         return stack;
+    }
+
+    /**
+     * Spawns an itemStack in the world.
+     */
+    public static void spawnItemStack(ItemStack itemStack, World world, float x, float y, float z, int delayBeforePickup) {
+        EntityItem entityItem = new EntityItem(world, x, y, z, itemStack);
+        entityItem.delayBeforeCanPickup = delayBeforePickup;
+
+        world.spawnEntityInWorld(entityItem);
     }
 }

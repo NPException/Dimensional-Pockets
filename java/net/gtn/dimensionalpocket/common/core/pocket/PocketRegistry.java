@@ -27,11 +27,9 @@ public class PocketRegistry {
     }
 
     public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource) {
-
-        for (Pocket pocket : backLinkMap.values()) {
+        for (Pocket pocket : backLinkMap.values())
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
                 return pocket;
-        }
 
         if (currentChunk.getY() >= 16)
             currentChunk.setY(0).addX(1);

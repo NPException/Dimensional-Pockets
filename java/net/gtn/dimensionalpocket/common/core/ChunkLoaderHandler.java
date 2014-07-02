@@ -73,7 +73,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
         if (pocket == null)
             return;
 
-        CoordSet pocketSet = pocket.getChunkCoords().copy();
+        CoordSet pocketSet = pocket.getChunkCoords();
         CoordSet chunkXZSet = pocketSet.copy().setY(0); // set to 0 to get the same CoordSet for every pocket in the same chunk
 
         TicketWrapper wrapper = ticketMap.get(chunkXZSet);
@@ -110,7 +110,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
     }
 
     public static void removePocketFromChunkLoader(Pocket pocket) {
-        CoordSet pocketSet = pocket.getChunkCoords().copy();
+        CoordSet pocketSet = pocket.getChunkCoords();
         CoordSet chunkXZSet = pocketSet.copy().setY(0);
 
         if (!ticketMap.containsKey(chunkXZSet)) {

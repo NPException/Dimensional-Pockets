@@ -78,11 +78,20 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null || player.getCurrentEquippedItem() != null)
-            return false;
+            return true;
 
         prepareTeleportIntoPocket(player);
         player.swingItem();
         return true;
+    }
+
+    @Override
+    public void onBlockDestroyed() {
+        if (worldObj.isRemote)
+            return;
+
+        Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
+        unloadPocket();
     }
 
     public int getLightForPocket() {
@@ -129,24 +138,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         CoordSet chunkSet = getPocket().getChunkCoords();
         chunkSet.writeToNBT(itemStack.getTagCompound());
 
-        int id = chunkSet.getX() * 16 + chunkSet.getY();
+        int id = chunkSet.getX() * 16 + chunkSet.getY() + 1;
 
-        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + (id + 1) + " ~");
+        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + id + " ~");
         return itemStack;
-    }
-
-    @Override
-    public void onBlockDestroyed() {
-        if (worldObj.isRemote)
-            return;
-
-        ItemStack itemStack = generateItemStack();
-
-        EntityItem entityItem = new EntityItem(worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, itemStack);
-        entityItem.delayBeforeCanPickup = 0;
-
-        worldObj.spawnEntityInWorld(entityItem);
-        unloadPocket();
     }
 
     public void unloadPocket() {

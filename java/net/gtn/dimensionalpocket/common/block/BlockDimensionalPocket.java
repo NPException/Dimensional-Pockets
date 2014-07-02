@@ -1,29 +1,18 @@
 package net.gtn.dimensionalpocket.common.block;
 
-import java.util.ArrayList;
-
-import cofh.api.block.IDismantleable;
-
-import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
-import net.gtn.dimensionalpocket.common.core.pocket.states.redstone.RedstoneSideState;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cofh.api.block.IDismantleable;
 
 public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
 
@@ -42,11 +31,6 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
     }
 
     @Override
-    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        return false;
-    }
-
-    @Override
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
     }
@@ -60,7 +44,6 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
 
         if (tileEntity instanceof TileDimensionalPocket) {
             TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-
             ItemStack itemStack = tile.generateItemStack();
 
             boolean flag = world.func_147480_a(x, y, z, false);
@@ -68,13 +51,9 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
             if (flag) {
                 if (returnBlock) {
                     player.inventory.addItemStackToInventory(itemStack);
-                } else {
-                    EntityItem entityItem = new EntityItem(world, x + 0.5F, y + 0.5F, z + 0.5F, itemStack);
-                    entityItem.delayBeforeCanPickup = 0;
-
-                    world.spawnEntityInWorld(entityItem);
-                }
-                MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                    MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+                } else
+                    Utils.spawnItemStack(itemStack, world, x + 0.5F, y + 0.5F, z + 0.5F, 0);
                 tile.unloadPocket();
             }
 
