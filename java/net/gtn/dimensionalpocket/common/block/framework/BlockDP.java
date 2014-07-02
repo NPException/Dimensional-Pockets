@@ -19,6 +19,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.client.ExtendedServerListData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -126,5 +127,7 @@ public abstract class BlockDP extends Block {
         return false;
     }
 
-    public abstract TileEntity getTileEntity(int metadata);
+    public TileEntity getTileEntity(int metadata) {
+        return null;
+    }
 }

@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.pocket.states.redstone;
+package net.gtn.dimensionalpocket.common.core.pocket.states;
 
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 
@@ -47,5 +47,9 @@ public class RedstoneState {
 
     public boolean isOutput() {
         return isState(RedstoneSideState.OUTPUT);
+    }
+
+    public static enum RedstoneSideState {
+        UNUSED, INPUT, OUTPUT;
     }
 }

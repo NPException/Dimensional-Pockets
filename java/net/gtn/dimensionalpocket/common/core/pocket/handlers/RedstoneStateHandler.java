@@ -1,14 +1,20 @@
-package net.gtn.dimensionalpocket.common.core.pocket.states;
+package net.gtn.dimensionalpocket.common.core.pocket.handlers;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.pocket.states.redstone.RedstoneSideState;
-import net.gtn.dimensionalpocket.common.core.pocket.states.redstone.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.IPocketState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneState;
+import net.gtn.dimensionalpocket.common.core.pocket.states.RedstoneState.RedstoneSideState;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -34,7 +40,7 @@ public class RedstoneStateHandler implements IPocketState {
             if (redstoneState.isOutput())
                 continue;
 
-            int strength = RedstoneHelper.getCurrentOutput(world, coordSet, direction);
+            int strength = RedstoneHelper.getCurrentSignal(world, coordSet, direction);
 
             if (redstoneState.setStrength(strength, RedstoneSideState.INPUT))
                 pocket.forcePocketSideUpdate(direction);
@@ -45,17 +51,23 @@ public class RedstoneStateHandler implements IPocketState {
     public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet, Block block) {
         RedstoneState redstoneState = redstoneStateArray[direction.ordinal()];
         if (redstoneState.isValid(RedstoneSideState.OUTPUT)) {
-            int strength = RedstoneHelper.getCurrentOutput(PocketRegistry.getWorldForPockets(), coordSet, direction.getOpposite());
+            int strength = RedstoneHelper.getCurrentSignal(PocketRegistry.getWorldForPockets(), coordSet, direction.getOpposite());
 
             if (redstoneState.setStrength(strength, RedstoneSideState.OUTPUT))
                 pocket.forceSideUpdate(direction);
         }
     }
 
+    /**
+     * The outside block should grab this.
+     */
     public int getOutput(int side) {
         return getStrength(side, RedstoneSideState.OUTPUT);
     }
 
+    /**
+     * The frames should grab this.
+     */
     public int getInput(int side) {
         return getStrength(side, RedstoneSideState.INPUT);
     }

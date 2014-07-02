@@ -97,9 +97,4 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);
     }
-
-    @Override
-    public TileEntity getTileEntity(int metadata) {
-        return null;
-    }
 }
