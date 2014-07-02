@@ -27,8 +27,6 @@ import net.minecraft.world.World;
 
 public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
 
-    private IIcon[] icons = new IIcon[Reference.SIDE_STATE_COUNT];
-
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
