@@ -49,6 +49,7 @@ public class RedstoneStateHandler implements IPocketState {
 
     @Override
     public void onSidePocketChange(Pocket pocket, ForgeDirection direction, CoordSet coordSet, Block block) {
+        DPLogger.info("Called: " + direction);
         RedstoneState redstoneState = redstoneStateArray[direction.ordinal()];
         if (redstoneState.isValid(RedstoneSideState.OUTPUT)) {
             int strength = RedstoneHelper.getCurrentSignal(PocketRegistry.getWorldForPockets(), coordSet, direction.getOpposite());
@@ -62,6 +63,7 @@ public class RedstoneStateHandler implements IPocketState {
      * The outside block should grab this.
      */
     public int getOutput(int side) {
+        DPLogger.info(ForgeDirection.getOrientation(side));
         return getStrength(side, RedstoneSideState.OUTPUT);
     }
 

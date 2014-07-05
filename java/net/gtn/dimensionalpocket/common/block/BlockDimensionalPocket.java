@@ -24,6 +24,11 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
 
     @Override
     public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
+        // TODO NP here is the issue.
+        // This isn't getting called.
+        // Deal with it.
+        // Much love.
+        // Suck it.
         TileEntity tileEntity = blockAccess.getTileEntity(x, y, z);
         if (tileEntity instanceof TileDimensionalPocket)
             return ((TileDimensionalPocket) tileEntity).getPocket().getRedstoneState().getOutput(side);

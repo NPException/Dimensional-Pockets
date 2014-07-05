@@ -30,8 +30,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z) {
-        CoordSet coordSet = new CoordSet(x, y, z);
-        Pocket pocket = PocketRegistry.getPocket(coordSet.asChunkCoords());
+        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
 
         if (pocket != null)
             return pocket.getExternalLight();
