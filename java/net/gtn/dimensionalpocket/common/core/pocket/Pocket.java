@@ -5,8 +5,6 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.pocket.handlers.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.core.utils.RedstoneHelper;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -71,8 +69,8 @@ public class Pocket {
             chunk.getBlockStorageArray()[l] = extendedBlockStorage;
         }
 
-        for (int x = 0; x < 16; x++)
-            for (int y = 0; y < 16; y++)
+        for (int x = 0; x < 16; x++) {
+            for (int y = 0; y < 16; y++) {
                 for (int z = 0; z < 16; z++) {
                     boolean flagX = x == 0 || x == 15;
                     boolean flagY = y == 0 || y == 15;
@@ -88,6 +86,8 @@ public class Pocket {
                     // use that method if setting things in the chunk will cause problems in the future
                     // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
+            } // @Jezza please do me the favor and let me have these brackets...
+        }
 
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }

@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.common.core;
 
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;

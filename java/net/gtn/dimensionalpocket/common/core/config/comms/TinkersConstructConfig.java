@@ -19,10 +19,11 @@ public class TinkersConstructConfig extends AbstractConfig {
         try {
             // Trust me, I tried other ways.
             // I hate myself just as much.
-            Class clazz = Class.forName(clazzName);
+            Class<?> clazz = Class.forName(clazzName);
             Field field = clazz.getField("blacklistedDims");
 
             ArrayList<Integer> temp = new ArrayList<Integer>();
+            @SuppressWarnings("unchecked")
             ArrayList<Integer> blackListedDims = (ArrayList<Integer>) field.get(temp);
 
             blackListedDims.add(Reference.DIMENSION_ID);

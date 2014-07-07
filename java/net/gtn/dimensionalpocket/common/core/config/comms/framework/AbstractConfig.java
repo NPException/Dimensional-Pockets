@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.config.comms.framework;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
 /**

@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket.states;
 
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-
 public class RedstoneState {
 
     private RedstoneSideState sideState = RedstoneSideState.UNUSED;

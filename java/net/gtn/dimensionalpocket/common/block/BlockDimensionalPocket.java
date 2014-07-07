@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;

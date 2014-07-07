@@ -1,9 +1,7 @@
 package net.gtn.dimensionalpocket.common.core.config.comms;
 
-import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.config.comms.framework.AbstractConfig;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import cpw.mods.fml.common.event.FMLInterModComms;
 
 public class ThaumcraftConfig extends AbstractConfig {
 

@@ -68,6 +68,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         return null;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List getPossibleCreatures(EnumCreatureType var1, int var2, int var3, int var4) {
         return Lists.newArrayList();
