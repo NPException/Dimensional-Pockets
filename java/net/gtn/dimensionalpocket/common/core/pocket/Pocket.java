@@ -49,8 +49,8 @@ public class Pocket {
         return 0;
     }
 
-    public void generatePocketRoom() {
-        if (generated)
+    public void generateOrUpdatePocketRoom(boolean doGenerate) {
+        if (generated && doGenerate)
             return;
 
         World world = PocketRegistry.getWorldForPockets();
@@ -80,7 +80,8 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
-                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    if (doGenerate)
+                        extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
                     world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
 
                     // use that method if setting things in the chunk will cause problems in the future
@@ -89,7 +90,8 @@ public class Pocket {
             } // @Jezza please do me the favor and let me have these brackets...
         }
 
-        generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+        if (doGenerate)
+            generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
@@ -107,7 +109,7 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
-        generatePocketRoom();
+        generateOrUpdatePocketRoom(true);
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);

@@ -62,7 +62,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         }
 
         Pocket pocket = getPocket();
-        pocket.generatePocketRoom();
+        pocket.generateOrUpdatePocketRoom(true);
         pocket.onNeighbourBlockChanged(this, getCoordSet(), getBlockType());
 
         ChunkLoaderHandler.addPocketToChunkLoader(pocket);
@@ -117,6 +117,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
             prevLightLevel = currentLightLevel;
             // pocket.forcePocketUpdate();
             // TODO Force client update levels of the client, because the light is calculated server side and stored per pocket, need to find a vanilla way to send a chunk update.
+
+            // This kinda works, but the whole lightlevel check needs to be restricted to maybe once every 5 seconds or so.
+            // pocket.generateOrUpdatePocketRoom(false);
         }
 
         return currentLightLevel;
