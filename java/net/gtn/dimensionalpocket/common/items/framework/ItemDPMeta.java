@@ -26,8 +26,7 @@ public abstract class ItemDPMeta extends ItemDP {
     @SideOnly(Side.CLIENT)
     public void getSubItems(Item item, CreativeTabs tab, List list) {
         String[] names = getNames();
-        int i = 0;
-        for (String name : names)
+        for (int i = 0; i < names.length; i++)
             list.add(new ItemStack(this, 1, i++));
     }
 

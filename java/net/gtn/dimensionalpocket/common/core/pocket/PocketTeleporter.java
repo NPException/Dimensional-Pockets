@@ -5,7 +5,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Teleporter;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class PocketTeleporter extends Teleporter {
@@ -23,7 +22,6 @@ public class PocketTeleporter extends Teleporter {
             return;
 
         EntityPlayerMP player = (EntityPlayerMP) entity;
-        World world = player.worldObj;
 
         double posX = targetSet.getX() + 0.5F;
         double posY = targetSet.getY() + 1;
