@@ -202,10 +202,7 @@ public class Pocket {
     }
 
     public boolean isSourceBlockPlaced() {
-        if (getBlockCoords() == null)
-            return false;
-        Block block = getBlockCoords().getBlock(getBlockWorld());
-        return block instanceof BlockDimensionalPocket;
+        return getBlock() instanceof BlockDimensionalPocket;
     }
 
     public RedstoneStateHandler getRedstoneState() {
