@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.block;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.pocket.handlers.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -21,19 +22,11 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         super(material, name);
         setBlockUnbreakable();
         setResistance(6000000.0F);
+        setLightLevel(1F);
         setLightOpacity(255);
         useNeighborBrightness = false;
         disableStats();
         setCreativeTab(null);
-    }
-
-    @Override
-    public int getLightValue(IBlockAccess world, int x, int y, int z) {
-        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-
-        if (pocket != null)
-            return pocket.getExternalLight();
-        return 0;
     }
 
     @Override
@@ -57,7 +50,9 @@ public class BlockDimensionalPocketFrame extends BlockDP {
             return 0;
 
         ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-        return pocket.getRedstoneState().getInput(pocketSide.ordinal());
+
+        RedstoneStateHandler state = pocket.getRedstoneState();
+        return state.getInput(pocketSide.ordinal());
     }
 
     @Override

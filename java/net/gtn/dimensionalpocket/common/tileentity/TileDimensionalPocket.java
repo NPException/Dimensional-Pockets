@@ -25,8 +25,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     private Pocket pocket;
     private String customName;
 
-    private int prevLightLevel = 0;
-
     private PocketTeleportPreparation telePrep;
 
     @Override
@@ -62,7 +60,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         }
 
         Pocket pocket = getPocket();
-        pocket.generateOrUpdatePocketRoom(true);
+        pocket.generatePocketRoom();
         pocket.onNeighbourBlockChanged(this, getCoordSet(), getBlockType());
 
         ChunkLoaderHandler.addPocketToChunkLoader(pocket);
@@ -85,44 +83,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
         unloadPocket();
-    }
-
-    public int getLightForPocket() {
-        if (pocket == null || !pocket.isSourceBlockPlaced())
-            return 0;
-
-        float highestLevel = 0f;
-
-        float level = worldObj.getLightBrightness(xCoord + 1, yCoord, zCoord);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        level = worldObj.getLightBrightness(xCoord - 1, yCoord, zCoord);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        level = worldObj.getLightBrightness(xCoord, yCoord + 1, zCoord);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        level = worldObj.getLightBrightness(xCoord, yCoord - 1, zCoord);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord + 1);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        level = worldObj.getLightBrightness(xCoord, yCoord, zCoord - 1);
-        highestLevel = (level > highestLevel) ? level : highestLevel;
-
-        int currentLightLevel = Math.round(highestLevel * 15f);
-
-        if (prevLightLevel != currentLightLevel) {
-            prevLightLevel = currentLightLevel;
-            // pocket.forcePocketUpdate();
-            // TODO Force client update levels of the client, because the light is calculated server side and stored per pocket, need to find a vanilla way to send a chunk update.
-
-            // This kinda works, but the whole lightlevel check needs to be restricted to maybe once every 5 seconds or so.
-            pocket.generateOrUpdatePocketRoom(false);
-        }
-
-        return currentLightLevel;
     }
 
     public ItemStack generateItemStack() {

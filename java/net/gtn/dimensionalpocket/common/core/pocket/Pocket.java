@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -27,7 +26,7 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    private transient RedstoneStateHandler redstoneStateHandler;
+    private RedstoneStateHandler redstoneStateHandler;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -35,22 +34,10 @@ public class Pocket {
         this.chunkCoords = chunkCoords;
 
         spawnSet = new CoordSet(1, 1, 1);
-        redstoneStateHandler = new RedstoneStateHandler();
     }
 
-    public int getExternalLight() {
-        if (isSourceBlockPlaced()) {
-            World world = getBlockWorld();
-            TileEntity tileEntity = world.getTileEntity(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
-
-            if (tileEntity instanceof TileDimensionalPocket)
-                return ((TileDimensionalPocket) tileEntity).getLightForPocket();
-        }
-        return 0;
-    }
-
-    public void generateOrUpdatePocketRoom(boolean doGenerate) {
-        if (generated && doGenerate)
+    public void generatePocketRoom() {
+        if (generated)
             return;
 
         World world = PocketRegistry.getWorldForPockets();
@@ -80,8 +67,7 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
                         continue;
 
-                    if (doGenerate)
-                        extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
                     world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
 
                     // use that method if setting things in the chunk will cause problems in the future
@@ -90,8 +76,7 @@ public class Pocket {
             } // @Jezza please do me the favor and let me have these brackets...
         }
 
-        if (doGenerate)
-            generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+        generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
@@ -109,7 +94,7 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
 
-        generateOrUpdatePocketRoom(true);
+        generatePocketRoom();
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -160,7 +145,7 @@ public class Pocket {
         world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
 
         world.setBlock(x, y, z, Blocks.wool);
-        int strength = redstoneStateHandler.getOutput(side.ordinal());
+        int strength = getRedstoneState().getOutput(side.ordinal());
         world.setBlockMetadataWithNotify(x, y, z, strength, 3);
     }
 
@@ -224,6 +209,8 @@ public class Pocket {
     }
 
     public RedstoneStateHandler getRedstoneState() {
+        if (redstoneStateHandler == null)
+            redstoneStateHandler = new RedstoneStateHandler();
         return redstoneStateHandler;
     }
 
@@ -279,13 +266,13 @@ public class Pocket {
     }
 
     public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
-        redstoneStateHandler.onSideChange(this, tile, coordSet, block);
+        getRedstoneState().onSideChange(this, tile, coordSet, block);
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
         if (block == ModBlocks.dimensionalPocketFrame || direction == ForgeDirection.UNKNOWN)
             return;
 
-        redstoneStateHandler.onSidePocketChange(this, direction, coordSet, block);
+        getRedstoneState().onSidePocketChange(this, direction, coordSet, block);
     }
 }
