@@ -27,7 +27,7 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    private RedstoneStateHandler redstoneStateHandler;
+    private transient RedstoneStateHandler redstoneStateHandler;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
