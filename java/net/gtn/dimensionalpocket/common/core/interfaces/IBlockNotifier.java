@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.utils;
+package net.gtn.dimensionalpocket.common.core.interfaces;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

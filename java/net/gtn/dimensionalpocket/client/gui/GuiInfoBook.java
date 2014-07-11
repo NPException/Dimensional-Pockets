@@ -197,10 +197,10 @@ public class GuiInfoBook extends GuiContainer {
                 renderRecipeGrid(RecipeHelper.getBlockRecipe(), new ItemStack(ModBlocks.dimensionalPocket), mouseX, mouseY);
                 break;
             case 1:
-                renderRecipeGrid(RecipeHelper.getEnderRecipe(), new ItemStack(ModItems.miscItems, 1, ModItems.ENDER_CRYSTAL_META), mouseX, mouseY);
+                renderRecipeGrid(RecipeHelper.getEnderRecipe(), ModItems.getEnderCrystal(), mouseX, mouseY);
                 break;
             case 2:
-                renderRecipeGrid(RecipeHelper.getNetherRecipe(), new ItemStack(ModItems.miscItems, 1, ModItems.NETHER_CRYSTAL_META), mouseX, mouseY);
+                renderRecipeGrid(RecipeHelper.getNetherRecipe(), ModItems.getNetherCrystal(), mouseX, mouseY);
                 break;
             default:
                 break;

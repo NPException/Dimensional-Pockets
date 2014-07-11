@@ -3,8 +3,8 @@ package net.gtn.dimensionalpocket.common.block.framework;
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
-import net.gtn.dimensionalpocket.common.core.utils.IBlockInteract;
-import net.gtn.dimensionalpocket.common.core.utils.IBlockNotifier;
+import net.gtn.dimensionalpocket.common.core.interfaces.IBlockInteract;
+import net.gtn.dimensionalpocket.common.core.interfaces.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
