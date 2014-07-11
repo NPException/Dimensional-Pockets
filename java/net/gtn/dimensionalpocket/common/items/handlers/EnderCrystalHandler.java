@@ -1,28 +1,25 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
-import net.gtn.dimensionalpocket.common.core.interfaces.IUsable;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class EnderCrystalHandler implements IUsable {
-
-    @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, CoordSet coordSet, int side, float hitX, float hitY, float hitZ) {
-        return false;
-    }
+public class EnderCrystalHandler extends UsableHandlerAbstract {
 
     @Override
     public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, CoordSet coordSet, int side, float hitX, float hitY, float hitZ) {
         if (player.dimension != Reference.DIMENSION_ID)
             return false;
 
-        if (world.isRemote)
-            return true;
+        if (world.isRemote) {
+            player.swingItem();
+            return false;
+        }
 
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
         if (pocket == null)
@@ -52,16 +49,9 @@ public class EnderCrystalHandler implements IUsable {
 
         if (flag) {
             pocket.setSpawnSet(spawnSet);
-
             player.inventory.decrStackSize(player.inventory.currentItem, 1);
-            return true;
         }
-        return false;
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        return itemStack;
+        return flag;
     }
 
 }

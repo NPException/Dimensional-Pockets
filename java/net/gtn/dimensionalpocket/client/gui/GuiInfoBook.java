@@ -1,13 +1,10 @@
 package net.gtn.dimensionalpocket.client.gui;
 
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
 import net.gtn.dimensionalpocket.client.ClientProxy;
-import net.gtn.dimensionalpocket.client.gui.GuiArrow.ArrowType;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.client.utils.RecipeHelper;
@@ -26,7 +23,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiInfoBook extends GuiContainer {
 
-    private GuiArrow leftArrow, rightArrow;
+    private GuiCustomButton leftArrow, rightArrow;
 
     private int currentPage;
     private int prevLines = 0;
@@ -75,11 +72,12 @@ public class GuiInfoBook extends GuiContainer {
     }
 
     private void initArrows() {
-        int x = guiLeft + (xSize / 2) - (GuiArrow.WIDTH / 2) + 2;
-        int y = guiTop + ySize - (GuiArrow.HEIGHT * 2);
+        int x = guiLeft + (xSize / 2) - (GuiArrow.state.getWidth() / 2) + 2;
+        int y = guiTop + ySize - (GuiArrow.state.getHeight() * 2);
 
-        leftArrow = new GuiArrow(ArrowType.LEFT, x - 44, y);
-        rightArrow = new GuiArrow(ArrowType.RIGHT, x + 44, y);
+        leftArrow = new GuiArrow(x - 44, y).setVisible(currentPage != 0);
+        leftArrow.getTextureState().addTexY(13);
+        rightArrow = new GuiArrow(x + 44, y).setVisible(currentPage != MAX_PAGE);
     }
 
     @Override
@@ -92,21 +90,18 @@ public class GuiInfoBook extends GuiContainer {
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
 
-        mc.renderEngine.bindTexture(shouldDrawRecipe() ? GuiSheet.GUI_INFO_BOOK_CRAFTING : GuiSheet.GUI_INFO_BOOK);
+        mc.renderEngine.bindTexture(GuiSheet.GUI_INFO_BOOK);
 
-        drawTexturedModalRect(x, y, 12, 1, xSize, ySize);
+        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
 
-        if (canRenderArrow(leftArrow))
-            leftArrow.renderArrow(mouseX, mouseY);
-        if (canRenderArrow(rightArrow))
-            rightArrow.renderArrow(mouseX, mouseY);
+        if (shouldDrawRecipe())
+            drawTexturedModalRect(x + 52, y + 37, 155, 0, 54, 106);
+
+        leftArrow.render(mouseX, mouseY);
+        rightArrow.render(mouseX, mouseY);
 
         if (shouldDrawRecipe())
             renderRecipe(getRecipeType(), mouseX, mouseY);
-    }
-
-    private boolean canRenderArrow(GuiArrow arrow) {
-        return arrow.getType() == ArrowType.LEFT ? currentPage != 0 : currentPage != MAX_PAGE;
     }
 
     @Override
@@ -116,9 +111,10 @@ public class GuiInfoBook extends GuiContainer {
         float scale = 0.75F;
         glScalef(scale, scale, scale);
 
-        String tempString = "";
+        String tempString = StatCollector.translateToLocal(shouldDrawRecipe() ? getRecipeString() : ("info.page." + currentPage));
 
-        tempString = StatCollector.translateToLocal(shouldDrawRecipe() ? getRecipeString() : ("info.page." + currentPage));
+        if (tempString == null)
+            tempString = "";
 
         drawCentredString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
 
@@ -127,18 +123,13 @@ public class GuiInfoBook extends GuiContainer {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int t) {
-        if (canRenderArrow(leftArrow) && leftArrow.onClick(mouseX, mouseY))
-            if (t == 2)
-                currentPage = 0;
-            else
-                currentPage--;
-        else if (canRenderArrow(rightArrow) && rightArrow.onClick(mouseX, mouseY))
-            if (t == 2)
-                currentPage = MAX_PAGE;
-            else
-                currentPage++;
-
+        if (leftArrow.canClick(mouseX, mouseY) && leftArrow.onClick(mouseX, mouseY))
+            currentPage = t == 2 ? 0 : currentPage - 1;
+        if (rightArrow.canClick(mouseX, mouseY) && rightArrow.onClick(mouseX, mouseY))
+            currentPage = t == 2 ? MAX_PAGE : currentPage + 1;
         currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
+        leftArrow.setVisible(currentPage != 0);
+        rightArrow.setVisible(currentPage != MAX_PAGE);
     }
 
     protected void drawCentredString(String string, int xOffset, int yOffset, int length, Colour colour) {

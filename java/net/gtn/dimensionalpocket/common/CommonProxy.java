@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
+import net.gtn.dimensionalpocket.common.core.container.ConfigContainer;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -10,6 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,9 +38,15 @@ public class CommonProxy implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
+            case 1:
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                if (tileEntity instanceof TileDimensionalPocket)
+                    return new ConfigContainer((TileDimensionalPocket) tileEntity);
+                break;
             default:
                 return null;
         }
+        return null;
     }
 
     @Override

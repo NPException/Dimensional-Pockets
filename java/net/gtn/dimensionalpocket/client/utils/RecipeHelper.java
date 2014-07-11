@@ -37,13 +37,13 @@ public class RecipeHelper {
 
     private static ItemStack[] blockArray = new ItemStack[] {
         new ItemStack(Blocks.stonebrick),
-        new ItemStack(ModItems.miscItems,1,1),
+        ModItems.getNetherCrystal(),
         new ItemStack(Blocks.stonebrick),
         new ItemStack(Blocks.iron_block),
         new ItemStack(Blocks.diamond_block),
         new ItemStack(Blocks.iron_block),
         new ItemStack(Blocks.stonebrick),
-        new ItemStack(ModItems.miscItems,1,0),
+        ModItems.getEnderCrystal(),
         new ItemStack(Blocks.stonebrick)
     };
 

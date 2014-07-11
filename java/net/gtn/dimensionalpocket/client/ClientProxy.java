@@ -1,8 +1,11 @@
 package net.gtn.dimensionalpocket.client;
 
+import net.gtn.dimensionalpocket.client.gui.GuiConfig;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.common.CommonProxy;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class ClientProxy extends CommonProxy {
@@ -19,9 +22,15 @@ public class ClientProxy extends CommonProxy {
         switch (ID) {
             case 0:
                 return new GuiInfoBook();
+            case 1:
+                TileEntity tileEntity = world.getTileEntity(x, y, z);
+                if (tileEntity instanceof TileDimensionalPocket)
+                    return new GuiConfig((TileDimensionalPocket) tileEntity);
+                break;
             default:
                 return null;
         }
+        return null;
     }
 
 }

@@ -156,4 +156,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         pocket.onNeighbourBlockChanged(this, new CoordSet(x, y, z), block);
     }
+
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return worldObj.getTileEntity(xCoord, yCoord, zCoord) != this ? false : player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64.0D;
+    }
 }
