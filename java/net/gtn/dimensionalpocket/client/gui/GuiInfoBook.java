@@ -1,17 +1,16 @@
 package net.gtn.dimensionalpocket.client.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.util.ArrayList;
-
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glScalef;
 import net.gtn.dimensionalpocket.client.ClientProxy;
+import net.gtn.dimensionalpocket.client.gui.components.GuiArrow;
+import net.gtn.dimensionalpocket.client.gui.components.GuiItemStack;
+import net.gtn.dimensionalpocket.client.gui.framework.GuiWidget;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.client.utils.RecipeHelper;
-import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -21,9 +20,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiInfoBook extends GuiContainer {
-
-    private GuiCustomButton leftArrow, rightArrow;
+public class GuiInfoBook extends GuiAbstract {
+    private GuiWidget rightArrow, leftArrow;
+    private GuiItemStack itemStackArray[] = new GuiItemStack[10];
 
     private int currentPage;
     private int prevLines = 0;
@@ -40,7 +39,7 @@ public class GuiInfoBook extends GuiContainer {
                 return true;
             }
         });
-
+        setMainTexture(GuiSheet.GUI_INFO_BOOK);
         currentPage = ClientProxy.currentPage;
 
         xSize = 154;
@@ -56,7 +55,7 @@ public class GuiInfoBook extends GuiContainer {
             CRAFTING_RECIPE_1 = Integer.parseInt(craftingRecipe1);
             CRAFTING_RECIPE_2 = Integer.parseInt(craftingRecipe2);
         } catch (NumberFormatException exception) {
-            DPLogger.severe("Error in current .lang file. Please make sure that all page numbers are a proper number.");
+            DPLogger.severe("Error in current .lang file. Please make sure that all page numbers are proper numbers.");
             MAX_PAGE = 9;
             CRAFTING_RECIPE_0 = 5;
             CRAFTING_RECIPE_0 = 6;
@@ -69,15 +68,24 @@ public class GuiInfoBook extends GuiContainer {
         super.initGui();
 
         initArrows();
+        int index = 0;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                itemStackArray[index++] = new GuiItemStack(null, guiLeft + 51 + (j * 18), guiTop + 36 + (i * 18));
+        itemStackArray[9] = new GuiItemStack(null, guiLeft + 69, guiTop + 124);
+
+        for (GuiItemStack gui : itemStackArray)
+            addButton(gui);
     }
 
     private void initArrows() {
-        int x = guiLeft + (xSize / 2) - (GuiArrow.state.getWidth() / 2) + 2;
-        int y = guiTop + ySize - (GuiArrow.state.getHeight() * 2);
+        int x = guiLeft + (xSize / 2) - (18 / 2) + 2;
+        int y = guiTop + ySize - (10 * 2);
 
-        leftArrow = new GuiArrow(x - 44, y).setVisible(currentPage != 0);
-        leftArrow.getTextureState().addTexY(13);
+        leftArrow = new GuiArrow(x - 44, y).addV(13).setVisible(currentPage != 0);
         rightArrow = new GuiArrow(x + 44, y).setVisible(currentPage != MAX_PAGE);
+        addButton(leftArrow);
+        addButton(rightArrow);
     }
 
     @Override
@@ -87,21 +95,15 @@ public class GuiInfoBook extends GuiContainer {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
-        int x = (width - xSize) / 2;
-        int y = (height - ySize) / 2;
+        mc.renderEngine.bindTexture(mainTexture);
+        drawTexturedModalRect(middleX, middleY, 0, 0, xSize, ySize);
 
-        mc.renderEngine.bindTexture(GuiSheet.GUI_INFO_BOOK);
+        if (shouldDrawRecipe()) {
+            drawTexturedModalRect(middleX + 52, middleY + 37, 155, 0, 54, 106);
+            renderRecipe(getRecipeType());
+        }
 
-        drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
-
-        if (shouldDrawRecipe())
-            drawTexturedModalRect(x + 52, y + 37, 155, 0, 54, 106);
-
-        leftArrow.render(mouseX, mouseY);
-        rightArrow.render(mouseX, mouseY);
-
-        if (shouldDrawRecipe())
-            renderRecipe(getRecipeType(), mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(var1, mouseX, mouseY);
     }
 
     @Override
@@ -119,17 +121,6 @@ public class GuiInfoBook extends GuiContainer {
         drawCentredString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
 
         glPopMatrix();
-    }
-
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int t) {
-        if (leftArrow.canClick(mouseX, mouseY) && leftArrow.onClick(mouseX, mouseY))
-            currentPage = t == 2 ? 0 : currentPage - 1;
-        if (rightArrow.canClick(mouseX, mouseY) && rightArrow.onClick(mouseX, mouseY))
-            currentPage = t == 2 ? MAX_PAGE : currentPage + 1;
-        currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
-        leftArrow.setVisible(currentPage != 0);
-        rightArrow.setVisible(currentPage != MAX_PAGE);
     }
 
     protected void drawCentredString(String string, int xOffset, int yOffset, int length, Colour colour) {
@@ -158,8 +149,6 @@ public class GuiInfoBook extends GuiContainer {
             case 2:
                 sb.append("nether");
                 break;
-            default:
-                break;
         }
 
         return sb.toString();
@@ -182,43 +171,31 @@ public class GuiInfoBook extends GuiContainer {
         return type;
     }
 
-    private void renderRecipe(int type, int mouseX, int mouseY) {
-        switch (type) {
-            case 0:
-                renderRecipeGrid(RecipeHelper.getBlockRecipe(), new ItemStack(ModBlocks.dimensionalPocket), mouseX, mouseY);
-                break;
-            case 1:
-                renderRecipeGrid(RecipeHelper.getEnderRecipe(), ModItems.getEnderCrystal(), mouseX, mouseY);
-                break;
-            case 2:
-                renderRecipeGrid(RecipeHelper.getNetherRecipe(), ModItems.getNetherCrystal(), mouseX, mouseY);
-                break;
-            default:
-                break;
-        }
+    private void renderRecipe(int type) {
+        ItemStack[] itemStacks = RecipeHelper.getRecipe(type);
+        if (itemStacks == null)
+            return;
+
+        int index = 0;
+        for (ItemStack itemStack : itemStacks)
+            itemStackArray[index++].setItemStack(itemStack);
     }
 
-    private void renderRecipeGrid(ItemStack[] recipeArray, ItemStack result, int mouseX, int mouseY) {
-        int xIndex = 0;
-        int yIndex = 0;
+    @Override
+    public void onButtonClicked(GuiWidget widget) {
+        int id = widget.getId();
 
-        ArrayList<ItemStack> toolTipList = new ArrayList<ItemStack>(2);
+        if (id == leftArrow.getId())
+            currentPage--;
+        if (id == rightArrow.getId())
+            currentPage++;
 
-        for (ItemStack itemStack : recipeArray) {
-            ItemStack tempStack = new GuiItemStack(itemStack, guiLeft + 52 + (xIndex * 18), guiTop + 37 + (yIndex * 18)).doRender(mouseX, mouseY);
-            if (tempStack != null)
-                toolTipList.add(tempStack);
-            if (++xIndex >= 3) {
-                xIndex = 0;
-                yIndex++;
-            }
-        }
+        currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
+        rightArrow.setVisible(currentPage != MAX_PAGE);
+        leftArrow.setVisible(currentPage != 0);
 
-        ItemStack tempStack = new GuiItemStack(result, guiLeft + 70, guiTop + 125).doRender(mouseX, mouseY);
-        if (tempStack != null)
-            toolTipList.add(tempStack);
-
-        for (ItemStack itemStack : toolTipList)
-            renderToolTip(itemStack, mouseX, mouseY);
+        if (!shouldDrawRecipe())
+            for (GuiItemStack gui : itemStackArray)
+                gui.setItemStack(null);
     }
 }

@@ -65,20 +65,20 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
         if (player.dimension == Reference.DIMENSION_ID) {
             if (world.isRemote)
-                return true;
+                return false;
 
             Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
             if (pocket == null)
-                return true;
+                return false;
 
-            if (pocket.getBlockDim() != Reference.DIMENSION_ID) {
+            if (pocket.getBlockDim() != Reference.DIMENSION_ID)
                 player.setSneaking(false);
-            }
 
             pocket.teleportFrom(player);
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override

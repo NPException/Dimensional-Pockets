@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client.utils;
 
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -20,7 +21,8 @@ public class RecipeHelper {
         new ItemStack(Items.ender_eye),
         new ItemStack(Items.ender_eye),
         new ItemStack(Items.ender_eye),
-        new ItemStack(Items.ender_eye)
+        new ItemStack(Items.ender_eye),
+        ModItems.getEnderCrystal()
     };
 
     private static ItemStack[] netherArray = new ItemStack[] {
@@ -32,7 +34,8 @@ public class RecipeHelper {
         new ItemStack(Items.ghast_tear),
         new ItemStack(Items.ghast_tear),
         new ItemStack(Items.ghast_tear),
-        new ItemStack(Items.ghast_tear)
+        new ItemStack(Items.ghast_tear),
+        ModItems.getNetherCrystal()
     };
 
     private static ItemStack[] blockArray = new ItemStack[] {
@@ -44,21 +47,22 @@ public class RecipeHelper {
         new ItemStack(Blocks.iron_block),
         new ItemStack(Blocks.stonebrick),
         ModItems.getEnderCrystal(),
-        new ItemStack(Blocks.stonebrick)
+        new ItemStack(Blocks.stonebrick),
+        new ItemStack(ModBlocks.dimensionalPocket)
     };
 
     //@formatter:on
 
-    public static ItemStack[] getEnderRecipe() {
-        return enderArray;
+    public static ItemStack[] getRecipe(int type) {
+        switch (type) {
+            case 0:
+                return blockArray;
+            case 1:
+                return enderArray;
+            case 2:
+                return netherArray;
+            default:
+                return null;
+        }
     }
-
-    public static ItemStack[] getNetherRecipe() {
-        return netherArray;
-    }
-
-    public static ItemStack[] getBlockRecipe() {
-        return blockArray;
-    }
-
 }
