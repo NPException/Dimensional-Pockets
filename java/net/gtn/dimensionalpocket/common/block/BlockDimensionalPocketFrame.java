@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.common.block;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.pocket.handlers.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
@@ -49,10 +48,8 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (pocket == null || !pocket.isSourceBlockPlaced())
             return 0;
 
-        ForgeDirection pocketSide = Pocket.getSideForBlock(new CoordSet(x, y, z).asSpawnPoint());
-
-        RedstoneStateHandler state = pocket.getRedstoneState();
-        return state.getInput(pocketSide.ordinal());
+        // TODO Here
+        return 0;
     }
 
     @Override

@@ -35,6 +35,14 @@ public abstract class GuiAbstract extends GuiContainer implements IGuiRenderHand
         return buttonList;
     }
 
+    public void bindTexture() {
+        bindTexture(mainTexture);
+    }
+
+    public void bindTexture(ResourceLocation texture) {
+        mc.renderEngine.bindTexture(texture);
+    }
+
     @Override
     public void initGui() {
         super.initGui();
@@ -69,7 +77,7 @@ public abstract class GuiAbstract extends GuiContainer implements IGuiRenderHand
     protected void mouseClicked(int mouseX, int mouseY, int t) {
         for (GuiWidget widget : buttonList)
             if (widget.canClick(mouseX, mouseY))
-                widget.onClick(mouseX, mouseY);
+                widget.onClick(mouseX, mouseY, t);
     }
 
     @Override

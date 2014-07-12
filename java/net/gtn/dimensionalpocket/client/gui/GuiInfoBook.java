@@ -95,7 +95,7 @@ public class GuiInfoBook extends GuiAbstract {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(mainTexture);
+        bindTexture();
         drawTexturedModalRect(middleX, middleY, 0, 0, xSize, ySize);
 
         if (shouldDrawRecipe()) {
@@ -118,12 +118,12 @@ public class GuiInfoBook extends GuiAbstract {
         if (tempString == null)
             tempString = "";
 
-        drawCentredString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
+        drawWrappedString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
 
         glPopMatrix();
     }
 
-    protected void drawCentredString(String string, int xOffset, int yOffset, int length, Colour colour) {
+    protected void drawWrappedString(String string, int xOffset, int yOffset, int length, Colour colour) {
         prevLines = 0;
         for (String str : string.split("<br>")) {
             int x = (xSize - 135) / 2 + 30;
@@ -182,7 +182,7 @@ public class GuiInfoBook extends GuiAbstract {
     }
 
     @Override
-    public void onButtonClicked(GuiWidget widget) {
+    public void onButtonClicked(GuiWidget widget, int mouseClick) {
         int id = widget.getId();
 
         if (id == leftArrow.getId())

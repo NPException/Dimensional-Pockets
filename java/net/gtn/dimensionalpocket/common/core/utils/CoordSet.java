@@ -94,6 +94,10 @@ public class CoordSet {
         return world.getTileEntity(x, y, z);
     }
 
+    public boolean isAirBlock(World world) {
+        return world.isAirBlock(x, y, z);
+    }
+
     @Override
     public int hashCode() {
         int hash = x;

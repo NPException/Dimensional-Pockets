@@ -34,7 +34,7 @@ public class GuiItemStack extends GuiWidget {
 
     @Override
     public void postRender(int mouseX, int mouseY) {
-        if (canClick(mouseX, mouseY))
+        if (isHoveringOver(mouseX, mouseY))
             renderToolTip(itemStack, mouseX, mouseY);
     }
 }

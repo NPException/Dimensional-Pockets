@@ -9,11 +9,41 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class Utils {
 
-    public static NBTTagCompound getPlayerPersistTag(EntityPlayer player) {
+    public static ForgeDirection getDirectionFromBitMask(int num) {
+        switch (num) {
+            case 0:
+                return ForgeDirection.SOUTH;
+            case 1:
+                return ForgeDirection.WEST;
+            case 2:
+                return ForgeDirection.NORTH;
+            case 3:
+                return ForgeDirection.EAST;
+            default:
+                return ForgeDirection.UNKNOWN;
+        }
+    }
 
+    public static String capitalizeString(String string) {
+        if (string == null)
+            return null;
+        if (string.equals(""))
+            return "";
+
+        String firstLetter = string.substring(0, 1).toUpperCase();
+
+        if (string.length() == 1)
+            return firstLetter;
+
+        String rest = string.substring(1).toLowerCase();
+        return firstLetter + rest;
+    }
+
+    public static NBTTagCompound getPlayerPersistTag(EntityPlayer player) {
         NBTTagCompound tag = player.getEntityData();
 
         NBTTagCompound persistTag = null;

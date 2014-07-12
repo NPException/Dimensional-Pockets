@@ -4,6 +4,6 @@ import net.gtn.dimensionalpocket.client.gui.framework.GuiWidget;
 
 public interface IClickHandler {
 
-    public void onButtonClicked(GuiWidget widget);
+    public void onButtonClicked(GuiWidget widget, int mouseClick);
 
 }

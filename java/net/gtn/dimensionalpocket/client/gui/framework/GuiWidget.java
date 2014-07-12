@@ -2,6 +2,8 @@ package net.gtn.dimensionalpocket.client.gui.framework;
 
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import net.gtn.dimensionalpocket.common.core.interfaces.IClickHandler;
 import net.gtn.dimensionalpocket.common.core.interfaces.IGuiButton;
 import net.gtn.dimensionalpocket.common.core.interfaces.IGuiRenderHandler;
@@ -56,6 +58,12 @@ public abstract class GuiWidget extends Gui implements IGuiButton {
         return this;
     }
 
+    public GuiWidget setDimensions(int width, int height) {
+        this.width = width;
+        this.height = height;
+        return this;
+    }
+
     public GuiWidget setVisible(boolean visible) {
         this.visible = visible;
         if (!visible) {
@@ -74,12 +82,12 @@ public abstract class GuiWidget extends Gui implements IGuiButton {
     }
 
     @Override
-    public boolean onClick(int mouseX, int mouseY) {
+    public boolean onClick(int mouseX, int mouseY, int mouseClick) {
         clicked = canClick(mouseX, mouseY);
         if (clicked) {
             timeClicked = System.currentTimeMillis();
             if (clickHandler != null)
-                clickHandler.onButtonClicked(this);
+                clickHandler.onButtonClicked(this, mouseClick);
             if (shouldPlaySoundOnClick())
                 playButtonClick();
         }
@@ -88,7 +96,12 @@ public abstract class GuiWidget extends Gui implements IGuiButton {
 
     @Override
     public boolean canClick(int mouseX, int mouseY) {
-        return visible && x < mouseX && mouseX < (x + width) && y < mouseY && mouseY < (y + height);
+        return visible && isHoveringOver(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean isHoveringOver(int mouseX, int mouseY) {
+        return x < mouseX && mouseX < (x + width) && y < mouseY && mouseY < (y + height);
     }
 
     public void playButtonClick() {
@@ -111,4 +124,16 @@ public abstract class GuiWidget extends Gui implements IGuiButton {
 
     public void postRender(int mouseX, int mouseY) {
     };
+
+    public boolean isAltKeyDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LMENU) || Keyboard.isKeyDown(Keyboard.KEY_RMENU);
+    }
+
+    public boolean isControlKeyDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+    }
+
+    public boolean isShiftKeyDown() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+    }
 }

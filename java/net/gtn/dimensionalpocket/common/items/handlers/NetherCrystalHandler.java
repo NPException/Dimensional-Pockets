@@ -16,8 +16,8 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
             return false;
 
         player.openGui(DimensionalPockets.instance, 1, world, coordSet.getX(), coordSet.getY(), coordSet.getZ());
-        if (!player.capabilities.isCreativeMode)
-            itemStack.stackSize--;
+        // if (!player.capabilities.isCreativeMode)
+        // itemStack.stackSize--;
         player.swingItem();
         return !world.isRemote;
     }

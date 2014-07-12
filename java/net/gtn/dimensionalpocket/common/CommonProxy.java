@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
-import net.gtn.dimensionalpocket.common.core.container.ConfigContainer;
+import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -41,10 +41,8 @@ public class CommonProxy implements IGuiHandler {
             case 1:
                 TileEntity tileEntity = world.getTileEntity(x, y, z);
                 if (tileEntity instanceof TileDimensionalPocket)
-                    return new ConfigContainer((TileDimensionalPocket) tileEntity);
+                    return new ContainerPocketConfig((TileDimensionalPocket) tileEntity);
                 break;
-            default:
-                return null;
         }
         return null;
     }

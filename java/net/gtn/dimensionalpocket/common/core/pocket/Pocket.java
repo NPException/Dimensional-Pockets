@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
-import net.gtn.dimensionalpocket.common.core.pocket.handlers.RedstoneStateHandler;
 import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -11,7 +10,6 @@ import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
@@ -25,8 +23,6 @@ public class Pocket {
     private int blockDim;
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
-
-    private RedstoneStateHandler redstoneStateHandler;
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -142,11 +138,7 @@ public class Pocket {
 
         if (world.isAirBlock(x, y, z))
             return;
-        world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
-
-        world.setBlock(x, y, z, Blocks.wool);
-        int strength = getRedstoneState().getOutput(side.ordinal());
-        world.setBlockMetadataWithNotify(x, y, z, strength, 3);
+        world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocket);
     }
 
     public void forcePocketSideUpdate(ForgeDirection side) {
@@ -205,12 +197,6 @@ public class Pocket {
         return getBlock() instanceof BlockDimensionalPocket;
     }
 
-    public RedstoneStateHandler getRedstoneState() {
-        if (redstoneStateHandler == null)
-            redstoneStateHandler = new RedstoneStateHandler();
-        return redstoneStateHandler;
-    }
-
     public World getBlockWorld() {
         return MinecraftServer.getServer().worldServerForDimension(blockDim);
     }
@@ -263,13 +249,8 @@ public class Pocket {
     }
 
     public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
-        getRedstoneState().onSideChange(this, tile, coordSet, block);
     }
 
     public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
-        if (block == ModBlocks.dimensionalPocketFrame || direction == ForgeDirection.UNKNOWN)
-            return;
-
-        getRedstoneState().onSidePocketChange(this, direction, coordSet, block);
     }
 }

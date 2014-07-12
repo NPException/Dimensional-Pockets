@@ -7,6 +7,9 @@ import net.minecraft.world.World;
 
 /**
  * All methods are called on both client and server.
+ * 
+ * Don't implement this.
+ * Instead extend UsableHandlerAbstract
  */
 public interface IUsable {
 
