@@ -1,8 +1,9 @@
 package net.gtn.dimensionalpocket.client;
 
-import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
+import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.common.CommonProxy;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.MovingObjectPositionUtil;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;

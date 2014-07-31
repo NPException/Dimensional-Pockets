@@ -29,13 +29,10 @@ public class Utils {
     }
 
     public static String capitalizeString(String string) {
-        if (string == null)
-            return null;
-        if (string.equals(""))
+        if (string == null || string.equals(""))
             return "";
 
         String firstLetter = string.substring(0, 1).toUpperCase();
-
         if (string.length() == 1)
             return firstLetter;
 
@@ -69,7 +66,7 @@ public class Utils {
 
     /**
      * This method will write the given name and lore to the itemstack's "display"-nbt tag. (Thanks to oku)
-     * 
+     *
      * @param stack
      * @param name
      * @param loreStrings
