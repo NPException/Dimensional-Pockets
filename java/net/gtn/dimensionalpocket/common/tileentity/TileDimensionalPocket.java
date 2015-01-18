@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -17,8 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract {
+public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
@@ -61,7 +64,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         Pocket pocket = getPocket();
         pocket.generatePocketRoom();
-        pocket.onNeighbourBlockChanged(this, getCoordSet(), getBlockType());
 
         ChunkLoaderHandler.addPocketToChunkLoader(pocket);
     }
@@ -151,9 +153,40 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-        if (pocket == null)
-            return;
-
-        pocket.onNeighbourBlockChanged(this, new CoordSet(x, y, z), block);
+        // nothing to do
     }
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection from) {
+		// TODO read out info from pocket
+		return true;
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+		// TODO Auto-generated method stub
+		System.out.println("IEnergyReceiver - receiveEnergy - from: " + from.name() + " - maxReceive: " + maxReceive + " - simulate: " + simulate);
+		return 0;
+	}
+	
+	@Override
+	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+		// TODO Auto-generated method stub
+		System.out.println("IEnergyProvider - extractEnergy - from: " + from.name() + " - maxExtract: " + maxExtract + " - simulate: " + simulate);
+		return Math.min(5, maxExtract);
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection from) {
+		// TODO Auto-generated method stub
+		System.out.println("IEnergyReceiver/Provider - getEnergyStored - from: " + from.name());
+		return 0;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection from) {
+		// TODO Auto-generated method stub
+		System.out.println("IEnergyReceiver/Provider - getMaxEnergyStored - from: " + from.name());
+		return 0;
+	}
 }

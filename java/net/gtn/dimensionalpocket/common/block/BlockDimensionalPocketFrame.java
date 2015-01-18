@@ -43,16 +43,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     }
 
     @Override
-    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
-        Pocket pocket = PocketRegistry.getPocket(new CoordSet(x, y, z).asChunkCoords());
-        if (pocket == null || !pocket.isSourceBlockPlaced())
-            return 0;
-
-        // TODO Here
-        return 0;
-    }
-
-    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null)
             return false;
@@ -80,14 +70,6 @@ public class BlockDimensionalPocketFrame extends BlockDP {
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        CoordSet blockSet = new CoordSet(x, y, z);
-        ForgeDirection direction = Pocket.getSideForBlock(blockSet.toChunkOffset()).getOpposite();
-        Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
-
-        if (!(pocket == null || direction == ForgeDirection.UNKNOWN || block == Blocks.air) && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
-            return;
-
-        if (pocket != null)
-            pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);
+        // do nothing
     }
 }

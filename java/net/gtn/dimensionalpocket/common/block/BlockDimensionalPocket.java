@@ -25,12 +25,6 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
     }
 
     @Override
-    public int isProvidingWeakPower(IBlockAccess blockAccess, int x, int y, int z, int side) {
-        // TODO here
-        return 0;
-    }
-
-    @Override
     public TileEntity getTileEntity(int metadata) {
         return new TileDimensionalPocket();
     }

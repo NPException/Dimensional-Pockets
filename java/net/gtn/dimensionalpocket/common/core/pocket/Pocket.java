@@ -35,10 +35,21 @@ public class Pocket {
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
 
-        this.connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
-        this.flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
-
         spawnSet = new CoordSet(1, 1, 1);
+    }
+    
+    private Map<ForgeDirection, CoordSet> getConnectorMap() {
+    	if (connectorMap == null) {
+    		connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
+    	}
+    	return connectorMap;
+    }
+    
+    private Map<ForgeDirection, FlowState> getFlowMap() {
+    	if (flowMap == null) {
+    		flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
+    	}
+    	return flowMap;
     }
 
     public void generatePocketRoom() {
@@ -85,23 +96,23 @@ public class Pocket {
     }
 
     public FlowState getFlowState(ForgeDirection direction) {
-        if (flowMap.containsKey(direction))
-            flowMap.get(direction);
+        if (getFlowMap().containsKey(direction))
+        	getFlowMap().get(direction);
         return FlowState.NONE;
     }
 
     public void setFlowState(ForgeDirection direction, FlowState flowState) {
-        flowMap.put(direction, flowState);
+    	getFlowMap().put(direction, flowState);
     }
 
-    public CoordSet getOffset(ForgeDirection direction) {
-        if (connectorMap.containsKey(direction))
-            connectorMap.get(direction);
+    public CoordSet getConnectorCoords(ForgeDirection direction) {
+        if (getConnectorMap().containsKey(direction))
+        	getConnectorMap().get(direction);
         return null;
     }
 
-    public void setOffset(ForgeDirection direction, CoordSet connector) {
-        connectorMap.put(direction, connector);
+    public void setConnectorCoords(ForgeDirection direction, CoordSet connectorCoords) {
+    	getConnectorMap().put(direction, connectorCoords);
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
@@ -159,69 +170,6 @@ public class Pocket {
         return true;
     }
 
-    public void forceSideUpdate(ForgeDirection side) {
-        int x = blockCoords.getX() + side.offsetX;
-        int y = blockCoords.getY() + side.offsetY;
-        int z = blockCoords.getZ() + side.offsetZ;
-        World world = getBlockWorld();
-
-        if (world.isAirBlock(x, y, z))
-            return;
-        world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocket);
-    }
-
-    public void forcePocketSideUpdate(ForgeDirection side) {
-        World world = PocketRegistry.getWorldForPockets();
-        if (world.isRemote)
-            return;
-
-        CoordSet blockSet = chunkCoords.toBlockCoords();
-
-        int MIN = 1;
-        int MAX = 14;
-
-        switch (side) {
-            case DOWN:
-                for (int x = MIN; x <= MAX; x++)
-                    for (int z = MIN; z <= MAX; z++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MIN, blockSet.getZ() + z);
-                break;
-            case UP:
-                for (int x = MIN; x <= MAX; x++)
-                    for (int z = MIN; z <= MAX; z++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + MAX, blockSet.getZ() + z);
-                break;
-            case NORTH:
-                for (int x = MIN; x <= MAX; x++)
-                    for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MIN);
-                break;
-            case SOUTH:
-                for (int x = MIN; x <= MAX; x++)
-                    for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + x, blockSet.getY() + y, blockSet.getZ() + MAX);
-                break;
-            case WEST:
-                for (int z = MIN; z <= MAX; z++)
-                    for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + MIN, blockSet.getY() + y, blockSet.getZ() + z);
-                break;
-            case EAST:
-                for (int z = MIN; z <= MAX; z++)
-                    for (int y = MIN; y <= MAX; y++)
-                        forcePossibleUpdate(world, blockSet.getX() + MAX, blockSet.getY() + y, blockSet.getZ() + z);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private void forcePossibleUpdate(World world, int x, int y, int z) {
-        if (world.isAirBlock(x, y, z))
-            return;
-        world.notifyBlockOfNeighborChange(x, y, z, ModBlocks.dimensionalPocketFrame);
-    }
-
     public boolean isSourceBlockPlaced() {
         return getBlock() instanceof BlockDimensionalPocket;
     }
@@ -275,11 +223,5 @@ public class Pocket {
             return ForgeDirection.SOUTH;
 
         return direction;
-    }
-
-    public void onNeighbourBlockChanged(TileDimensionalPocket tile, CoordSet coordSet, Block block) {
-    }
-
-    public void onNeighbourBlockChangedPocket(ForgeDirection direction, CoordSet coordSet, Block block) {
     }
 }
