@@ -1,44 +1,37 @@
 package net.gtn.dimensionalpocket.client.gui;
 
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.client.gui.GuiContainerAbstract;
+import me.jezza.oc.client.gui.components.GuiWidget;
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.gui.components.GuiArrow;
 import net.gtn.dimensionalpocket.client.gui.components.GuiItemStack;
-import net.gtn.dimensionalpocket.client.gui.framework.GuiWidget;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.client.utils.RecipeHelper;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
-public class GuiInfoBook extends GuiAbstract {
+public class GuiInfoBook extends GuiContainerAbstract {
     private GuiWidget rightArrow, leftArrow;
     private GuiItemStack itemStackArray[] = new GuiItemStack[10];
 
     private int currentPage;
-    private int prevLines = 0;
 
     private int MAX_PAGE;
     private int CRAFTING_RECIPE_0;
     private int CRAFTING_RECIPE_1;
     private int CRAFTING_RECIPE_2;
 
-    public GuiInfoBook() {
-        super(new Container() {
-            @Override
-            public boolean canInteractWith(EntityPlayer player) {
-                return true;
-            }
-        });
+    public GuiInfoBook(EntityPlayer player) {
+        super(player);
         setMainTexture(GuiSheet.GUI_INFO_BOOK);
         currentPage = ClientProxy.currentPage;
 
@@ -82,7 +75,9 @@ public class GuiInfoBook extends GuiAbstract {
         int x = guiLeft + (xSize / 2) - (18 / 2) + 2;
         int y = guiTop + ySize - (10 * 2);
 
-        leftArrow = new GuiArrow(x - 44, y).addV(13).setVisible(currentPage != 0);
+        GuiArrow leftGuiArrow = new GuiArrow(x - 44, y);
+        leftGuiArrow.v += 13;
+        leftArrow = leftGuiArrow.setVisible(currentPage != 0);
         rightArrow = new GuiArrow(x + 44, y).setVisible(currentPage != MAX_PAGE);
         addButton(leftArrow);
         addButton(rightArrow);
@@ -123,8 +118,26 @@ public class GuiInfoBook extends GuiAbstract {
         glPopMatrix();
     }
 
+    @Override
+    public void onActionPerformed(GuiWidget widget, int mouse) {
+        int id = widget.getId();
+
+        if (id == leftArrow.getId())
+            currentPage--;
+        if (id == rightArrow.getId())
+            currentPage++;
+
+        currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
+        rightArrow.setVisible(currentPage != MAX_PAGE);
+        leftArrow.setVisible(currentPage != 0);
+
+        if (!shouldDrawRecipe())
+            for (GuiItemStack gui : itemStackArray)
+                gui.setItemStack(null);
+    }
+
     protected void drawWrappedString(String string, int xOffset, int yOffset, int length, Colour colour) {
-        prevLines = 0;
+        int prevLines = 0;
         for (String str : string.split("<br>")) {
             int x = (xSize - 135) / 2 + 30;
             int y = ySize / 2 - 70;
@@ -179,23 +192,5 @@ public class GuiInfoBook extends GuiAbstract {
         int index = 0;
         for (ItemStack itemStack : itemStacks)
             itemStackArray[index++].setItemStack(itemStack);
-    }
-
-    @Override
-    public void onButtonClicked(GuiWidget widget, int mouseClick) {
-        int id = widget.getId();
-
-        if (id == leftArrow.getId())
-            currentPage--;
-        if (id == rightArrow.getId())
-            currentPage++;
-
-        currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
-        rightArrow.setVisible(currentPage != MAX_PAGE);
-        leftArrow.setVisible(currentPage != 0);
-
-        if (!shouldDrawRecipe())
-            for (GuiItemStack gui : itemStackArray)
-                gui.setItemStack(null);
     }
 }

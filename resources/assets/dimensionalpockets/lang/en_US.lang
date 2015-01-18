@@ -5,7 +5,7 @@ itemGroup.dimensionalPockets=Dimensional Pockets
 tile.dimensionalPocket.name=Dimensional Pocket
 tile.dimensionalPocketFrame.name=Outside Of The Block
 
-item.infoTool.name=Guide To Dimensional Pockets
+item.infoBookDP.name=Guide To Dimensional Pockets
 item.enderCrystal.name=Ender Crystal
 item.netherCrystal.name=Nether Crystal
 

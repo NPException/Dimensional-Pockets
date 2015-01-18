@@ -1,10 +1,10 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import java.util.ArrayList;
-
-import net.gtn.dimensionalpocket.client.gui.framework.GuiUntexturedButton;
+import me.jezza.oc.client.gui.components.interactions.GuiUntexturedButton;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.ArrayList;
 
 public class GuiSideButton extends GuiUntexturedButton {
 
@@ -19,12 +19,13 @@ public class GuiSideButton extends GuiUntexturedButton {
         return this;
     }
 
+
     @Override
-    public void postRender(int mouseX, int mouseY) {
-        if (isHoveringOver(mouseX, mouseY)) {
+    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+        if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             list.add(Utils.capitalizeString(direction.name()));
-            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
+            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
         }
     }
 }

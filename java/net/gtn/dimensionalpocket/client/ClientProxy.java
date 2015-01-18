@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.client;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.common.CommonProxy;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.MovingObjectPositionUtil;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,20 +16,19 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void runClientSide() {
-
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         switch (ID) {
             case 0:
-                return new GuiInfoBook();
+                return new GuiInfoBook(player);
             case 1:
                 TileEntity tileEntity = world.getTileEntity(x, y, z);
                 if (tileEntity instanceof TileDimensionalPocket) {
                     int side = MovingObjectPositionUtil.getCurrentMousedOverSide(player);
                     int looking = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
-                    return new GuiPocketConfig((TileDimensionalPocket) tileEntity, side, looking);
+                    return new GuiPocketConfig(player, (TileDimensionalPocket) tileEntity, side, looking);
                 }
                 break;
             default:

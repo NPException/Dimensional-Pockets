@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import java.util.ArrayList;
+import me.jezza.oc.client.gui.components.GuiCycle;
 
-import net.gtn.dimensionalpocket.client.gui.framework.GuiCycle;
+import java.util.ArrayList;
 
 public class GuiToggleProcess extends GuiCycle {
 
@@ -11,8 +11,8 @@ public class GuiToggleProcess extends GuiCycle {
     }
 
     @Override
-    public void postRender(int mouseX, int mouseY) {
-        if (isHoveringOver(mouseX, mouseY)) {
+    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+        if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             switch (typeState) {
                 case 0:
@@ -25,7 +25,7 @@ public class GuiToggleProcess extends GuiCycle {
                     list.add("Output");
                     break;
             }
-            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
+            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
         }
     }
 

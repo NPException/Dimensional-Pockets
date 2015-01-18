@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import net.gtn.dimensionalpocket.client.gui.framework.GuiWidget;
+import me.jezza.oc.client.gui.components.GuiWidget;
 import net.gtn.dimensionalpocket.client.utils.RenderUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -28,13 +28,13 @@ public class GuiItemStack extends GuiWidget {
     }
 
     @Override
-    public void render(int mouseX, int mouseY) {
+    public void renderBackground(int mouseX, int mouseY) {
         RenderUtils.renderItemStackInGUI(itemStack, fontRendererObj, itemRender, x + 2, y + 2, 100.0F);
     }
 
     @Override
-    public void postRender(int mouseX, int mouseY) {
-        if (isHoveringOver(mouseX, mouseY))
-            renderToolTip(itemStack, mouseX, mouseY);
+    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+        if (canClick(mouseX, mouseY))
+            renderToolTip(itemStack, translatedX, translatedY);
     }
 }

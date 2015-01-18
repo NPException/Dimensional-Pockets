@@ -1,29 +1,27 @@
 package net.gtn.dimensionalpocket.client.gui;
 
+import me.jezza.oc.client.gui.GuiContainerAbstract;
+import me.jezza.oc.client.gui.components.GuiWidget;
+import me.jezza.oc.client.gui.interfaces.IGuiRenderHandler;
 import net.gtn.dimensionalpocket.client.gui.components.GuiExitButton;
 import net.gtn.dimensionalpocket.client.gui.components.GuiSideButton;
 import net.gtn.dimensionalpocket.client.gui.components.GuiStateType;
 import net.gtn.dimensionalpocket.client.gui.components.GuiToggleProcess;
-import net.gtn.dimensionalpocket.client.gui.framework.GuiCycle;
-import net.gtn.dimensionalpocket.client.gui.framework.GuiWidget;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
-import net.gtn.dimensionalpocket.common.core.interfaces.IClickHandler;
-import net.gtn.dimensionalpocket.common.core.interfaces.IGuiRenderHandler;
-import net.gtn.dimensionalpocket.common.core.pocket.SideState;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class GuiPocketConfig extends GuiAbstract implements IClickHandler, IGuiRenderHandler {
+public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderHandler {
 
     private final ForgeDirection side;
     private ForgeDirection lookDirection;
 
-    private SideState currentState = null;
-
-    public GuiPocketConfig(TileDimensionalPocket tile, int sideHit, int sideLooking) {
-        super(new ContainerPocketConfig(tile));
+    public GuiPocketConfig(EntityPlayer player, TileDimensionalPocket tile, int sideHit, int sideLooking) {
+        super(player, new ContainerPocketConfig(tile));
         setMainTexture(GuiSheet.GUI_CONFIG);
 
         this.side = ForgeDirection.getOrientation(sideHit);
@@ -43,7 +41,7 @@ public class GuiPocketConfig extends GuiAbstract implements IClickHandler, IGuiR
         int x = guiLeft;
         int y = guiTop;
 
-        addButton(new GuiExitButton(x + (1 * 20) - 34, y + (1 * 20) - 11));
+        addButton(new GuiExitButton(x + (20) - 34, y + (20) - 11));
 
         ForgeDirection sideRotation = ForgeDirection.UP;
         switch (side) {
@@ -73,7 +71,7 @@ public class GuiPocketConfig extends GuiAbstract implements IClickHandler, IGuiR
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(float tick, int mouseX, int mouseY) {
         bindTexture();
         drawTexturedModalRect(middleX - 19, middleY + 4, 0, 108, 19, 21);
 
@@ -84,30 +82,17 @@ public class GuiPocketConfig extends GuiAbstract implements IClickHandler, IGuiR
         drawTexturedModalRect(middleX + 76, middleY + 42, 74, 32, 24, 24);
 
         drawTexturedModalRect(middleX, middleY, 0, 0, xSize, ySize);
-        super.drawGuiContainerBackgroundLayer(var1, mouseX, mouseY);
+        super.drawGuiContainerBackgroundLayer(tick, mouseX, mouseY);
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int t) {
-        for (GuiWidget widget : getButtonList()) {
-            if (widget instanceof GuiCycle) {
-                GuiCycle gui = (GuiCycle) widget;
-                if (currentState != null && gui.canClick(mouseX, mouseY))
-                    widget.onClick(mouseX, mouseY, t);
-            } else if (widget.canClick(mouseX, mouseY))
-                widget.onClick(mouseX, mouseY, t);
-        }
-    }
-
-    @Override
-    public void onButtonClicked(GuiWidget widget, int mouseClick) {
+    public void onActionPerformed(GuiWidget widget, int mouse) {
         int id = widget.getId();
-        if (id == 0) {
+        if (id == 0){
+            
             return;
         }
 
-        if (widget instanceof GuiSideButton) {
-            // GuiSideButton button = (GuiSideButton) widget;
-        }
+        DPLogger.info(id);
     }
 }

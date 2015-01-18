@@ -20,6 +20,7 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
 
 @Config.Controller(configFile = "DimensionalPockets")
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.12.1.1060,);after:TConstruct")
@@ -35,7 +36,7 @@ public class DimensionalPockets {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        DPLogger.init(event.getModLog());
+        DPLogger.init(LogManager.getLogger(Reference.MOD_NAME.replaceAll(" ", "")));
 
         ModBlocks.init();
         ModItems.init();

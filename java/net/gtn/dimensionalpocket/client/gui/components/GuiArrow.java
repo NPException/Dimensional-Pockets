@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import net.gtn.dimensionalpocket.client.gui.framework.GuiTexturedButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.client.gui.components.GuiTexturedButton;
 
 @SideOnly(Side.CLIENT)
 public class GuiArrow extends GuiTexturedButton {

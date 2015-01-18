@@ -87,6 +87,7 @@ public class BlockDimensionalPocketFrame extends BlockDP {
         if (!(pocket == null || direction == ForgeDirection.UNKNOWN || block == Blocks.air) && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
             return;
 
-        pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);
+        if (pocket != null)
+            pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);
     }
 }
