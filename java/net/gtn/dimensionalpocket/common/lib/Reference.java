@@ -1,5 +1,8 @@
 package net.gtn.dimensionalpocket.common.lib;
 
+import me.jezza.oc.api.configuration.Config.ConfigBoolean;
+import me.jezza.oc.api.configuration.Config.ConfigInteger;
+
 public class Reference {
 
     public static final String MOD_ID = "dimensionalPockets";
@@ -11,13 +14,12 @@ public class Reference {
     public static final String CLIENT_PROXY_CLASS = "net.gtn.dimensionalpocket.client.ClientProxy";
     public static final String SERVER_PROXY_CLASS = "net.gtn.dimensionalpocket.common.CommonProxy";
 
-    public static final int DIMENSION_ID_DEFAULT = 33;
-    public static int DIMENSION_ID;
+    @ConfigInteger(category = "Gameplay")
+    public static int DIMENSION_ID = 33;
 
-    public static final int BIOME_ID_DEFAULT = 99;
-    public static int BIOME_ID;
+    @ConfigInteger(category = "Gameplay")
+    public static int BIOME_ID = 99;
 
-    public static final int SIDE_STATE_COUNT = 1;
-
-    public static boolean SHOULD_SPAWN_WITH_BOOK;
+    @ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
+    public static boolean SHOULD_SPAWN_WITH_BOOK = true;
 }
