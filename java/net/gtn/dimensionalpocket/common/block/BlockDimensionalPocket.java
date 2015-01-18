@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.block;
 
+import cofh.api.block.IDismantleable;
+import com.google.common.collect.Lists;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -11,7 +13,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cofh.api.block.IDismantleable;
+
+import java.util.ArrayList;
 
 public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
 
@@ -33,7 +36,7 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
     }
 
     @Override
-    public ItemStack dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
+    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
         if (world.isRemote)
             return null;
 
@@ -54,7 +57,7 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable {
                 tile.unloadPocket();
             }
 
-            return itemStack;
+            return Lists.newArrayList(itemStack);
         }
         return null;
     }
