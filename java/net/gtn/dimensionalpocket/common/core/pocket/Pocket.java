@@ -17,7 +17,13 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public class Pocket {
+
+    private Map<ForgeDirection, CoordSet> connectorMap;
+    private Map<ForgeDirection, FlowState> flowMap;
 
     private boolean generated = false;
     private int blockDim;
@@ -28,6 +34,9 @@ public class Pocket {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
+
+        this.connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
+        this.flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
 
         spawnSet = new CoordSet(1, 1, 1);
     }
@@ -60,7 +69,7 @@ public class Pocket {
                     boolean flagZ = z == 0 || z == 15;
 
                     // Made these flags, so I could add these checks, almost halves it in time.
-                    if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && (flagX || flagZ)) || (flagZ && (flagY || flagX)))
+                    if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && flagZ))
                         continue;
 
                     extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
@@ -73,6 +82,26 @@ public class Pocket {
         }
 
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+    }
+
+    public FlowState getFlowState(ForgeDirection direction) {
+        if (flowMap.containsKey(direction))
+            flowMap.get(direction);
+        return FlowState.NONE;
+    }
+
+    public void setFlowState(ForgeDirection direction, FlowState flowState) {
+        flowMap.put(direction, flowState);
+    }
+
+    public CoordSet getOffset(ForgeDirection direction) {
+        if (connectorMap.containsKey(direction))
+            connectorMap.get(direction);
+        return null;
+    }
+
+    public void setOffset(ForgeDirection direction, CoordSet connector) {
+        connectorMap.put(direction, connector);
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
