@@ -1,39 +1,41 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import cpw.mods.fml.relauncher.Side;
 
 public class DPLogger {
 
-    public static DPLogger log = new DPLogger();
-    static Side side;
+    public static DPLogger INSTANCE = new DPLogger();
 
-    private Logger dpLogger;
+    private Logger logger;
 
-    public DPLogger() {
+    private DPLogger() {
     }
 
-    public static void init() {
-        log.dpLogger = LogManager.getLogger("DP");
+    public static void init(Logger logger) {
+        INSTANCE.logger = logger;
     }
 
-    private static void log(Level logLevel, String levelName, Class<?> srcClass, Object object) {
+    public static void log(Level logLevel, String levelName, Object object) {
+        INSTANCE.logger.log(logLevel, levelName + " " + object);
+    }
+
+    public static void log(Level logLevel, String levelName, Class<?> srcClass, Object object) {
         StringBuilder sb = new StringBuilder(levelName);
+        sb.append(" ");
         if (srcClass != null)
             sb.append("<").append(srcClass.getSimpleName()).append("> ");
         sb.append(object);
-        log.dpLogger.log(logLevel, sb.toString());
+        INSTANCE.logger.log(logLevel, sb.toString());
     }
 
     public static void info(Object object) {
         info(object, null);
+        log(Level.INFO, "[INFO] ", null, object);
     }
 
     public static void info(Object object, Class<?> srcClass) {
-        log(Level.INFO, "[INFO] ", srcClass, object);
+        log(Level.INFO, "[INFO]", srcClass, object);
     }
 
     public static void debug(Object object) {
@@ -41,7 +43,7 @@ public class DPLogger {
     }
 
     public static void debug(Object object, Class<?> srcClass) {
-        log(Level.DEBUG, "[DEBUG] ", srcClass, object);
+        log(Level.DEBUG, "[DEBUG]", srcClass, object);
     }
 
     public static void warning(Object object) {
@@ -49,7 +51,7 @@ public class DPLogger {
     }
 
     public static void warning(Object object, Class<?> srcClass) {
-        log(Level.WARN, "[WARNING] ", srcClass, object);
+        log(Level.WARN, "[WARNING]", srcClass, object);
     }
 
     public static void severe(Object object) {
@@ -57,11 +59,11 @@ public class DPLogger {
     }
 
     public static void severe(Object object, Class<?> srcClass) {
-        log(Level.FATAL, "[SEVERE] ", srcClass, object);
+        log(Level.FATAL, "[SEVERE]", srcClass, object);
     }
 
     public static Logger getLogger() {
-        return log.dpLogger;
+        return INSTANCE.logger;
     }
 
 }

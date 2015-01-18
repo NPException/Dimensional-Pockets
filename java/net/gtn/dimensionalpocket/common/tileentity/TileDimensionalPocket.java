@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
@@ -9,7 +10,6 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

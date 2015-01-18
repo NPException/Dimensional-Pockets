@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
+import me.jezza.oc.common.utils.CoordSet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;

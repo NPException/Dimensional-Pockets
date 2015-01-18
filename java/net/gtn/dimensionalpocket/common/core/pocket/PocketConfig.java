@@ -1,18 +1,17 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.server.MinecraftServer;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.minecraft.server.MinecraftServer;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class PocketConfig {
 

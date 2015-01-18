@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.common.block;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -81,10 +81,10 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         CoordSet blockSet = new CoordSet(x, y, z);
-        ForgeDirection direction = Pocket.getSideForBlock(blockSet.toSpawnPoint()).getOpposite();
+        ForgeDirection direction = Pocket.getSideForBlock(blockSet.toChunkOffset()).getOpposite();
         Pocket pocket = PocketRegistry.getPocket(blockSet.toChunkCoords());
 
-        if (pocket == null || direction == ForgeDirection.UNKNOWN || block == Blocks.air ? false : world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
+        if (!(pocket == null || direction == ForgeDirection.UNKNOWN || block == Blocks.air) && world.isAirBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ))
             return;
 
         pocket.onNeighbourBlockChangedPocket(direction.getOpposite(), blockSet, block);

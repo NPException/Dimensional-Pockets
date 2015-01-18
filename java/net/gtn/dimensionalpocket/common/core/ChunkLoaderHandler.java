@@ -1,14 +1,9 @@
 package net.gtn.dimensionalpocket.common.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -16,6 +11,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ChunkLoaderHandler implements LoadingCallback {
 

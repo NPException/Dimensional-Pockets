@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;

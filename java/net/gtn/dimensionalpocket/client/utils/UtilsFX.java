@@ -1,20 +1,20 @@
 package net.gtn.dimensionalpocket.client.utils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @SideOnly(Side.CLIENT)
 public class UtilsFX {

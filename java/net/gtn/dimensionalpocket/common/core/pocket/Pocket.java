@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;

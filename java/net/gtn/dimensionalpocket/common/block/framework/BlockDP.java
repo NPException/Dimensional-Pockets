@@ -1,7 +1,8 @@
 package net.gtn.dimensionalpocket.common.block.framework;
 
-import java.util.ArrayList;
-
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.interfaces.IBlockInteract;
 import net.gtn.dimensionalpocket.common.core.interfaces.IBlockNotifier;
@@ -16,9 +17,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 
 public abstract class BlockDP extends Block {
 
@@ -55,9 +55,9 @@ public abstract class BlockDP extends Block {
     }
 
     @Override
-    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z) {
+    public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
         onBlockRemoval(world, x, y, z);
-        return super.removedByPlayer(world, player, x, y, z);
+        return super.removedByPlayer(world, player, x, y, z, willHarvest);
     }
 
     public void onBlockRemoval(World world, int x, int y, int z) {

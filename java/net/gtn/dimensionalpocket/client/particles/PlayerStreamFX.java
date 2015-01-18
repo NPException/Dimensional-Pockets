@@ -1,20 +1,20 @@
 package net.gtn.dimensionalpocket.client.particles;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.util.Random;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Random;
+
+import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {

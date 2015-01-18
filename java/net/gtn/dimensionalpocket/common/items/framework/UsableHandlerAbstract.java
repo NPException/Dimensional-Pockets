@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common.items.framework;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.interfaces.IUsable;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;

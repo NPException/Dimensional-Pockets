@@ -1,14 +1,14 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PocketRegistry {
 

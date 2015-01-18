@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +25,7 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
         if (pocket == null)
             return false;
 
-        CoordSet spawnSet = coordSet.asSpawnPoint();
+        CoordSet spawnSet = coordSet.asChunkOffset();
 
         int sx = spawnSet.getX();
         int sy = spawnSet.getY();
@@ -40,7 +40,7 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
         else if (sz == 15) coordSet.addZ(-1).addY(-1);
         else if (sy == 15) coordSet.addY(-3);
 
-        spawnSet = coordSet.asSpawnPoint();
+        spawnSet = coordSet.asChunkOffset();
 
         boolean flag = world.isAirBlock(coordSet.getX(), coordSet.getY() + 1, coordSet.getZ())
                        && world.isAirBlock(coordSet.getX(), coordSet.getY() + 2, coordSet.getZ())

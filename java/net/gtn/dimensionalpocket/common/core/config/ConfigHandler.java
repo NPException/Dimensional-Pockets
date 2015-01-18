@@ -1,10 +1,10 @@
 package net.gtn.dimensionalpocket.common.core.config;
 
-import java.io.File;
-
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 public class ConfigHandler {
 
