@@ -18,9 +18,9 @@ public class ModItems {
     public static Item netherCrystal;
 
     public static void init() {
-        book = new ItemUsable(Strings.INFO_TOOL).setHandler(new BookHandler());
-        enderCrystal = new ItemUsable(Strings.ENDER_CRYSTAL).setHandler(new EnderCrystalHandler());
-        netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL).setHandler(new NetherCrystalHandler());
+        book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
+        enderCrystal = new ItemUsable(Strings.ENDER_CRYSTAL, new EnderCrystalHandler());
+        netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL, new NetherCrystalHandler());
     }
 
     public static ItemStack getNetherCrystal() {
@@ -36,74 +36,71 @@ public class ModItems {
 
         //@formatter:off
         crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
-                new Object[] { "#N#",
-                               "IDI",
-                               "#E#",
+                "#N#",
+                "IDI",
+                "#E#",
 
-                               Character.valueOf('#'),
-                               new ItemStack(Blocks.stonebrick, 1, 0),
+                '#',
+                new ItemStack(Blocks.stonebrick, 1, 0),
 
-                               Character.valueOf('I'),
-                               Blocks.iron_block,
+                'I',
+                Blocks.iron_block,
 
-                               Character.valueOf('D'),
-                               Blocks.diamond_block,
+                'D',
+                Blocks.diamond_block,
 
-                               Character.valueOf('N'),
-                               netherCrystal,
+                'N',
+                netherCrystal,
 
-                               Character.valueOf('E'),
-                               enderCrystal
-        });
+                'E',
+                enderCrystal
+        );
 
         crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
-                new Object[] { "#E#",
-                               "IDI",
-                               "#N#",
+                "#E#",
+                "IDI",
+                "#N#",
             
-                               Character.valueOf('#'),
-                               new ItemStack(Blocks.stonebrick, 1, 0),
+                '#',
+                new ItemStack(Blocks.stonebrick, 1, 0),
             
-                               Character.valueOf('I'),
-                               Blocks.iron_block,
+                'I',
+                Blocks.iron_block,
             
-                               Character.valueOf('D'),
-                               Blocks.diamond_block,
+                'D',
+                Blocks.diamond_block,
             
-                               Character.valueOf('N'),
-                               netherCrystal,
+                'N',
+                netherCrystal,
             
-                               Character.valueOf('E'),
-                               enderCrystal
-        });
+                'E',
+                enderCrystal
+        );
         
         crafting.addRecipe(getNetherCrystal(),
-                new Object[] { "TTT",
-                               "TRT",
-                               "TTT",
+                "TTT",
+                "TRT",
+                "TTT",
 
-                               Character.valueOf('T'),
-                               Items.ghast_tear,
+                'T',
+                Items.ghast_tear,
 
-                               Character.valueOf('R'),
-                               Blocks.redstone_block
-        });
+                'R',
+                Blocks.redstone_block
+        );
         
         crafting.addRecipe(getEnderCrystal(),
-                new Object[] { "EEE",
-                               "EGE",
-                               "EEE",
+                "EEE",
+                "EGE",
+                "EEE",
 
-                               Character.valueOf('E'),
-                               Items.ender_eye,
+                'E',
+                Items.ender_eye,
 
-                               Character.valueOf('G'),
-                               Blocks.glass
-        });
+                'G',
+                Blocks.glass);
         
-        crafting.addShapelessRecipe(new ItemStack(book),
-                new Object[]{ Items.book, Items.leather
-        });
+        crafting.addShapelessRecipe(new ItemStack(book),Items.book, Items.leather);
         //@formatter:on
     }
 

@@ -9,35 +9,25 @@ import net.minecraft.world.World;
 
 public class ItemUsable extends ItemDP {
 
-    private IUsable handler;
+    private final IUsable handler;
 
-    public ItemUsable(String name) {
+    public ItemUsable(String name, IUsable handler) {
         super(name);
-    }
-
-    public ItemUsable setHandler(IUsable handler) {
         this.handler = handler;
-        return this;
     }
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (handler != null)
-            return handler.onItemUse(itemStack, player, world, new CoordSet(x, y, z), side, hitX, hitY, hitZ);
-        return super.onItemUse(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ);
+        return handler.onItemUse(itemStack, player, world, new CoordSet(x, y, z), side, hitX, hitY, hitZ);
     }
 
     @Override
     public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (handler != null)
-            return handler.onItemUseFirst(itemStack, player, world, new CoordSet(x, y, z), side, hitX, hitY, hitZ);
-        return super.onItemUseFirst(itemStack, player, world, x, y, z, side, hitX, hitY, hitZ);
+        return handler.onItemUseFirst(itemStack, player, world, new CoordSet(x, y, z), side, hitX, hitY, hitZ);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (handler != null)
-            return handler.onItemRightClick(itemStack, world, player);
-        return super.onItemRightClick(itemStack, world, player);
+        return handler.onItemRightClick(itemStack, world, player);
     }
 }
