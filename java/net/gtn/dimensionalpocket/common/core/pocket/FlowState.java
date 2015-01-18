@@ -1,5 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
 public enum FlowState {
-    INPUT, OUTPUT, NONE;
+    ENERGY_INPUT, ENERGY_OUTPUT, NONE;
 }
