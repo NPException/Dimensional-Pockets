@@ -30,8 +30,7 @@ public class DPLogger {
     }
 
     public static void info(Object object) {
-        info(object, null);
-        log(Level.INFO, "[INFO] ", null, object);
+        log(Level.INFO, "[INFO]", null, object);
     }
 
     public static void info(Object object, Class<?> srcClass) {
