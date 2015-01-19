@@ -14,6 +14,10 @@ public class GuiSideButton extends GuiUntexturedButton {
         super(x, y, width, height);
     }
 
+    public ForgeDirection getDirection() {
+        return direction;
+    }
+
     public GuiSideButton setDirection(ForgeDirection direction) {
         this.direction = direction;
         return this;

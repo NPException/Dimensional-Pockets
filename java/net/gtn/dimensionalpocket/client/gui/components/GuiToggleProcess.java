@@ -4,7 +4,7 @@ import me.jezza.oc.client.gui.components.GuiCycle;
 
 import java.util.ArrayList;
 
-public class GuiToggleProcess extends GuiCycle {
+public class GuiToggleProcess extends GuiCycle<GuiToggleProcess> {
 
     public GuiToggleProcess(int x, int y, int u) {
         super(x, y, u, 0, 16, 16);

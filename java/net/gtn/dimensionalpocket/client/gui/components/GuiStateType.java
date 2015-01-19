@@ -21,7 +21,7 @@ public class GuiStateType extends GuiToggle {
             ArrayList<String> list = new ArrayList<String>();
             if (typeState == 0)
                 list.add("Enabled");
-            if (typeState == 1)
+            else if (typeState == 1)
                 list.add("Disabled");
             renderHoveringText(list, translatedX, translatedY, fontRendererObj);
         }

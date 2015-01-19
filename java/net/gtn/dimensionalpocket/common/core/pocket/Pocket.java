@@ -6,7 +6,6 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -30,26 +29,17 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
+    {
+        flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
+        connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
+    }
+
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
         this.chunkCoords = chunkCoords;
 
         spawnSet = new CoordSet(1, 1, 1);
-    }
-    
-    private Map<ForgeDirection, CoordSet> getConnectorMap() {
-    	if (connectorMap == null) {
-    		connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
-    	}
-    	return connectorMap;
-    }
-    
-    private Map<ForgeDirection, FlowState> getFlowMap() {
-    	if (flowMap == null) {
-    		flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
-    	}
-    	return flowMap;
     }
 
     public void generatePocketRoom() {
@@ -95,24 +85,32 @@ public class Pocket {
         generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
     }
 
+    public void resetFlowStates() {
+        flowMap.clear();
+    }
+
     public FlowState getFlowState(ForgeDirection direction) {
-        if (getFlowMap().containsKey(direction))
-        	getFlowMap().get(direction);
+        if (flowMap.containsKey(direction))
+            return flowMap.get(direction);
         return FlowState.NONE;
     }
 
     public void setFlowState(ForgeDirection direction, FlowState flowState) {
-    	getFlowMap().put(direction, flowState);
+        flowMap.put(direction, flowState);
+    }
+
+    public void resetConnectors() {
+        connectorMap.clear();
     }
 
     public CoordSet getConnectorCoords(ForgeDirection direction) {
-        if (getConnectorMap().containsKey(direction))
-        	getConnectorMap().get(direction);
+        if (connectorMap.containsKey(direction))
+            return connectorMap.get(direction);
         return null;
     }
 
     public void setConnectorCoords(ForgeDirection direction, CoordSet connectorCoords) {
-    	getConnectorMap().put(direction, connectorCoords);
+        connectorMap.put(direction, connectorCoords);
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
