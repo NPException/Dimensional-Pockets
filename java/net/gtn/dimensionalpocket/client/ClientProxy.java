@@ -1,14 +1,20 @@
 package net.gtn.dimensionalpocket.client;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
+import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
+import net.gtn.dimensionalpocket.client.renderer.tile.TilePocketRenderer;
 import net.gtn.dimensionalpocket.common.CommonProxy;
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.utils.MovingObjectPositionUtil;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 public class ClientProxy extends CommonProxy {
 
@@ -16,9 +22,9 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void runClientSide() {
-//        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
+        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
 
-//        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TilePocketRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TilePocketRenderer());
     }
 
     @Override

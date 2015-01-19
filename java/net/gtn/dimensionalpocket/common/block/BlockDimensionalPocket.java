@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common.block;
 
 import cofh.api.block.IDismantleable;
 import com.google.common.collect.Lists;
-import me.jezza.oc.common.blocks.BlockAbstract;
+import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class BlockDimensionalPocket extends BlockAbstract implements IDismantleable, ITileProvider {
+public class BlockDimensionalPocket extends BlockAbstractModel implements IDismantleable, ITileProvider {
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);

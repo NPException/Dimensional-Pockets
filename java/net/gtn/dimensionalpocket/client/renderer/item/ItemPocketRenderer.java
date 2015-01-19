@@ -29,7 +29,6 @@ public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
     }
 
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-
         if (type == ItemRenderType.INVENTORY) {
             glTranslatef(0.0F, -0.1F, 0.0F);
         }
