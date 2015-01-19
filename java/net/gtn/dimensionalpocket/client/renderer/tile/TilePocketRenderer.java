@@ -26,7 +26,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     private Random random = new Random(31100L);
 
     private ResourceLocation t1 = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/dimensionalPocket_frame.png");
+    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
     private ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
@@ -59,8 +59,10 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         bindTexture(pocketFrame);
         Tessellator instance = Tessellator.instance;
         instance.startDrawingQuads();
-        instance.setBrightness(180);
-        float greyScale = 0.25F;
+//        instance.setBrightness(180);
+//        float greyScale = 0.25F;
+        instance.setBrightness(255); // CHANGE BY NPE
+        float greyScale = 1.0F; // CHANGE BY NPE
         instance.setColorRGBA_F(greyScale, greyScale, greyScale, 1.0F);
 
         //@formatter:off
@@ -98,8 +100,10 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         instance.draw();
         
         instance.startDrawingQuads();
-        instance.setBrightness(180);
-        greyScale = 0.0F;
+//        instance.setBrightness(180);
+//        greyScale = 0.0F;
+        instance.setBrightness(255); // CHANGE BY NPE
+        greyScale = 1.0F; // CHANGE BY NPE
         instance.setColorRGBA_F(greyScale, greyScale, greyScale, 1.0F);
         // Y Neg
         instance.addVertex(x       , y + 1.0D, z       );
