@@ -11,8 +11,6 @@ public class ModBlocks {
     public static Block dimensionalPocket;
     public static Block dimensionalPocketFrame;
     
-    public static int blockPocketRendererID = -1;
-
     public static void init() {
         dimensionalPocket = new BlockDimensionalPocket(Material.anvil, Strings.BLOCK_POCKET);
 

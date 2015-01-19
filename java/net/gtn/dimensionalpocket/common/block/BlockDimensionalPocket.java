@@ -2,9 +2,11 @@ package net.gtn.dimensionalpocket.common.block;
 
 import cofh.api.block.IDismantleable;
 import com.google.common.collect.Lists;
+import me.jezza.oc.common.blocks.BlockAbstract;
 import me.jezza.oc.common.interfaces.ITileProvider;
-import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,12 +18,13 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class BlockDimensionalPocket extends BlockDP implements IDismantleable, ITileProvider {
+public class BlockDimensionalPocket extends BlockAbstract implements IDismantleable, ITileProvider {
 
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
         setResistance(15F);
+        setCreativeTab(DimensionalPockets.creativeTab);
     }
 
     @Override
@@ -54,6 +57,11 @@ public class BlockDimensionalPocket extends BlockDP implements IDismantleable, I
     @Override
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
         return true;
+    }
+
+    @Override
+    public String getModIdentifier() {
+        return Reference.MOD_IDENTIFIER;
     }
 
     @Override

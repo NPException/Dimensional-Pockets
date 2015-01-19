@@ -29,7 +29,7 @@ public class Utils {
     }
 
     public static String capitalizeString(String string) {
-        if (string == null || string.equals(""))
+        if (string == null || string.isEmpty())
             return "";
 
         String firstLetter = string.substring(0, 1).toUpperCase();

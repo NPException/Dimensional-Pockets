@@ -20,7 +20,6 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
     private int flag = 0;
     private int yOffset = 0;
 
-    private final ForgeDirection side;
     private ForgeDirection lookDirection;
 
     private Pocket pocket;
@@ -34,9 +33,11 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
         super(player, new ContainerPocketConfig(tile));
         setMainTexture(GuiSheet.GUI_CONFIG);
 
-        this.side = ForgeDirection.getOrientation(sideHit);
+        currentDirection = ForgeDirection.getOrientation(sideHit);
+        flag = 1;
         this.lookDirection = Utils.getDirectionFromBitMask(sideLooking);
         pocket = tile.getPocket();
+        flowState = pocket.getFlowState(currentDirection);
 
         xSize = 74;
         ySize = 74;
@@ -55,7 +56,7 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
         addButton(new GuiExitButton(x + (20) - 34, y + (20) - 11));
 
         ForgeDirection sideRotation = ForgeDirection.UP;
-        switch (side) {
+        switch (currentDirection) {
             case DOWN:
                 lookDirection = lookDirection.getOpposite();
             case UP:
@@ -70,14 +71,15 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
                 break;
         }
 
-        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (1 * 20) - 11, 16, 16).setDirection(side.getRotation(lookDirection.getRotation(side))));
-        addButton(new GuiSideButton(x + (1 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(side.getRotation(sideRotation)));
-        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(side));
-        addButton(new GuiSideButton(x + (3 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(side.getRotation(sideRotation.getOpposite())));
-        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (3 * 20) - 11, 16, 16).setDirection(side.getRotation(lookDirection.getRotation(side).getOpposite())));
-        addButton(new GuiSideButton(x + (3 * 20) - 11, y + (3 * 20) - 11, 16, 16).setDirection(side.getOpposite()));
+        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (1 * 20) - 11, 16, 16).setDirection(currentDirection.getRotation(lookDirection.getRotation(currentDirection))));
+        addButton(new GuiSideButton(x + (1 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(currentDirection.getRotation(sideRotation)));
+        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(currentDirection));
+        addButton(new GuiSideButton(x + (3 * 20) - 11, y + (2 * 20) - 11, 16, 16).setDirection(currentDirection.getRotation(sideRotation.getOpposite())));
+        addButton(new GuiSideButton(x + (2 * 20) - 11, y + (3 * 20) - 11, 16, 16).setDirection(currentDirection.getRotation(lookDirection.getRotation(currentDirection).getOpposite())));
+        addButton(new GuiSideButton(x + (3 * 20) - 11, y + (3 * 20) - 11, 16, 16).setDirection(currentDirection.getOpposite()));
 
         flowToggle = new GuiToggleProcess(x + 80, y + 13, 208);
+        flowToggle.setTypeState(flowState.ordinal());
         addButton(flowToggle);
 //        addButton(new GuiStateType(x + 80, y + 46, 74, 0, 16, 16).setTypeState(1));
     }
@@ -112,14 +114,15 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
     @Override
     public void updateScreen() {
         super.updateScreen();
+        int step = 5;
         if (flag < 0) {
-            yOffset -= 5;
+            yOffset -= step;
             if (yOffset <= 1) {
                 yOffset = 1;
                 flag = 0;
             }
         } else if (flag > 0) {
-            yOffset += 5;
+            yOffset += step;
             if (yOffset >= 15) {
                 yOffset = 15;
                 flag = 0;
@@ -145,6 +148,7 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
             if (currentDirection == direction) {
                 currentDirection = ForgeDirection.UNKNOWN;
                 flowState = FlowState.NONE;
+                flowToggle.setTypeState(flowState.ordinal());
                 flag = -1;
             } else {
                 if (currentDirection == ForgeDirection.UNKNOWN)
