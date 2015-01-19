@@ -2,12 +2,12 @@ package net.gtn.dimensionalpocket.common.tileentity;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import me.jezza.oc.common.interfaces.IBlockInteract;
+import me.jezza.oc.common.interfaces.IBlockNotifier;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
-import net.gtn.dimensionalpocket.common.core.interfaces.IBlockInteract;
-import net.gtn.dimensionalpocket.common.core.interfaces.IBlockNotifier;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -38,7 +39,24 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     }
 
     @Override
-    public void onBlockPlaced(EntityLivingBase entityLiving, ItemStack itemStack) {
+    public void onBlockRemoval(World world, int x, int y, int z) {
+        if (worldObj.isRemote)
+            return;
+
+        Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
+        unloadPocket();
+    }
+
+    @Override
+    public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
+    }
+
+    @Override
+    public void onNeighbourTileChanged(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
+    }
+
+    @Override
+    public void onBlockAdded(EntityLivingBase entityLivingBase, World world, int x, int y, int z, ItemStack itemStack) {
         if (worldObj.isRemote)
             return;
 
@@ -52,7 +70,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
                 if (!success)
                     throw new RuntimeException("YOU DESERVED THIS!");
 
-                PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLiving.dimension, getCoordSet());
+                PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLivingBase.dimension, getCoordSet());
             }
 
             if (itemCompound.hasKey("display")) {
@@ -69,22 +87,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
+    public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null || player.getCurrentEquippedItem() != null)
             return true;
 
         prepareTeleportIntoPocket(player);
         player.swingItem();
         return true;
-    }
-
-    @Override
-    public void onBlockDestroyed() {
-        if (worldObj.isRemote)
-            return;
-
-        Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
-        unloadPocket();
     }
 
     public ItemStack generateItemStack() {
@@ -152,41 +161,36 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     }
 
     @Override
-    public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-        // nothing to do
+    public boolean canConnectEnergy(ForgeDirection from) {
+        // TODO read out info from pocket
+        return true;
     }
 
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
-		// TODO read out info from pocket
-		return true;
-	}
+    @Override
+    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+        // TODO Auto-generated method stub
+        System.out.println("IEnergyReceiver - receiveEnergy - from: " + from.name() + " - maxReceive: " + maxReceive + " - simulate: " + simulate);
+        return 0;
+    }
 
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		// TODO Auto-generated method stub
-		System.out.println("IEnergyReceiver - receiveEnergy - from: " + from.name() + " - maxReceive: " + maxReceive + " - simulate: " + simulate);
-		return 0;
-	}
-	
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		// TODO Auto-generated method stub
-		System.out.println("IEnergyProvider - extractEnergy - from: " + from.name() + " - maxExtract: " + maxExtract + " - simulate: " + simulate);
-		return Math.min(5, maxExtract);
-	}
+    @Override
+    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+        // TODO Auto-generated method stub
+        System.out.println("IEnergyProvider - extractEnergy - from: " + from.name() + " - maxExtract: " + maxExtract + " - simulate: " + simulate);
+        return Math.min(5, maxExtract);
+    }
 
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		// TODO Auto-generated method stub
-		System.out.println("IEnergyReceiver/Provider - getEnergyStored - from: " + from.name());
-		return 0;
-	}
+    @Override
+    public int getEnergyStored(ForgeDirection from) {
+        // TODO Auto-generated method stub
+        System.out.println("IEnergyReceiver/Provider - getEnergyStored - from: " + from.name());
+        return 0;
+    }
 
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		// TODO Auto-generated method stub
-		System.out.println("IEnergyReceiver/Provider - getMaxEnergyStored - from: " + from.name());
-		return 0;
-	}
+    @Override
+    public int getMaxEnergyStored(ForgeDirection from) {
+        // TODO Auto-generated method stub
+        System.out.println("IEnergyReceiver/Provider - getMaxEnergyStored - from: " + from.name());
+        return 0;
+    }
 }

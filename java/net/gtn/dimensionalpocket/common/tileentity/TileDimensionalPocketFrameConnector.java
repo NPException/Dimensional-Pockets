@@ -3,26 +3,11 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.client.utils.UtilsFX;
-import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
-import net.gtn.dimensionalpocket.common.core.interfaces.IBlockInteract;
-import net.gtn.dimensionalpocket.common.core.interfaces.IBlockNotifier;
-import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocketFrameConnector extends TileDP implements IEnergyReceiver, IEnergyProvider {
