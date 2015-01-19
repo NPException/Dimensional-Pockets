@@ -29,10 +29,18 @@ public class Pocket {
     private final CoordSet chunkCoords;
     private CoordSet blockCoords, spawnSet;
 
-    {
-        flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
-        connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
+    private Map<ForgeDirection, CoordSet> getConnectorMap() {
+    	if (connectorMap == null)
+    		connectorMap = new EnumMap<ForgeDirection, CoordSet>(ForgeDirection.class);
+    	return connectorMap;
     }
+    
+    private Map<ForgeDirection, FlowState> getFlowMap() {
+    	if (flowMap == null)
+    		flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
+    	return flowMap;
+    }
+
 
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
@@ -86,31 +94,33 @@ public class Pocket {
     }
 
     public void resetFlowStates() {
-        flowMap.clear();
+    	getFlowMap().clear();
     }
 
-    public FlowState getFlowState(ForgeDirection direction) {
-        if (flowMap.containsKey(direction))
-            return flowMap.get(direction);
+    public FlowState getFlowState(ForgeDirection side) {
+    	Map<ForgeDirection, FlowState> fMap = getFlowMap();
+        if (fMap.containsKey(side))
+            return fMap.get(side);
         return FlowState.NONE;
     }
 
-    public void setFlowState(ForgeDirection direction, FlowState flowState) {
-        flowMap.put(direction, flowState);
+    public void setFlowState(ForgeDirection side, FlowState flowState) {
+    	getFlowMap().put(side, flowState);
     }
 
     public void resetConnectors() {
-        connectorMap.clear();
+    	getConnectorMap().clear();
     }
 
-    public CoordSet getConnectorCoords(ForgeDirection direction) {
-        if (connectorMap.containsKey(direction))
-            return connectorMap.get(direction);
+    public CoordSet getConnectorCoords(ForgeDirection side) {
+    	Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
+        if (cMap.containsKey(side))
+            return cMap.get(side);
         return null;
     }
 
-    public void setConnectorCoords(ForgeDirection direction, CoordSet connectorCoords) {
-        connectorMap.put(direction, connectorCoords);
+    public void setConnectorCoords(ForgeDirection side, CoordSet connectorCoords) {
+    	getConnectorMap().put(side, connectorCoords);
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {

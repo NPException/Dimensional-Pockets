@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -112,19 +113,6 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 
 		glPushMatrix();
 		glEnable(2896);
-		glEnable(32826);
-		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		glEnable(3042);
-		glBlendFunc(770, 771);
-		int a;
-		if (tile.getWorldObj() != null) {
-			a = tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord + 5, tile.zCoord);
-			int k = a % 65536;
-			int l = a / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, k / 1.0F, l / 1.0F);
-		}
-		glDisable(3042);
-		glDisable(32826);
 		glPopMatrix();
 	}
 

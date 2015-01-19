@@ -65,6 +65,7 @@ public class DimensionalPockets {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
+    	// do nothing
     }
 
     @EventHandler

@@ -23,7 +23,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void runClientSide() {
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
-
+    	
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TilePocketRenderer());
     }
 

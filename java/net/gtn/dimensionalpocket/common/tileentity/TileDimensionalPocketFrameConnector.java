@@ -40,7 +40,7 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
         	if (p != null
         			&& !getCoordSet().equals(
         					p.getConnectorCoords(
-        						p.getSideForBlock(
+        						Pocket.getSideForBlock(
         							getCoordSet().asChunkOffset()
         						)
         					)
@@ -58,7 +58,7 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		Pocket p = getPocket();
 		if (p == null) return false;
 		
-		switch (p.getFlowState(from)) {
+		switch (p.getFlowState(from.getOpposite())) {
 			case ENERGY_INPUT:
 			case ENERGY_OUTPUT:
 				return true;
@@ -101,11 +101,11 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyReceiver) {
 			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
-			System.out.println("DPConnector - receiveEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - received: " + received); // TODO: REMOVE THIS LINE AFTER TESTING
+			//System.out.println("DPConnector - receiveEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - received: " + received); // TODO: REMOVE THIS LINE AFTER TESTING
 			return received;
 		}
 		
-		System.out.println("DPConnector - receiveEnergy - no IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		//System.out.println("DPConnector - receiveEnergy - no IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 	
@@ -118,11 +118,11 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyProvider) {
 			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
-			System.out.println("DPConnector - extractEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - extracted: " + extracted); // TODO: REMOVE THIS LINE AFTER TESTING
+			//System.out.println("DPConnector - extractEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - extracted: " + extracted); // TODO: REMOVE THIS LINE AFTER TESTING
 			return extracted;
 		}
 		
-		System.out.println("DPConnector - extractEnergy - no IEnergyProvider connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		//System.out.println("DPConnector - extractEnergy - no IEnergyProvider connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 
@@ -135,15 +135,15 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyProvider) {
 			int stored = ((IEnergyProvider) targetTE).getEnergyStored(from);
-			System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
+			//System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return stored;
 		} else if (targetTE instanceof IEnergyReceiver) {
 			int stored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
-			System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
+			//System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return stored;
 		}
 		
-		System.out.println("DPConnector - getEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		//System.out.println("DPConnector - getEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 
@@ -155,16 +155,16 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		TileEntity targetTE = getDimPocketNeighbourTileEntity(from.getOpposite());
 		
 		if (targetTE instanceof IEnergyProvider) {
-			int maxStored = ((IEnergyProvider) targetTE).getEnergyStored(from);
-			System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
+			int maxStored = ((IEnergyProvider) targetTE).getMaxEnergyStored(from);
+			//System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return maxStored;
 		} else if (targetTE instanceof IEnergyReceiver) {
-			int maxStored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
-			System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
+			int maxStored = ((IEnergyReceiver) targetTE).getMaxEnergyStored(from);
+			//System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return maxStored;
 		}
 		
-		System.out.println("DPConnector - getMaxEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		//System.out.println("DPConnector - getMaxEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 }

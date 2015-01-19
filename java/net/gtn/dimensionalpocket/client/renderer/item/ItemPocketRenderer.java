@@ -15,7 +15,7 @@ public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
     private RenderBlocks rb = new RenderBlocks();
     private Tessellator instance = Tessellator.instance;
 
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/dimensionalPocket_frame.png");
+    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
     @Override
@@ -25,10 +25,11 @@ public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
 
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-        return helper != ItemRendererHelper.EQUIPPED_BLOCK;
+        return true;//helper != ItemRendererHelper.EQUIPPED_BLOCK;
     }
 
-    public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+    @Override
+	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         if (type == ItemRenderType.INVENTORY) {
             glTranslatef(0.0F, -0.1F, 0.0F);
         }
