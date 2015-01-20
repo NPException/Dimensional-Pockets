@@ -1,10 +1,10 @@
 package net.gtn.dimensionalpocket.common.core.config.comms;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
 import net.gtn.dimensionalpocket.common.core.config.comms.framework.AbstractConfig;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 public class TinkersConstructConfig extends AbstractConfig {
 
@@ -26,7 +26,7 @@ public class TinkersConstructConfig extends AbstractConfig {
             @SuppressWarnings("unchecked")
             ArrayList<Integer> blackListedDims = (ArrayList<Integer>) field.get(temp);
 
-            blackListedDims.add(Integer.valueOf(Reference.DIMENSION_ID));
+            blackListedDims.add(Reference.DIMENSION_ID);
         } catch (Exception e) {
             e.printStackTrace();
         }

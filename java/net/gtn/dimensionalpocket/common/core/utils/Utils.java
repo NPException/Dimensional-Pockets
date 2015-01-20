@@ -43,7 +43,7 @@ public class Utils {
     public static NBTTagCompound getPlayerPersistTag(EntityPlayer player) {
         NBTTagCompound tag = player.getEntityData();
 
-        NBTTagCompound persistTag = null;
+        NBTTagCompound persistTag;
         if (tag.hasKey(EntityPlayer.PERSISTED_NBT_TAG)) {
             persistTag = tag.getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
         } else {
@@ -51,7 +51,7 @@ public class Utils {
             tag.setTag(EntityPlayer.PERSISTED_NBT_TAG, persistTag);
         }
 
-        NBTTagCompound modTag = null;
+        NBTTagCompound modTag;
         String modID = Reference.MOD_ID;
 
         if (persistTag.hasKey(modID)) {

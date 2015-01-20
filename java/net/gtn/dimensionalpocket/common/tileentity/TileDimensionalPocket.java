@@ -52,12 +52,12 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-    	// do nothing
+        // do nothing
     }
 
     @Override
     public void onNeighbourTileChanged(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-    	// do nothing
+        // do nothing
     }
 
     @Override
@@ -69,14 +69,12 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
             NBTTagCompound itemCompound = itemStack.getTagCompound();
 
             CoordSet chunkSet = CoordSet.readFromNBT(itemCompound);
-            if (chunkSet != null) {
-                boolean success = setPocket(chunkSet);
+            boolean success = setPocket(chunkSet);
 
-                if (!success)
-                    throw new RuntimeException("YOU DESERVED THIS!");
+            if (!success)
+                throw new RuntimeException("YOU DESERVED THIS!");
 
-                PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLivingBase.dimension, getCoordSet());
-            }
+            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLivingBase.dimension, getCoordSet());
 
             if (itemCompound.hasKey("display")) {
                 String tempString = itemCompound.getCompoundTag("display").getString("Name");
@@ -167,112 +165,112 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
-    	Pocket p = getPocket();
-		if (p == null) return false;
-		
-		switch (p.getFlowState(from)) {
-			case ENERGY_INPUT:
-			case ENERGY_OUTPUT:
-				return true;
-			default:
-				return false;
-		}
+        Pocket p = getPocket();
+        if (p == null) return false;
+
+        switch (p.getFlowState(from)) {
+            case ENERGY_INPUT:
+            case ENERGY_OUTPUT:
+                return true;
+            default:
+                return false;
+        }
     }
 
-    /** 
-	 * Returns the neighboring TileEntity of the Frame connector block at the given side.
-	 * 
-	 * @param side
-	 * @return the neighboring TE, or null if the the chunk is not loaded or no TE exists at the spot.
-	 */
-	private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
-		Pocket p = getPocket();
-		if (p == null) return null;
-		
-		World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
-		
-		CoordSet targetCoords = p.getConnectorCoords(side);
-		if (targetCoords == null || ! targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
-			return null;
-		}
-		
-		targetCoords.addForgeDirection(side.getOpposite());
-		if (! targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
-			return null;
-		}
-		
-		return targetWorld.getTileEntity(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ());
-	}
+    /**
+     * Returns the neighboring TileEntity of the Frame connector block at the given side.
+     *
+     * @param side
+     * @return the neighboring TE, or null if the the chunk is not loaded or no TE exists at the spot.
+     */
+    private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
+        Pocket p = getPocket();
+        if (p == null) return null;
 
-	/**
-	 * Redirects the receiveEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
-	 */
-	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
-		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
-		
-		if (targetTE instanceof IEnergyReceiver) {
-			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
-			if (! simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket received: " + received + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return received;
-		}
-		
-		return 0;
-	}
-	
-	/**
-	 * Redirects the extractEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
-	 */
-	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
-		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
-		
-		if (targetTE instanceof IEnergyProvider) {
-			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
-			if (! simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket got extracted: " + extracted + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return extracted;
-		}
-		
-		return 0;
-	}
+        World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
-	/**
-	 * Redirects the getEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
-	 */
-	@Override
-	public int getEnergyStored(ForgeDirection from) {
-		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
-		
-		if (targetTE instanceof IEnergyProvider) {
-			int stored = ((IEnergyProvider) targetTE).getEnergyStored(from);
-			System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return stored;
-		} else if (targetTE instanceof IEnergyReceiver) {
-			int stored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
-			System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return stored;
-		}
-		
-		return 0;
-	}
+        CoordSet targetCoords = p.getConnectorCoords(side);
+        if (targetCoords == null || !targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
+            return null;
+        }
 
-	/**
-	 * Redirects the getMaxEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
-	 */
-	@Override
-	public int getMaxEnergyStored(ForgeDirection from) {
-		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
-		
-		if (targetTE instanceof IEnergyProvider) {
-			int maxStored = ((IEnergyProvider) targetTE).getMaxEnergyStored(from);
-			System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return maxStored;
-		} else if (targetTE instanceof IEnergyReceiver) {
-			int maxStored = ((IEnergyReceiver) targetTE).getMaxEnergyStored(from);
-			System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
-			return maxStored;
-		}
-		
-		return 0;
-	}
+        targetCoords.addForgeDirection(side.getOpposite());
+        if (!targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
+            return null;
+        }
+
+        return targetWorld.getTileEntity(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ());
+    }
+
+    /**
+     * Redirects the receiveEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     */
+    @Override
+    public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+        TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+        if (targetTE instanceof IEnergyReceiver) {
+            int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
+            if (!simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket received: " + received + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return received;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Redirects the extractEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     */
+    @Override
+    public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+        TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+        if (targetTE instanceof IEnergyProvider) {
+            int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
+            if (!simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket got extracted: " + extracted + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return extracted;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Redirects the getEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     */
+    @Override
+    public int getEnergyStored(ForgeDirection from) {
+        TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+        if (targetTE instanceof IEnergyProvider) {
+            int stored = ((IEnergyProvider) targetTE).getEnergyStored(from);
+            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return stored;
+        } else if (targetTE instanceof IEnergyReceiver) {
+            int stored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
+            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return stored;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Redirects the getMaxEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     */
+    @Override
+    public int getMaxEnergyStored(ForgeDirection from) {
+        TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+        if (targetTE instanceof IEnergyProvider) {
+            int maxStored = ((IEnergyProvider) targetTE).getMaxEnergyStored(from);
+            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return maxStored;
+        } else if (targetTE instanceof IEnergyReceiver) {
+            int maxStored = ((IEnergyReceiver) targetTE).getMaxEnergyStored(from);
+            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
+            return maxStored;
+        }
+
+        return 0;
+    }
 }

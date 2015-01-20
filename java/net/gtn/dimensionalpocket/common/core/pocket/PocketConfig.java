@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,7 +51,8 @@ public class PocketConfig {
         try {
             File registryFile = getConfig(backLinkFile);
 
-            Pocket[] tempArray = backLinkMap.values().toArray(new Pocket[0]);
+            Collection<Pocket> values = backLinkMap.values();
+            Pocket[] tempArray = values.toArray(new Pocket[values.size()]);
 
             FileWriter writer = new FileWriter(registryFile);
             gson.toJson(tempArray, writer);

@@ -9,7 +9,7 @@ public abstract class AbstractConfig implements IInterModConfig {
 
     private String modID;
 
-    public AbstractConfig(String modID) {
+    protected AbstractConfig(String modID) {
         this.modID = modID;
     }
 

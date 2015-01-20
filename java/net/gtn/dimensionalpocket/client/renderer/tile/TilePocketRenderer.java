@@ -42,15 +42,15 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         if (tile instanceof TileDimensionalPocket)
             renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick, null, null, null);
     }
-    
+
     @Override
     protected void bindTexture(ResourceLocation texture) {
-    	if (itemStack != null)
-    		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-    	else
-    		super.bindTexture(texture);
+        if (itemStack != null)
+            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        else
+            super.bindTexture(texture);
     }
-    
+
     /**
      * Method is used by tile and item renderer.
      * Last three arguments are passed by the item renderer.
@@ -58,16 +58,15 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
      * otherwise it is rendering an item
      */
     public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float f, ItemStack itemStack, ItemRenderType itemRenderType, Object[] data) {
-    	this.itemStack = itemStack;
+        this.itemStack = itemStack;
         double maxDistance = 32.0; // distance to block
-        this.inRange = (tile == null) ? true
-        		: Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
-        
+        this.inRange = (tile == null) || Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+
         glPushMatrix();
         if (itemStack == null)
-        	glDisable(GL_FOG);
+            glDisable(GL_FOG);
         else if (itemRenderType == ItemRenderType.INVENTORY)
-        	glTranslatef(0.0F, -0.1F, 0.0F);
+            glTranslatef(0.0F, -0.1F, 0.0F);
 
         // Y Neg
         drawPlane(0, x, y, z, 0.001F);
@@ -93,9 +92,9 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             instance.setBrightness(tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord));
         else
             instance.setBrightness(220);
-        
+
         renderFaces(x, y, z, pocketFrame, null);
-        
+
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         renderFaces(x, y, z, pocketOverlay, pocket);
 
@@ -103,17 +102,17 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 
         glEnable(GL_LIGHTING);
         if (itemStack == null)
-        	glEnable(GL_FOG);
+            glEnable(GL_FOG);
         glPopMatrix();
     }
 
     private void renderFaces(double x, double y, double z, ResourceLocation texture, Pocket pocket) {
-    	Tessellator instance = Tessellator.instance;
-    	bindTexture(texture);
-    	
-    	boolean checkFlowStates = inRange && (texture == pocketOverlay);
+        Tessellator instance = Tessellator.instance;
+        bindTexture(texture);
 
-    	instance.startDrawingQuads();
+        boolean checkFlowStates = inRange && (texture == pocketOverlay);
+
+        instance.startDrawingQuads();
         instance.setColorRGBA(255, 255, 255, 255);
 
         // @formatter:off
@@ -191,7 +190,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         float dX = (float) TileEntityRendererDispatcher.staticPlayerX;
         float dY = (float) TileEntityRendererDispatcher.staticPlayerY;
         float dZ = (float) TileEntityRendererDispatcher.staticPlayerZ;
-        
+
         glPushMatrix();
         glDisable(GL_LIGHTING);
         random.setSeed(31100L);
@@ -286,7 +285,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		// @formatter:on
 
         instance.draw();
-        
+
         glDisable(GL_BLEND);
         glPopMatrix();
     }
