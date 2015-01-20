@@ -15,21 +15,24 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TilePocketRenderer extends TileEntitySpecialRenderer {
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     private boolean inRange;
-    private static final int planeCount = 16;
+    private ItemStack itemStack;
+    private static final int planeCount = 15;
     private static final int fieldBrightness = 240;
 
     private Random random = new Random(31100L);
 
     private ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket3.png");
+    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
     private ResourceLocation pocketOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay2.png");
     private ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
@@ -37,14 +40,34 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
         if (tile instanceof TileDimensionalPocket)
-            renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick);
+            renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick, null, null, null);
     }
-
-    public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float f) {
-        double maxDistance = 16.0; // distance to block
-        this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+    
+    @Override
+    protected void bindTexture(ResourceLocation texture) {
+    	if (itemStack != null)
+    		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+    	else
+    		super.bindTexture(texture);
+    }
+    
+    /**
+     * Method is used by tile and item renderer.
+     * Last three arguments are passed by the item renderer.
+     * if itemStack is null (and tile is not null) it is rendering a tile,
+     * otherwise it is rendering an item
+     */
+    public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float f, ItemStack itemStack, ItemRenderType itemRenderType, Object[] data) {
+    	this.itemStack = itemStack;
+        double maxDistance = 32.0; // distance to block
+        this.inRange = (tile == null) ? true
+        		: Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+        
         glPushMatrix();
-        glDisable(GL_FOG);
+        if (itemStack == null)
+        	glDisable(GL_FOG);
+        else if (itemRenderType == ItemRenderType.INVENTORY)
+        	glTranslatef(0.0F, -0.1F, 0.0F);
 
         // Y Neg
         drawPlane(0, x, y, z, 0.001F);
@@ -66,29 +89,21 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 
         Tessellator instance = Tessellator.instance;
 
-        if (tile.getWorldObj() != null)
+        if (tile != null && tile.getWorldObj() != null)
             instance.setBrightness(tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord));
         else
             instance.setBrightness(220);
         
         renderFaces(x, y, z, pocketFrame, null);
-
-        // TODO: NPE Here's the shit you need to worry about.
-        /*
-         * Basically it's all here, the glColor3f() will set the colour, all you need to do is grab it with tile.getShit(); and it'll work.
-         */
-//        float red = System.currentTimeMillis() % 700000L / 250000.0F;
-//        float green = System.currentTimeMillis() % 700000L / 250000.0F;
-//        float blue = System.currentTimeMillis() % 700000L / 250000.0F;
-//
-//        glColor3f(red, green, blue);
         
-        renderFaces(x, y, z, pocketOverlay, tile.getPocket());
+        Pocket pocket = (tile == null) ? null : tile.getPocket();
+        renderFaces(x, y, z, pocketOverlay, pocket);
 
         glDisable(GL_BLEND);
 
         glEnable(GL_LIGHTING);
-        glEnable(GL_FOG);
+        if (itemStack == null)
+        	glEnable(GL_FOG);
         glPopMatrix();
     }
 
@@ -97,14 +112,14 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     	instance.setColorRGBA(255, 255, 255, 255);
     	bindTexture(texture);
     	
-    	boolean checkFlowStates = inRange && (texture == pocketOverlay) && (pocket != null);
+    	boolean checkFlowStates = inRange && (texture == pocketOverlay);
 
     	instance.startDrawingQuads();
         
         // @formatter:off
 		// Y Neg
         if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.DOWN);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.DOWN);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x          , y, z          , 1.0D, 1.0D);
@@ -115,7 +130,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		
 		// Y Pos
 		if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.UP);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.UP);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x          , y + 1.0D, z + 1.0D, 1.0D, 1.0D);
@@ -126,7 +141,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		
 		// Z Neg
 		if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.NORTH);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.NORTH);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x          , y + 1.0D  , z, 0.0D, 1.0D);
@@ -137,7 +152,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		
 		// Z Pos
 		if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.SOUTH);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.SOUTH);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D, 1.0D, 1.0D);
@@ -148,7 +163,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		
 		// X Neg
 		if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.WEST);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.WEST);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x, y       , z         , 1.0D, 0.0D);
@@ -159,7 +174,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		
 		// X Pos
 		if (checkFlowStates) {
-			FlowState state = pocket.getFlowState(ForgeDirection.EAST);
+			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.EAST);
 			instance.setColorRGBA(state.r, state.g, state.b, state.a);
 		}
 		instance.addVertexWithUV(x + 1.0D, y        , z + 1.0D  , 1.0D, 0.0D);
@@ -221,6 +236,8 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         instance.startDrawingQuads();
         instance.setBrightness(fieldBrightness);
         instance.setColorRGBA_F(1.0F, 1.0F, 1.0F, 1.0F);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         // @formatter:off
 		switch (side) {
@@ -269,6 +286,8 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 		// @formatter:on
 
         instance.draw();
+        
+        glDisable(GL_BLEND);
         glPopMatrix();
     }
 
