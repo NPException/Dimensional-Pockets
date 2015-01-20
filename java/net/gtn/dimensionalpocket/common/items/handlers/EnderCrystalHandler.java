@@ -49,7 +49,7 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
 
         if (flag) {
             pocket.setSpawnSet(spawnSet);
-            player.inventory.decrStackSize(player.inventory.currentItem, 1);
+//            player.inventory.decrStackSize(player.inventory.currentItem, 1);
         }
         return flag;
     }
