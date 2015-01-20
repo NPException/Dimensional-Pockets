@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
+import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
+import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.client.Minecraft;
@@ -15,6 +17,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TilePocketRenderer extends TileEntitySpecialRenderer {
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -26,8 +29,8 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     private Random random = new Random(31100L);
 
     private ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
-    private ResourceLocation pocketOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay.png");
+    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket3.png");
+    private ResourceLocation pocketOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay2.png");
     private ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
@@ -57,21 +60,18 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         drawPlane(5, x, y, z, 0.999F);
 
         glDisable(GL_LIGHTING);
-        bindTexture(pocketFrame);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         Tessellator instance = Tessellator.instance;
 
         if (tile.getWorldObj() != null)
             instance.setBrightness(tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord));
         else
             instance.setBrightness(220);
-
-        float greyScale = 1.0F;
-        instance.setColorRGBA_F(greyScale, greyScale, greyScale, 1F);
-
-        renderFaces(instance, x, y, z);
+        
+        renderFaces(x, y, z, pocketFrame, null);
 
         // TODO: NPE Here's the shit you need to worry about.
         /*
@@ -83,8 +83,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 //
 //        glColor3f(red, green, blue);
         
-        bindTexture(pocketOverlay);
-        renderFaces(instance, x, y, z);
+        renderFaces(x, y, z, pocketOverlay, tile.getPocket());
 
         glDisable(GL_BLEND);
 
@@ -93,39 +92,81 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    private static void renderFaces(Tessellator instance, double x, double y, double z) {
-        instance.startDrawingQuads();
+    private void renderFaces(double x, double y, double z, ResourceLocation texture, Pocket pocket) {
+    	Tessellator instance = Tessellator.instance;
+    	instance.setColorRGBA(255, 255, 255, 255);
+    	bindTexture(texture);
+    	
+    	boolean checkFlowStates = inRange && (texture == pocketOverlay) && (pocket != null);
+
+    	instance.startDrawingQuads();
+        
         // @formatter:off
 		// Y Neg
+        if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.DOWN);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x          , y, z          , 1.0D, 1.0D);
 		instance.addVertexWithUV(x + 1.0D   , y, z          , 1.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D   , y, z + 1.0D   , 0.0D, 0.0D);
 		instance.addVertexWithUV(x          , y, z + 1.0D   , 0.0D, 1.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
+		
 		// Y Pos
+		if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.UP);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x          , y + 1.0D, z + 1.0D, 1.0D, 1.0D);
 		instance.addVertexWithUV(x + 1.0D   , y + 1.0D, z + 1.0D, 1.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D   , y + 1.0D, z       , 0.0D, 0.0D);
 		instance.addVertexWithUV(x          , y + 1.0D, z       , 0.0D, 1.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
+		
 		// Z Neg
+		if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.NORTH);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x          , y + 1.0D  , z, 0.0D, 1.0D);
 		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z, 1.0D, 1.0D);
 		instance.addVertexWithUV(x + 1.0D   , y         , z, 1.0D, 0.0D);
 		instance.addVertexWithUV(x          , y         , z, 0.0D, 0.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
+		
 		// Z Pos
+		if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.SOUTH);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D, 1.0D, 1.0D);
 		instance.addVertexWithUV(x          , y         , z + 1.0D, 1.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D, 0.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z + 1.0D, 0.0D, 1.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
+		
 		// X Neg
+		if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.WEST);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x, y       , z         , 1.0D, 0.0D);
 		instance.addVertexWithUV(x, y       , z + 1.0D  , 0.0D, 0.0D);
 		instance.addVertexWithUV(x, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
 		instance.addVertexWithUV(x, y + 1.0D, z         , 1.0D, 1.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
+		
 		// X Pos
+		if (checkFlowStates) {
+			FlowState state = pocket.getFlowState(ForgeDirection.EAST);
+			instance.setColorRGBA(state.r, state.g, state.b, state.a);
+		}
 		instance.addVertexWithUV(x + 1.0D, y        , z + 1.0D  , 1.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D, y        , z         , 0.0D, 0.0D);
 		instance.addVertexWithUV(x + 1.0D, y + 1.0D , z         , 0.0D, 1.0D);
 		instance.addVertexWithUV(x + 1.0D, y + 1.0D , z + 1.0D  , 1.0D, 1.0D);
+		instance.setColorRGBA(255, 255, 255, 255);
 
 		instance.draw();
 		// @formatter:on
@@ -232,12 +273,12 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     }
 
     public void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -245,7 +286,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -276,41 +317,41 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dZ, -dY);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -dY);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x, y + offset, z);
-			tessellator1.addVertex(x, y + offset, z + 1.0D);
-			tessellator1.addVertex(x + 1.0D, y + offset, z + 1.0D);
-			tessellator1.addVertex(x + 1.0D, y + offset, z);
+			tessellator.addVertex(x, y + offset, z);
+			tessellator.addVertex(x, y + offset, z + 1.0D);
+			tessellator.addVertex(x + 1.0D, y + offset, z + 1.0D);
+			tessellator.addVertex(x + 1.0D, y + offset, z);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
     }
 
     public void drawPlaneYNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -318,7 +359,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -349,41 +390,41 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dZ, -dY);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -dY);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x, y + offset, z + 1.0D);
-			tessellator1.addVertex(x, y + offset, z);
-			tessellator1.addVertex(x + 1.0D, y + offset, z);
-			tessellator1.addVertex(x + 1.0D, y + offset, z + 1.0D);
+			tessellator.addVertex(x, y + offset, z + 1.0D);
+			tessellator.addVertex(x, y + offset, z);
+			tessellator.addVertex(x + 1.0D, y + offset, z);
+			tessellator.addVertex(x + 1.0D, y + offset, z + 1.0D);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
     }
 
     public void drawPlaneZPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -391,7 +432,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -422,41 +463,41 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dY, -dZ);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dZ);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x, y + 1.0D, z + offset);
-			tessellator1.addVertex(x, y, z + offset);
-			tessellator1.addVertex(x + 1.0D, y, z + offset);
-			tessellator1.addVertex(x + 1.0D, y + 1.0D, z + offset);
+			tessellator.addVertex(x, y + 1.0D, z + offset);
+			tessellator.addVertex(x, y, z + offset);
+			tessellator.addVertex(x + 1.0D, y, z + offset);
+			tessellator.addVertex(x + 1.0D, y + 1.0D, z + offset);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
     }
 
     public void drawPlaneZNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -464,7 +505,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -495,41 +536,41 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dY, -dZ);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dZ);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x, y, z + offset);
-			tessellator1.addVertex(x, y + 1.0D, z + offset);
-			tessellator1.addVertex(x + 1.0D, y + 1.0D, z + offset);
-			tessellator1.addVertex(x + 1.0D, y, z + offset);
+			tessellator.addVertex(x, y, z + offset);
+			tessellator.addVertex(x, y + 1.0D, z + offset);
+			tessellator.addVertex(x + 1.0D, y + 1.0D, z + offset);
+			tessellator.addVertex(x + 1.0D, y, z + offset);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
     }
 
     public void drawPlaneXPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -537,7 +578,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -568,41 +609,41 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dZ, -dY, -dX);
             glTranslatef(ActiveRenderInfo.objectZ * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dX);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x + offset, y + 1.0D, z);
-			tessellator1.addVertex(x + offset, y + 1.0D, z + 1.0D);
-			tessellator1.addVertex(x + offset, y, z + 1.0D);
-			tessellator1.addVertex(x + offset, y, z);
+			tessellator.addVertex(x + offset, y + 1.0D, z);
+			tessellator.addVertex(x + offset, y + 1.0D, z + 1.0D);
+			tessellator.addVertex(x + offset, y, z + 1.0D);
+			tessellator.addVertex(x + offset, y, z);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
     }
 
     public void drawPlaneXNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
-        for (int tessellator = 0; tessellator < planeCount; ++tessellator) {
+        for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
-            float f5 = 16 - tessellator;
+            float f5 = 16 - count;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (tessellator == 0) {
+            if (count == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -610,7 +651,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (tessellator == 1) {
+            if (count == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -641,29 +682,29 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((tessellator * tessellator * 4321 + tessellator * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dZ, -dY, -dX);
             glTranslatef(ActiveRenderInfo.objectZ * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dX);
-            Tessellator tessellator1 = Tessellator.instance;
-            tessellator1.startDrawingQuads();
+            Tessellator tessellator = Tessellator.instance;
+            tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (tessellator == 0) {
+            if (count == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
             }
-            tessellator1.setBrightness(fieldBrightness);
-            tessellator1.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
+            tessellator.setBrightness(fieldBrightness);
+            tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator1.addVertex(x + offset, y, z);
-			tessellator1.addVertex(x + offset, y, z + 1.0D);
-			tessellator1.addVertex(x + offset, y + 1.0D, z + 1.0D);
-			tessellator1.addVertex(x + offset, y + 1.0D, z);
+			tessellator.addVertex(x + offset, y, z);
+			tessellator.addVertex(x + offset, y, z + 1.0D);
+			tessellator.addVertex(x + offset, y + 1.0D, z + 1.0D);
+			tessellator.addVertex(x + offset, y + 1.0D, z);
 			// @formatter:on
-            tessellator1.draw();
+            tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
         }
