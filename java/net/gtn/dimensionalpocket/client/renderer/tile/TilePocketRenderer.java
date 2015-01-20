@@ -1,10 +1,5 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.nio.FloatBuffer;
-import java.util.Random;
-
 import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -20,6 +15,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.nio.FloatBuffer;
+import java.util.Random;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class TilePocketRenderer extends TileEntitySpecialRenderer {
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -109,13 +109,13 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
 
     private void renderFaces(double x, double y, double z, ResourceLocation texture, Pocket pocket) {
     	Tessellator instance = Tessellator.instance;
-    	instance.setColorRGBA(255, 255, 255, 255);
     	bindTexture(texture);
     	
     	boolean checkFlowStates = inRange && (texture == pocketOverlay);
 
     	instance.startDrawingQuads();
-        
+        instance.setColorRGBA(255, 255, 255, 255);
+
         // @formatter:off
 		// Y Neg
         if (checkFlowStates) {
