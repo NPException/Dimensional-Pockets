@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client.renderer.item;
 
+import static org.lwjgl.opengl.GL11.*;
 import me.jezza.oc.client.renderer.BlockRenderer;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -8,10 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 
-import static org.lwjgl.opengl.GL11.*;
-
 public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
-    private static float inverseOf255 = 0.00392156862F;
 
     private Tessellator instance = Tessellator.instance;
 
@@ -40,26 +38,20 @@ public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
             glTranslatef(0.0F, -0.1F, 0.0F);
             glEnable(2896);
         }
-
-        renderCube(pocketFrame);
-
+        
         glPushMatrix();
         glTranslatef(0.005F, 0.005F, 0.005F);
         glScalef(0.98F, 0.98F, 0.98F);
         renderCube(particleField);
         glPopMatrix();
 
-        if (!inventoryFlag) {
-            glEnable(3042);
-            glBlendFunc(770, 771);
-        }
+        glColor3f(1f, 1f, 1f);
+        renderCube(pocketFrame);
 
-        long l = System.currentTimeMillis() % 0xFFFFFF;
-        float red = (l & 0xFF0000L) >> 16;
-        float green = (l & 0xFF00L) >> 8;
-        float blue = (l & 0xFFL);
+        glEnable(3042);
+        glBlendFunc(770, 771);
 
-        glColor3f(red * inverseOf255, green * inverseOf255, blue * inverseOf255);
+        glColor3f(1f, 1f, 1f);
         renderCube(pocketOverlay);
 
         glDisable(3042);
