@@ -7,6 +7,7 @@ import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 public class EnderCrystalHandler extends UsableHandlerAbstract {
@@ -50,6 +51,9 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
         if (flag) {
             pocket.setSpawnSet(spawnSet);
 //            player.inventory.decrStackSize(player.inventory.currentItem, 1);
+            ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
+            comp.getChatStyle().setItalic(Boolean.TRUE);
+            player.addChatMessage(comp);
         }
         return flag;
     }

@@ -12,6 +12,8 @@ item.netherCrystal.name=Nether Crystal
 info.trapped.1=You're trapped! Maybe someone broke the Dimensional Pocket...
 info.trapped.2=For some reason, you can't rematerialize! It's almost like there is something blocking it...
 
+info.spawn.set.in.pocket=You have set a new spawn point in the Dimensional Pocket.
+
 info.page.maxPage=9
 
 info.page.recipe.block.id=5
