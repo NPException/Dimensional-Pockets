@@ -28,7 +28,6 @@ public class BiomeHelper {
                 return false;
             }
 
-            @SuppressWarnings("rawtypes")
             @Override
             public List getSpawnableList(EnumCreatureType par1EnumCreatureType) {
                 return Lists.newArrayList();
@@ -36,6 +35,7 @@ public class BiomeHelper {
 
             @Override
             public void addDefaultFlowers() {
+                // do nothing
             }
 
             @Override

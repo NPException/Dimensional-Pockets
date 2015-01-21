@@ -5,7 +5,7 @@ import net.gtn.dimensionalpocket.client.utils.RenderUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-public class GuiItemStack extends GuiWidget {
+public class GuiItemStack extends GuiWidget<GuiItemStack> {
 
     private ItemStack itemStack = new ItemStack(Blocks.stone);
 

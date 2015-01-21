@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
 public class GuiInfoBook extends GuiContainerAbstract {
-    private GuiWidget rightArrow, leftArrow;
+    private GuiWidget<GuiArrow> rightArrow, leftArrow;
     private GuiItemStack itemStackArray[] = new GuiItemStack[10];
 
     private int currentPage;

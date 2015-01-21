@@ -11,7 +11,7 @@ public class ThaumcraftConfig extends AbstractConfig {
 
     @Override
     public void runModSpecificComms() {
-
+        // do nothing
     }
 
     @Override

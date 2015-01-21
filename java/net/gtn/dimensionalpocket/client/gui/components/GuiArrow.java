@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.client.gui.components.GuiTexturedButton;
 
 @SideOnly(Side.CLIENT)
-public class GuiArrow extends GuiTexturedButton {
+public class GuiArrow extends GuiTexturedButton<GuiArrow> {
 
     public GuiArrow(int x, int y) {
         super(x, y, 0, 180, 18, 10);

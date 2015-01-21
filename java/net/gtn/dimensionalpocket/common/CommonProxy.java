@@ -33,6 +33,7 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void runClientSide() {
+        // do nothing
     }
 
     @Override

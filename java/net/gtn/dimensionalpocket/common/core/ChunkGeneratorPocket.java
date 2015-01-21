@@ -45,7 +45,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     @Override
     public void populate(IChunkProvider var1, int var2, int var3) {
-
+        // do nothing
     }
 
     @Override
@@ -68,7 +68,6 @@ public class ChunkGeneratorPocket implements IChunkProvider {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public List getPossibleCreatures(EnumCreatureType var1, int var2, int var3, int var4) {
         return Lists.newArrayList();
@@ -86,11 +85,11 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     @Override
     public void recreateStructures(int var1, int var2) {
-
+     // do nothing
     }
 
     @Override
     public void saveExtraData() {
-
+     // do nothing
     }
 }

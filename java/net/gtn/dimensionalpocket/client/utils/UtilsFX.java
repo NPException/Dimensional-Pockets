@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
@@ -42,13 +43,15 @@ public class UtilsFX {
     }
 
     public static void createPlayerExplosion(EntityPlayer player) {
-
+     // do nothing
     }
 
     public static ResourceLocation getParticleTexture() {
         try {
             return (ResourceLocation) ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "b", "field_110737_b");
         } catch (Exception e) {
+            DPLogger.warning("Could not load particleTextures");
+            e.printStackTrace();
         }
         return null;
     }

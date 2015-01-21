@@ -31,6 +31,7 @@ public class ModItems {
         return new ItemStack(enderCrystal);
     }
 
+    @SuppressWarnings("boxing")
     public static void initRecipes() {
         CraftingManager crafting = CraftingManager.getInstance();
 

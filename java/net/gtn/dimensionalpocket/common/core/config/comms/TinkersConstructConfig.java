@@ -23,10 +23,9 @@ public class TinkersConstructConfig extends AbstractConfig {
             Field field = clazz.getField("blacklistedDims");
 
             ArrayList<Integer> temp = new ArrayList<Integer>();
-            @SuppressWarnings("unchecked")
             ArrayList<Integer> blackListedDims = (ArrayList<Integer>) field.get(temp);
 
-            blackListedDims.add(Reference.DIMENSION_ID);
+            blackListedDims.add(Integer.valueOf(Reference.DIMENSION_ID));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -34,6 +33,7 @@ public class TinkersConstructConfig extends AbstractConfig {
 
     @Override
     public void sendInterModComms() {
+        // do nothing
     }
 
 }

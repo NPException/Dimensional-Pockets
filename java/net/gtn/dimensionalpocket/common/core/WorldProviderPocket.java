@@ -22,6 +22,7 @@ public class WorldProviderPocket extends WorldProvider {
                 @Override
                 @SideOnly(Side.CLIENT)
                 public void render(float partialTicks, WorldClient world, Minecraft mc) {
+                    // do nothing
                 }
             });
     }
