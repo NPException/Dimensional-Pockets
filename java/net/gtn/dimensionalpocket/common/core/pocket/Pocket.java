@@ -4,6 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.gson.annotations.SerializedName;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
@@ -37,13 +39,25 @@ public class Pocket {
     
     private transient NBTTagCompound nbtTagCompound;
 
+    @SerializedName("connectors")
     private Map<ForgeDirection, CoordSet> connectorMap;
+    
+    @SerializedName("sideStates")
     private Map<ForgeDirection, FlowState> flowMap; // TODO: rename to stateMap before release!
 
-    private boolean generated = false;
+    @SerializedName("generated")
+    private boolean isGenerated = false;
+    
+    @SerializedName("blockDim")
     private int blockDim;
+    
+    @SerializedName("chunkCoords")
     private CoordSet chunkCoords;
+    
+    @SerializedName("blockCoords")
     private CoordSet blockCoords;
+    
+    @SerializedName("spawnCoords")
     private CoordSet spawnCoords;
     
     @Deprecated
@@ -73,7 +87,7 @@ public class Pocket {
     }
 
     public void generatePocketRoom() {
-        if (generated)
+        if (isGenerated)
             return;
 
         World world = PocketRegistry.getWorldForPockets();
@@ -112,8 +126,8 @@ public class Pocket {
             } // @Jezza please do me the favor and let me have these brackets...
         }
 
-        generated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
-        getNBT().setBoolean(NBT_GENERATED_KEY, generated);
+        isGenerated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+        getNBT().setBoolean(NBT_GENERATED_KEY, isGenerated);
     }
 
     public void resetFlowStates() {
@@ -299,7 +313,7 @@ public class Pocket {
             }
             nbtTagCompound.setTag(NBT_CONNECTOR_MAP_KEY, connectorMap);
             
-            nbtTagCompound.setBoolean(NBT_GENERATED_KEY, generated);
+            nbtTagCompound.setBoolean(NBT_GENERATED_KEY, isGenerated);
             nbtTagCompound.setInteger(NBT_BLOCK_DIMENSION_KEY, blockDim);
             
             if (chunkCoords != null)
@@ -335,7 +349,7 @@ public class Pocket {
         pocket.blockDim = pocketTag.getInteger(NBT_BLOCK_DIMENSION_KEY);
         pocket.blockCoords = CoordSet.readFromNBT(pocketTag, NBT_BLOCK_COORDS_KEY);
         
-        pocket.generated = pocketTag.getBoolean(NBT_GENERATED_KEY);
+        pocket.isGenerated = pocketTag.getBoolean(NBT_GENERATED_KEY);
         pocket.spawnCoords = CoordSet.readFromNBT(pocketTag, NBT_SPAWN_COORDS_KEY);
         
         NBTTagCompound stateMap = pocketTag.getCompoundTag(NBT_FLOW_STATE_MAP_KEY);
