@@ -16,12 +16,36 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.awt.Color;
 import java.nio.FloatBuffer;
+import java.util.EnumMap;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import static org.lwjgl.opengl.GL11.*;
 
+@SideOnly(Side.CLIENT)
 public class TilePocketRenderer extends TileEntitySpecialRenderer {
+    private static class Colour {
+        private int r,g,b,a;
+        
+        private Colour(String rgb, int a) {
+            Color color = Color.decode(rgb);
+            this.r = color.getRed();
+            this.g = color.getGreen();
+            this.b = color.getBlue();
+            this.a = a;
+        }
+    }
+    
+    private static EnumMap<FlowState, Colour> stateColours = new EnumMap<>(FlowState.class);
+    static {
+        stateColours.put(FlowState.NONE, new Colour("#646464", 100));
+        stateColours.put(FlowState.ENERGY_INPUT, new Colour("#FFFA6E", 100));
+        stateColours.put(FlowState.ENERGY_OUTPUT, new Colour("#00C800", 100));
+    }
+    
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     private boolean inRange;
@@ -32,11 +56,18 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     private Random random = new Random(31100L);
 
     private ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
-    private ResourceLocation pocketOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay2.png");
     private ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
+    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
+    private EnumMap<FlowState, ResourceLocation> overlays = new EnumMap<>(FlowState.class);
+    {
+        ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
+        //overlays.put(FlowState.NONE, basicOverlay);
+        overlays.put(FlowState.ENERGY_INPUT, basicOverlay);
+        overlays.put(FlowState.ENERGY_OUTPUT, basicOverlay);
+    }
+    
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
         if (tile instanceof TileDimensionalPocket)
@@ -93,96 +124,106 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         else
             instance.setBrightness(220);
 
-        renderFaces(x, y, z, pocketFrame, null);
+        renderFaces(x, y, z, 0, null, false);
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
-        renderFaces(x, y, z, pocketOverlay, pocket);
+        
+        renderFaces(x, y, z, 0.0001d, pocket, true);
 
         glDisable(GL_BLEND);
 
         glEnable(GL_LIGHTING);
         if (itemStack == null)
             glEnable(GL_FOG);
+        
         glPopMatrix();
     }
+    
+    /**
+     * Prepares the rendering for the given side and returns whether the rendering should proceed or not.
+     * @param isOverlay
+     * @param side
+     * @param pocket
+     * @param instance
+     * @return
+     */
+    private boolean prepareRenderForSide(boolean isOverlay, ForgeDirection side, Pocket pocket, Tessellator instance) {
+        if (isOverlay) {
+            FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(side);
+            ResourceLocation overlayTexture = overlays.get(state);
+            if (overlayTexture == null)
+                return false;
+            
+            instance.startDrawingQuads();
+            bindTexture(overlayTexture);
+            Colour c = stateColours.get(state);
+            instance.setColorRGBA(c.r, c.g, c.b, c.a);
+        } else {
+            instance.startDrawingQuads();
+            bindTexture(pocketFrame);
+            instance.setColorRGBA(255, 255, 255, 255);
+        }
+        return true;
+    }
 
-    private void renderFaces(double x, double y, double z, ResourceLocation texture, Pocket pocket) {
+    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, boolean isOverlay) {
         Tessellator instance = Tessellator.instance;
-        bindTexture(texture);
-
-        boolean checkFlowStates = inRange && (texture == pocketOverlay);
-
-        instance.startDrawingQuads();
-        instance.setColorRGBA(255, 255, 255, 255);
 
         // @formatter:off
 		// Y Neg
-        if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.DOWN);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x          , y, z          , 1.0D, 1.0D);
-		instance.addVertexWithUV(x + 1.0D   , y, z          , 1.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D   , y, z + 1.0D   , 0.0D, 0.0D);
-		instance.addVertexWithUV(x          , y, z + 1.0D   , 0.0D, 1.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
+        if (prepareRenderForSide(isOverlay, ForgeDirection.DOWN, pocket, instance)) {
+    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y - offset, z + 1.0D   , 0.0D, 1.0D);
+    		instance.draw();
+        }
 		
 		// Y Pos
-		if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.UP);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x          , y + 1.0D, z + 1.0D, 1.0D, 1.0D);
-		instance.addVertexWithUV(x + 1.0D   , y + 1.0D, z + 1.0D, 1.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D   , y + 1.0D, z       , 0.0D, 0.0D);
-		instance.addVertexWithUV(x          , y + 1.0D, z       , 0.0D, 1.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
+        if (prepareRenderForSide(isOverlay, ForgeDirection.UP, pocket, instance)) {
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z       , 0.0D, 1.0D);
+    		instance.draw();
+        }
 		
 		// Z Neg
-		if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.NORTH);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x          , y + 1.0D  , z, 0.0D, 1.0D);
-		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z, 1.0D, 1.0D);
-		instance.addVertexWithUV(x + 1.0D   , y         , z, 1.0D, 0.0D);
-		instance.addVertexWithUV(x          , y         , z, 0.0D, 0.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
+        if (prepareRenderForSide(isOverlay, ForgeDirection.NORTH, pocket, instance)) {
+    		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y         , z - offset, 0.0D, 0.0D);
+    		instance.draw();
+        }
 		
 		// Z Pos
-		if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.SOUTH);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D, 1.0D, 1.0D);
-		instance.addVertexWithUV(x          , y         , z + 1.0D, 1.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D, 0.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z + 1.0D, 0.0D, 1.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
+        if (prepareRenderForSide(isOverlay, ForgeDirection.SOUTH, pocket, instance)) {
+    		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 1.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z + 1.0D + offset, 0.0D, 1.0D);
+    		instance.draw();
+        }
 		
 		// X Neg
-		if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.WEST);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x, y       , z         , 1.0D, 0.0D);
-		instance.addVertexWithUV(x, y       , z + 1.0D  , 0.0D, 0.0D);
-		instance.addVertexWithUV(x, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
-		instance.addVertexWithUV(x, y + 1.0D, z         , 1.0D, 1.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
+        if (prepareRenderForSide(isOverlay, ForgeDirection.WEST, pocket, instance)) {
+    		instance.addVertexWithUV(x - offset, y       , z         , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y + 1.0D, z         , 1.0D, 1.0D);
+    		instance.draw();
+        }
 		
 		// X Pos
-		if (checkFlowStates) {
-			FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(ForgeDirection.EAST);
-			instance.setColorRGBA(state.r, state.g, state.b, state.a);
-		}
-		instance.addVertexWithUV(x + 1.0D, y        , z + 1.0D  , 1.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D, y        , z         , 0.0D, 0.0D);
-		instance.addVertexWithUV(x + 1.0D, y + 1.0D , z         , 0.0D, 1.0D);
-		instance.addVertexWithUV(x + 1.0D, y + 1.0D , z + 1.0D  , 1.0D, 1.0D);
-		instance.setColorRGBA(255, 255, 255, 255);
-
-		instance.draw();
+        if (prepareRenderForSide(isOverlay, ForgeDirection.EAST, pocket, instance)) {
+    		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z + 1.0D  , 1.0D, 1.0D);
+    		instance.draw();
+        }
+		
 		// @formatter:on
     }
 
@@ -241,12 +282,14 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         // @formatter:off
 		switch (side) {
 		    case 0:
+		        // Y Neg
 		    	instance.addVertexWithUV(x + 1.0D, y + offset, z, 1.0D, 1.0D);
 		    	instance.addVertexWithUV(x + 1.0D, y + offset, z + 1.0D, 1.0D, 0.0D);
 		    	instance.addVertexWithUV(x, y + offset, z + 1.0D, 0.0D, 0.0D);
 		    	instance.addVertexWithUV(x, y + offset, z, 0.0D, 1.0D);
 		    	break;
 		    case 1:
+		        // Y Pos
 		    	instance.addVertexWithUV(x, y + offset, z + 1.0D, 1.0D, 1.0D);
 		    	instance.addVertexWithUV(x + 1.0D, y + offset, z + 1.0D, 1.0D, 0.0D);
 		    	instance.addVertexWithUV(x + 1.0D, y + offset, z, 0.0D, 0.0D);
@@ -425,9 +468,9 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x, y + offset, z + 1.0D);
-			tessellator.addVertex(x, y + offset, z);
-			tessellator.addVertex(x + 1.0D, y + offset, z);
+			tessellator.addVertex(x,        y + offset, z + 1.0D);
+			tessellator.addVertex(x,        y + offset, z       );
+			tessellator.addVertex(x + 1.0D, y + offset, z       );
 			tessellator.addVertex(x + 1.0D, y + offset, z + 1.0D);
 			// @formatter:on
             tessellator.draw();
