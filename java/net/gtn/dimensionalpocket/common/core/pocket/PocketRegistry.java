@@ -23,6 +23,7 @@ public class PocketRegistry {
     }
 
     public static Pocket getPocket(CoordSet chunkCoords) {
+        Utils.enforceServer();
         if (backLinkMap.containsKey(chunkCoords))
             return backLinkMap.get(chunkCoords);
         return null;
@@ -51,6 +52,7 @@ public class PocketRegistry {
     }
 
     public static void updatePocket(CoordSet chunkCoords, int newBlockDimID, CoordSet newBlockCoords) {
+        Utils.enforceServer();
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null) {
             DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);
@@ -64,6 +66,7 @@ public class PocketRegistry {
     }
 
     public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnCoords) {
+        Utils.enforceServer();
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null) {
             DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);

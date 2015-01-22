@@ -1,24 +1,22 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ChunkLoaderHandler implements LoadingCallback {
 
@@ -34,6 +32,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
 
     @Override
     public void ticketsLoaded(List<Ticket> tickets, World world) {
+        Utils.enforceServer();
         for (Ticket ticket : tickets) {
             if (ticket == null)
                 continue;
@@ -73,6 +72,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
     }
 
     public static void addPocketToChunkLoader(Pocket pocket) {
+        Utils.enforceServer();
         if (pocket == null)
             return;
 
@@ -113,6 +113,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
     }
 
     public static void removePocketFromChunkLoader(Pocket pocket) {
+        Utils.enforceServer();
         CoordSet pocketSet = pocket.getChunkCoords();
         CoordSet chunkXZSet = pocketSet.copy().setY(0);
 
@@ -135,6 +136,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
     }
 
     public static void clearTicketMap() {
+        Utils.enforceServer();
         ticketMap.clear();
     }
 }

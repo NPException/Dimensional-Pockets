@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -13,6 +14,7 @@ public class PocketTeleporter extends Teleporter {
 
     public PocketTeleporter(WorldServer worldServer, CoordSet targetSet) {
         super(worldServer);
+        Utils.enforceServer();
         this.targetSet = targetSet.copy();
     }
 

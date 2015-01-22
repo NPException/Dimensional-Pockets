@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
-import cofh.api.energy.IEnergyConnection;
-import cofh.api.energy.IEnergyProvider;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.FlowState;

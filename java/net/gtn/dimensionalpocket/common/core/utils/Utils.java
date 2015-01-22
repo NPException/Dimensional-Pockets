@@ -121,7 +121,19 @@ public class Utils {
     public static void enforceServer() {
         if (Reference.ENFORCE_SIDED_METHODS) {
             Minecraft mc = Minecraft.getMinecraft();
-            if (!mc.isIntegratedServerRunning() && mc.theWorld.isRemote) {
+            if (!mc.isIntegratedServerRunning() && (mc.theWorld != null && mc.theWorld.isRemote)) {
+                throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
+            }
+        }
+    }
+    
+    /**
+     * Tries to check if this is a client side call. If it is a non remote call, this throws an exception.
+     */
+    public static void enforceClient() {
+        if (Reference.ENFORCE_SIDED_METHODS) {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc.theWorld != null && !mc.theWorld.isRemote) {
                 throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
             }
         }
