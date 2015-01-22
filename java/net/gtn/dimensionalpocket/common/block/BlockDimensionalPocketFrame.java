@@ -1,19 +1,24 @@
 package net.gtn.dimensionalpocket.common.block;
 
+import me.jezza.oc.common.blocks.BlockAbstract;
+import me.jezza.oc.common.interfaces.ITileProvider;
 import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.block.framework.BlockDP;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketFrameConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDimensionalPocketFrame extends BlockDP {
+public class BlockDimensionalPocketFrame extends BlockAbstract implements ITileProvider {
+    
+    public static final int CONNECTOR_META = 1;
 
     public BlockDimensionalPocketFrame(Material material, String name) {
         super(material, name);
@@ -75,6 +80,18 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     @Override
     public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
        return false;
+    }
+    
+    @Override
+    public TileEntity createNewTileEntity(World world, int metadata) {
+        if (metadata == CONNECTOR_META)
+            return new TileDimensionalPocketFrameConnector();
+        return null;
+    }
+
+    @Override
+    public String getModIdentifier() {
+        return Reference.MOD_IDENTIFIER;
     }
     
     @Override

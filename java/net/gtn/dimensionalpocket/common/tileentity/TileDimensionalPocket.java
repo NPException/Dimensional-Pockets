@@ -118,6 +118,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         ChunkLoaderHandler.removePocketFromChunkLoader(getPocket());
     }
 
+    @Override
     public Pocket getPocket() {
         if (worldObj.isRemote)
             return pocket;

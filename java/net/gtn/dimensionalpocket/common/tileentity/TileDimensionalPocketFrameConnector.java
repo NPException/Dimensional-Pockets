@@ -5,7 +5,7 @@ import cofh.api.energy.IEnergyReceiver;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,12 +14,10 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 
     private Pocket pocket;
     
+    @Override
     public Pocket getPocket() {
-    	System.out.println("Is client side: " + getWorldObj().isRemote);
-        if (pocket == null)
+    	if (pocket == null && !getWorldObj().isRemote)
             pocket = PocketRegistry.getPocket(getCoordSet().asChunkCoords());
-        if (pocket == null)
-        	DPLogger.warning("Did not find a Pocket for DPFrameConnector at " + getCoordSet().toString(), getClass());
         return pocket;
     }
     
@@ -33,21 +31,37 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
     public void updateEntity() {
     	if (worldObj.isRemote) return;
     	
-    	if (counter++ > 10) {
+    	if (++counter > 10) {
     		counter = 0;
     		
     		Pocket p = getPocket();
-        	if (p != null
-        			&& !getCoordSet().equals(
-        					p.getConnectorCoords(
-        						Pocket.getSideForBlock(
-        							getCoordSet().asChunkOffset()
-        						)
-        					)
-        				)) {
-        		invalidate();
+        	if (p != null) {
+        	    ForgeDirection wallSide = Pocket.getSideForBlock(getCoordSet().asChunkOffset());
+        	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
+        	    if (!getCoordSet().equals(connectorCoords)) {
+        	        getWorldObj().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+        	        invalidate();
+        	    }
         	}
     	}
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        getPocket().writeToNBT(tag);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        
+        Pocket tmpPocket = Pocket.readFromNBT(tag);
+        
+        if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
+            pocket = tmpPocket;
+        else
+            pocket = PocketRegistry.getPocket(tmpPocket.getChunkCoords());
     }
 
     /**

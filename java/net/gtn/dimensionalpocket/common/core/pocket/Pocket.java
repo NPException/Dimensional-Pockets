@@ -11,6 +11,7 @@ import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -146,22 +147,61 @@ public class Pocket {
     	getFlowMap().put(side, flowState);
     	getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
     }
-
-    public void resetConnectors() {
-    	getConnectorMap().clear();
-    	getNBT().setTag(NBT_CONNECTOR_MAP_KEY, new NBTTagCompound());
+    
+    private void generateDefaultConnectors() {
+        Utils.enforceServer();
+        CoordSet root = chunkCoords.toBlockCoords();
+        for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+            switch (side) {
+                case DOWN:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 0, 7)));
+                    break;
+                case UP:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 15, 7)));
+                    break;
+                case NORTH:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 0)));
+                    break;
+                case SOUTH:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 15)));
+                    break;
+                case WEST:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(0, 7, 7)));
+                    break;
+                case EAST:
+                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(15, 7, 7)));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     public CoordSet getConnectorCoords(ForgeDirection side) {
     	Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
-        if (cMap.containsKey(side))
-            return cMap.get(side);
-        return null;
+        if (cMap.isEmpty())
+            generateDefaultConnectors();
+        return cMap.get(side);
     }
 
-    public void setConnectorCoords(ForgeDirection side, CoordSet connectorCoords) {
+    /**
+     * Attempts to set a new connector on a wall for a pocket.
+     * Returns whether it successfully set the new coords.
+     * @return
+     */
+    public boolean setConnectorForSide(ForgeDirection side, CoordSet connectorCoords) {
+        Utils.enforceServer();
+
+        World world = PocketRegistry.getWorldForPockets();
+        if (ModBlocks.dimensionalPocketFrame != connectorCoords.getBlock(world))
+            return false;
+        
+        world.setBlockMetadataWithNotify( connectorCoords.getX(),connectorCoords.getY(), connectorCoords.getZ(),
+                                          BlockDimensionalPocketFrame.CONNECTOR_META, 3 );
+        
     	getConnectorMap().put(side, connectorCoords);
     	connectorCoords.writeToNBT( getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
+    	return true;
     }
 
     public boolean teleportTo(EntityPlayer entityPlayer) {
