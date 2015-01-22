@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -112,5 +113,17 @@ public class Utils {
         entityItem.delayBeforeCanPickup = delayBeforePickup;
 
         world.spawnEntityInWorld(entityItem);
+    }
+    
+    /**
+     * Tries to check if this is a server side call. If it is a remote call, this throws an exception.
+     */
+    public static void enforceServer() {
+        if (Reference.ENFORCE_SIDED_METHODS) {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (!mc.isIntegratedServerRunning() && mc.theWorld.isRemote) {
+                throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
+            }
+        }
     }
 }

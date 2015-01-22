@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
 import me.jezza.oc.common.interfaces.IBlockInteract;
 import me.jezza.oc.common.interfaces.IBlockNotifier;
 import me.jezza.oc.common.utils.CoordSet;
@@ -24,6 +22,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider {
 
@@ -119,8 +119,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     }
 
     public Pocket getPocket() {
+        if (worldObj.isRemote)
+            return pocket;
+        
         if (pocket == null)
-            pocket = PocketRegistry.getOrCreatePocket(worldObj.provider.dimensionId, getCoordSet());
+            pocket = PocketRegistry.getOrCreatePocket(worldObj, getCoordSet());
         return pocket;
     }
 
@@ -136,7 +139,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        getPocket().getChunkCoords().writeToNBT(tag);
+        getPocket().writeToNBT(tag);
         if (customName != null)
             tag.setString(TAG_CUSTOM_DP_NAME, customName);
     }
@@ -144,9 +147,14 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        CoordSet tempSet = CoordSet.readFromNBT(tag);
-        pocket = PocketRegistry.getPocket(tempSet);
-
+        
+        Pocket tmpPocket = Pocket.readFromNBT(tag);
+        
+        if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
+            pocket = tmpPocket;
+        else
+            pocket = PocketRegistry.getPocket(tmpPocket.getChunkCoords());
+        
         String tempString = tag.getString(TAG_CUSTOM_DP_NAME);
         if (!tempString.isEmpty())
             customName = tempString;

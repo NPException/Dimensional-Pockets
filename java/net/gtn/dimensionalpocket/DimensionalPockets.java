@@ -23,7 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 
 @Config.Controller(configFile = "DimensionalPockets")
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.12.1.1060,);after:TConstruct;after:Thaumcraft;")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets {
 
     @Instance(Reference.MOD_ID)
@@ -67,15 +67,21 @@ public class DimensionalPockets {
     public void postInit(FMLPostInitializationEvent event) {
     	// do nothing
     }
+    
+    @EventHandler
+    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+        // PocketRegistry needs to be loaded before the TileEntities are read from NBT
+        PocketRegistry.loadData();
+    }
 
     @EventHandler
     public void onServerStarted(FMLServerStartingEvent event) {
-        PocketRegistry.loadData();
+        PocketRegistry.initChunkLoading();
     }
 
     @EventHandler
     public void onServerStopping(FMLServerStoppingEvent event) {
         PocketRegistry.saveData();
-        ChunkLoaderHandler.ticketMap.clear();
+        ChunkLoaderHandler.clearTicketMap();
     }
 }

@@ -1,7 +1,9 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import cofh.api.block.IDismantleable;
+
 import com.google.common.collect.Lists;
+
 import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -67,5 +70,10 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileDimensionalPocket();
+    }
+    
+    @Override
+    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
+       return false;
     }
 }

@@ -1,14 +1,16 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class PocketRegistry {
 
@@ -26,7 +28,10 @@ public class PocketRegistry {
         return null;
     }
 
-    public static Pocket getOrCreatePocket(int dimIDSource, CoordSet coordSetSource) {
+    public static Pocket getOrCreatePocket(World world, CoordSet coordSetSource) {
+        Utils.enforceServer();
+        
+        int dimIDSource = world.provider.dimensionId;
         for (Pocket pocket : backLinkMap.values())
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
                 return pocket;
@@ -58,14 +63,14 @@ public class PocketRegistry {
         saveData();
     }
 
-    public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnSet) {
+    public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnCoords) {
         Pocket link = backLinkMap.get(chunkCoords);
         if (link == null) {
             DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);
             return;
         }
 
-        link.setSpawnSet(spawnSet);
+        link.setSpawnCoords(spawnCoords);
 
         saveData();
     }
@@ -78,7 +83,9 @@ public class PocketRegistry {
     public static void loadData() {
         backLinkMap = PocketConfig.loadBackLinkMap();
         currentChunk = PocketConfig.loadCurrentChunk();
-
+    }
+    
+    public static void initChunkLoading() {
         for (Pocket pocket : backLinkMap.values())
             if (pocket.isSourceBlockPlaced())
                 ChunkLoaderHandler.addPocketToChunkLoader(pocket);

@@ -1,11 +1,14 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
+import cofh.api.energy.IEnergyConnection;
+import cofh.api.energy.IEnergyProvider;
 import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.DimensionalPockets;
+import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +31,8 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
             return false;
         }
         
-        Pocket pocket = ((TileDimensionalPocket) te).getPocket();
+        TileDimensionalPocket tdp = (TileDimensionalPocket) te;
+        Pocket pocket = tdp.getPocket();
         
         ForgeDirection fdSide = ForgeDirection.getOrientation(side);
         FlowState state = pocket.getFlowState(fdSide);
@@ -36,8 +40,17 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
         if (nextStateOrdinal >= FlowState.values().length)
         	nextStateOrdinal = 0;
         
-        FlowState newState = FlowState.values()[nextStateOrdinal];
+        FlowState newState = FlowState.values()[nextStateOrdinal]; 
         pocket.setFlowState(fdSide, newState);
+        
+        for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+            CoordSet nc = coordSet.copy().addForgeDirection(dir);
+            Block block = world.getBlock(nc.getX(), nc.getY(), nc.getZ());
+            block.onNeighborBlockChange(world, nc.getX(), nc.getY(), nc.getZ(), ModBlocks.dimensionalPocket);
+            block.onNeighborChange(world, nc.getX(), nc.getY(), nc.getZ(), tdp.xCoord, tdp.yCoord, tdp.zCoord);
+        }
+        
+        tdp.markForUpdate();
         
         return true;
     }

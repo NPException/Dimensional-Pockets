@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class ChunkLoaderHandler implements LoadingCallback {
 
     private static class TicketWrapper {
@@ -27,7 +30,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
         Ticket ticket;
     }
 
-    public static final Map<CoordSet, TicketWrapper> ticketMap = new HashMap<CoordSet, TicketWrapper>();
+    private static final Map<CoordSet, TicketWrapper> ticketMap = new HashMap<CoordSet, TicketWrapper>();
 
     @Override
     public void ticketsLoaded(List<Ticket> tickets, World world) {
@@ -131,4 +134,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
         }
     }
 
+    public static void clearTicketMap() {
+        ticketMap.clear();
+    }
 }

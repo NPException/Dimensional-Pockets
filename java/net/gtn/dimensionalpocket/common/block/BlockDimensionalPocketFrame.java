@@ -71,4 +71,9 @@ public class BlockDimensionalPocketFrame extends BlockDP {
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         // do nothing
     }
+    
+    @Override
+    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
+       return false;
+    }
 }

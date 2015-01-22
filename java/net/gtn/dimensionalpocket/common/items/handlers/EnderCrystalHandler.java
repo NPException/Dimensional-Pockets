@@ -26,11 +26,11 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
         if (pocket == null)
             return false;
 
-        CoordSet spawnSet = coordSet.asChunkOffset();
+        CoordSet spawnCoords = coordSet.asChunkOffset();
 
-        int sx = spawnSet.getX();
-        int sy = spawnSet.getY();
-        int sz = spawnSet.getZ();
+        int sx = spawnCoords.getX();
+        int sy = spawnCoords.getY();
+        int sz = spawnCoords.getZ();
 
         // compensate for wall and ceiling
 
@@ -41,15 +41,15 @@ public class EnderCrystalHandler extends UsableHandlerAbstract {
         else if (sz == 15) coordSet.addZ(-1).addY(-1);
         else if (sy == 15) coordSet.addY(-3);
 
-        spawnSet = coordSet.asChunkOffset();
+        spawnCoords = coordSet.asChunkOffset();
 
         boolean flag = world.isAirBlock(coordSet.getX(), coordSet.getY() + 1, coordSet.getZ())
                        && world.isAirBlock(coordSet.getX(), coordSet.getY() + 2, coordSet.getZ())
-                       && spawnSet.getY() <= 12;
+                       && spawnCoords.getY() <= 12;
         //@formatter:on
 
         if (flag) {
-            pocket.setSpawnSet(spawnSet);
+            pocket.setSpawnCoords(spawnCoords);
 //            player.inventory.decrStackSize(player.inventory.currentItem, 1);
             ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
             comp.getChatStyle().setItalic(Boolean.TRUE);

@@ -1,11 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.minecraft.server.MinecraftServer;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,7 +8,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.server.MinecraftServer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class PocketConfig {
+    
+    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final String backLinkFile = "teleportRegistry";
     private static final String currentChunkFile = "currentChunk";
@@ -46,8 +49,6 @@ public class PocketConfig {
     }
 
     public static void saveBackLinkMap(Map<CoordSet, Pocket> backLinkMap) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         try {
             File registryFile = getConfig(backLinkFile);
 
@@ -55,7 +56,7 @@ public class PocketConfig {
             Pocket[] tempArray = values.toArray(new Pocket[values.size()]);
 
             FileWriter writer = new FileWriter(registryFile);
-            gson.toJson(tempArray, writer);
+            GSON.toJson(tempArray, writer);
             writer.close();
 
         } catch (Exception e) {
@@ -65,14 +66,12 @@ public class PocketConfig {
 
     public static Map<CoordSet, Pocket> loadBackLinkMap() {
         Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
-        Gson gson = new Gson();
-
         try {
             File registryFile = getConfig(backLinkFile);
 
             final FileReader reader = new FileReader(registryFile);
 
-            Pocket[] tempArray = gson.fromJson(reader, Pocket[].class);
+            Pocket[] tempArray = GSON.fromJson(reader, Pocket[].class);
             reader.close();
 
             if (tempArray != null)
@@ -87,13 +86,11 @@ public class PocketConfig {
     }
 
     public static void saveCurrentChunk(CoordSet currentChunk) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         try {
             File registryFile = getConfig(currentChunkFile);
 
             FileWriter writer = new FileWriter(registryFile);
-            gson.toJson(currentChunk, writer);
+            GSON.toJson(currentChunk, writer);
             writer.close();
 
         } catch (Exception e) {
