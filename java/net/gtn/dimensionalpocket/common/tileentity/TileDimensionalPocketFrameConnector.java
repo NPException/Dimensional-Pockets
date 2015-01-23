@@ -2,6 +2,8 @@ package net.gtn.dimensionalpocket.common.tileentity;
 
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -11,14 +13,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileDimensionalPocketFrameConnector extends TileDP implements IEnergyReceiver, IEnergyProvider {
+    
+    boolean newTile = true;
+    
+    public TileDimensionalPocketFrameConnector() {
+    }
 
+    @SideOnly(Side.CLIENT)
     private Pocket pocket;
     
     @Override
     public Pocket getPocket() {
-    	if (pocket == null && !getWorldObj().isRemote)
-            pocket = PocketRegistry.getPocket(getCoordSet().asChunkCoords());
-        return pocket;
+    	if (worldObj.isRemote)
+    	    return pocket;
+
+    	return PocketRegistry.getPocket(getCoordSet().asChunkCoords());
     }
     
     private int counter = 0;
@@ -31,6 +40,11 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
     public void updateEntity() {
     	if (worldObj.isRemote) return;
     	
+    	if (newTile) {
+    	    newTile = false;
+    	    System.out.println(getClass().getSimpleName() + " created at " + getCoordSet());
+    	}
+    	
     	if (++counter > 10) {
     		counter = 0;
     		
@@ -39,7 +53,8 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
         	    ForgeDirection wallSide = Pocket.getSideForBlock(getCoordSet().asChunkOffset());
         	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
         	    if (!getCoordSet().equals(connectorCoords)) {
-        	        getWorldObj().setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+        	        System.out.println("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
+        	        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
         	        invalidate();
         	    }
         	}
@@ -56,12 +71,8 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         
-        Pocket tmpPocket = Pocket.readFromNBT(tag);
-        
         if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
-            pocket = tmpPocket;
-        else
-            pocket = PocketRegistry.getPocket(tmpPocket.getChunkCoords());
+            pocket = Pocket.readFromNBT(tag);
     }
 
     /**
@@ -73,8 +84,7 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		if (p == null) return false;
 		
 		switch (p.getFlowState(from.getOpposite())) {
-			case ENERGY_INPUT:
-			case ENERGY_OUTPUT:
+			case ENERGY:
 				return true;
 			default:
 				return false;
@@ -115,11 +125,11 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyReceiver) {
 			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
-			//System.out.println("DPConnector - receiveEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - received: " + received); // TODO: REMOVE THIS LINE AFTER TESTING
+			if(!simulate) System.out.println("DPConnector - receiveEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - received: " + received); // TODO: REMOVE THIS LINE AFTER TESTING
 			return received;
 		}
 		
-		//System.out.println("DPConnector - receiveEnergy - no IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		if(!simulate) System.out.println("DPConnector - receiveEnergy - no IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 	
@@ -132,11 +142,11 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyProvider) {
 			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
-			//System.out.println("DPConnector - extractEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - extracted: " + extracted); // TODO: REMOVE THIS LINE AFTER TESTING
+			if(!simulate) System.out.println("DPConnector - extractEnergy - " + targetTE.getBlockType().getUnlocalizedName() + " - sim: " + simulate + " - extracted: " + extracted); // TODO: REMOVE THIS LINE AFTER TESTING
 			return extracted;
 		}
 		
-		//System.out.println("DPConnector - extractEnergy - no IEnergyProvider connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		if(!simulate) System.out.println("DPConnector - extractEnergy - no IEnergyProvider connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 
@@ -149,15 +159,15 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyProvider) {
 			int stored = ((IEnergyProvider) targetTE).getEnergyStored(from);
-			//System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
+			System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return stored;
 		} else if (targetTE instanceof IEnergyReceiver) {
 			int stored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
-			//System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
+			System.out.println("DPConnector - getEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - stored: " + stored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return stored;
 		}
 		
-		//System.out.println("DPConnector - getEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		System.out.println("DPConnector - getEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 
@@ -170,15 +180,15 @@ public class TileDimensionalPocketFrameConnector extends TileDP implements IEner
 		
 		if (targetTE instanceof IEnergyProvider) {
 			int maxStored = ((IEnergyProvider) targetTE).getMaxEnergyStored(from);
-			//System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
+			System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return maxStored;
 		} else if (targetTE instanceof IEnergyReceiver) {
 			int maxStored = ((IEnergyReceiver) targetTE).getMaxEnergyStored(from);
-			//System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
+			System.out.println("DPConnector - getMaxEnergyStored - " + targetTE.getBlockType().getUnlocalizedName() + " - maxStored: " + maxStored); // TODO: REMOVE THIS LINE AFTER TESTING
 			return maxStored;
 		}
 		
-		//System.out.println("DPConnector - getMaxEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
+		System.out.println("DPConnector - getMaxEnergyStored - no IEnergyProvider or IEnergyReceiver connected on side " + from.getOpposite().name()); // TODO: REMOVE THIS LINE AFTER TESTING
 		return 0;
 	}
 }

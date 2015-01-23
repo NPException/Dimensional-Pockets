@@ -24,12 +24,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
+    @SideOnly(Side.CLIENT)
     private Pocket pocket;
+    
     private String customName;
 
     private PocketTeleportPreparation telePrep;
@@ -69,12 +73,12 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
             NBTTagCompound itemCompound = itemStack.getTagCompound();
 
             CoordSet chunkSet = CoordSet.readFromNBT(itemCompound);
-            boolean success = setPocket(chunkSet);
+            boolean success = PocketRegistry.getPocket(chunkSet) != null;
 
             if (!success)
                 throw new RuntimeException("YOU DESERVED THIS!");
 
-            PocketRegistry.updatePocket(getPocket().getChunkCoords(), entityLivingBase.dimension, getCoordSet());
+            PocketRegistry.updatePocket(chunkSet, entityLivingBase.dimension, getCoordSet());
 
             if (itemCompound.hasKey("display")) {
                 String tempString = itemCompound.getCompoundTag("display").getString("Name");
@@ -123,18 +127,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         if (worldObj.isRemote)
             return pocket;
         
-        if (pocket == null)
-            pocket = PocketRegistry.getOrCreatePocket(worldObj, getCoordSet());
-        return pocket;
-    }
-
-    public boolean setPocket(CoordSet chunkSet) {
-        Pocket newPocket = PocketRegistry.getPocket(chunkSet);
-
-        if (newPocket != null)
-            pocket = newPocket;
-
-        return newPocket != null && newPocket.getChunkCoords().equals(chunkSet);
+        return PocketRegistry.getOrCreatePocket(worldObj, getCoordSet());
     }
 
     @Override
@@ -149,12 +142,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         
-        Pocket tmpPocket = Pocket.readFromNBT(tag);
-        
         if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
-            pocket = tmpPocket;
-        else
-            pocket = PocketRegistry.getPocket(tmpPocket.getChunkCoords());
+            pocket = Pocket.readFromNBT(tag);;
         
         String tempString = tag.getString(TAG_CUSTOM_DP_NAME);
         if (!tempString.isEmpty())
@@ -178,8 +167,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         if (p == null) return false;
 
         switch (p.getFlowState(from)) {
-            case ENERGY_INPUT:
-            case ENERGY_OUTPUT:
+            case ENERGY:
                 return true;
             default:
                 return false;

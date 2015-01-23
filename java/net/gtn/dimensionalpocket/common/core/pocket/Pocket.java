@@ -44,7 +44,7 @@ public class Pocket {
     private Map<ForgeDirection, CoordSet> connectorMap;
     
     @SerializedName("sideStates")
-    private Map<ForgeDirection, FlowState> flowMap; // TODO: rename to stateMap before release!
+    private Map<ForgeDirection, PocketSideState> flowMap; // TODO: rename to stateMap before release!
 
     @SerializedName("generated")
     private boolean isGenerated = false;
@@ -70,9 +70,9 @@ public class Pocket {
     	return connectorMap;
     }
     
-    private Map<ForgeDirection, FlowState> getFlowMap() {
+    private Map<ForgeDirection, PocketSideState> getFlowMap() {
     	if (flowMap == null)
-    		flowMap = new EnumMap<ForgeDirection, FlowState>(ForgeDirection.class);
+    		flowMap = new EnumMap<ForgeDirection, PocketSideState>(ForgeDirection.class);
     	return flowMap;
     }
 
@@ -136,14 +136,14 @@ public class Pocket {
     	getNBT().setTag(NBT_FLOW_STATE_MAP_KEY, new NBTTagCompound());
     }
 
-    public FlowState getFlowState(ForgeDirection side) {
-    	Map<ForgeDirection, FlowState> fMap = getFlowMap();
+    public PocketSideState getFlowState(ForgeDirection side) {
+    	Map<ForgeDirection, PocketSideState> fMap = getFlowMap();
         if (fMap.containsKey(side))
             return fMap.get(side);
-        return FlowState.NONE;
+        return PocketSideState.NONE;
     }
 
-    public void setFlowState(ForgeDirection side, FlowState flowState) {
+    public void setFlowState(ForgeDirection side, PocketSideState flowState) {
     	getFlowMap().put(side, flowState);
     	getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
     }
@@ -181,7 +181,7 @@ public class Pocket {
     	Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
         if (cMap.isEmpty())
             generateDefaultConnectors();
-        return cMap.get(side);
+        return cMap.get(side).copy();
     }
 
     /**
@@ -338,9 +338,9 @@ public class Pocket {
             nbtTagCompound = new NBTTagCompound();
             
             NBTTagCompound stateMap = new NBTTagCompound();
-            for (Entry<ForgeDirection, FlowState> entry : getFlowMap().entrySet()) {
+            for (Entry<ForgeDirection, PocketSideState> entry : getFlowMap().entrySet()) {
                 ForgeDirection side = entry.getKey();
-                FlowState state = entry.getValue();
+                PocketSideState state = entry.getValue();
                 stateMap.setString(side.name(), state.name());
             }
             nbtTagCompound.setTag(NBT_FLOW_STATE_MAP_KEY, stateMap);
@@ -395,7 +395,7 @@ public class Pocket {
         NBTTagCompound stateMap = pocketTag.getCompoundTag(NBT_FLOW_STATE_MAP_KEY);
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
             if (stateMap.hasKey(side.name())) {
-                FlowState state = FlowState.valueOf(stateMap.getString(side.name()));
+                PocketSideState state = PocketSideState.valueOf(stateMap.getString(side.name()));
                 pocket.getFlowMap().put(side, state);
             }
         }

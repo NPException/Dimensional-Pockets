@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common.items.handlers;
 
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -61,12 +61,12 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
             Pocket pocket = tdp.getPocket();
             
             ForgeDirection fdSide = ForgeDirection.getOrientation(side);
-            FlowState state = pocket.getFlowState(fdSide);
+            PocketSideState state = pocket.getFlowState(fdSide);
             int nextStateOrdinal = state.ordinal() + 1;
-            if (nextStateOrdinal >= FlowState.values().length)
+            if (nextStateOrdinal >= PocketSideState.values().length)
             	nextStateOrdinal = 0;
             
-            FlowState newState = FlowState.values()[nextStateOrdinal]; 
+            PocketSideState newState = PocketSideState.values()[nextStateOrdinal]; 
             pocket.setFlowState(fdSide, newState);
             
             // TODO is this necessary?

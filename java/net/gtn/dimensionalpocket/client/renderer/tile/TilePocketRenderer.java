@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -39,11 +39,10 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         }
     }
     
-    private static EnumMap<FlowState, Colour> stateColours = new EnumMap<>(FlowState.class);
+    private static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
-        stateColours.put(FlowState.NONE, new Colour("#646464", 100));
-        stateColours.put(FlowState.ENERGY_INPUT, new Colour("#FFFA6E", 100));
-        stateColours.put(FlowState.ENERGY_OUTPUT, new Colour("#00C800", 100));
+        stateColours.put(PocketSideState.NONE, new Colour("#646464", 100));
+        stateColours.put(PocketSideState.ENERGY, new Colour("#00C800", 100));
     }
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -60,12 +59,11 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
     private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
-    private EnumMap<FlowState, ResourceLocation> overlays = new EnumMap<>(FlowState.class);
+    private EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
     {
         ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
         //overlays.put(FlowState.NONE, basicOverlay);
-        overlays.put(FlowState.ENERGY_INPUT, basicOverlay);
-        overlays.put(FlowState.ENERGY_OUTPUT, basicOverlay);
+        overlays.put(PocketSideState.ENERGY, basicOverlay);
     }
     
     @Override
@@ -149,7 +147,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
      */
     private boolean prepareRenderForSide(boolean isOverlay, ForgeDirection side, Pocket pocket, Tessellator instance) {
         if (isOverlay) {
-            FlowState state = (pocket == null) ? FlowState.NONE : pocket.getFlowState(side);
+            PocketSideState state = (pocket == null) ? PocketSideState.NONE : pocket.getFlowState(side);
             ResourceLocation overlayTexture = overlays.get(state);
             if (overlayTexture == null)
                 return false;

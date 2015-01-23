@@ -8,7 +8,7 @@ import net.gtn.dimensionalpocket.client.gui.components.GuiSideButton;
 import net.gtn.dimensionalpocket.client.gui.components.GuiToggleProcess;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
-import net.gtn.dimensionalpocket.common.core.pocket.FlowState;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -25,7 +25,7 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
     private Pocket pocket;
 
     private ForgeDirection currentDirection = ForgeDirection.UNKNOWN;
-    private FlowState flowState = FlowState.NONE;
+    private PocketSideState flowState = PocketSideState.NONE;
 
     private GuiToggleProcess flowToggle;
 
@@ -147,7 +147,7 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
             ForgeDirection direction = sideButton.getDirection();
             if (currentDirection == direction) {
                 currentDirection = ForgeDirection.UNKNOWN;
-                flowState = FlowState.NONE;
+                flowState = PocketSideState.NONE;
                 flowToggle.setTypeState(flowState.ordinal());
                 flag = -1;
             } else {
@@ -165,7 +165,7 @@ public class GuiPocketConfig extends GuiContainerAbstract implements IGuiRenderH
 
         if (widget.getId() == flowToggle.getId()) {
             flowToggle.processMouseClick(mouse);
-            flowState = FlowState.values()[flowToggle.typeState];
+            flowState = PocketSideState.values()[flowToggle.typeState];
             sendMessage(currentDirection.ordinal(), flowState.ordinal());
         }
     }
