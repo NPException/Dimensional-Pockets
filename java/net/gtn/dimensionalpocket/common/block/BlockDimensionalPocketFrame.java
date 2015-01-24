@@ -5,12 +5,15 @@ import me.jezza.oc.common.interfaces.ITileProvider;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketFrameConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -50,8 +53,16 @@ public class BlockDimensionalPocketFrame extends BlockAbstract implements ITileP
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         if (player == null)
             return false;
+        
+        ItemStack equippedItemStack = player.getCurrentEquippedItem();
+        if (equippedItemStack != null) {
+            if (Utils.isItemPocketWrench(equippedItemStack)) {
+                new NetherCrystalHandler().onItemUseFirst(equippedItemStack, player, world, new CoordSet(x, y, z), side, hitVecX, hitVecY, hitVecZ);
+            }
+            return true;
+        }
 
-        if (!player.isSneaking() || player.getCurrentEquippedItem() != null)
+        if (!player.isSneaking())
             return false;
 
         if (player.dimension == Reference.DIMENSION_ID) {

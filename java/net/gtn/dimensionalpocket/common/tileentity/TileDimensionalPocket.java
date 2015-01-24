@@ -11,6 +11,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
@@ -96,8 +97,16 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-        if (player == null || player.getCurrentEquippedItem() != null)
+        if (player == null)
             return true;
+        
+        ItemStack equippedItemStack = player.getCurrentEquippedItem();
+        if (equippedItemStack != null) {
+            if (Utils.isItemPocketWrench(equippedItemStack)) {
+                new NetherCrystalHandler().onItemUseFirst(equippedItemStack, player, world, getCoordSet(), side, hitVecX, hitVecY, hitVecZ);
+            }
+            return true;
+        }
 
         prepareTeleportIntoPocket(player);
         return true;

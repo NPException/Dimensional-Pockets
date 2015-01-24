@@ -12,6 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class Utils {
 
@@ -146,5 +147,30 @@ public class Utils {
                 throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
             }
         }
+    }
+    
+    public static boolean isOreDictItem(ItemStack stack, String oreDictName) {
+        enforceServer();
+        int targetOreDictID = OreDictionary.getOreID(oreDictName);
+        for (int stackOreDictID : OreDictionary.getOreIDs(stack)) {
+            if (targetOreDictID == stackOreDictID)
+                return true;
+        }
+        return false;
+    }
+    
+    public static boolean isItemPocketWrench(ItemStack stack) {
+        if (!Utils.isOreDictItem(stack, "stickWood"))
+            return false;
+        
+        if (!stack.hasTagCompound())
+            return false;
+        
+        NBTTagCompound itemCompound = stack.getTagCompound();
+        if (!itemCompound.hasKey("display")) 
+            return false;
+        
+        String customName = itemCompound.getCompoundTag("display").getString("Name");
+        return "Pocket Wrench".equals(customName);
     }
 }
