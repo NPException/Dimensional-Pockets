@@ -23,7 +23,7 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
     @Override
     public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, CoordSet coordSet, int side, float hitX, float hitY, float hitZ) {
         Block block = coordSet.getBlock(world);
-        if (block != ModBlocks.dimensionalPocket && block != ModBlocks.dimensionalPocketFrame)
+        if (block != ModBlocks.dimensionalPocket && block != ModBlocks.dimensionalPocketWall)
             return false;
 
         if (world.isRemote) {
@@ -31,7 +31,7 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
             return false;
         }
         
-        if (block == ModBlocks.dimensionalPocketFrame) {
+        if (block == ModBlocks.dimensionalPocketWall) {
             if (world.provider.dimensionId != Reference.DIMENSION_ID)
                 return false;
             

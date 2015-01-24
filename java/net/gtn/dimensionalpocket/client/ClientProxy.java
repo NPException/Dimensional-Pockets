@@ -4,7 +4,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
-import net.gtn.dimensionalpocket.client.renderer.tile.TilePocketRenderer;
+import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.utils.MovingObjectPositionUtil;
@@ -24,7 +24,7 @@ public class ClientProxy extends CommonProxy {
     public void runClientSide() {
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
     	
-        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TilePocketRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
     }
 
     @Override

@@ -6,7 +6,7 @@ import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
-import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketFrameConnector;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +30,8 @@ public class CommonProxy implements IGuiHandler {
     }
 
     public void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.BLOCK_POCKET);
-        GameRegistry.registerTileEntity(TileDimensionalPocketFrameConnector.class, Strings.BLOCK_POCKET_FRAME);
+        GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.TILE_POCKET);
+        GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
     }
 
     public void runClientSide() {

@@ -3,7 +3,7 @@ itemGroup.dimensionalPockets=Dimensional Pockets
 "info.page.maxPage"
 
 tile.dimensionalPocket.name=Dimensional Pocket
-tile.dimensionalPocketFrame.name=Outside Of The Block
+tile.dimensionalPocketFrame.name=Dimensional Pocket Wall
 
 item.infoBookDP.name=Guide To Dimensional Pockets
 item.enderCrystal.name=Ender Crystal

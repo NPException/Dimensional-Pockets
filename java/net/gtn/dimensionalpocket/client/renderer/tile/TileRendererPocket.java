@@ -1,7 +1,14 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.nio.FloatBuffer;
+import java.util.EnumMap;
+import java.util.Random;
+
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.client.Minecraft;
@@ -15,40 +22,29 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.awt.Color;
-import java.nio.FloatBuffer;
-import java.util.EnumMap;
-import java.util.Random;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
-public class TilePocketRenderer extends TileEntitySpecialRenderer {
-    private static class Colour {
-        private int r,g,b,a;
-        
-        private Colour(String rgb, int a) {
-            Color color = Color.decode(rgb);
-            this.r = color.getRed();
-            this.g = color.getGreen();
-            this.b = color.getBlue();
-            this.a = a;
-        }
-    }
+public class TileRendererPocket extends TileEntitySpecialRenderer {
     
-    private static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
+    static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
-        stateColours.put(PocketSideState.NONE, new Colour("#646464", 100));
-        stateColours.put(PocketSideState.ENERGY, new Colour("#10E000", 100));
+        Colour colour = Colour.DARK_GREY.copy();
+        colour.a = 100.0 / 255;
+        stateColours.put(PocketSideState.NONE, colour);
+        
+        colour = Colour.GREEN.copy();
+        colour.a = 100.0 / 255.0;
+        stateColours.put(PocketSideState.ENERGY, colour);
     }
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     private boolean inRange;
+    private float stateColorLevel;
     private ItemStack itemStack;
+    
     private static final int planeCount = 15;
     private static final int fieldBrightness = 240;
 
@@ -94,8 +90,12 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
         glPushMatrix();
         if (itemStack == null)
             glDisable(GL_FOG);
-        else if (itemRenderType == ItemRenderType.INVENTORY)
-            glTranslatef(0.0F, -0.1F, 0.0F);
+        else {
+            if (itemRenderType == ItemRenderType.INVENTORY)
+                glTranslatef(0.0F, -0.1F, 0.0F);
+            if (itemRenderType == ItemRenderType.ENTITY)
+                glTranslatef(-0.5F, -0.4F, -0.5F);
+        }
 
         // Y Neg
         drawPlane(0, x, y, z, 0.001F);
@@ -121,6 +121,11 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             instance.setBrightness(tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord));
         else
             instance.setBrightness(220);
+        
+        
+        long colorCycleTime = 1337L;
+        double minColorLevel = 0.5;
+        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
 
         renderFaces(x, y, z, 0, null, false);
 
@@ -155,7 +160,10 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
             instance.startDrawingQuads();
             bindTexture(overlayTexture);
             Colour c = stateColours.get(state);
-            instance.setColorRGBA(c.r, c.g, c.b, c.a);
+            instance.setColorRGBA_F((float) c.r * stateColorLevel,
+                                    (float) c.g * stateColorLevel,
+                                    (float) c.b * stateColorLevel,
+                                    (float) c.a);
         } else {
             instance.startDrawingQuads();
             bindTexture(pocketFrame);

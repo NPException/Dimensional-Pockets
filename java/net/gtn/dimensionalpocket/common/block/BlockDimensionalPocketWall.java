@@ -8,7 +8,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketFrameConnector;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -19,11 +19,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDimensionalPocketFrame extends BlockAbstract implements ITileProvider {
+public class BlockDimensionalPocketWall extends BlockAbstract implements ITileProvider {
     
     public static final int CONNECTOR_META = 1;
 
-    public BlockDimensionalPocketFrame(Material material, String name) {
+    public BlockDimensionalPocketWall(Material material, String name) {
         super(material, name);
         setBlockUnbreakable();
         setResistance(6000000.0F);
@@ -97,7 +97,7 @@ public class BlockDimensionalPocketFrame extends BlockAbstract implements ITileP
     @Override
     public TileEntity createNewTileEntity(World world, int metadata) {
         if (metadata == CONNECTOR_META)
-            return new TileDimensionalPocketFrameConnector();
+            return new TileDimensionalPocketWallConnector();
         return null;
     }
 

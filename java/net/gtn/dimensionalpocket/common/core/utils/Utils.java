@@ -171,6 +171,6 @@ public class Utils {
             return false;
         
         String customName = itemCompound.getCompoundTag("display").getString("Name");
-        return "Pocket Wrench".equals(customName);
+        return "Pocket Wrench".equalsIgnoreCase(customName);
     }
 }

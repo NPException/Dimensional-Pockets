@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
-import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketFrame;
+import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -118,16 +118,13 @@ public class Pocket {
                     if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && flagZ))
                         continue;
 
-                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketFrame);
+                    extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketWall);
                     world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
-
-                    // use that method if setting things in the chunk will cause problems in the future
-                    // world.setBlock(worldX+x, worldY+y, worldZ+z, ModBlocks.dimensionalPocketFrame);
                 }
             } // @Jezza please do me the favor and let me have these brackets...
         }
 
-        isGenerated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketFrame;
+        isGenerated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketWall;
         getNBT().setBoolean(NBT_GENERATED_KEY, isGenerated);
     }
 
@@ -152,7 +149,7 @@ public class Pocket {
         World world = PocketRegistry.getWorldForPockets();
         CoordSet connectorCoords = getConnectorCoords(side);
         world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
-        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketFrame);
+        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
 
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();
@@ -206,15 +203,15 @@ public class Pocket {
         Utils.enforceServer();
 
         World world = PocketRegistry.getWorldForPockets();
-        if (ModBlocks.dimensionalPocketFrame != connectorCoords.getBlock(world))
+        if (ModBlocks.dimensionalPocketWall != connectorCoords.getBlock(world))
             return false;
 
         getConnectorMap().put(side, connectorCoords);
         connectorCoords.writeToNBT(getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
 
-        world.setBlockMetadataWithNotify(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), BlockDimensionalPocketFrame.CONNECTOR_META, 3);
+        world.setBlockMetadataWithNotify(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
         world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
-        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketFrame);
+        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
 
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();

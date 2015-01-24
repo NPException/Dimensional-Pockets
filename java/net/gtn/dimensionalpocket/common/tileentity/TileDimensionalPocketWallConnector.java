@@ -13,11 +13,11 @@ import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileDimensionalPocketFrameConnector extends TileDP implements IEnergyReceiver, IEnergyProvider, IEnergyHandler {
+public class TileDimensionalPocketWallConnector extends TileDP implements IEnergyReceiver, IEnergyProvider, IEnergyHandler {
     
     boolean newTile = true;
     
-    public TileDimensionalPocketFrameConnector() {
+    public TileDimensionalPocketWallConnector() {
     }
 
     @SideOnly(Side.CLIENT)
