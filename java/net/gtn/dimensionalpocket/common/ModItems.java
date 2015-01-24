@@ -1,26 +1,28 @@
 package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.items.ItemUsable;
+import net.gtn.dimensionalpocket.common.items.framework.ItemDP;
 import net.gtn.dimensionalpocket.common.items.handlers.BookHandler;
 import net.gtn.dimensionalpocket.common.items.handlers.EnderCrystalHandler;
 import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
 public class ModItems {
 
-    public static Item book;
-    public static Item enderCrystal;
-    public static Item netherCrystal;
+    public static ItemDP book;
+    public static ItemDP enderCrystal;
+    public static ItemDP netherCrystal;
 
     public static void init() {
         book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
         enderCrystal = new ItemUsable(Strings.ENDER_CRYSTAL, new EnderCrystalHandler());
+        enderCrystal.hasEffect = true;
         netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL, new NetherCrystalHandler());
+        netherCrystal.hasEffect = true;
     }
 
     public static ItemStack getNetherCrystal() {

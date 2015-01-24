@@ -7,8 +7,11 @@ import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public abstract class ItemDP extends Item {
+    
+    public boolean hasEffect = false;
 
     public ItemDP(String name) {
         setUnlocalizedName(name);
@@ -26,4 +29,10 @@ public abstract class ItemDP extends Item {
         itemIcon = iconRegister.registerIcon(Reference.MOD_IDENTIFIER + getUnlocalizedName().replace("item.", ""));
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack stack)
+    {
+        return hasEffect;
+    }
 }
