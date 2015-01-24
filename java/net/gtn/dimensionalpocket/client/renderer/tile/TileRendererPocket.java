@@ -30,7 +30,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     
     static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
-        Colour colour = Colour.DARK_GREY.copy();
+        Colour colour = Colour.WHITE.copy();
         colour.a = 100.0 / 255;
         stateColours.put(PocketSideState.NONE, colour);
         
@@ -41,8 +41,8 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
-    private boolean inRange;
-    private float stateColorLevel;
+    protected boolean inRange;
+    protected float stateColorLevel;
     private ItemStack itemStack;
     
     private static final int planeCount = 15;
@@ -50,14 +50,15 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private Random random = new Random(31100L);
 
-    private ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    private ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
-    private ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
+    protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
+    protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
+    protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
-    private ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
-    private EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
+    private static ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
+    protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
+    
+    protected EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
     {
-        ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
         //overlays.put(FlowState.NONE, basicOverlay);
         overlays.put(PocketSideState.ENERGY, basicOverlay);
     }
@@ -74,6 +75,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             Minecraft.getMinecraft().renderEngine.bindTexture(texture);
         else
             super.bindTexture(texture);
+    }
+    
+    protected void updateStateColorLevel() {
+        long colorCycleTime = 1337L;
+        double minColorLevel = 0.5;
+        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
     }
 
     /**
@@ -98,17 +105,17 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 
         // Y Neg
-        drawPlane(0, x, y, z, 0.001F);
+        drawPlane(0, x, y, z, 0.001, 1.0);
         // Y Pos
-        drawPlane(1, x, y, z, 0.999F);
+        drawPlane(1, x, y, z, 0.999, 1.0);
         // Z Neg
-        drawPlane(2, x, y, z, 0.001F);
+        drawPlane(2, x, y, z, 0.001, 1.0);
         // Z Pos
-        drawPlane(3, x, y, z, 0.999F);
+        drawPlane(3, x, y, z, 0.999, 1.0);
         // X Neg
-        drawPlane(4, x, y, z, 0.001F);
+        drawPlane(4, x, y, z, 0.001, 1.0);
         // X Pos
-        drawPlane(5, x, y, z, 0.999F);
+        drawPlane(5, x, y, z, 0.999, 1.0);
 
         glDisable(GL_LIGHTING);
 
@@ -122,16 +129,13 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         else
             instance.setBrightness(220);
         
-        
-        long colorCycleTime = 1337L;
-        double minColorLevel = 0.5;
-        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
+        updateStateColorLevel();
 
-        renderFaces(x, y, z, 0, null, false);
+        renderFaces(x, y, z, 0, null, pocketFrame);
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
-        renderFaces(x, y, z, 0.0001d, pocket, true);
+        renderFaces(x, y, z, 0.0001d, pocket, null);
 
         glDisable(GL_BLEND);
 
@@ -150,8 +154,8 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
      * @param instance
      * @return
      */
-    private boolean prepareRenderForSide(boolean isOverlay, ForgeDirection side, Pocket pocket, Tessellator instance) {
-        if (isOverlay) {
+    protected boolean prepareRenderForSide(ResourceLocation texture, ForgeDirection side, Pocket pocket, Tessellator instance) {
+        if (texture == null) {
             PocketSideState state = (pocket == null) ? PocketSideState.NONE : pocket.getFlowState(side);
             ResourceLocation overlayTexture = overlays.get(state);
             if (overlayTexture == null)
@@ -166,18 +170,18 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                                     (float) c.a);
         } else {
             instance.startDrawingQuads();
-            bindTexture(pocketFrame);
+            bindTexture(texture);
             instance.setColorRGBA(255, 255, 255, 255);
         }
         return true;
     }
 
-    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, boolean isOverlay) {
+    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, ResourceLocation texture) {
         Tessellator instance = Tessellator.instance;
 
         // @formatter:off
 		// Y Neg
-        if (prepareRenderForSide(isOverlay, ForgeDirection.DOWN, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.DOWN, pocket, instance)) {
     		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 0.0D);
@@ -186,7 +190,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Y Pos
-        if (prepareRenderForSide(isOverlay, ForgeDirection.UP, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.UP, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 0.0D);
@@ -195,7 +199,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Neg
-        if (prepareRenderForSide(isOverlay, ForgeDirection.NORTH, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.NORTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 0.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 1.0D, 0.0D);
@@ -204,7 +208,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Pos
-        if (prepareRenderForSide(isOverlay, ForgeDirection.SOUTH, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.SOUTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 0.0D, 0.0D);
@@ -213,7 +217,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Neg
-        if (prepareRenderForSide(isOverlay, ForgeDirection.WEST, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.WEST, pocket, instance)) {
     		instance.addVertexWithUV(x - offset, y       , z         , 1.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 0.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
@@ -222,7 +226,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Pos
-        if (prepareRenderForSide(isOverlay, ForgeDirection.EAST, pocket, instance)) {
+        if (prepareRenderForSide(texture, ForgeDirection.EAST, pocket, instance)) {
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 0.0D, 1.0D);
@@ -233,7 +237,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 		// @formatter:on
     }
 
-    private void drawPlane(int side, double x, double y, double z, float offset) {
+    protected void drawPlane(int side, double x, double y, double z, double offset, double scale) {
         float dX = (float) TileEntityRendererDispatcher.staticPlayerX;
         float dY = (float) TileEntityRendererDispatcher.staticPlayerY;
         float dZ = (float) TileEntityRendererDispatcher.staticPlayerZ;
@@ -244,26 +248,26 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         if (inRange) {
             switch (side) {
                 case 0:
-                    drawPlaneYNeg(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneYNeg(dX, dY, dZ, x, y, z, offset, scale);
                     break;
                 case 1:
-                    drawPlaneYPos(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneYPos(dX, dY, dZ, x, y, z, offset, scale);
                     break;
                 case 2:
-                    drawPlaneZNeg(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneZNeg(dX, dY, dZ, x, y, z, offset, scale);
                     break;
                 case 3:
-                    drawPlaneZPos(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneZPos(dX, dY, dZ, x, y, z, offset, scale);
                     break;
                 case 4:
-                    drawPlaneXNeg(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneXNeg(dX, dY, dZ, x, y, z, offset, scale);
                     break;
                 case 5:
-                    drawPlaneXPos(dX, dY, dZ, x, y, z, offset);
+                    drawPlaneXPos(dX, dY, dZ, x, y, z, offset, scale);
                     break;
             }
         } else {
-            renderOutOfRange(side, x, y, z, offset);
+            renderOutOfRange(side, x, y, z, offset, scale);
         }
 
         glDisable(GL_BLEND);
@@ -275,7 +279,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    public void renderOutOfRange(int side, double x, double y, double z, float offset) {
+    public void renderOutOfRange(int side, double x, double y, double z, double offset, double scale) {
         glPushMatrix();
         bindTexture(reducedParticleField);
         Tessellator instance = Tessellator.instance;
@@ -289,45 +293,45 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 		switch (side) {
 		    case 0:
 		        // Y Neg
-		    	instance.addVertexWithUV(x + 1.0D, y + offset, z, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y + offset, z + 1.0D, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x, y + offset, z + 1.0D, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x, y + offset, z, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x + scale, y + offset, z,         1.0D, 1.0D);
+		    	instance.addVertexWithUV(x + scale, y + offset, z + scale, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x,         y + offset, z + scale, 0.0D, 0.0D);
+		    	instance.addVertexWithUV(x,         y + offset, z,         0.0D, 1.0D);
 		    	break;
 		    case 1:
 		        // Y Pos
-		    	instance.addVertexWithUV(x, y + offset, z + 1.0D, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y + offset, z + 1.0D, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y + offset, z, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x, y + offset, z, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x,         y + offset, z + scale, 1.0D, 1.0D);
+		    	instance.addVertexWithUV(x + scale, y + offset, z + scale, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x + scale, y + offset, z,         0.0D, 0.0D);
+		    	instance.addVertexWithUV(x,         y + offset, z,         0.0D, 1.0D);
 		    	break;
 		    case 2:
 		    	// Z Neg
-		    	instance.addVertexWithUV(x, y, z + offset, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x, y + 1.0D, z + offset, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y + 1.0D, z + offset, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y, z + offset, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x,         y,         z + offset, 1.0D, 1.0D);
+		    	instance.addVertexWithUV(x,         y + scale, z + offset, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x + scale, y + scale, z + offset, 0.0D, 0.0D);
+		    	instance.addVertexWithUV(x + scale, y,         z + offset, 0.0D, 1.0D);
 		    	break;
 		    case 3:
 		    	// Z Pos
-		    	instance.addVertexWithUV(x, y + 1.0D, z + offset, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x, y, z + offset, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y, z + offset, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x + 1.0D, y + 1.0D, z + offset, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x,         y + scale, z + offset, 1.0D, 1.0D);
+		    	instance.addVertexWithUV(x,         y,         z + offset, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x + scale, y,         z + offset, 0.0D, 0.0D);
+		    	instance.addVertexWithUV(x + scale, y + scale, z + offset, 0.0D, 1.0D);
 		    	break;
 		    case 4:
 		    	// X NEG
-		    	instance.addVertexWithUV(x + offset, y, z, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x + offset, y, z + 1.0D, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x + offset, y + 1.0D, z + 1.0D, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x + offset, y + 1.0D, z, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x + offset, y,         z, 1.0D, 1.0D);
+		    	instance.addVertexWithUV(x + offset, y,         z + scale, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x + offset, y + scale, z + scale, 0.0D, 0.0D);
+		    	instance.addVertexWithUV(x + offset, y + scale, z, 0.0D, 1.0D);
 		    	break;
 		    case 5:
 		    	// X POS
-		    	instance.addVertexWithUV(x + offset, y + 1.0D, z, 1.0D, 1.0D);
-		    	instance.addVertexWithUV(x + offset, y + 1.0D, z + 1.0D, 1.0D, 0.0D);
-		    	instance.addVertexWithUV(x + offset, y, z + 1.0D, 0.0D, 0.0D);
-		    	instance.addVertexWithUV(x + offset, y, z, 0.0D, 1.0D);
+		    	instance.addVertexWithUV(x + offset, y + scale, z,         1.0D, 1.0D);
+		    	instance.addVertexWithUV(x + offset, y + scale, z + scale, 1.0D, 0.0D);
+		    	instance.addVertexWithUV(x + offset, y,         z + scale, 0.0D, 0.0D);
+		    	instance.addVertexWithUV(x + offset, y,         z,         0.0D, 1.0D);
 		    	break;
 		    default:
 		}
@@ -339,7 +343,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    public void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -401,10 +405,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x, y + offset, z);
-			tessellator.addVertex(x, y + offset, z + 1.0D);
-			tessellator.addVertex(x + 1.0D, y + offset, z + 1.0D);
-			tessellator.addVertex(x + 1.0D, y + offset, z);
+			tessellator.addVertex(x,         y + offset, z);
+			tessellator.addVertex(x,         y + offset, z + scale);
+			tessellator.addVertex(x + scale, y + offset, z + scale);
+			tessellator.addVertex(x + scale, y + offset, z);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();
@@ -412,7 +416,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
     }
 
-    public void drawPlaneYNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneYNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -474,10 +478,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x,        y + offset, z + 1.0D);
-			tessellator.addVertex(x,        y + offset, z       );
-			tessellator.addVertex(x + 1.0D, y + offset, z       );
-			tessellator.addVertex(x + 1.0D, y + offset, z + 1.0D);
+			tessellator.addVertex(x,         y + offset, z + scale);
+			tessellator.addVertex(x,         y + offset, z       );
+			tessellator.addVertex(x + scale, y + offset, z       );
+			tessellator.addVertex(x + scale, y + offset, z + scale);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();
@@ -485,7 +489,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
     }
 
-    public void drawPlaneZPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneZPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -547,10 +551,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x, y + 1.0D, z + offset);
-			tessellator.addVertex(x, y, z + offset);
-			tessellator.addVertex(x + 1.0D, y, z + offset);
-			tessellator.addVertex(x + 1.0D, y + 1.0D, z + offset);
+			tessellator.addVertex(x,         y + scale, z + offset);
+			tessellator.addVertex(x,         y,         z + offset);
+			tessellator.addVertex(x + scale, y,         z + offset);
+			tessellator.addVertex(x + scale, y + scale, z + offset);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();
@@ -558,7 +562,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
     }
 
-    public void drawPlaneZNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneZNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -620,10 +624,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x, y, z + offset);
-			tessellator.addVertex(x, y + 1.0D, z + offset);
-			tessellator.addVertex(x + 1.0D, y + 1.0D, z + offset);
-			tessellator.addVertex(x + 1.0D, y, z + offset);
+			tessellator.addVertex(x,         y,         z + offset);
+			tessellator.addVertex(x,         y + scale, z + offset);
+			tessellator.addVertex(x + scale, y + scale, z + offset);
+			tessellator.addVertex(x + scale, y,         z + offset);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();
@@ -631,7 +635,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
     }
 
-    public void drawPlaneXPos(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneXPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -693,10 +697,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x + offset, y + 1.0D, z);
-			tessellator.addVertex(x + offset, y + 1.0D, z + 1.0D);
-			tessellator.addVertex(x + offset, y, z + 1.0D);
-			tessellator.addVertex(x + offset, y, z);
+			tessellator.addVertex(x + offset, y + scale, z);
+			tessellator.addVertex(x + offset, y + scale, z + scale);
+			tessellator.addVertex(x + offset, y,         z + scale);
+			tessellator.addVertex(x + offset, y,         z);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();
@@ -704,7 +708,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
     }
 
-    public void drawPlaneXNeg(float dX, float dY, float dZ, double x, double y, double z, float offset) {
+    private void drawPlaneXNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         for (int count = 0; count < planeCount; ++count) {
             glPushMatrix();
             float f5 = 16 - count;
@@ -766,10 +770,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             tessellator.setBrightness(fieldBrightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x + offset, y, z);
-			tessellator.addVertex(x + offset, y, z + 1.0D);
-			tessellator.addVertex(x + offset, y + 1.0D, z + 1.0D);
-			tessellator.addVertex(x + offset, y + 1.0D, z);
+			tessellator.addVertex(x + offset, y,         z);
+			tessellator.addVertex(x + offset, y,         z + scale);
+			tessellator.addVertex(x + offset, y + scale, z + scale);
+			tessellator.addVertex(x + offset, y + scale, z);
 			// @formatter:on
             tessellator.draw();
             glPopMatrix();

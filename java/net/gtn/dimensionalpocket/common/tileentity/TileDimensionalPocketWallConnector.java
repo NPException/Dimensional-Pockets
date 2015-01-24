@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
@@ -57,6 +58,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
         	        System.out.println("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
         	        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
         	        invalidate();
+        	        markForUpdate();
         	    }
         	}
     	}
@@ -181,5 +183,27 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
 		}
 		
 		return 0;
+	}
+	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+	    CoordSet offSet = getCoordSet().asChunkOffset();
+	    
+	    boolean ignoreX = offSet.getX() % 15 == 0;
+	    boolean ignoreY = offSet.getY() % 15 == 0;
+	    boolean ignoreZ = offSet.getZ() % 15 == 0;
+	    
+	    int ox = offSet.getX()-1;
+	    int oy = offSet.getY()-1;
+	    int oz = offSet.getZ()-1;
+	    
+	    return AxisAlignedBB.getBoundingBox(
+	            xCoord - (ignoreX ? 0 : ox),
+	            yCoord - (ignoreY ? 0 : oy),
+	            zCoord - (ignoreZ ? 0 : oz),
+	            xCoord + (ignoreX ? 1 : 14-ox),
+	            yCoord + (ignoreY ? 1 : 14-oy),
+	            zCoord + (ignoreZ ? 1 : 14-oz)
+	            );
 	}
 }

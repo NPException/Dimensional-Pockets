@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import me.jezza.oc.common.blocks.BlockAbstract;
+import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -19,7 +20,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockDimensionalPocketWall extends BlockAbstract implements ITileProvider {
+public class BlockDimensionalPocketWall extends BlockAbstractModel implements ITileProvider {
     
     public static final int CONNECTOR_META = 1;
 
