@@ -42,7 +42,7 @@ public class TilePocketRenderer extends TileEntitySpecialRenderer {
     private static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
         stateColours.put(PocketSideState.NONE, new Colour("#646464", 100));
-        stateColours.put(PocketSideState.ENERGY, new Colour("#00C800", 100));
+        stateColours.put(PocketSideState.ENERGY, new Colour("#10E000", 100));
     }
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
