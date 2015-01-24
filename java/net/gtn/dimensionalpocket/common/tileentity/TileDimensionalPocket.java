@@ -16,6 +16,7 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -86,6 +87,13 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
                 String tempString = itemCompound.getCompoundTag("display").getString("Name");
                 if (!tempString.isEmpty())
                     customName = tempString;
+            }
+            
+            if (entityLivingBase instanceof EntityPlayer) {
+                EntityPlayerMP player = (EntityPlayerMP) entityLivingBase;
+                if (player.getCurrentEquippedItem() == itemStack)
+                    player.destroyCurrentEquippedItem();
+                    System.out.println("test");
             }
         }
 
