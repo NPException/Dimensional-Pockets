@@ -30,10 +30,27 @@ public enum TeleportDirection {
     /** +X  */
     EAST(1, 0, 0), EAST_MINUS_ONE(1, -1, 0),
     
+    /** -Z -X */
+    NORTHWEST(-1, 0, -1), NORTHWEST_MINUS_ONE(-1, -1, -1),
+    
+    /** -Z +X */
+    NORTHEAST(1, 0, -1), NORTHEAST_MINUS_ONE(1, -1, -1),
+    
+    /** +Z -X */
+    SOUTHWEST(-1, 0, 1), SOUTHWEST_MINUS_ONE(-1, -1, 1),
+    
+    /** +Z +X */
+    SOUTHEAST(1, 0, 1), SOUTHEAST_MINUS_ONE(1, -1, 1),
+    
     UNKNOWN(0, 0, 0);
     //@formatter:on
 
-    public static final TeleportDirection[] VALID_DIRECTIONS = { UP, DOWN, NORTH, SOUTH, WEST, EAST, NORTH_MINUS_ONE, SOUTH_MINUS_ONE, WEST_MINUS_ONE, EAST_MINUS_ONE };
+    public static final TeleportDirection[] VALID_DIRECTIONS = {
+        UP, DOWN, NORTH, SOUTH, WEST, EAST,
+        NORTH_MINUS_ONE, SOUTH_MINUS_ONE, WEST_MINUS_ONE, EAST_MINUS_ONE,
+        NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST,
+        NORTHWEST_MINUS_ONE, NORTHEAST_MINUS_ONE, SOUTHWEST_MINUS_ONE, SOUTHEAST_MINUS_ONE
+    };
 
     public final int offsetX;
     public final int offsetY;

@@ -4,8 +4,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.gson.annotations.SerializedName;
-
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
@@ -23,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import com.google.gson.annotations.SerializedName;
 
 public class Pocket {
     
@@ -44,7 +44,7 @@ public class Pocket {
     private Map<ForgeDirection, CoordSet> connectorMap;
     
     @SerializedName("sideStates")
-    private Map<ForgeDirection, PocketSideState> flowMap; // TODO: rename to stateMap before release!
+    private Map<ForgeDirection, PocketSideState> stateMap;
 
     @SerializedName("generated")
     private boolean isGenerated = false;
@@ -71,9 +71,9 @@ public class Pocket {
     }
     
     private Map<ForgeDirection, PocketSideState> getFlowMap() {
-    	if (flowMap == null)
-    		flowMap = new EnumMap<ForgeDirection, PocketSideState>(ForgeDirection.class);
-    	return flowMap;
+    	if (stateMap == null)
+    		stateMap = new EnumMap<ForgeDirection, PocketSideState>(ForgeDirection.class);
+    	return stateMap;
     }
 
     private Pocket() {
@@ -144,50 +144,63 @@ public class Pocket {
     }
 
     public void setFlowState(ForgeDirection side, PocketSideState flowState) {
-    	getFlowMap().put(side, flowState);
-    	getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
+        Utils.enforceServer();
+
+        getFlowMap().put(side, flowState);
+        getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
+
+        World world = PocketRegistry.getWorldForPockets();
+        CoordSet connectorCoords = getConnectorCoords(side);
+        world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
+        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketFrame);
+
+        if (isSourceBlockPlaced()) {
+            CoordSet srcCoords = getBlockCoords();
+            World blockWorld = getBlockWorld();
+            blockWorld.markBlockForUpdate(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ());
+            blockWorld.notifyBlockChange(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ(), ModBlocks.dimensionalPocket);
+        }
     }
     
     private void generateDefaultConnectors() {
         Utils.enforceServer();
         CoordSet root = chunkCoords.toBlockCoords();
-        for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
             switch (side) {
-                case DOWN:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 0, 7)));
-                    break;
-                case UP:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 15, 7)));
-                    break;
-                case NORTH:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 0)));
-                    break;
-                case SOUTH:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 15)));
-                    break;
-                case WEST:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(0, 7, 7)));
-                    break;
-                case EAST:
-                    setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(15, 7, 7)));
-                    break;
-                default:
-                    break;
+            case DOWN:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 0, 7)));
+                break;
+            case UP:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 15, 7)));
+                break;
+            case NORTH:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 0)));
+                break;
+            case SOUTH:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(7, 7, 15)));
+                break;
+            case WEST:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(0, 7, 7)));
+                break;
+            case EAST:
+                setConnectorForSide(side, root.copy().addCoordSet(new CoordSet(15, 7, 7)));
+                break;
+            default:
+                break;
             }
         }
     }
 
     public CoordSet getConnectorCoords(ForgeDirection side) {
-    	Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
+        Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
         if (cMap.isEmpty())
             generateDefaultConnectors();
         return cMap.get(side).copy();
     }
 
     /**
-     * Attempts to set a new connector on a wall for a pocket.
-     * Returns whether it successfully set the new coords.
-     * @return
+     * Attempts to set a new connector on a wall for a pocket. Returns whether
+     * it successfully set the new coords.
      */
     public boolean setConnectorForSide(ForgeDirection side, CoordSet connectorCoords) {
         Utils.enforceServer();
@@ -195,18 +208,37 @@ public class Pocket {
         World world = PocketRegistry.getWorldForPockets();
         if (ModBlocks.dimensionalPocketFrame != connectorCoords.getBlock(world))
             return false;
-        
-        world.setBlockMetadataWithNotify( connectorCoords.getX(),connectorCoords.getY(), connectorCoords.getZ(),
-                                          BlockDimensionalPocketFrame.CONNECTOR_META, 3 );
-        
-    	getConnectorMap().put(side, connectorCoords);
-    	connectorCoords.writeToNBT( getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
-    	return true;
+
+        getConnectorMap().put(side, connectorCoords);
+        connectorCoords.writeToNBT(getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
+
+        world.setBlockMetadataWithNotify(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), BlockDimensionalPocketFrame.CONNECTOR_META, 3);
+        world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
+        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketFrame);
+
+        if (isSourceBlockPlaced()) {
+            CoordSet srcCoords = getBlockCoords();
+            World blockWorld = getBlockWorld();
+            blockWorld.markBlockForUpdate(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ());
+            blockWorld.notifyBlockChange(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ(), ModBlocks.dimensionalPocket);
+        }
+
+        return true;
     }
 
-    public boolean teleportTo(EntityPlayer entityPlayer) {
+    public void teleportTo(EntityPlayer entityPlayer) {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
-            return false;
+            return;
+        
+
+        World world = getBlockWorld();
+        TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        if (teleportSide == TeleportDirection.UNKNOWN) {
+            ChatComponentTranslation comp = new ChatComponentTranslation("info.exit.blocked");
+            comp.getChatStyle().setItalic(Boolean.TRUE);
+            entityPlayer.addChatMessage(comp);
+            return;
+        }
 
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
@@ -224,13 +256,12 @@ public class Pocket {
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
         else
             teleporter.placeInPortal(player, 0, 0, 0, 0);
-
-        return true;
     }
 
-    public boolean teleportFrom(EntityPlayer entityPlayer) {
+    public void teleportFrom(EntityPlayer entityPlayer) {
         if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
-            return false;
+            return;
+        
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
         World world = getBlockWorld();
 
@@ -254,8 +285,6 @@ public class Pocket {
             comp.getChatStyle().setItalic(Boolean.TRUE);
             entityPlayer.addChatMessage(comp);
         }
-
-        return true;
     }
 
     public boolean isSourceBlockPlaced() {
@@ -288,10 +317,6 @@ public class Pocket {
         this.blockCoords.writeToNBT(getNBT(), NBT_BLOCK_COORDS_KEY);
     }
     
-    /*
-     * Purely for compatibility with 0.07.7 saves
-     */
-    @Deprecated
     private CoordSet getSpawnCoords() {
         if (spawnCoords == null) {
             spawnCoords = spawnSet;

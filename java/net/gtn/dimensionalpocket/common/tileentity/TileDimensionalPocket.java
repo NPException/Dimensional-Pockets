@@ -22,12 +22,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider {
+public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider, IEnergyHandler {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
@@ -99,7 +100,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
             return true;
 
         prepareTeleportIntoPocket(player);
-        player.swingItem();
         return true;
     }
 
@@ -208,7 +208,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         if (targetTE instanceof IEnergyReceiver) {
             int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
-            if (!simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket received: " + received + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return received;
         }
 
@@ -224,7 +223,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         if (targetTE instanceof IEnergyProvider) {
             int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
-            if (!simulate) System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket got extracted: " + extracted + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return extracted;
         }
 
@@ -240,11 +238,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         if (targetTE instanceof IEnergyProvider) {
             int stored = ((IEnergyProvider) targetTE).getEnergyStored(from);
-            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return stored;
         } else if (targetTE instanceof IEnergyReceiver) {
             int stored = ((IEnergyReceiver) targetTE).getEnergyStored(from);
-            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket has stored: " + stored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return stored;
         }
 
@@ -260,11 +256,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         if (targetTE instanceof IEnergyProvider) {
             int maxStored = ((IEnergyProvider) targetTE).getMaxEnergyStored(from);
-            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return maxStored;
         } else if (targetTE instanceof IEnergyReceiver) {
             int maxStored = ((IEnergyReceiver) targetTE).getMaxEnergyStored(from);
-            System.out.println("Block (" + targetTE.getBlockType().getLocalizedName() + ") in pocket can store max: " + maxStored + " RF"); // TODO: REMOVE THIS LINE AFTER TESTING
             return maxStored;
         }
 

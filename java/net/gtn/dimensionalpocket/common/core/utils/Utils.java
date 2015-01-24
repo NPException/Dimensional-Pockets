@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -39,6 +40,14 @@ public class Utils {
 
         String rest = string.substring(1).toLowerCase();
         return firstLetter + rest;
+    }
+    
+    public static String translate(String ... keyAndParams) {
+        String result = StatCollector.translateToLocal(keyAndParams[0]);
+        for(int i=1; i<keyAndParams.length; i++) {
+            result = result.replace("{"+(i-1)+"}", keyAndParams[i]);
+        }
+        return result;
     }
 
     public static NBTTagCompound getPlayerPersistTag(EntityPlayer player) {
