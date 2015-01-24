@@ -58,8 +58,9 @@ public class BlockDimensionalPocketFrame extends BlockAbstract implements ITileP
         if (equippedItemStack != null) {
             if (Utils.isItemPocketWrench(equippedItemStack)) {
                 new NetherCrystalHandler().onItemUseFirst(equippedItemStack, player, world, new CoordSet(x, y, z), side, hitVecX, hitVecY, hitVecZ);
+                return true;
             }
-            return true;
+            return false;
         }
 
         if (!player.isSneaking())
