@@ -42,7 +42,8 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     protected boolean inRange;
-    protected float stateColorLevel;
+    private float stateColorLevel;
+    private float fieldTranslation;
     private ItemStack itemStack;
     
     private static final int planeCount = 15;
@@ -82,6 +83,15 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         double minColorLevel = 0.5;
         this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
     }
+    
+    /**
+     * Set time in ms it should take the particle field to translate once completely
+     * @param cycleTime
+     */
+    protected void updateFieldTranslation(float speed) {
+        long cycleTime = (long) (250000L/speed);
+        this.fieldTranslation = System.currentTimeMillis() % cycleTime / ((float) cycleTime);
+    }
 
     /**
      * Method is used by tile and item renderer.
@@ -104,6 +114,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glTranslatef(-0.5F, -0.4F, -0.5F);
         }
 
+        updateFieldTranslation(2F);
         // Y Neg
         drawPlane(0, x, y, z, 0.001, 1.0);
         // Y Pos
@@ -385,7 +396,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
@@ -458,7 +469,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
@@ -531,7 +542,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
@@ -604,7 +615,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
@@ -677,7 +688,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
@@ -750,7 +761,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glMatrixMode(5890);
             glPushMatrix();
             glLoadIdentity();
-            glTranslatef(0.0F, System.currentTimeMillis() % 700000L / 250000.0F, 0.0F);
+            glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
             glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);

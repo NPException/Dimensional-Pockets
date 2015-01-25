@@ -15,6 +15,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TileRendererPocketWall extends TileRendererPocket {
     
+    private static ResourceLocation innerPocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocketInside.png");
     private static ResourceLocation wallConnector = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_wall_connector.png");
     
     public TileRendererPocketWall() {
@@ -58,8 +59,9 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int oz = (offZ == 0) ? 0 : offZ-1;
         
         double offset = (wallVisibleSide.ordinal() % 2 == 0) ? 0.001 : 0.999;
-        
-        drawPlane(wallVisibleSide.ordinal(), x-ox, y-oy, z-oz, offset, 14.0);
+        updateFieldTranslation(3F);
+        //drawPlane(wallVisibleSide.ordinal(), x-ox, y-oy, z-oz, offset, 14.0);
+        drawPlane(wallVisibleSide.ordinal(), x-offX, y-offY, z-offZ, offset, 16.0);
         
         glDisable(GL_LIGHTING);
 
@@ -70,8 +72,8 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
-        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.0001d, 14.0, pocket, pocketFrame);
-        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, null);
+        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, innerPocketFrame);
+        renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.001d, 16.0, pocket, null);
         
         renderFaceOnWall(wallVisibleSide, x, y, z, 0.0015d, 1.0, pocket, wallConnector);
         updateStateColorLevel();

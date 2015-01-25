@@ -17,9 +17,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileDimensionalPocketWallConnector extends TileDP implements IEnergyReceiver, IEnergyProvider, IEnergyHandler {
     
     boolean newTile = true;
-    
-    public TileDimensionalPocketWallConnector() {
-    }
 
     @SideOnly(Side.CLIENT)
     private Pocket pocket;
