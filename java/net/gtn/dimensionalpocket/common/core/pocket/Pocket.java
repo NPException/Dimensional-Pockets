@@ -11,11 +11,13 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -36,6 +38,8 @@ public class Pocket {
     private static final String NBT_CHUNK_COORDS_KEY = "chunkCoords";
     private static final String NBT_BLOCK_COORDS_KEY = "blockCoords";
     private static final String NBT_SPAWN_COORDS_KEY = "spawnCoords";
+    private static final String NBT_SPAWN_COORDS_YAW_KEY = "spawnCoordsYaw";
+    private static final String NBT_SPAWN_COORDS_PITCH_KEY = "spawnCoordsPitch";
     // NBT CONSTANTS END //
     
     private transient NBTTagCompound nbtTagCompound;
@@ -60,6 +64,10 @@ public class Pocket {
     
     @SerializedName("spawnCoords")
     private CoordSet spawnCoords;
+    @SerializedName("spawnCoordsYaw")
+    private float spawnYaw;
+    @SerializedName("spawnCoordsPitch")
+    private float spawnPitch;
     
     @Deprecated
     private CoordSet spawnSet; // renamed to spawnCoords. Needs to stay for compatibility with old saves.
@@ -83,7 +91,7 @@ public class Pocket {
     public Pocket(CoordSet chunkCoords, int blockDim, CoordSet blockCoords) {
         setBlockDim(blockDim);
         setBlockCoords(blockCoords);
-        setSpawnCoords(new CoordSet(7, 1, 7));
+        setSpawnInPocket(new CoordSet(7, 1, 7), 0f, 0f);
         this.chunkCoords = chunkCoords;
     }
 
@@ -126,6 +134,8 @@ public class Pocket {
 
         isGenerated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketWall;
         getNBT().setBoolean(NBT_GENERATED_KEY, isGenerated);
+        
+        generateDefaultConnectors();
     }
 
     public void resetFlowStates() {
@@ -190,7 +200,7 @@ public class Pocket {
 
     public CoordSet getConnectorCoords(ForgeDirection side) {
         Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
-        if (cMap.isEmpty())
+        if (cMap.size() < 6)
             generateDefaultConnectors();
         return cMap.get(side).copy();
     }
@@ -205,6 +215,14 @@ public class Pocket {
         World world = PocketRegistry.getWorldForPockets();
         if (ModBlocks.dimensionalPocketWall != connectorCoords.getBlock(world))
             return false;
+        
+        if (getConnectorMap().size() == 6) { // the check is needed to prevent a stack overflow on first connector creation
+            CoordSet oldCoords = getConnectorCoords(side);
+            TileEntity te = oldCoords.getTileEntity(world);
+            if (te instanceof TileDimensionalPocketWallConnector) {
+                ((TileDimensionalPocketWallConnector) te).invalidateConnector();
+            }
+        }
 
         getConnectorMap().put(side, connectorCoords);
         connectorCoords.writeToNBT(getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
@@ -245,7 +263,7 @@ public class Pocket {
         tempSet.asBlockCoords();
         tempSet.addCoordSet(getSpawnCoords());
 
-        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet);
+        PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet, spawnYaw, spawnPitch);
 
         generatePocketRoom();
 
@@ -266,7 +284,7 @@ public class Pocket {
             TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
             if (teleportSide != TeleportDirection.UNKNOWN) {
                 CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet()).addY(-1);
-                PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, tempBlockSet);
+                PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, tempBlockSet, player.rotationYaw, player.rotationPitch);
 
                 if (blockDim != Reference.DIMENSION_ID)
                     PocketTeleporter.transferPlayerToDimension(player, blockDim, teleporter);
@@ -322,9 +340,14 @@ public class Pocket {
         return spawnCoords;
     }
     
-    public void setSpawnCoords(CoordSet spawnCoords) {
+    public void setSpawnInPocket(CoordSet spawnCoords, float spawnYaw, float spawnPitch) {
         this.spawnCoords = spawnCoords;
         this.spawnCoords.writeToNBT(getNBT(), NBT_SPAWN_COORDS_KEY);
+        
+        this.spawnYaw = spawnYaw;
+        getNBT().setFloat(NBT_SPAWN_COORDS_YAW_KEY, this.spawnYaw);
+        this.spawnPitch = spawnPitch;
+        getNBT().setFloat(NBT_SPAWN_COORDS_PITCH_KEY, this.spawnPitch);
     }
 
     public CoordSet getChunkCoords() {
@@ -386,6 +409,9 @@ public class Pocket {
             
             if (getSpawnCoords() != null)
                 spawnCoords.writeToNBT(nbtTagCompound, NBT_SPAWN_COORDS_KEY);
+            
+            getNBT().setFloat(NBT_SPAWN_COORDS_YAW_KEY, this.spawnYaw);
+            getNBT().setFloat(NBT_SPAWN_COORDS_PITCH_KEY, this.spawnPitch);
         }
         
         return nbtTagCompound;
@@ -413,6 +439,8 @@ public class Pocket {
         
         pocket.isGenerated = pocketTag.getBoolean(NBT_GENERATED_KEY);
         pocket.spawnCoords = CoordSet.readFromNBT(pocketTag, NBT_SPAWN_COORDS_KEY);
+        pocket.spawnYaw = pocketTag.getFloat(NBT_SPAWN_COORDS_YAW_KEY);
+        pocket.spawnPitch = pocketTag.getFloat(NBT_SPAWN_COORDS_PITCH_KEY);
         
         NBTTagCompound stateMap = pocketTag.getCompoundTag(NBT_FLOW_STATE_MAP_KEY);
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {

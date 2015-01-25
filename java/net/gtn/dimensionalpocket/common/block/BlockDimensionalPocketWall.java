@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.common.block;
 
-import me.jezza.oc.common.blocks.BlockAbstract;
 import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import me.jezza.oc.common.utils.CoordSet;

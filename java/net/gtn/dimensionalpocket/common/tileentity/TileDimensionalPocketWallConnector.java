@@ -35,7 +35,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
     private int counter = 0;
     
     /**
-     * Checks periodically if this DPFrameConnector is the valid one for the pocket.
+     * Checks periodically if this DPWallConnector is the valid one for the pocket.
      * If not, it will be invalidated.
      */
     @Override
@@ -44,10 +44,11 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
     	
     	if (newTile) {
     	    newTile = false;
+    	    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, blockMetadata, 3);
     	    System.out.println(getClass().getSimpleName() + " created at " + getCoordSet());
     	}
     	
-    	if (++counter > 10) {
+    	if (++counter > 20) {
     		counter = 0;
     		
     		Pocket p = getPocket();
@@ -56,12 +57,16 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
         	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
         	    if (!getCoordSet().equals(connectorCoords)) {
         	        System.out.println("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
-        	        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
-        	        invalidate();
-        	        markForUpdate();
+        	        invalidateConnector();
         	    }
         	}
     	}
+    }
+    
+    public void invalidateConnector() {
+        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 0, 3);
+        invalidate();
+        markForUpdate();
     }
     
     @Override

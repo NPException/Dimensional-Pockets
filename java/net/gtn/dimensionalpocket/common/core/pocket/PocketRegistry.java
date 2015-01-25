@@ -65,19 +65,6 @@ public class PocketRegistry {
         saveData();
     }
 
-    public static void updatePocketSpawn(CoordSet chunkCoords, CoordSet spawnCoords) {
-        Utils.enforceServer();
-        Pocket link = backLinkMap.get(chunkCoords);
-        if (link == null) {
-            DPLogger.severe("No Pocket for chunkCoords: " + chunkCoords);
-            return;
-        }
-
-        link.setSpawnCoords(spawnCoords);
-
-        saveData();
-    }
-
     public static void saveData() {
         PocketConfig.saveBackLinkMap(backLinkMap);
         PocketConfig.saveCurrentChunk(currentChunk);

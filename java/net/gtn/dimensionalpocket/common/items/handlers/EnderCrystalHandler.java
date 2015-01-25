@@ -13,49 +13,27 @@ import net.minecraft.world.World;
 public class EnderCrystalHandler extends UsableHandlerAbstract {
 
     @Override
-    public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, CoordSet coordSet, int side, float hitX, float hitY, float hitZ) {
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.dimension != Reference.DIMENSION_ID)
-            return false;
+            return itemStack;
 
         if (world.isRemote) {
             player.swingItem();
-            return false;
+            return itemStack;
         }
 
+        CoordSet coordSet = new CoordSet(player);
         Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
         if (pocket == null)
-            return false;
+            return itemStack;
 
-        CoordSet spawnCoords = coordSet.asChunkOffset();
-
-        int sx = spawnCoords.getX();
-        int sy = spawnCoords.getY();
-        int sz = spawnCoords.getZ();
-
-        // compensate for wall and ceiling
-
-        //@formatter:off
-        if      (sx == 0)  coordSet.addX(1).addY(-1);
-        else if (sx == 15) coordSet.addX(-1).addY(-1);
-        else if (sz == 0)  coordSet.addZ(1).addY(-1);
-        else if (sz == 15) coordSet.addZ(-1).addY(-1);
-        else if (sy == 15) coordSet.addY(-3);
-
-        spawnCoords = coordSet.asChunkOffset();
-
-        boolean flag = world.isAirBlock(coordSet.getX(), coordSet.getY() + 1, coordSet.getZ())
-                       && world.isAirBlock(coordSet.getX(), coordSet.getY() + 2, coordSet.getZ())
-                       && spawnCoords.getY() <= 12;
-        //@formatter:on
-
-        if (flag) {
-            pocket.setSpawnCoords(spawnCoords);
-//            player.inventory.decrStackSize(player.inventory.currentItem, 1);
-            ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
-            comp.getChatStyle().setItalic(Boolean.TRUE);
-            player.addChatMessage(comp);
-        }
-        return flag;
+        pocket.setSpawnInPocket(coordSet.toChunkOffset(), player.rotationYaw, player.rotationPitch);
+        
+        ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
+        comp.getChatStyle().setItalic(Boolean.TRUE);
+        player.addChatMessage(comp);
+            
+        return itemStack;
     }
 
 }

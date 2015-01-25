@@ -11,11 +11,14 @@ import net.minecraft.world.WorldServer;
 public class PocketTeleporter extends Teleporter {
 
     CoordSet targetSet;
+    float spawnYaw, spawnPitch;
 
-    public PocketTeleporter(WorldServer worldServer, CoordSet targetSet) {
+    public PocketTeleporter(WorldServer worldServer, CoordSet targetSet, float spawnYaw, float spawnPitch) {
         super(worldServer);
         Utils.enforceServer();
         this.targetSet = targetSet.copy();
+        this.spawnYaw = spawnYaw;
+        this.spawnPitch = spawnPitch;
     }
 
     @Override
@@ -29,12 +32,12 @@ public class PocketTeleporter extends Teleporter {
         double posY = targetSet.getY() + 1;
         double posZ = targetSet.getZ() + 0.5F;
 
-        player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
+        player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, spawnYaw, spawnPitch);
         player.fallDistance = 0;
     }
 
-    public static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet) {
-        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet);
+    public static PocketTeleporter createTeleporter(int dimID, CoordSet coordSet, float spawnYaw, float spawnPitch) {
+        return new PocketTeleporter(MinecraftServer.getServer().worldServerForDimension(dimID), coordSet, spawnYaw, spawnPitch);
     }
 
     public static void transferPlayerToDimension(EntityPlayerMP player, int dimID, Teleporter teleporter) {

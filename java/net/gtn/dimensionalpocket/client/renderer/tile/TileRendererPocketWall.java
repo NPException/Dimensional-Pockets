@@ -3,7 +3,6 @@ package net.gtn.dimensionalpocket.client.renderer.tile;
 import static org.lwjgl.opengl.GL11.*;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.client.renderer.Tessellator;
@@ -16,12 +15,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TileRendererPocketWall extends TileRendererPocket {
     
-    private ResourceLocation wallFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket2.png");
+    private static ResourceLocation wallConnector = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_wall_connector.png");
     
     public TileRendererPocketWall() {
         inRange = true;
         // enable overlay for NONE state
-        overlays.put(PocketSideState.NONE, basicOverlay);
+        //overlays.put(PocketSideState.NONE, basicOverlay);
     }
     
     @Override
@@ -69,16 +68,14 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         Tessellator.instance.setBrightness(220);
         
-        long colorCycleTime = 1337L;
-        double minColorLevel = 0.5;
-        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
-        
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
-        renderOnWallFace(wallVisibleSide, x-ox, y-oy, z-oz, 0.0001d, 14.0, pocket, wallFrame);
+        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.0001d, 14.0, pocket, pocketFrame);
+        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, null);
         
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0015d, 1.0, pocket, wallConnector);
         updateStateColorLevel();
-        renderOnWallFace(wallVisibleSide, x, y, z, 0.001d, 1.0, pocket, null);
+        //renderFaceOnWall(wallVisibleSide, x, y, z, 0.002d, 1.0, pocket, null);
 
         glDisable(GL_BLEND);
 
@@ -89,7 +86,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         glPopMatrix();
     }
 
-    private void renderOnWallFace(ForgeDirection side, double x, double y, double z, double offset, double scale, Pocket pocket, ResourceLocation texture) {
+    private void renderFaceOnWall(ForgeDirection side, double x, double y, double z, double offset, double scale, Pocket pocket, ResourceLocation texture) {
         Tessellator instance = Tessellator.instance;
 
         // @formatter:off
