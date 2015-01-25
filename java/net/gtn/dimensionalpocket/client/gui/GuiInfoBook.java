@@ -4,10 +4,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.client.gui.GuiContainerAbstract;
 import me.jezza.oc.client.gui.components.GuiWidget;
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.gui.components.GuiArrow;
 import net.gtn.dimensionalpocket.client.gui.components.GuiItemStack;
-import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.GuiSheet;
 import net.gtn.dimensionalpocket.client.utils.RecipeHelper;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -15,7 +15,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-
 import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)

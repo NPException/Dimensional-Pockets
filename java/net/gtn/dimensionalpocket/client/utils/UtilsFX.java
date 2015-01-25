@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.client.utils;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.particles.PlayerStreamFX;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
@@ -37,7 +38,7 @@ public class UtilsFX {
     }
 
     public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), new Colour(0.1F, 0.1F, 0.1F, 0.5F));
+        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), Colour.WHITE);
 
         Minecraft.getMinecraft().effectRenderer.addEffect(fx);
     }

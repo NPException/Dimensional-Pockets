@@ -9,7 +9,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 import java.util.Random;
 
-import net.gtn.dimensionalpocket.client.utils.Colour;
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;
@@ -25,15 +25,20 @@ import net.minecraft.world.World;
  */
 public class PlayerExplosionFX extends EntityFX {
 
+    private static final Random random = new Random();
+
+    private int particleNumber;
     private Colour colour;
 
     protected PlayerExplosionFX(World world, EntityPlayer player, Random rand, Colour colour) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.5F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.5F));
-        this.colour = colour;
+        this.colour = colour.copy();
         
         motionX = (16 - posX) / 10;
         motionY = (16 - posY) / 10;
         motionZ = (16 - posZ) / 10;
+        
+        particleNumber = random.nextInt(3) + 1;
     }
 
     @Override
@@ -62,9 +67,9 @@ public class PlayerExplosionFX extends EntityFX {
         glEnable(3042);
         glBlendFunc(770, 771);
 
-        UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE);
+        UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE + particleNumber);
 
-        colour.doGL();
+        colour.doGLColor4();
         float interpX = (float) (prevPosX + (posX - prevPosX) * tick - interpPosX);
         float interpY = (float) (prevPosY + (posY - prevPosY) * tick - interpPosY);
         float interpZ = (float) (prevPosZ + (posZ - prevPosZ) * tick - interpPosZ);

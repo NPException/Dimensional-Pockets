@@ -2,8 +2,8 @@ package net.gtn.dimensionalpocket.client.particles;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.client.utils.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;
@@ -19,18 +19,23 @@ import static org.lwjgl.opengl.GL11.*;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
+    private static final Random random = new Random();
+
+    private int particleNumber;
     private Colour colour;
 
     public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand, Colour colour) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.6F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.6F));
         noClip = true;
         particleScale = 0.5F;
-        this.colour = colour;
+        this.colour = colour.copy();
         particleMaxAge = ticksToTake;
 
         motionX = (targetSet.getX() + 0.5F - posX) / ticksToTake;
         motionY = (targetSet.getY() + 0.5F - posY) / ticksToTake;
         motionZ = (targetSet.getZ() + 0.5F - posZ) / ticksToTake;
+        
+        particleNumber = random.nextInt(3) + 1;
     }
 
     @Override
@@ -59,9 +64,9 @@ public class PlayerStreamFX extends EntityFX {
         glEnable(3042);
         glBlendFunc(770, 771);
 
-        UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE);
+        UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE + particleNumber);
 
-        colour.doGL();
+        colour.doGLColor4();
         float interpX = (float) (prevPosX + (posX - prevPosX) * tick - interpPosX);
         float interpY = (float) (prevPosY + (posY - prevPosY) * tick - interpPosY);
         float interpZ = (float) (prevPosZ + (posZ - prevPosZ) * tick - interpPosZ);
