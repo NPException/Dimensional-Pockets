@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common;
 
+import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
 import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -27,6 +29,8 @@ public class CommonProxy implements IGuiHandler {
         registerTileEntities();
 
         InterModConfigHandler.initComms();
+        
+        MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
     }
 
     public void registerTileEntities() {

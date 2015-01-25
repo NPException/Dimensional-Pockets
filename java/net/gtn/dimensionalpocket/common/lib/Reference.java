@@ -17,6 +17,9 @@ public class Reference {
     @ConfigBoolean(category = "Debugging", comment = "If set to \"true\" a RuntimeException will be thrown if there ever\n"
                                                    + "is a client-only method called by the server or vice versa.")
     public static boolean ENFORCE_SIDED_METHODS = false;
+    
+    @ConfigBoolean(category = "Debugging", comment = "Set this to \"true\" if you desperatly want to try to break your world :P")
+    public static boolean CAN_BREAK_POCKET_WALL_IN_CREATIVE = false;
 
     @ConfigInteger(category = "Gameplay")
     public static int DIMENSION_ID = 33;

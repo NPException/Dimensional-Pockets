@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
 import net.gtn.dimensionalpocket.common.core.utils.MovingObjectPositionUtil;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 
@@ -28,6 +30,8 @@ public class ClientProxy extends CommonProxy {
     	
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
+        
+        MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
     }
 
     @Override

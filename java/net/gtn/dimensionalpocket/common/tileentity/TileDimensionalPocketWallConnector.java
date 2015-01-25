@@ -4,6 +4,7 @@ import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -43,7 +44,6 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
     	if (newTile) {
     	    newTile = false;
     	    worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, BlockDimensionalPocketWall.CONNECTOR_META, 3);
-    	    System.out.println(getClass().getSimpleName() + " created at " + getCoordSet());
     	}
     	
     	if (++counter > 20) {
@@ -54,7 +54,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
         	    ForgeDirection wallSide = Pocket.getSideForBlock(getCoordSet().asChunkOffset());
         	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
         	    if (!getCoordSet().equals(connectorCoords)) {
-        	        System.out.println("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
+        	        DPLogger.debug("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
         	        invalidateConnector();
         	    }
         	}
