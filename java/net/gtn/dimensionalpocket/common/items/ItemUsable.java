@@ -1,18 +1,24 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import me.jezza.oc.common.items.ItemAbstract;
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.interfaces.IUsable;
-import net.gtn.dimensionalpocket.common.items.framework.ItemDP;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemUsable extends ItemDP {
+public class ItemUsable extends ItemAbstract {
 
     private final IUsable handler;
+    public boolean hasEffect = false;
 
     public ItemUsable(String name, IUsable handler) {
         super(name);
+        setCreativeTab(DimensionalPockets.creativeTab);
         this.handler = handler;
     }
 
@@ -29,5 +35,17 @@ public class ItemUsable extends ItemDP {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         return handler.onItemRightClick(itemStack, world, player);
+    }
+
+    @Override
+    public String getModIdentifier() {
+        return Reference.MOD_IDENTIFIER;
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack stack)
+    {
+        return hasEffect;
     }
 }

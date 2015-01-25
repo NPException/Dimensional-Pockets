@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.items.ItemUsable;
-import net.gtn.dimensionalpocket.common.items.framework.ItemDP;
 import net.gtn.dimensionalpocket.common.items.handlers.BookHandler;
 import net.gtn.dimensionalpocket.common.items.handlers.EnderCrystalHandler;
 import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
@@ -13,9 +12,9 @@ import net.minecraft.item.crafting.CraftingManager;
 
 public class ModItems {
 
-    public static ItemDP book;
-    public static ItemDP enderCrystal;
-    public static ItemDP netherCrystal;
+    public static ItemUsable book;
+    public static ItemUsable enderCrystal;
+    public static ItemUsable netherCrystal;
 
     public static void init() {
         book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
