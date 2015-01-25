@@ -11,6 +11,7 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class PocketRegistry {
 
@@ -73,6 +74,13 @@ public class PocketRegistry {
     public static void loadData() {
         backLinkMap = PocketConfig.loadBackLinkMap();
         currentChunk = PocketConfig.loadCurrentChunk();
+    }
+    
+    public static void validatePocketConnectors() {
+        for (Pocket pocket : backLinkMap.values()) {
+            // this call will generate the connectors if they do not yet exist
+            pocket.getConnectorCoords(ForgeDirection.UP);
+        }
     }
     
     public static void initChunkLoading() {

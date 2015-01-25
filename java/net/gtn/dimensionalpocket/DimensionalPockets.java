@@ -77,6 +77,7 @@ public class DimensionalPockets {
     @EventHandler
     public void onServerStarted(FMLServerStartingEvent event) {
         PocketRegistry.initChunkLoading();
+        PocketRegistry.validatePocketConnectors();
     }
 
     @EventHandler
