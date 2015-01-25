@@ -1,13 +1,11 @@
 itemGroup.dimensionalPockets=Dimensional Pockets
 
-"info.page.maxPage"
-
 tile.dimensionalPocket.name=Dimensional Pocket
 tile.dimensionalPocketFrame.name=Dimensional Pocket Wall
 
 item.infoBookDP.name=Guide To Dimensional Pockets
-item.enderCrystal.name=Ender Crystal
-item.netherCrystal.name=Nether Crystal
+item.endCrystal.name=§5End Crystal§r
+item.netherCrystal.name=§cNether Crystal§r
 
 pocket.side.state.NONE=None
 pocket.side.state.ENERGY=RF Transfer
@@ -20,6 +18,10 @@ info.spawn.set.in.pocket=You have set a new spawn point in the Dimensional Pocke
 info.pocket.side.state.set.to={0} side set to: {1}
 info.pocket.side.connector.set={0} wall connector spot moved.
 
+info.tooltip.shift={0}Press {1}Shift {0}for more info.
+info.tooltip.endCrystal.shift=When used inside a Dimensional Pocket, it will set the spawn point inside that Pocket to the position you are currently at.
+info.tooltip.netherCrystal.shift=You can use this on the face of a Dimensional Pocket to cycle through the transfer modes of that face. (Only RF transfer available atm.) This also works on the inside of the Pocket.\nIf you use this crystal on the inside wall of a Pocket while sneaking, you can set the position of the "Connector" spot on that wall.
+
 info.page.maxPage=9
 
 info.page.recipe.block.id=5
@@ -27,7 +29,7 @@ info.page.recipe.ender.id=6
 info.page.recipe.nether.id=7
 
 info.page.recipe.block=Dimensional Pocket Recipe
-info.page.recipe.ender=Ender Crystal Recipe
+info.page.recipe.ender=End Crystal Recipe
 info.page.recipe.nether=Nether Crystal Recipe
 
 info.page.0=Welcome to Dimensional Pockets.<br> <br>This entire book is to help you along your path to compacting your life within Minecraft.<br>This book will show you how to leave your silly worries of not enough room behind, because this is a whole new level.<br>Using this book is straight forward, just click the arrow at the bottom right.<br>As you can probably tell, this mod doesn't add many things.<br>What we lose in number of things, we gain in functionality.
@@ -36,4 +38,4 @@ info.page.2=To get out, it's simply a shift right click with an empty hand on th
 info.page.3=You can also use redstone with it.<br>So, if you send a redstone signal with a strength of 13 into the north side, then in the block, you'll receive a 13 strength signal from the north wall.<br>On top of that, the blocks stack, eg, if you place a pocket down, and jump into it, you can then place down another and jump into that one.<br>The entire point of this block is that you can compact redstone, machines, and of course, by extension, your entire base.
 info.page.4=On the next pages you will find the recipes for the dimensional pocket and both of the crystals.<br> <br>The crystals also have another function aside from being part of a recipe:<br> <br>If you right click anywhere inside the dimensional pocket with a crystal in your hand, the spawn point for that dimensional pocket will be set to that spot, assuming ,of course, that there are 2 air blocks above it.
 info.page.8=Unfortunately, due to Modjam's rules, we can't add mod support, but post Modjam we will definitely work towards mod support, such as Thermal Expansion and Applied Energistics 2.<br>If you think you'd like a mod to work with us, get in contact. We won't abandon our mod so quickly, expect more stuffs! :D<br>Hope you enjoy it.
-info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NPException<br>      @NPException<br> <br> - ASB2<br>      @IAMASB2<br> <br> <br> <br>Texture Artist:<br> <br> - Gellebgs<br>      @silverangel777
+info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NPException<br>      @NPException<br> <br> <br> <br>Texture Artist:<br> <br> - Gellebgs<br>      @silverangel777

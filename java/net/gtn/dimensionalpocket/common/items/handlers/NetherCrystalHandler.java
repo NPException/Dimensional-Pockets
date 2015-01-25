@@ -1,5 +1,8 @@
 package net.gtn.dimensionalpocket.common.items.handlers;
 
+import java.util.List;
+
+import me.jezza.oc.common.items.ItemInformation;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -86,5 +89,16 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
         ChatComponentText comp = new ChatComponentText(Utils.translate("info.pocket.side.state.set.to", wallSide.name(), newState.translateName()));
         comp.getChatStyle().setItalic(Boolean.TRUE);
         player.addChatMessage(comp);
+    }
+    
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, ItemInformation information) {
+        addShiftInformation(information);
+        
+        String text = Utils.translate("info.tooltip.netherCrystal.shift");
+        List<String> lines = Utils.formatToLines(text, 40);
+        for (String line : lines) {
+            information.addShiftList(line);
+        }
     }
 }

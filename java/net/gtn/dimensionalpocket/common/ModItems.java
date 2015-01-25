@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common;
 
 import net.gtn.dimensionalpocket.common.items.ItemUsable;
 import net.gtn.dimensionalpocket.common.items.handlers.BookHandler;
-import net.gtn.dimensionalpocket.common.items.handlers.EnderCrystalHandler;
+import net.gtn.dimensionalpocket.common.items.handlers.EndCrystalHandler;
 import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
@@ -13,23 +13,15 @@ import net.minecraft.item.crafting.CraftingManager;
 public class ModItems {
 
     public static ItemUsable book;
-    public static ItemUsable enderCrystal;
+    public static ItemUsable endCrystal;
     public static ItemUsable netherCrystal;
 
     public static void init() {
         book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
-        enderCrystal = new ItemUsable(Strings.ENDER_CRYSTAL, new EnderCrystalHandler());
-        enderCrystal.hasEffect = true;
+        endCrystal = new ItemUsable(Strings.END_CRYSTAL, new EndCrystalHandler());
+        endCrystal.hasEffect = true;
         netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL, new NetherCrystalHandler());
         netherCrystal.hasEffect = true;
-    }
-
-    public static ItemStack getNetherCrystal() {
-        return new ItemStack(netherCrystal);
-    }
-
-    public static ItemStack getEnderCrystal() {
-        return new ItemStack(enderCrystal);
     }
 
     @SuppressWarnings("boxing")
@@ -55,7 +47,7 @@ public class ModItems {
                 netherCrystal,
 
                 'E',
-                enderCrystal
+                endCrystal
         );
 
         crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
@@ -76,10 +68,10 @@ public class ModItems {
                 netherCrystal,
             
                 'E',
-                enderCrystal
+                endCrystal
         );
         
-        crafting.addRecipe(getNetherCrystal(),
+        crafting.addRecipe(new ItemStack(netherCrystal),
                 "TTT",
                 "TRT",
                 "TTT",
@@ -91,7 +83,7 @@ public class ModItems {
                 Blocks.redstone_block
         );
         
-        crafting.addRecipe(getEnderCrystal(),
+        crafting.addRecipe(new ItemStack(endCrystal),
                 "EEE",
                 "EGE",
                 "EEE",

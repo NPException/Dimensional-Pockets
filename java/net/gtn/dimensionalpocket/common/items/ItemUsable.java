@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.common.items;
 
 import me.jezza.oc.common.items.ItemAbstract;
+import me.jezza.oc.common.items.ItemInformation;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.interfaces.IUsable;
@@ -47,5 +48,10 @@ public class ItemUsable extends ItemAbstract {
     public boolean hasEffect(ItemStack stack)
     {
         return hasEffect;
+    }
+    
+    @Override
+    protected void addInformation(ItemStack stack, EntityPlayer player, ItemInformation information) {
+        handler.addInformation(stack, player, information);
     }
 }

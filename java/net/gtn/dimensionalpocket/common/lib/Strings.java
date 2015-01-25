@@ -11,7 +11,7 @@ public class Strings {
     public static final String TILE_POCKET_WALL_CONNECTOR = "dimensionalPocketWall_connector";
 
     public static final String INFO_BOOK = "infoBookDP";
-    public static final String ENDER_CRYSTAL = "enderCrystal";
+    public static final String END_CRYSTAL = "endCrystal";
     public static final String NETHER_CRYSTAL = "netherCrystal";
 
     public static final String DIMENSIONAL_POCKET_PARTICLE = "dimensionalParticle";

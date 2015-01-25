@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.interfaces;
 
+import me.jezza.oc.common.items.ItemInformation;
 import me.jezza.oc.common.utils.CoordSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,4 +37,13 @@ public interface IUsable {
      */
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player);
     //@formatter:on
+
+    
+    /**
+     * Called by OmnisCore to get ToolTip information for an Item
+     * @param stack
+     * @param player
+     * @param information
+     */
+    public void addInformation(ItemStack stack, EntityPlayer player, ItemInformation information);
 }

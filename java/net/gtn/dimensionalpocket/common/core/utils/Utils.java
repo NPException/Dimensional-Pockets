@@ -1,5 +1,8 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -43,10 +46,16 @@ public class Utils {
         return firstLetter + rest;
     }
     
-    public static String translate(String ... keyAndParams) {
-        String result = StatCollector.translateToLocal(keyAndParams[0]);
-        for(int i=1; i<keyAndParams.length; i++) {
-            result = result.replace("{"+(i-1)+"}", keyAndParams[i]);
+    public static String translate(String key) {
+        return translate(key, (Object[])null);
+    }
+    
+    public static String translate(String key, Object ... params) {
+        String result = StatCollector.translateToLocal(key);
+        if (params != null) {
+            for(int i=0; i<params.length; i++) {
+                result = result.replace("{"+(i)+"}", String.valueOf(params[i]));
+            }
         }
         return result;
     }
@@ -172,5 +181,28 @@ public class Utils {
         
         String customName = itemCompound.getCompoundTag("display").getString("Name");
         return "Pocket Wrench".equalsIgnoreCase(customName);
+    }
+
+    public static List<String> formatToLines(String text, int maxLineLength) {
+       List<String> lines = new ArrayList<>();
+       for (String part : text.split("\\\\n")) {
+           if (part.length() <= maxLineLength) {
+               lines.add(part);
+           } else {
+               String[] words = part.split(" ");
+               StringBuilder sb = new StringBuilder();
+               for (String word : words) {
+                   String space = (sb.length() == 0) ? "" : " ";
+                   if (sb.length() + space.length() + word.length() > maxLineLength) {
+                       lines.add(sb.toString());
+                       sb = new StringBuilder();
+                       space = "";
+                   }
+                   sb.append(space).append(word);
+               }
+               lines.add(sb.toString());
+           }
+       }
+       return lines;
     }
 }

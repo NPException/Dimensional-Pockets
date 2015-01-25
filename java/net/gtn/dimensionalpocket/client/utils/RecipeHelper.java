@@ -22,7 +22,7 @@ public class RecipeHelper {
         new ItemStack(Items.ender_eye),
         new ItemStack(Items.ender_eye),
         new ItemStack(Items.ender_eye),
-        ModItems.getEnderCrystal()
+        new ItemStack(ModItems.endCrystal)
     };
 
     private static ItemStack[] netherArray = new ItemStack[] {
@@ -35,18 +35,18 @@ public class RecipeHelper {
         new ItemStack(Items.ghast_tear),
         new ItemStack(Items.ghast_tear),
         new ItemStack(Items.ghast_tear),
-        ModItems.getNetherCrystal()
+        new ItemStack(ModItems.netherCrystal)
     };
 
     private static ItemStack[] blockArray = new ItemStack[] {
         new ItemStack(Blocks.stonebrick),
-        ModItems.getNetherCrystal(),
+        new ItemStack(ModItems.endCrystal),
         new ItemStack(Blocks.stonebrick),
         new ItemStack(Blocks.iron_block),
         new ItemStack(Blocks.diamond_block),
         new ItemStack(Blocks.iron_block),
         new ItemStack(Blocks.stonebrick),
-        ModItems.getEnderCrystal(),
+        new ItemStack(ModItems.netherCrystal),
         new ItemStack(Blocks.stonebrick),
         new ItemStack(ModBlocks.dimensionalPocket)
     };
