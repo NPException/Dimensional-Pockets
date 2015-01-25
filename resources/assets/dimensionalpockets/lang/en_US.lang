@@ -24,18 +24,18 @@ info.tooltip.netherCrystal.shift=You can use this on the face of a Dimensional P
 
 info.page.maxPage=9
 
-info.page.recipe.block.id=5
-info.page.recipe.ender.id=6
-info.page.recipe.nether.id=7
+info.page.recipe.endCrystal.id=5
+info.page.recipe.netherCrystal.id=6
+info.page.recipe.block.id=7
 
 info.page.recipe.block=Dimensional Pocket Recipe
-info.page.recipe.ender=End Crystal Recipe
-info.page.recipe.nether=Nether Crystal Recipe
+info.page.recipe.endCrystal=End Crystal Recipe
+info.page.recipe.netherCrystal=Nether Crystal Recipe
 
 info.page.0=Welcome to Dimensional Pockets.<br> <br>This entire book is to help you along your path to compacting your life within Minecraft.<br>This book will show you how to leave your silly worries of not enough room behind, because this is a whole new level.<br>Using this book is straight forward, just click the arrow at the bottom right.<br>As you can probably tell, this mod doesn't add many things.<br>What we lose in number of things, we gain in functionality.
-info.page.1=So, onto the only block, The dimensional pocket.<br>When placed and on right click with an empty hand, you'll enter it. That's right. Enter the block.<br>As a block, by default Minecraft standards, is a 16x16x16 series of pixels.<br>So, likewise, the inside of the block is 14x14x14, as you lose 2 from the walls of the block.
-info.page.2=To get out, it's simply a shift right click with an empty hand on the wall.<br>When the block is broken, it will remain linked to the "block" that you were inside of.<br>And yes, you can get trapped inside it if something breaks it, so be careful.<br>So, while a friend is inside a block, you can break it on him, and carry him around with you.<br>Portable friend.
-info.page.3=You can also use redstone with it.<br>So, if you send a redstone signal with a strength of 13 into the north side, then in the block, you'll receive a 13 strength signal from the north wall.<br>On top of that, the blocks stack, eg, if you place a pocket down, and jump into it, you can then place down another and jump into that one.<br>The entire point of this block is that you can compact redstone, machines, and of course, by extension, your entire base.
-info.page.4=On the next pages you will find the recipes for the dimensional pocket and both of the crystals.<br> <br>The crystals also have another function aside from being part of a recipe:<br> <br>If you right click anywhere inside the dimensional pocket with a crystal in your hand, the spawn point for that dimensional pocket will be set to that spot, assuming ,of course, that there are 2 air blocks above it.
-info.page.8=Unfortunately, due to Modjam's rules, we can't add mod support, but post Modjam we will definitely work towards mod support, such as Thermal Expansion and Applied Energistics 2.<br>If you think you'd like a mod to work with us, get in contact. We won't abandon our mod so quickly, expect more stuffs! :D<br>Hope you enjoy it.
+info.page.1=So, onto the only block, The Dimensional Pocket.<br>When placed and on right click with an empty hand, you'll enter it.<br> <br>That's right.<br> <br>Enter the block.
+info.page.2=To get out, it's simply a shift right click with an empty hand on the wall.<br> <br>Be careful, you can get trapped inside if something breaks the Dimensional Pocket!<br>So, while a friend is inside a Dimensional Pocket, you can break it on him, and carry him around with you.<br> <br>Portable friend. <3
+info.page.3=When you're inside a Dimensional Pocket, you'll notice a strange marked spot on each wall.<br>Those are called Connectors and mark the spots that actually interact with a corresponding face on the outside.<br> <br>You'll figure out everything else on your own. :)
+info.page.4=One more thing:<br> <br>The Dimensional Pocket needs two different crystals in it's crafting recipe. Those crystals do also have uses aside from just being a crafting ingredient.<br> <br>If you want to know those uses, press [Shift] while hovering over a crystal in your inventory.
+info.page.8=If you think you'd like a mod to work with us, get in contact. We won't abandon our mod so quickly, expect more stuffs! :D<br>Hope you enjoy it.
 info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NPException<br>      @NPException<br> <br> <br> <br>Texture Artist:<br> <br> - Gellebgs<br>      @silverangel777

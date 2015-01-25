@@ -39,8 +39,8 @@ public class GuiInfoBook extends GuiContainerAbstract {
 
         String num = StatCollector.translateToLocal("info.page.maxPage");
         String craftingRecipe0 = StatCollector.translateToLocal("info.page.recipe.block.id");
-        String craftingRecipe1 = StatCollector.translateToLocal("info.page.recipe.ender.id");
-        String craftingRecipe2 = StatCollector.translateToLocal("info.page.recipe.nether.id");
+        String craftingRecipe1 = StatCollector.translateToLocal("info.page.recipe.endCrystal.id");
+        String craftingRecipe2 = StatCollector.translateToLocal("info.page.recipe.netherCrystal.id");
         try {
             MAX_PAGE = Integer.parseInt(num);
             CRAFTING_RECIPE_0 = Integer.parseInt(craftingRecipe0);
@@ -112,7 +112,7 @@ public class GuiInfoBook extends GuiContainerAbstract {
         if (tempString == null)
             tempString = "";
 
-        drawWrappedString(tempString, 0, 0, 140, new Colour(0.2F, 0.2F, 0.2F, 1.0F));
+        drawWrappedString(tempString, 0, 0, 140, new Colour(0.2, 0.2, 0.2, 1.0));
 
         glPopMatrix();
     }
@@ -156,10 +156,10 @@ public class GuiInfoBook extends GuiContainerAbstract {
                 sb.append("block");
                 break;
             case 1:
-                sb.append("ender");
+                sb.append("endCrystal");
                 break;
             case 2:
-                sb.append("nether");
+                sb.append("netherCrystal");
                 break;
         }
 
