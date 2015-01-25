@@ -4,10 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -77,9 +80,16 @@ public class PocketRegistry {
     }
     
     public static void validatePocketConnectors() {
+        DPLogger.info("Enforcing valid metadata for wall connector blocks");
+        World pocketWorld = getWorldForPockets();
         for (Pocket pocket : backLinkMap.values()) {
             // this call will generate the connectors if they do not yet exist
-            pocket.getConnectorCoords(ForgeDirection.UP);
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+                CoordSet coords = pocket.getConnectorCoords(side);
+                Block block = coords.getBlock(pocketWorld);
+                if (block == ModBlocks.dimensionalPocketWall)
+                    pocketWorld.setBlockMetadataWithNotify(coords.getX(), coords.getY(), coords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
+            }
         }
     }
     

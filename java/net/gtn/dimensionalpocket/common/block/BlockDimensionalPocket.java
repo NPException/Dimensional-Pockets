@@ -26,6 +26,8 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
     public BlockDimensionalPocket(Material material, String name) {
         super(material, name);
         setHardness(4F);
+        setLightOpacity(255);
+        setLightLevel(1F);
         setResistance(15F);
         setCreativeTab(DimensionalPockets.creativeTab);
     }

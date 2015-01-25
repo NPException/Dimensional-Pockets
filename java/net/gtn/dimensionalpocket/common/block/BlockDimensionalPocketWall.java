@@ -9,7 +9,6 @@ import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,15 +82,15 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
 
         return false;
     }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        // do nothing
-    }
     
     @Override
     public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
        return false;
+    }
+    
+    @Override
+    public boolean hasTileEntity(int metadata) {
+        return metadata == CONNECTOR_META;
     }
     
     @Override
@@ -104,10 +103,5 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
     @Override
     public String getModIdentifier() {
         return Reference.MOD_IDENTIFIER;
-    }
-    
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
     }
 }
