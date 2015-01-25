@@ -28,9 +28,9 @@ info.page.recipe.endCrystal.id=5
 info.page.recipe.netherCrystal.id=6
 info.page.recipe.block.id=7
 
-info.page.recipe.block=Dimensional Pocket Recipe
-info.page.recipe.endCrystal=End Crystal Recipe
-info.page.recipe.netherCrystal=Nether Crystal Recipe
+info.page.recipe.block=§1Dimensional Pocket Recipe§r
+info.page.recipe.endCrystal=§5End Crystal Recipe§r
+info.page.recipe.netherCrystal=§cNether Crystal Recipe§r
 
 info.page.0=Welcome to Dimensional Pockets.<br> <br>This entire book is to help you along your path to compacting your life within Minecraft.<br>This book will show you how to leave your silly worries of not enough room behind, because this is a whole new level.<br>Using this book is straight forward, just click the arrow at the bottom right.<br>As you can probably tell, this mod doesn't add many things.<br>What we lose in number of things, we gain in functionality.
 info.page.1=So, onto the only block, The Dimensional Pocket.<br>When placed and on right click with an empty hand, you'll enter it.<br> <br>That's right.<br> <br>Enter the block.

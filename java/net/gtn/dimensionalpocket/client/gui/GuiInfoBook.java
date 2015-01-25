@@ -25,9 +25,9 @@ public class GuiInfoBook extends GuiContainerAbstract {
     private int currentPage;
 
     private int MAX_PAGE;
-    private int CRAFTING_RECIPE_0;
-    private int CRAFTING_RECIPE_1;
-    private int CRAFTING_RECIPE_2;
+    private int CRAFTING_RECIPE_POCKET;
+    private int CRAFTING_RECIPE_END_CRYSTAL;
+    private int CRAFTING_RECIPE_NETHER_CRYSTAL;
 
     public GuiInfoBook(EntityPlayer player) {
         super(player);
@@ -38,20 +38,20 @@ public class GuiInfoBook extends GuiContainerAbstract {
         ySize = 180;
 
         String num = StatCollector.translateToLocal("info.page.maxPage");
-        String craftingRecipe0 = StatCollector.translateToLocal("info.page.recipe.block.id");
-        String craftingRecipe1 = StatCollector.translateToLocal("info.page.recipe.endCrystal.id");
-        String craftingRecipe2 = StatCollector.translateToLocal("info.page.recipe.netherCrystal.id");
+        String craftingRecipePocket = StatCollector.translateToLocal("info.page.recipe.block.id");
+        String craftingRecipeEndCrystal = StatCollector.translateToLocal("info.page.recipe.endCrystal.id");
+        String craftingRecipeNetherCrystal = StatCollector.translateToLocal("info.page.recipe.netherCrystal.id");
         try {
             MAX_PAGE = Integer.parseInt(num);
-            CRAFTING_RECIPE_0 = Integer.parseInt(craftingRecipe0);
-            CRAFTING_RECIPE_1 = Integer.parseInt(craftingRecipe1);
-            CRAFTING_RECIPE_2 = Integer.parseInt(craftingRecipe2);
+            CRAFTING_RECIPE_POCKET = Integer.parseInt(craftingRecipePocket);
+            CRAFTING_RECIPE_END_CRYSTAL = Integer.parseInt(craftingRecipeEndCrystal);
+            CRAFTING_RECIPE_NETHER_CRYSTAL = Integer.parseInt(craftingRecipeNetherCrystal);
         } catch (NumberFormatException exception) {
             DPLogger.severe("Error in current .lang file. Please make sure that all page numbers are proper numbers.");
             MAX_PAGE = 9;
-            CRAFTING_RECIPE_0 = 5;
-            CRAFTING_RECIPE_0 = 6;
-            CRAFTING_RECIPE_0 = 7;
+            CRAFTING_RECIPE_END_CRYSTAL = 5;
+            CRAFTING_RECIPE_NETHER_CRYSTAL = 6;
+            CRAFTING_RECIPE_POCKET = 7;
         }
     }
 
@@ -89,6 +89,8 @@ public class GuiInfoBook extends GuiContainerAbstract {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
+        glPushMatrix();
+        
         bindTexture();
         drawTexturedModalRect(middleX, middleY, 0, 0, xSize, ySize);
 
@@ -98,6 +100,8 @@ public class GuiInfoBook extends GuiContainerAbstract {
         }
 
         super.drawGuiContainerBackgroundLayer(var1, mouseX, mouseY);
+        
+        glPopMatrix();
     }
 
     @Override
@@ -107,7 +111,11 @@ public class GuiInfoBook extends GuiContainerAbstract {
         float scale = 0.75F;
         glScalef(scale, scale, scale);
 
-        String tempString = StatCollector.translateToLocal(shouldDrawRecipe() ? getRecipeString() : ("info.page." + currentPage));
+        String tempString;
+        if (shouldDrawRecipe())
+            tempString = "§n" + StatCollector.translateToLocal(getRecipeString()) + "§r";
+        else
+            tempString = StatCollector.translateToLocal("info.page." + currentPage);
 
         if (tempString == null)
             tempString = "";
@@ -141,7 +149,11 @@ public class GuiInfoBook extends GuiContainerAbstract {
             int x = (xSize - 135) / 2 + 30;
             int y = ySize / 2 - 70;
 
-            fontRendererObj.drawSplitString(str, x + xOffset, y + yOffset + (fontRendererObj.FONT_HEIGHT * prevLines), length, colour.getInt());
+            if (shouldDrawRecipe()) {
+                fontRendererObj.drawString(str, x + xOffset, y + yOffset + (fontRendererObj.FONT_HEIGHT * prevLines), colour.getInt());
+            } else {
+                fontRendererObj.drawSplitString(str, x + xOffset, y + yOffset + (fontRendererObj.FONT_HEIGHT * prevLines), length, colour.getInt());
+            }
             prevLines += (int) Math.ceil((float) (str.length() * 7) / (float) 165);
         }
     }
@@ -173,11 +185,11 @@ public class GuiInfoBook extends GuiContainerAbstract {
     private int getRecipeType() {
         int type = -1;
 
-        if (currentPage == CRAFTING_RECIPE_0)
+        if (currentPage == CRAFTING_RECIPE_POCKET)
             type = 0;
-        else if (currentPage == CRAFTING_RECIPE_1)
+        else if (currentPage == CRAFTING_RECIPE_END_CRYSTAL)
             type = 1;
-        else if (currentPage == CRAFTING_RECIPE_2)
+        else if (currentPage == CRAFTING_RECIPE_NETHER_CRYSTAL)
             type = 2;
 
         return type;
