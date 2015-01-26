@@ -23,7 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 
 @Config.Controller(configFile = "DimensionalPockets")
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);after:OmnisCore;after:TConstruct;after:Thaumcraft;")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.5,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets {
 
     @Instance(Reference.MOD_ID)
