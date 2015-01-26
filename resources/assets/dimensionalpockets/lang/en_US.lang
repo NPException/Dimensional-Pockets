@@ -28,11 +28,11 @@ info.page.recipe.endCrystal.id=5
 info.page.recipe.netherCrystal.id=6
 info.page.recipe.block.id=7
 
-info.page.recipe.block=§1Dimensional Pocket Recipe§r
-info.page.recipe.endCrystal=§5End Crystal Recipe§r
-info.page.recipe.netherCrystal=§cNether Crystal Recipe§r
+info.page.recipe.block=§1§nDimensional Pocket Recipe§r
+info.page.recipe.endCrystal=§5§nEnd Crystal Recipe§r
+info.page.recipe.netherCrystal=§c§nNether Crystal Recipe§r
 
-info.page.0=Welcome to Dimensional Pockets.<br> <br>This entire book is to help you along your path to compacting your life within Minecraft.<br>This book will show you how to leave your silly worries of not enough room behind, because this is a whole new level.<br>Using this book is straight forward, just click the arrow at the bottom right.<br>As you can probably tell, this mod doesn't add many things.<br>What we lose in number of things, we gain in functionality.
+info.page.0=Welcome to<br>   §1§nDimensional Pockets<br> <br>This entire book is to help you along your path to compacting your life within Minecraft.<br>This book will show you how to leave your silly worries of not enough room behind, because this is a whole new level.<br>Using this book is straight forward, just click the arrow at the bottom right.<br>As you can probably tell, this mod doesn't add many things.<br>What we lose in number of things, we gain in functionality.
 info.page.1=So, onto the only block, The Dimensional Pocket.<br>When placed and on right click with an empty hand, you'll enter it.<br> <br>That's right.<br> <br>Enter the block.
 info.page.2=To get out, it's simply a shift right click with an empty hand on the wall.<br> <br>Be careful, you can get trapped inside if something breaks the Dimensional Pocket!<br>So, while a friend is inside a Dimensional Pocket, you can break it on him, and carry him around with you.<br> <br>Portable friend. <3
 info.page.3=When you're inside a Dimensional Pocket, you'll notice a strange marked spot on each wall.<br>Those are called Connectors and mark the spots that actually interact with a corresponding face on the outside.<br> <br>You'll figure out everything else on your own. :)

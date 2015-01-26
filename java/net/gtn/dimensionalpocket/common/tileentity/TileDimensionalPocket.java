@@ -133,7 +133,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         String creatorLore = null;
         Pocket pocket = getPocket();
         if (pocket != null && pocket.getCreator() != null) {
-            creatorLore = "Creator: §3" + pocket.getCreator();
+            creatorLore = "Creator: §3§o" + pocket.getCreator();
         }
 
         itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + id + "§8 ~", creatorLore);

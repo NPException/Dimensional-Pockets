@@ -113,7 +113,7 @@ public class GuiInfoBook extends GuiContainerAbstract {
 
         String tempString;
         if (shouldDrawRecipe())
-            tempString = "§n" + StatCollector.translateToLocal(getRecipeString()) + "§r";
+            tempString = StatCollector.translateToLocal(getRecipeString());
         else
             tempString = StatCollector.translateToLocal("info.page." + currentPage);
 
