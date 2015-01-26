@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,10 +17,12 @@ import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 
 @Config.Controller(configFile = "DimensionalPockets")
@@ -65,7 +68,8 @@ public class DimensionalPockets {
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-    	// do nothing
+        if (Reference.DO_VERSION_CHECK)
+            FMLCommonHandler.instance().bus().register(new VersionChecker());
     }
     
     @EventHandler

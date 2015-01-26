@@ -14,6 +14,11 @@ public class Reference {
     public static final String CLIENT_PROXY_CLASS = "net.gtn.dimensionalpocket.client.ClientProxy";
     public static final String SERVER_PROXY_CLASS = "net.gtn.dimensionalpocket.common.CommonProxy";
     
+    public static final String MOD_DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets";
+    
+    public static final String REMOTE_VERSION_FILE = "https://raw.githubusercontent.com/NPException42/Dimensional-Pockets/master/latest_versions.json";
+
+    
     @ConfigBoolean(category = "Debugging", comment = "If set to \"true\" a RuntimeException will be thrown if there ever\n"
                                                    + "is a client-only method called by the server or vice versa.")
     public static boolean ENFORCE_SIDED_METHODS = false;
@@ -29,4 +34,7 @@ public class Reference {
 
     @ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
     public static boolean SHOULD_SPAWN_WITH_BOOK = true;
+    
+    @ConfigBoolean(category = "General", comment ="If you do not want the mod to check for more recent versions, set this to \"false\".")
+    public static boolean DO_VERSION_CHECK = true;
 }

@@ -7,10 +7,12 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -205,5 +207,12 @@ public class Utils {
            }
        }
        return lines;
+    }
+    
+    public static ChatComponentText createChatLink(String text, String url) {
+        ChatComponentText link = new ChatComponentText(text);
+        link.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        link.getChatStyle().setUnderlined(Boolean.TRUE);
+        return link;
     }
 }

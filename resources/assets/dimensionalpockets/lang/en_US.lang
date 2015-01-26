@@ -39,3 +39,7 @@ info.page.3=When you're inside a Dimensional Pocket, you'll notice a strange mar
 info.page.4=One more thing:<br> <br>The Dimensional Pocket needs two different crystals in it's crafting recipe. Those crystals do also have uses aside from just being a crafting ingredient.<br> <br>If you want to know those uses, press [Shift] while hovering over a crystal in your inventory.
 info.page.8=If you think you'd like a mod to work with us, get in contact. We won't abandon our mod so quickly, expect more stuffs! :D<br>Hope you enjoy it.
 info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NPException<br>      @NPException<br> <br> <br> <br>Texture Artist:<br> <br> - Gellebgs<br>      @silverangel777
+
+info.update.available.1=§7Version §6[{0}]§7 of Dimensional Pockets is available!
+info.update.available.2=§3You can get it on Curseforge
+info.update.available.clickme=(CLICK ME)
