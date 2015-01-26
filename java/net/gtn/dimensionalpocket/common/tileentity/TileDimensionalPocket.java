@@ -93,12 +93,11 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
                 EntityPlayerMP player = (EntityPlayerMP) entityLivingBase;
                 if (player.getCurrentEquippedItem() == itemStack)
                     player.destroyCurrentEquippedItem();
-                    System.out.println("test");
             }
         }
 
         Pocket pocket = getPocket();
-        pocket.generatePocketRoom();
+        pocket.generatePocketRoom(entityLivingBase.getCommandSenderName());
 
         ChunkLoaderHandler.addPocketToChunkLoader(pocket);
     }
@@ -130,8 +129,14 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         chunkSet.writeToNBT(itemStack.getTagCompound());
 
         int id = chunkSet.getX() * 16 + chunkSet.getY() + 1;
+        
+        String creatorLore = null;
+        Pocket pocket = getPocket();
+        if (pocket != null && pocket.getCreator() != null) {
+            creatorLore = "Creator: §3" + pocket.getCreator();
+        }
 
-        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket " + id + " ~");
+        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + id + "§8 ~", creatorLore);
         return itemStack;
     }
 

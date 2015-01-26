@@ -40,6 +40,7 @@ public class Pocket {
     private static final String NBT_SPAWN_COORDS_KEY = "spawnCoords";
     private static final String NBT_SPAWN_COORDS_YAW_KEY = "spawnCoordsYaw";
     private static final String NBT_SPAWN_COORDS_PITCH_KEY = "spawnCoordsPitch";
+    private static final String NBT_CREATOR_KEY = "creator";
     // NBT CONSTANTS END //
     
     private transient NBTTagCompound nbtTagCompound;
@@ -69,6 +70,9 @@ public class Pocket {
     @SerializedName("spawnCoordsPitch")
     private float spawnPitch;
     
+    @SerializedName("creator")
+    private String creator;
+    
     @Deprecated
     private CoordSet spawnSet; // renamed to spawnCoords. Needs to stay for compatibility with old saves.
 
@@ -78,7 +82,7 @@ public class Pocket {
     	return connectorMap;
     }
     
-    private Map<ForgeDirection, PocketSideState> getFlowMap() {
+    private Map<ForgeDirection, PocketSideState> getSideStateMap() {
     	if (stateMap == null)
     		stateMap = new EnumMap<ForgeDirection, PocketSideState>(ForgeDirection.class);
     	return stateMap;
@@ -95,7 +99,7 @@ public class Pocket {
         this.chunkCoords = chunkCoords;
     }
 
-    public void generatePocketRoom() {
+    public void generatePocketRoom(String creatorName) {
         if (isGenerated)
             return;
 
@@ -135,16 +139,21 @@ public class Pocket {
         isGenerated = world.getBlock((chunkCoords.getX() * 16) + 1, chunkCoords.getY() * 16, (chunkCoords.getZ() * 16) + 1) instanceof BlockDimensionalPocketWall;
         getNBT().setBoolean(NBT_GENERATED_KEY, isGenerated);
         
+        if (creatorName != null && !creatorName.isEmpty()) {
+            this.creator = creatorName;
+            getNBT().setString(NBT_GENERATED_KEY, creatorName);
+        }
+        
         generateDefaultConnectors();
     }
 
     public void resetFlowStates() {
-    	getFlowMap().clear();
+    	getSideStateMap().clear();
     	getNBT().setTag(NBT_FLOW_STATE_MAP_KEY, new NBTTagCompound());
     }
 
     public PocketSideState getFlowState(ForgeDirection side) {
-    	Map<ForgeDirection, PocketSideState> fMap = getFlowMap();
+    	Map<ForgeDirection, PocketSideState> fMap = getSideStateMap();
         if (fMap.containsKey(side))
             return fMap.get(side);
         return PocketSideState.NONE;
@@ -153,7 +162,7 @@ public class Pocket {
     public void setFlowState(ForgeDirection side, PocketSideState flowState) {
         Utils.enforceServer();
 
-        getFlowMap().put(side, flowState);
+        getSideStateMap().put(side, flowState);
         getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
 
         World world = PocketRegistry.getWorldForPockets();
@@ -265,7 +274,7 @@ public class Pocket {
 
         PocketTeleporter teleporter = PocketTeleporter.createTeleporter(dimID, tempSet, spawnYaw, spawnPitch);
 
-        generatePocketRoom();
+        generatePocketRoom(entityPlayer.getCommandSenderName());
 
         if (dimID != Reference.DIMENSION_ID)
             PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
@@ -353,6 +362,10 @@ public class Pocket {
     public CoordSet getChunkCoords() {
         return chunkCoords.copy();
     }
+    
+    public String getCreator() {
+        return creator;
+    }
 
     
 
@@ -383,7 +396,7 @@ public class Pocket {
             nbtTagCompound = new NBTTagCompound();
             
             NBTTagCompound stateMap = new NBTTagCompound();
-            for (Entry<ForgeDirection, PocketSideState> entry : getFlowMap().entrySet()) {
+            for (Entry<ForgeDirection, PocketSideState> entry : getSideStateMap().entrySet()) {
                 ForgeDirection side = entry.getKey();
                 PocketSideState state = entry.getValue();
                 stateMap.setString(side.name(), state.name());
@@ -412,6 +425,9 @@ public class Pocket {
             
             getNBT().setFloat(NBT_SPAWN_COORDS_YAW_KEY, this.spawnYaw);
             getNBT().setFloat(NBT_SPAWN_COORDS_PITCH_KEY, this.spawnPitch);
+            
+            if (creator != null && !creator.isEmpty())
+                nbtTagCompound.setString(NBT_CREATOR_KEY, creator);
         }
         
         return nbtTagCompound;
@@ -442,11 +458,18 @@ public class Pocket {
         pocket.spawnYaw = pocketTag.getFloat(NBT_SPAWN_COORDS_YAW_KEY);
         pocket.spawnPitch = pocketTag.getFloat(NBT_SPAWN_COORDS_PITCH_KEY);
         
+        pocket.creator = pocketTag.getString(NBT_CREATOR_KEY);
+        if (pocket.creator.isEmpty())
+            pocket.creator = null;
+        
+        // basic values must be read out first, so that they wont get lost on NBT generation
+        // while putting in the states
+        
         NBTTagCompound stateMap = pocketTag.getCompoundTag(NBT_FLOW_STATE_MAP_KEY);
         for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
             if (stateMap.hasKey(side.name())) {
                 PocketSideState state = PocketSideState.valueOf(stateMap.getString(side.name()));
-                pocket.getFlowMap().put(side, state);
+                pocket.getSideStateMap().put(side, state);
             }
         }
 

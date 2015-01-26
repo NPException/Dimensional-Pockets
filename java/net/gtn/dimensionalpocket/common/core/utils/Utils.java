@@ -107,8 +107,10 @@ public class Utils {
 
         if (loreStrings != null && loreStrings.length > 0) {
             NBTTagList lore = new NBTTagList();
-            for (String s : loreStrings)
-                lore.appendTag(new NBTTagString(EnumChatFormatting.GRAY + s));
+            for (String s : loreStrings) {
+                if (s != null)
+                    lore.appendTag(new NBTTagString(EnumChatFormatting.GRAY + s));
+            }
             display.setTag("Lore", lore);
         }
 
@@ -159,7 +161,6 @@ public class Utils {
     }
     
     public static boolean isOreDictItem(ItemStack stack, String oreDictName) {
-        enforceServer();
         int targetOreDictID = OreDictionary.getOreID(oreDictName);
         for (int stackOreDictID : OreDictionary.getOreIDs(stack)) {
             if (targetOreDictID == stackOreDictID)
