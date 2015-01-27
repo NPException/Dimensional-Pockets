@@ -25,7 +25,7 @@ public class CommonProxy implements IGuiHandler {
 
     private static final String GIVEN_INFO_BOOK = "givenInfoBook";
 
-    public void runServerSide() {
+    public void initServerSide() {
         registerTileEntities();
 
         InterModConfigHandler.initComms();
@@ -38,7 +38,11 @@ public class CommonProxy implements IGuiHandler {
         GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
     }
 
-    public void runClientSide() {
+    public void initClientSide() {
+        // do nothing
+    }
+    
+    public void postInitClientSide() {
         // do nothing
     }
 

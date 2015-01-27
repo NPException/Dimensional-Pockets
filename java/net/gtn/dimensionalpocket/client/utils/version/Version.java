@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.utils.version;
+package net.gtn.dimensionalpocket.client.utils.version;
 
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 

@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -42,10 +43,18 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion) {
     	// do nothing
     }
+    
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player) {
+        if (!Reference.CAN_BREAK_POCKET_WALL_IN_CREATIVE)
+            return null;
+        
+        return super.getPickBlock(target, world, x, y, z, player);
+    }
 
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z) {
-        return world.provider.dimensionId == Reference.DIMENSION_ID;
+        return (world.provider.dimensionId == Reference.DIMENSION_ID) && Reference.CAN_BREAK_POCKET_WALL_IN_CREATIVE;
     }
 
     @Override

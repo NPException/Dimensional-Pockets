@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.common.core.utils.version;
+package net.gtn.dimensionalpocket.client.utils.version;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,15 +15,12 @@ import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class VersionChecker {
     
@@ -157,16 +154,7 @@ public class VersionChecker {
     }
     
     
-    private boolean nagged;
-    
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void checkUpToDate(PlayerTickEvent evt) {
-        if (nagged) {
-            return;
-        }
-        
-        EntityPlayer player = evt.player;
+    public static void checkUpToDate(EntityPlayer player) {
         Version latest = getLatestVersion();
         if (latest != null) {
             player.addChatMessage(new ChatComponentText(Utils.translate("info.update.available.1", latest.version)));
@@ -175,7 +163,5 @@ public class VersionChecker {
             linkLine.appendSibling(Utils.createChatLink(Utils.translate("info.update.available.clickme"), latest.url));
             player.addChatMessage(linkLine);
         }
-
-        nagged = true;
     }
 }

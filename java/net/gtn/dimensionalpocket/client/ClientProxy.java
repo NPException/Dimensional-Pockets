@@ -1,11 +1,11 @@
 package net.gtn.dimensionalpocket.client;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
+import net.gtn.dimensionalpocket.client.tickhandler.ClientPlayerTickEventHandler;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
@@ -19,19 +19,29 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 
 public class ClientProxy extends CommonProxy {
 
     public static int currentPage = 0;
 
     @Override
-    public void runClientSide() {
+    public void initClientSide() {
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
     	
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
         
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+    }
+    
+    @Override
+    public void postInitClientSide() {
+        FMLCommonHandler.instance().bus().register(new ClientPlayerTickEventHandler());
+
+        ClientPlayerTickEventHandler.hideStuffFromNEI = Loader.isModLoaded("NotEnoughItems");
     }
 
     @Override
