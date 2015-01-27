@@ -67,8 +67,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        Tessellator.instance.setBrightness(220);
         
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
@@ -77,7 +75,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         renderFaceOnWall(wallVisibleSide, x, y, z, 0.0015d, 1.0, pocket, wallConnector);
         updateStateColorLevel();
-        //renderFaceOnWall(wallVisibleSide, x, y, z, 0.002d, 1.0, pocket, null);
 
         glDisable(GL_BLEND);
 

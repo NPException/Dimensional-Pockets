@@ -47,7 +47,9 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     private ItemStack itemStack;
     
     private static final int planeCount = 15;
-    private static final int fieldBrightness = 240;
+    
+    private static final int maxBrightness = 220;
+    private static final int fieldBrightness = maxBrightness;
 
     private Random random = new Random(31100L);
 
@@ -135,16 +137,13 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         Tessellator instance = Tessellator.instance;
 
-        if (tile != null && tile.getWorldObj() != null)
-            instance.setBrightness(tile.getBlockType().getMixedBrightnessForBlock(tile.getWorldObj(), tile.xCoord, tile.yCoord, tile.zCoord));
-        else
-            instance.setBrightness(220);
-        
-        updateStateColorLevel();
+        instance.setBrightness(maxBrightness);
 
         renderFaces(x, y, z, 0, null, pocketFrame);
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
+        
+        updateStateColorLevel();
         
         renderFaces(x, y, z, 0.0001d, pocket, null);
 
@@ -174,6 +173,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             
             instance.startDrawingQuads();
             bindTexture(overlayTexture);
+            instance.setBrightness(maxBrightness);
             Colour c = stateColours.get(state);
             instance.setColorRGBA_F((float) c.r * stateColorLevel,
                                     (float) c.g * stateColorLevel,
@@ -182,6 +182,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         } else {
             instance.startDrawingQuads();
             bindTexture(texture);
+            instance.setBrightness(maxBrightness);
             instance.setColorRGBA(255, 255, 255, 255);
         }
         return true;
