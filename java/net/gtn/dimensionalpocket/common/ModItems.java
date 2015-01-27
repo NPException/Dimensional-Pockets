@@ -18,8 +18,11 @@ public class ModItems {
 
     public static void init() {
         book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
+        book.setMaxStackSize(1);
+        
         endCrystal = new ItemUsable(Strings.END_CRYSTAL, new EndCrystalHandler());
         endCrystal.hasEffect = true;
+        
         netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL, new NetherCrystalHandler());
         netherCrystal.hasEffect = true;
     }
