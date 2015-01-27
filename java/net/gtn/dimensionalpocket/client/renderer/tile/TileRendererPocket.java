@@ -48,7 +48,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     
     private static final int planeCount = 15;
     
-    private static final int maxBrightness = 220;
+    private static final int maxBrightness = 240;
     private static final int fieldBrightness = maxBrightness;
 
     private Random random = new Random(31100L);
