@@ -1,10 +1,9 @@
-**Current Release:** https://github.com/NPException42/Dimensional-Pockets/releases/tag/0.07.7
+**Current Release:** http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets
 
 
+So this is the repo for our Modjam 4 entry. Dimensional Pockets.
 
-So this is the repo for our Modjam 4 entry. Dimensional Pockets
-
-participants are: (in ranking of awesome)
+Members are: (in ranking of awesome)
 Jezza, Nox, gellegbs, NPException
 
 The team name is:
