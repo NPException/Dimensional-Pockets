@@ -7,16 +7,15 @@ item.infoBookDP.name=Guide To Dimensional Pockets
 item.endCrystal.name=§5End Crystal§r
 item.netherCrystal.name=§cNether Crystal§r
 
-pocket.side.state.NONE=None
-pocket.side.state.ENERGY=RF Transfer
+pocket.side.state.NONE=§7§oNone
+pocket.side.state.ENERGY=§6§oRF Transfer
 
 info.trapped.1=You're trapped! Maybe someone broke the Dimensional Pocket...
 info.trapped.2=For some reason, you can't rematerialize! It's almost like there is something blocking it...
 info.exit.blocked=You can't teleport because you would not get back out. There's no free spot around the pocket.
 
 info.spawn.set.in.pocket=You have set a new spawn point in the Dimensional Pocket.
-info.pocket.side.state.set.to={0} side set to: {1}
-info.pocket.side.connector.set={0} wall connector spot moved.
+info.pocket.side.state.set.to=§7§o{0} §8§oside set to: {1}
 
 info.tooltip.shift={0}Press {1}Shift {0}for more info.
 info.tooltip.endCrystal.shift=When used inside a Dimensional Pocket, it will set the spawn point inside that Pocket to the position you are currently at.

@@ -31,13 +31,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     
     static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
-        Colour colour = Colour.WHITE.copy();
-        colour.a = 100.0 / 255.0;
-        stateColours.put(PocketSideState.NONE, colour);
+        Colour white = Colour.WHITE.copy(); white.a = 100.0 / 255.0;
+        Colour green = Colour.GREEN.copy(); green.a = 100.0 / 255.0;
         
-        colour = Colour.GREEN.copy();
-        colour.a = 100.0 / 255.0;
-        stateColours.put(PocketSideState.ENERGY, colour);
+        stateColours.put(PocketSideState.NONE, white);
+        stateColours.put(PocketSideState.ENERGY, green);
     }
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -61,7 +59,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     private static final int fieldBrightness = maxBrightness;
 
     private final Random random = new Random();
-    private final long seed  = random.nextLong()/6; // ensure that it will always be mutliplyable by the side ids
+    private final long seed  = random.nextLong()/6; // ensure that it will always be mutlipliable by the side ids
 
     protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
     protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER
@@ -71,13 +69,16 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
     protected static ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
-    protected static ResourceLocation pocketCorners = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_colorspots.png");
-    protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
+    protected static ResourceLocation pocketSideIndicators = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicators.png");
+    protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_basic.png");
     
     protected EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
     {
-        //overlays.put(FlowState.NONE, basicOverlay);
-        overlays.put(PocketSideState.ENERGY, basicOverlay);
+        if (!Reference.COLOR_BLIND_MODE) {
+            overlays.put(PocketSideState.ENERGY, basicOverlay);
+        } else {
+            overlays.put(PocketSideState.ENERGY, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_gear.png"));
+        }
     }
     
     @Override
@@ -95,9 +96,9 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
     
     protected void updateStateColorLevel() {
-        long colorCycleTime = 1337L;
+        long colorCycleTime = 1337000000L;
         double minColorLevel = 0.5;
-        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.currentTimeMillis()%colorCycleTime) * Math.PI / colorCycleTime));
+        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.nanoTime()%colorCycleTime) * Math.PI / colorCycleTime));
     }
     
     /**
@@ -156,7 +157,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         renderFaces(x, y, z, 0, null, pocketFrame, Colour.WHITE);
         
         if (showColoredSides)
-            renderFaces(x, y, z, 0, null, pocketCorners, null);
+            renderFaces(x, y, z, 0, null, pocketSideIndicators, null);
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
@@ -215,55 +216,55 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         // @formatter:off
 		// Y Neg
         if (prepareRenderForSide(texture, colour, ForgeDirection.DOWN, pocket, instance)) {
-    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y - offset, z + 1.0D   , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y - offset, z + 1.0D   , 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Y Pos
         if (prepareRenderForSide(texture, colour, ForgeDirection.UP, pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z       , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z       , 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Z Neg
         if (prepareRenderForSide(texture, colour, ForgeDirection.NORTH, pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y         , z - offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y         , z - offset, 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Z Pos
         if (prepareRenderForSide(texture, colour, ForgeDirection.SOUTH, pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z + 1.0D + offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z + 1.0D + offset, 1.0D, 0.0D);
     		instance.draw();
         }
 		
 		// X Neg
         if (prepareRenderForSide(texture, colour, ForgeDirection.WEST, pocket, instance)) {
-    		instance.addVertexWithUV(x - offset, y       , z         , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x - offset, y + 1.0D, z         , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y       , z         , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x - offset, y + 1.0D, z         , 0.0D, 0.0D);
     		instance.draw();
         }
 		
 		// X Pos
         if (prepareRenderForSide(texture, colour, ForgeDirection.EAST, pocket, instance)) {
-    		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z + 1.0D  , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z + 1.0D  , 0.0D, 0.0D);
     		instance.draw();
         }
 		

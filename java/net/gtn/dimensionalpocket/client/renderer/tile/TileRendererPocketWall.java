@@ -17,12 +17,30 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class TileRendererPocketWall extends TileRendererPocket {
     
     private static ResourceLocation innerPocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocketInside.png");
-    private static ResourceLocation wallConnector = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_wall_connector.png");
+    private static ResourceLocation wallConnector = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_wall_connector.png");
+    private static ResourceLocation wallConnectorBackground = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_wall_connector_bg.png");
+    
+    private Colour connectorBaseColor = Colour.WHITE.copy();
+    private Colour connectorColor = connectorBaseColor.copy();
+    private Colour connectorBGColour = Colour.WHITE.copy();
+    
+    {
+        connectorBGColour.a = 0.80;
+    }
+    
+    private void updateConnectorColor() {
+        long colorCycleTime = 5000000000L;
+        double minColorLevel = 0.5;
+        double level = (minColorLevel + (1-minColorLevel) * Math.sin((System.nanoTime()%colorCycleTime) * Math.PI / colorCycleTime));
+        
+        connectorColor.r = connectorBaseColor.r * level;
+        connectorColor.g = connectorBaseColor.g * level;
+        connectorColor.b = connectorBaseColor.b * level;
+        connectorColor.a = connectorBaseColor.a * level;
+    }
     
     public TileRendererPocketWall() {
         inRange = true;
-        // enable overlay for NONE state
-        //overlays.put(PocketSideState.NONE, basicOverlay);
     }
     
     @Override
@@ -57,7 +75,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         double offset = (wallVisibleSide.ordinal() % 2 == 0) ? 0.001 : 0.999;
         updateFieldTranslation(3F);
-        //drawPlane(wallVisibleSide.ordinal(), x-ox, y-oy, z-oz, offset, 14.0);
         drawPlane(wallVisibleSide.ordinal(), x-offX, y-offY, z-offZ, offset, 16.0);
         
         glDisable(GL_LIGHTING);
@@ -75,14 +92,16 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         // corners
         if (showColoredSides)
-            renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0015d, 16.0, pocket, pocketCorners, null);
+            renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0015d, 16.0, pocket, pocketSideIndicators, null);
         
         // overlays
         updateStateColorLevel();
         renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.002d, 16.0, pocket, null, null);
         
         // connector
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnector, Colour.WHITE);
+        updateConnectorColor();
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnectorBackground, connectorBGColour);
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnector, connectorColor);
 
         glDisable(GL_BLEND);
 
@@ -101,55 +120,55 @@ public class TileRendererPocketWall extends TileRendererPocket {
         // @formatter:off
 		// Y Neg
         if (side == ForgeDirection.DOWN && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y - offset, z          , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y - offset, z + scale  , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y - offset, z + scale  , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y - offset, z          , 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y - offset, z + scale  , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y - offset, z + scale  , 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Y Pos
         if (side == ForgeDirection.UP && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + scale, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z + scale, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z        , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z        , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + scale, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z + scale, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z        , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + 1.0D + offset, z        , 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Z Neg
         if (side == ForgeDirection.NORTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + scale , z - offset, 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y + scale , z - offset, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y         , z - offset, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y         , z - offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y + scale , z - offset, 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y + scale , z - offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x + scale  , y         , z - offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y         , z - offset, 1.0D, 1.0D);
     		instance.draw();
         }
 		
 		// Z Pos
         if (side == ForgeDirection.SOUTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + scale , z + 1.0D + offset, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y         , z + 1.0D + offset, 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y + scale , z + 1.0D + offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x          , y + scale , z + 1.0D + offset, 0.0D, 0.0D);
+    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + scale  , y         , z + 1.0D + offset, 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + scale  , y + scale , z + 1.0D + offset, 1.0D, 0.0D);
     		instance.draw();
         }
 		
 		// X Neg
         if (side == ForgeDirection.WEST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x - offset, y        , z          , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x - offset, y        , z + scale  , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x - offset, y + scale, z + scale  , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x - offset, y + scale, z          , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y        , z          , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y        , z + scale  , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x - offset, y + scale, z + scale  , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x - offset, y + scale, z          , 0.0D, 0.0D);
     		instance.draw();
         }
 		
 		// X Pos
         if (side == ForgeDirection.EAST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x + 1.0D + offset, y         , z + scale  , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y         , z          , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z          , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z + scale  , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y         , z + scale  , 0.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y         , z          , 1.0D, 1.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z          , 1.0D, 0.0D);
+    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z + scale  , 0.0D, 0.0D);
     		instance.draw();
         }
 		

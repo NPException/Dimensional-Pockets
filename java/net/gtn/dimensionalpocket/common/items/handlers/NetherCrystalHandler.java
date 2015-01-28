@@ -55,10 +55,6 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
                     return false;
                 
                 pocket.setConnectorForSide(wallSide, coordSet);
-                
-                ChatComponentText comp = new ChatComponentText(Utils.translate("info.pocket.side.connector.set", wallSide.name()));
-                comp.getChatStyle().setItalic(Boolean.TRUE);
-                player.addChatMessage(comp);
             } else {
                 cyclePocketSideState(pocket, wallSide, player);
             }
@@ -87,7 +83,6 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
         pocket.setFlowState(wallSide, newState);
         
         ChatComponentText comp = new ChatComponentText(Utils.translate("info.pocket.side.state.set.to", wallSide.name(), newState.translateName()));
-        comp.getChatStyle().setItalic(Boolean.TRUE);
         player.addChatMessage(comp);
     }
     

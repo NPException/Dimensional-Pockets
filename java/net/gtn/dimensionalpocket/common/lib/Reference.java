@@ -7,7 +7,7 @@ public class Reference {
 
     public static final String MOD_ID = "dimensionalPockets";
     public static final String MOD_NAME = "Dimensional Pockets";
-    public static final String VERSION = "0.10.0";
+    public static final String VERSION = "0.10.2";
 
     public static final String MOD_IDENTIFIER = MOD_ID + ":";
 
@@ -63,6 +63,12 @@ public class Reference {
      * GENERAL CONFIGS
      */
     
-    @ConfigBoolean(category = "General", comment ="If you do not want the mod to check for more recent versions, set this to \"false\".")
+    @ConfigBoolean(category = "General", comment = "If you do not want the mod to check for more recent versions, set this to \"false\".")
     public static boolean DO_VERSION_CHECK = true;
+    
+    @ConfigBoolean(category = "General", comment = "If you have a hard time distinguishing colours,"
+                                                 + " you can change this to true.\n"
+                                                 + "Gameplay relevant parts of the mod will be displayed"
+                                                 + "in a less color dependent way then.")
+    public static boolean COLOR_BLIND_MODE = false;
 }
