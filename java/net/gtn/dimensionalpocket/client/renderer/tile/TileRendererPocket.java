@@ -9,6 +9,7 @@ import java.util.Random;
 import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
     static {
         Colour colour = Colour.WHITE.copy();
-        colour.a = 100.0 / 255;
+        colour.a = 100.0 / 255.0;
         stateColours.put(PocketSideState.NONE, colour);
         
         colour = Colour.GREEN.copy();
@@ -40,24 +41,37 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
+    
+    public static boolean showColoredSides = false;
 
     protected boolean inRange;
     private float stateColorLevel;
     private float fieldTranslation;
     private ItemStack itemStack;
     
-    private static final int planeCount = 15;
+    
+    private static final int planeCount = Reference.NUMBER_OF_PARTICLE_PLANES;
+    private static float maxPlaneDepth = 16f;
+    private static float minPlaneDepth = 1f;
+    // add one to planecount because the "tunnel" layer is added
+    private static float planeDepthIncrement = (maxPlaneDepth-minPlaneDepth) / (planeCount+1);
+    
     
     private static final int maxBrightness = 240;
     private static final int fieldBrightness = maxBrightness;
 
-    private Random random = new Random(31100L);
+    private final Random random = new Random();
+    private final long seed  = random.nextLong()/6; // ensure that it will always be mutliplyable by the side ids
 
     protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png");
+    protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER
+                                                            + (Reference.USE_FANCY_RENDERING
+                                                                    ? "textures/misc/particleField.png"
+                                                                    : "textures/misc/particleFieldStatic.png"));
     protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
     protected static ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
+    protected static ResourceLocation pocketCorners = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_colorspots.png");
     protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket_overlay_none.png");
     
     protected EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
@@ -139,13 +153,16 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         instance.setBrightness(maxBrightness);
 
-        renderFaces(x, y, z, 0, null, pocketFrame);
+        renderFaces(x, y, z, 0, null, pocketFrame, Colour.WHITE);
+        
+        if (showColoredSides)
+            renderFaces(x, y, z, 0, null, pocketCorners, null);
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
         updateStateColorLevel();
         
-        renderFaces(x, y, z, 0.0001d, pocket, null);
+        renderFaces(x, y, z, 0.0001d, pocket, null, null);
 
         glDisable(GL_BLEND);
 
@@ -164,7 +181,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
      * @param instance
      * @return
      */
-    protected boolean prepareRenderForSide(ResourceLocation texture, ForgeDirection side, Pocket pocket, Tessellator instance) {
+    protected boolean prepareRenderForSide(ResourceLocation texture, Colour texColour, ForgeDirection side, Pocket pocket, Tessellator instance) {
         if (texture == null) {
             PocketSideState state = (pocket == null) ? PocketSideState.NONE : pocket.getFlowState(side);
             ResourceLocation overlayTexture = overlays.get(state);
@@ -183,17 +200,21 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             instance.startDrawingQuads();
             bindTexture(texture);
             instance.setBrightness(maxBrightness);
-            instance.setColorRGBA(255, 255, 255, 255);
+            // use color code for forge direction if necessary
+            if (texColour == null)
+                texColour = Utils.FD_COLOURS.get(side);
+            
+            instance.setColorRGBA_F((float) texColour.r, (float) texColour.g, (float) texColour.b, (float) texColour.a);
         }
         return true;
     }
 
-    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, ResourceLocation texture) {
+    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, ResourceLocation texture, Colour colour) {
         Tessellator instance = Tessellator.instance;
 
         // @formatter:off
 		// Y Neg
-        if (prepareRenderForSide(texture, ForgeDirection.DOWN, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.DOWN, pocket, instance)) {
     		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 0.0D);
@@ -202,7 +223,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Y Pos
-        if (prepareRenderForSide(texture, ForgeDirection.UP, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.UP, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 0.0D);
@@ -211,7 +232,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Neg
-        if (prepareRenderForSide(texture, ForgeDirection.NORTH, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.NORTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 0.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 1.0D, 0.0D);
@@ -220,7 +241,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Pos
-        if (prepareRenderForSide(texture, ForgeDirection.SOUTH, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.SOUTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 0.0D, 0.0D);
@@ -229,7 +250,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Neg
-        if (prepareRenderForSide(texture, ForgeDirection.WEST, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.WEST, pocket, instance)) {
     		instance.addVertexWithUV(x - offset, y       , z         , 1.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 0.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 0.0D, 1.0D);
@@ -238,7 +259,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Pos
-        if (prepareRenderForSide(texture, ForgeDirection.EAST, pocket, instance)) {
+        if (prepareRenderForSide(texture, colour, ForgeDirection.EAST, pocket, instance)) {
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 0.0D, 1.0D);
@@ -256,8 +277,9 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         glPushMatrix();
         glDisable(GL_LIGHTING);
-        random.setSeed(31100L);
-        if (inRange) {
+        random.setSeed(seed*(side+1)); // ensures different seed per side, but same seed for same side
+        
+        if (inRange && Reference.USE_FANCY_RENDERING) {
             switch (side) {
                 case 0:
                     drawPlaneYNeg(dX, dY, dZ, x, y, z, offset, scale);
@@ -279,7 +301,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                     break;
             }
         } else {
-            renderOutOfRange(side, x, y, z, offset, scale);
+            renderOutOfRangeOrStatic(side, x, y, z, offset, scale);
         }
 
         glDisable(GL_BLEND);
@@ -291,9 +313,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    public void renderOutOfRange(int side, double x, double y, double z, double offset, double scale) {
+    public void renderOutOfRangeOrStatic(int side, double x, double y, double z, double offset, double scale) {
         glPushMatrix();
-        bindTexture(reducedParticleField);
+        
+        if (inRange)
+            bindTexture(particleField);
+        else
+            bindTexture(reducedParticleField);
+        
         Tessellator instance = Tessellator.instance;
         instance.startDrawingQuads();
         instance.setBrightness(fieldBrightness);
@@ -355,13 +382,15 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    private void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+    private void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {        
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -369,7 +398,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -400,7 +429,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dZ, -dY);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -dY);
@@ -409,7 +438,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
@@ -429,12 +458,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
 
     private void drawPlaneYNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -442,7 +473,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -473,7 +504,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dZ, -dY);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectZ * f5 / f9, -dY);
@@ -482,7 +513,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
@@ -502,12 +533,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
 
     private void drawPlaneZPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -515,7 +548,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -546,7 +579,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dY, -dZ);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dZ);
@@ -555,7 +588,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
@@ -575,12 +608,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
 
     private void drawPlaneZNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -588,7 +623,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -619,7 +654,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dX, -dY, -dZ);
             glTranslatef(ActiveRenderInfo.objectX * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dZ);
@@ -628,7 +663,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
@@ -648,12 +683,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
 
     private void drawPlaneXPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -661,7 +698,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -692,7 +729,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dZ, -dY, -dX);
             glTranslatef(ActiveRenderInfo.objectZ * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dX);
@@ -701,7 +738,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;
@@ -721,12 +758,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     }
 
     private void drawPlaneXNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
-        for (int count = 0; count < planeCount; ++count) {
+        int i = -1;
+        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+            i++;
             glPushMatrix();
-            float f5 = 16 - count;
+            float f5 = maxPlaneDepth - depthDecrease;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if (count == 0) {
+            if (i == 0) {
                 bindTexture(tunnel);
                 f7 = 0.1F;
                 f5 = 65.0F;
@@ -734,7 +773,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
-            if (count == 1) {
+            if (i == 1) {
                 bindTexture(particleField);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
@@ -765,7 +804,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glTranslatef(0.0F, fieldTranslation, 0.0F);
             glScalef(f6, f6, f6);
             glTranslatef(0.5F, 0.5F, 0.0F);
-            glRotatef((count * count * 4321 + count * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
+            glRotatef((i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             glTranslatef(-0.5F, -0.5F, 0.0F);
             glTranslatef(-dZ, -dY, -dX);
             glTranslatef(ActiveRenderInfo.objectZ * f5 / f9, ActiveRenderInfo.objectY * f5 / f9, -dX);
@@ -774,7 +813,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if (count == 0) {
+            if (i == 0) {
                 f13 = 1.0F;
                 f12 = 1.0F;
                 f11 = 1.0F;

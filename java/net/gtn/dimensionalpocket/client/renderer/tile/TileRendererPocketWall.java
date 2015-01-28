@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
 import static org.lwjgl.opengl.GL11.*;
+import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -54,10 +55,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int offY = offsetCoords.getY() % 15;
         int offZ = offsetCoords.getZ() % 15;
         
-        int ox = (offX == 0) ? 0 : offX-1;
-        int oy = (offY == 0) ? 0 : offY-1;
-        int oz = (offZ == 0) ? 0 : offZ-1;
-        
         double offset = (wallVisibleSide.ordinal() % 2 == 0) ? 0.001 : 0.999;
         updateFieldTranslation(3F);
         //drawPlane(wallVisibleSide.ordinal(), x-ox, y-oy, z-oz, offset, 14.0);
@@ -70,11 +67,22 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
-        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, innerPocketFrame);
-        renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.001d, 16.0, pocket, null);
+        // frame other offsets and scale because the texture is smaller
+        int ox = (offX == 0) ? 0 : offX-1;
+        int oy = (offY == 0) ? 0 : offY-1;
+        int oz = (offZ == 0) ? 0 : offZ-1;
+        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, innerPocketFrame, Colour.WHITE);
         
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0015d, 1.0, pocket, wallConnector);
+        // corners
+        if (showColoredSides)
+            renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0015d, 16.0, pocket, pocketCorners, null);
+        
+        // overlays
         updateStateColorLevel();
+        renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.002d, 16.0, pocket, null, null);
+        
+        // connector
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnector, Colour.WHITE);
 
         glDisable(GL_BLEND);
 
@@ -85,12 +93,14 @@ public class TileRendererPocketWall extends TileRendererPocket {
         glPopMatrix();
     }
 
-    private void renderFaceOnWall(ForgeDirection side, double x, double y, double z, double offset, double scale, Pocket pocket, ResourceLocation texture) {
+    private void renderFaceOnWall(ForgeDirection side, double x, double y, double z, double offset, double scale,
+            Pocket pocket, ResourceLocation texture, Colour colour) {
+        
         Tessellator instance = Tessellator.instance;
 
         // @formatter:off
 		// Y Neg
-        if (side == ForgeDirection.DOWN && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.DOWN && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 1.0D);
     		instance.addVertexWithUV(x + scale  , y - offset, z          , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + scale  , y - offset, z + scale  , 0.0D, 0.0D);
@@ -99,7 +109,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
 		
 		// Y Pos
-        if (side == ForgeDirection.UP && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.UP && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D + offset, z + scale, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z + scale, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z        , 0.0D, 0.0D);
@@ -108,7 +118,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
 		
 		// Z Neg
-        if (side == ForgeDirection.NORTH && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.NORTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x          , y + scale , z - offset, 0.0D, 1.0D);
     		instance.addVertexWithUV(x + scale  , y + scale , z - offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x + scale  , y         , z - offset, 1.0D, 0.0D);
@@ -117,7 +127,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
 		
 		// Z Pos
-        if (side == ForgeDirection.SOUTH && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.SOUTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x          , y + scale , z + 1.0D + offset, 1.0D, 1.0D);
     		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + scale  , y         , z + 1.0D + offset, 0.0D, 0.0D);
@@ -126,7 +136,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
 		
 		// X Neg
-        if (side == ForgeDirection.WEST && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.WEST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x - offset, y        , z          , 1.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y        , z + scale  , 0.0D, 0.0D);
     		instance.addVertexWithUV(x - offset, y + scale, z + scale  , 0.0D, 1.0D);
@@ -135,7 +145,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
 		
 		// X Pos
-        if (side == ForgeDirection.EAST && prepareRenderForSide(texture, side.getOpposite(), pocket, instance)) {
+        if (side == ForgeDirection.EAST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
     		instance.addVertexWithUV(x + 1.0D + offset, y         , z + scale  , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y         , z          , 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z          , 0.0D, 1.0D);

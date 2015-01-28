@@ -2,9 +2,12 @@ package net.gtn.dimensionalpocket.client.tickhandler;
 
 import java.lang.reflect.Method;
 
+import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -30,6 +33,11 @@ public class ClientPlayerTickEventHandler {
         }
     }
     
+    private static void checkPlayerForNetherCrystal(EntityPlayer player) {
+        ItemStack equippedItem = player.getCurrentEquippedItem();
+        TileRendererPocket.showColoredSides = (equippedItem != null) && (equippedItem.getItem() == ModItems.netherCrystal);
+    }
+    
     
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
@@ -43,5 +51,8 @@ public class ClientPlayerTickEventHandler {
             checkForVersion = false;
             VersionChecker.checkUpToDate(evt.player);
         }
+        
+        // check for Nether Crystal in hand to trigger side color coding of pockets
+        checkPlayerForNetherCrystal(evt.player);
     }
 }

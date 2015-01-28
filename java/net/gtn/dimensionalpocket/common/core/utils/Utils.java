@@ -1,8 +1,10 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -20,6 +22,26 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class Utils {
+    
+    public static EnumMap<ForgeDirection, Colour> FD_COLOURS = new EnumMap<>(ForgeDirection.class);
+    static {
+        // @formatter:off
+        double alpha = 7.0;
+        Colour purple = Colour.PURPLE.copy(); purple.a = alpha;
+        Colour orange = Colour.ORANGE.copy(); orange.a = alpha;
+        Colour yellow = Colour.YELLOW.copy(); yellow.a = alpha;
+        Colour blue = Colour.BLUE.copy(); blue.a = alpha;
+        Colour green = Colour.GREEN.copy(); green.a = alpha;
+        Colour red = Colour.RED.copy(); red.a = alpha;
+        
+        FD_COLOURS.put(ForgeDirection.DOWN,  purple);
+        FD_COLOURS.put(ForgeDirection.UP,    orange);
+        FD_COLOURS.put(ForgeDirection.NORTH, yellow);
+        FD_COLOURS.put(ForgeDirection.SOUTH, blue);
+        FD_COLOURS.put(ForgeDirection.WEST,  green);
+        FD_COLOURS.put(ForgeDirection.EAST,  red);
+        // @formatter:on
+    }
 
     public static ForgeDirection getDirectionFromBitMask(int num) {
         switch (num) {
