@@ -35,7 +35,7 @@ public class ClientPlayerTickEventHandler {
     
     private static void checkPlayerForNetherCrystal(EntityPlayer player) {
         ItemStack equippedItem = player.getCurrentEquippedItem();
-        TileRendererPocket.showColoredSides = (equippedItem != null) && (equippedItem.getItem() == ModItems.netherCrystal);
+        TileRendererPocket.doIndicateSides = (equippedItem != null) && (equippedItem.getItem() == ModItems.netherCrystal);
     }
     
     

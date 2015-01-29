@@ -75,7 +75,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         
         double offset = (wallVisibleSide.ordinal() % 2 == 0) ? 0.001 : 0.999;
         updateFieldTranslation(3F);
-        drawPlane(wallVisibleSide.ordinal(), x-offX, y-offY, z-offZ, offset, 16.0);
+        drawParticleField(wallVisibleSide.ordinal(), x-offX, y-offY, z-offZ, offset, 16.0);
         
         glDisable(GL_LIGHTING);
 
@@ -88,20 +88,24 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int ox = (offX == 0) ? 0 : offX-1;
         int oy = (offY == 0) ? 0 : offY-1;
         int oz = (offZ == 0) ? 0 : offZ-1;
-        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, innerPocketFrame, Colour.WHITE);
+        renderFaceOnWall(wallVisibleSide, x-ox, y-oy, z-oz, 0.001d, 14.0, pocket, Colour.WHITE, innerPocketFrame);
         
         // corners
-        if (showColoredSides)
-            renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0015d, 16.0, pocket, pocketSideIndicators, null);
+        if (doIndicateSides) {
+            renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0015, 16.0, pocket, null, sideIndicators.get(wallVisibleSide));
+            if (Reference.COLOR_BLIND_MODE) {
+                renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0025, 16.0, pocket, Colour.WHITE, colorblindSideIndicators.get(wallVisibleSide.getOpposite()));
+            }
+        }
         
         // overlays
         updateStateColorLevel();
-        renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.002d, 16.0, pocket, null, null);
+        renderFaceOnWall(wallVisibleSide, x-offX, y-offY, z-offZ, 0.0020, 16.0, pocket, null, null);
         
         // connector
         updateConnectorColor();
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnectorBackground, connectorBGColour);
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0025d, 1.0, pocket, wallConnector, connectorColor);
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0030, 1.0, pocket, connectorBGColour, wallConnectorBackground);
+        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0035, 1.0, pocket, connectorColor, wallConnector);
 
         glDisable(GL_BLEND);
 
@@ -113,7 +117,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
     }
 
     private void renderFaceOnWall(ForgeDirection side, double x, double y, double z, double offset, double scale,
-            Pocket pocket, ResourceLocation texture, Colour colour) {
+            Pocket pocket, Colour colour, ResourceLocation texture) {
         
         Tessellator instance = Tessellator.instance;
 

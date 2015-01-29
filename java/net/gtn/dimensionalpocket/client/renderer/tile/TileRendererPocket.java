@@ -40,7 +40,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     
     FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
     
-    public static boolean showColoredSides = false;
+    public static boolean doIndicateSides = false;
 
     protected boolean inRange;
     private float stateColorLevel;
@@ -61,6 +61,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     private final Random random = new Random();
     private final long seed  = random.nextLong()/6; // ensure that it will always be mutlipliable by the side ids
 
+    private static ResourceLocation blank = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/blank.png");
     protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
     protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER
                                                             + (Reference.USE_FANCY_RENDERING
@@ -68,12 +69,32 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                                                                     : "textures/misc/particleFieldStatic.png"));
     protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
-    protected static ResourceLocation pocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
-    protected static ResourceLocation pocketSideIndicators = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicators.png");
+    protected static EnumMap<ForgeDirection, ResourceLocation> frameTextures = new EnumMap<>(ForgeDirection.class);
+    static {
+        ResourceLocation frameTexture = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
+        for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS) {
+            frameTextures.put(fd, frameTexture);
+        }
+    }
+    
+    protected static EnumMap<ForgeDirection, ResourceLocation> sideIndicators = new EnumMap<>(ForgeDirection.class);
+    protected static EnumMap<ForgeDirection, ResourceLocation> colorblindSideIndicators = new EnumMap<>(ForgeDirection.class);
+    static {
+        ResourceLocation indicator = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicators.png");
+        for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS) {
+            sideIndicators.put(fd, indicator);
+            colorblindSideIndicators.put(fd, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicator_cb_" + fd.name() + ".png"));
+        }
+        colorblindSideIndicators.put(ForgeDirection.UP, blank);
+        colorblindSideIndicators.put(ForgeDirection.DOWN, blank);
+    }
+    
+    protected static EnumMap<ForgeDirection, ResourceLocation> noTextures = new EnumMap<>(ForgeDirection.class);
+    
     protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_basic.png");
     
-    protected EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
-    {
+    protected static EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
+    static {
         if (!Reference.COLOR_BLIND_MODE) {
             overlays.put(PocketSideState.ENERGY, basicOverlay);
         } else {
@@ -133,17 +154,17 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         updateFieldTranslation(2F);
         // Y Neg
-        drawPlane(0, x, y, z, 0.001, 1.0);
+        drawParticleField(0, x, y, z, 0.001, 1.0);
         // Y Pos
-        drawPlane(1, x, y, z, 0.999, 1.0);
+        drawParticleField(1, x, y, z, 0.999, 1.0);
         // Z Neg
-        drawPlane(2, x, y, z, 0.001, 1.0);
+        drawParticleField(2, x, y, z, 0.001, 1.0);
         // Z Pos
-        drawPlane(3, x, y, z, 0.999, 1.0);
+        drawParticleField(3, x, y, z, 0.999, 1.0);
         // X Neg
-        drawPlane(4, x, y, z, 0.001, 1.0);
+        drawParticleField(4, x, y, z, 0.001, 1.0);
         // X Pos
-        drawPlane(5, x, y, z, 0.999, 1.0);
+        drawParticleField(5, x, y, z, 0.999, 1.0);
 
         glDisable(GL_LIGHTING);
 
@@ -154,16 +175,20 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         instance.setBrightness(maxBrightness);
 
-        renderFaces(x, y, z, 0, null, pocketFrame, Colour.WHITE);
+        renderFaces(x, y, z, 0, null, Colour.WHITE, frameTextures);
         
-        if (showColoredSides)
-            renderFaces(x, y, z, 0, null, pocketSideIndicators, null);
+        if (doIndicateSides) {
+            renderFaces(x, y, z, 0.0001, null, null, sideIndicators);
+            if (Reference.COLOR_BLIND_MODE) {
+                renderFaces(x, y, z, 0.0003, null, Colour.WHITE, colorblindSideIndicators);
+            }
+        }
 
         Pocket pocket = (tile == null) ? null : tile.getPocket();
         
         updateStateColorLevel();
         
-        renderFaces(x, y, z, 0.0001d, pocket, null, null);
+        renderFaces(x, y, z, 0.0002, pocket, null, noTextures);
 
         glDisable(GL_BLEND);
 
@@ -210,12 +235,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         return true;
     }
 
-    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, ResourceLocation texture, Colour colour) {
+    private void renderFaces(double x, double y, double z, double offset, Pocket pocket, Colour colour, EnumMap<ForgeDirection, ResourceLocation> textures) {
         Tessellator instance = Tessellator.instance;
 
         // @formatter:off
 		// Y Neg
-        if (prepareRenderForSide(texture, colour, ForgeDirection.DOWN, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.DOWN), colour, ForgeDirection.DOWN, pocket, instance)) {
     		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z          , 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y - offset, z + 1.0D   , 0.0D, 1.0D);
@@ -224,7 +249,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Y Pos
-        if (prepareRenderForSide(texture, colour, ForgeDirection.UP, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.UP), colour, ForgeDirection.UP, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D + offset, z + 1.0D, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z + 1.0D, 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D + offset, z       , 0.0D, 1.0D);
@@ -233,7 +258,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Neg
-        if (prepareRenderForSide(texture, colour, ForgeDirection.NORTH, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.NORTH), colour, ForgeDirection.NORTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z - offset, 1.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y + 1.0D  , z - offset, 0.0D, 0.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z - offset, 0.0D, 1.0D);
@@ -242,7 +267,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// Z Pos
-        if (prepareRenderForSide(texture, colour, ForgeDirection.SOUTH, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.SOUTH), colour, ForgeDirection.SOUTH, pocket, instance)) {
     		instance.addVertexWithUV(x          , y + 1.0D  , z + 1.0D + offset, 0.0D, 0.0D);
     		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 0.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D   , y         , z + 1.0D + offset, 1.0D, 1.0D);
@@ -251,7 +276,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Neg
-        if (prepareRenderForSide(texture, colour, ForgeDirection.WEST, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.WEST), colour, ForgeDirection.WEST, pocket, instance)) {
     		instance.addVertexWithUV(x - offset, y       , z         , 0.0D, 1.0D);
     		instance.addVertexWithUV(x - offset, y       , z + 1.0D  , 1.0D, 1.0D);
     		instance.addVertexWithUV(x - offset, y + 1.0D, z + 1.0D  , 1.0D, 0.0D);
@@ -260,7 +285,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         }
 		
 		// X Pos
-        if (prepareRenderForSide(texture, colour, ForgeDirection.EAST, pocket, instance)) {
+        if (prepareRenderForSide(textures.get(ForgeDirection.EAST), colour, ForgeDirection.EAST, pocket, instance)) {
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z + 1.0D  , 0.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y        , z         , 1.0D, 1.0D);
     		instance.addVertexWithUV(x + 1.0D + offset, y + 1.0D , z         , 1.0D, 0.0D);
@@ -271,7 +296,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 		// @formatter:on
     }
 
-    protected void drawPlane(int side, double x, double y, double z, double offset, double scale) {
+    protected void drawParticleField(int side, double x, double y, double z, double offset, double scale) {
         float dX = (float) TileEntityRendererDispatcher.staticPlayerX;
         float dY = (float) TileEntityRendererDispatcher.staticPlayerY;
         float dZ = (float) TileEntityRendererDispatcher.staticPlayerZ;
@@ -302,7 +327,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                     break;
             }
         } else {
-            renderOutOfRangeOrStatic(side, x, y, z, offset, scale);
+            renderParticleFieldOutOfRangeOrStatic(side, x, y, z, offset, scale);
         }
 
         glDisable(GL_BLEND);
@@ -314,7 +339,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    public void renderOutOfRangeOrStatic(int side, double x, double y, double z, double offset, double scale) {
+    public void renderParticleFieldOutOfRangeOrStatic(int side, double x, double y, double z, double offset, double scale) {
         glPushMatrix();
         
         if (inRange)
