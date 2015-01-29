@@ -74,7 +74,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int offZ = offsetCoords.getZ() % 15;
         
         double offset = (wallVisibleSide.ordinal() % 2 == 0) ? 0.001 : 0.999;
-        updateFieldTranslation(3F);
+        updateParticleField(3F);
         drawParticleField(wallVisibleSide.ordinal(), x-offX, y-offY, z-offZ, offset, 16.0);
         
         glDisable(GL_LIGHTING);

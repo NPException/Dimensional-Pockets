@@ -43,16 +43,17 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     public static boolean doIndicateSides = false;
 
     protected boolean inRange;
+    private ResourceLocation currentParticleFieldTexture;
     private float stateColorLevel;
     private float fieldTranslation;
     private ItemStack itemStack;
     
     
-    private static final int planeCount = Reference.NUMBER_OF_PARTICLE_PLANES;
     private static float maxPlaneDepth = 16f;
     private static float minPlaneDepth = 1f;
     // add one to planecount because the "tunnel" layer is added
-    private static float planeDepthIncrement = (maxPlaneDepth-minPlaneDepth) / (planeCount+1);
+    private int planeCount;
+    private float planeDepthIncrement;
     
     
     private static final int maxBrightness = 240;
@@ -63,10 +64,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private static ResourceLocation blank = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/blank.png");
     protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    protected static ResourceLocation particleField = new ResourceLocation(Reference.MOD_IDENTIFIER
-                                                            + (Reference.USE_FANCY_RENDERING
-                                                                    ? "textures/misc/particleField.png"
-                                                                    : "textures/misc/particleFieldStatic.png"));
+    protected static ResourceLocation[] particleFieldTextures = {
+        new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png"),
+        new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleFieldStatic.png")
+    };
+    
     protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
     protected static EnumMap<ForgeDirection, ResourceLocation> frameTextures = new EnumMap<>(ForgeDirection.class);
@@ -94,12 +96,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_basic.png");
     
     protected static EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
+    protected static EnumMap<PocketSideState, ResourceLocation> cbOverlays = new EnumMap<>(PocketSideState.class);
     static {
-        if (!Reference.COLOR_BLIND_MODE) {
-            overlays.put(PocketSideState.ENERGY, basicOverlay);
-        } else {
-            overlays.put(PocketSideState.ENERGY, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_gear.png"));
-        }
+        overlays.put(PocketSideState.ENERGY, basicOverlay);
+        cbOverlays.put(PocketSideState.ENERGY, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_gear.png"));
     }
     
     @Override
@@ -126,9 +126,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
      * Set time in ms it should take the particle field to translate once completely
      * @param cycleTime
      */
-    protected void updateFieldTranslation(float speed) {
+    protected void updateParticleField(float speed) {
         long cycleTime = (long) (250000L/speed);
         this.fieldTranslation = System.currentTimeMillis() % cycleTime / ((float) cycleTime);
+        currentParticleFieldTexture = Reference.USE_FANCY_RENDERING ? particleFieldTextures[0] : particleFieldTextures[1];
+        planeCount = Reference.NUMBER_OF_PARTICLE_PLANES;
+        planeDepthIncrement = (maxPlaneDepth-minPlaneDepth) / (planeCount+1);
     }
 
     /**
@@ -152,7 +155,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glTranslatef(-0.5F, -0.4F, -0.5F);
         }
 
-        updateFieldTranslation(2F);
+        updateParticleField(2F);
         // Y Neg
         drawParticleField(0, x, y, z, 0.001, 1.0);
         // Y Pos
@@ -210,7 +213,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     protected boolean prepareRenderForSide(ResourceLocation texture, Colour texColour, ForgeDirection side, Pocket pocket, Tessellator instance) {
         if (texture == null) {
             PocketSideState state = (pocket == null) ? PocketSideState.NONE : pocket.getFlowState(side);
-            ResourceLocation overlayTexture = overlays.get(state);
+            ResourceLocation overlayTexture = Reference.COLOR_BLIND_MODE ? cbOverlays.get(state) : overlays.get(state);
             if (overlayTexture == null)
                 return false;
             
@@ -343,7 +346,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPushMatrix();
         
         if (inRange)
-            bindTexture(particleField);
+            bindTexture(currentParticleFieldTexture);
         else
             bindTexture(reducedParticleField);
         
@@ -425,7 +428,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;
@@ -500,7 +503,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;
@@ -575,7 +578,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;
@@ -650,7 +653,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;
@@ -725,7 +728,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;
@@ -800,7 +803,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             }
             if (i == 1) {
-                bindTexture(particleField);
+                bindTexture(currentParticleFieldTexture);
                 glEnable(GL_BLEND);
                 glBlendFunc(1, 1);
                 f6 = 0.5F;

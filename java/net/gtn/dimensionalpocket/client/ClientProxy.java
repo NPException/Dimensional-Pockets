@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client;
 
+import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
@@ -17,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -40,6 +42,7 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInitClientSide() {
         FMLCommonHandler.instance().bus().register(new ClientPlayerTickEventHandler());
+        ClientCommandHandler.instance.registerCommand(new RenderTweakCommand());
 
         ClientPlayerTickEventHandler.hideStuffFromNEI = Loader.isModLoaded("NotEnoughItems");
     }
