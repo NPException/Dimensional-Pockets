@@ -7,6 +7,7 @@ import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,6 +15,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ClientPlayerTickEventHandler {
     
     private static boolean checkForVersion = Reference.DO_VERSION_CHECK;
@@ -42,6 +44,9 @@ public class ClientPlayerTickEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void event(PlayerTickEvent evt) {
+        if (evt.player != Minecraft.getMinecraft().thePlayer)
+            return;
+        
         if (hideStuffFromNEI) {
             hideStuffFromNEI = false;
             hideStuffFromNEI();
