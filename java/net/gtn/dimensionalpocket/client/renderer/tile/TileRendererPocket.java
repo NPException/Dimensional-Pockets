@@ -129,7 +129,8 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     protected void updateParticleField(float speed) {
         long cycleTime = (long) (250000L/speed);
         this.fieldTranslation = System.currentTimeMillis() % cycleTime / ((float) cycleTime);
-        currentParticleFieldTexture = Reference.USE_FANCY_RENDERING ? particleFieldTextures[0] : particleFieldTextures[1];
+        currentParticleFieldTexture = (Reference.USE_FANCY_RENDERING && itemStack == null) // disable the field rendering for the item. FIXME: entity item rendering of planes is buggy
+                                                    ? particleFieldTextures[0] : particleFieldTextures[1];
         planeCount = Reference.NUMBER_OF_PARTICLE_PLANES;
         planeDepthIncrement = (maxPlaneDepth-minPlaneDepth) / (planeCount+1);
     }
@@ -149,6 +150,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         if (itemStack == null)
             glDisable(GL_FOG);
         else {
+            glPushMatrix();
             if (itemRenderType == ItemRenderType.INVENTORY)
                 glTranslatef(0.0F, -0.1F, 0.0F);
             if (itemRenderType == ItemRenderType.ENTITY)
@@ -180,7 +182,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         renderFaces(x, y, z, 0, null, Colour.WHITE, frameTextures);
         
-        if (doIndicateSides) {
+        if (doIndicateSides && itemStack == null) {
             renderFaces(x, y, z, 0.0001, null, null, sideIndicators);
             if (Reference.COLOR_BLIND_MODE) {
                 renderFaces(x, y, z, 0.0003, null, Colour.WHITE, colorblindSideIndicators);
@@ -196,8 +198,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glDisable(GL_BLEND);
 
         glEnable(GL_LIGHTING);
-        if (itemStack == null)
+        if (itemStack == null) {
             glEnable(GL_FOG);
+        } else {
+            glPopMatrix();
+        }
         
         glPopMatrix();
     }
@@ -308,7 +313,9 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glDisable(GL_LIGHTING);
         random.setSeed(seed*(side+1)); // ensures different seed per side, but same seed for same side
         
-        if (inRange && Reference.USE_FANCY_RENDERING) {
+        if (inRange && Reference.USE_FANCY_RENDERING
+                && itemStack == null // disable the field rendering for the item. FIXME: entity item rendering of planes is buggy
+                ) {
             switch (side) {
                 case 0:
                     drawPlaneYNeg(dX, dY, dZ, x, y, z, offset, scale);
