@@ -17,10 +17,17 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class PocketRegistry {
-
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
+    
+    // TODO: check generation with old world again. did overwrite existing pocket.
 
-    private static CoordSet currentChunk = new CoordSet(-100, 0, 0);
+    private static final int pocketChunkSpacing = 20;
+    private static PocketGenParameters pocketGenParameters = new PocketGenParameters();
+    
+    static class PocketGenParameters {
+        private CoordSet currentChunk = new CoordSet(0, 0, PocketRegistry.pocketChunkSpacing);
+        private ForgeDirection nextPocketCoordsDirection = ForgeDirection.NORTH;
+    }
 
     public static WorldServer getWorldForPockets() {
         return MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
@@ -32,6 +39,32 @@ public class PocketRegistry {
             return backLinkMap.get(chunkCoords);
         return null;
     }
+    
+    private static CoordSet getNextPocketCoords(CoordSet currentCoords) {
+        
+        // create offset for next pocket
+        CoordSet offset = new CoordSet().addForgeDirection(pocketGenParameters.nextPocketCoordsDirection);
+        offset.setX(offset.getX() * pocketChunkSpacing);
+        offset.setZ(offset.getZ() * pocketChunkSpacing);
+        
+        // create result coordset
+        CoordSet result = currentCoords.copy().addCoordSet(offset);
+        // needed to bring old saves to this height
+        result.setY(0);
+        
+        // create test offset to check for the next pockets direction
+        ForgeDirection clockwiseTurn = pocketGenParameters.nextPocketCoordsDirection.getRotation(ForgeDirection.UP);
+        CoordSet probeOffset = new CoordSet().addForgeDirection(clockwiseTurn);
+        probeOffset.setX(probeOffset.getX() * pocketChunkSpacing);
+        probeOffset.setZ(probeOffset.getZ() * pocketChunkSpacing);
+        
+        // check if probed coordset is mapped to a pocket already
+        CoordSet probeCoords = result.copy().addCoordSet(probeOffset);
+        if (!backLinkMap.containsKey(probeCoords))
+            pocketGenParameters.nextPocketCoordsDirection = clockwiseTurn;
+        
+        return result;
+    }
 
     public static Pocket getOrCreatePocket(World world, CoordSet coordSetSource) {
         Utils.enforceServer();
@@ -41,14 +74,12 @@ public class PocketRegistry {
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
                 return pocket;
 
-        if (currentChunk.getY() >= 16)
-            currentChunk.setY(0).addX(1);
+        // only update currentChunkCoords if pockets already exist
+        if (!backLinkMap.isEmpty())
+            pocketGenParameters.currentChunk = getNextPocketCoords(pocketGenParameters.currentChunk);
 
-        Pocket pocket = new Pocket(currentChunk.copy(), dimIDSource, coordSetSource);
+        Pocket pocket = new Pocket(pocketGenParameters.currentChunk.copy(), dimIDSource, coordSetSource);
         backLinkMap.put(pocket.getChunkCoords(), pocket);
-
-        // add one here, so we start at 0 with the first room
-        currentChunk.addY(1);
 
         saveData();
 
@@ -71,12 +102,12 @@ public class PocketRegistry {
 
     public static void saveData() {
         PocketConfig.saveBackLinkMap(backLinkMap);
-        PocketConfig.saveCurrentChunk(currentChunk);
+        PocketConfig.savePocketGenParams(pocketGenParameters);
     }
 
     public static void loadData() {
         backLinkMap = PocketConfig.loadBackLinkMap();
-        currentChunk = PocketConfig.loadCurrentChunk();
+        pocketGenParameters = PocketConfig.loadPocketGenParams();
     }
     
     public static void validatePocketConnectors() {
@@ -86,9 +117,11 @@ public class PocketRegistry {
             // this call will generate the connectors if they do not yet exist
             for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
                 CoordSet coords = pocket.getConnectorCoords(side);
-                Block block = coords.getBlock(pocketWorld);
-                if (block == ModBlocks.dimensionalPocketWall)
-                    pocketWorld.setBlockMetadataWithNotify(coords.getX(), coords.getY(), coords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
+                if (coords != null) {
+                    Block block = coords.getBlock(pocketWorld);
+                    if (block == ModBlocks.dimensionalPocketWall)
+                        pocketWorld.setBlockMetadataWithNotify(coords.getX(), coords.getY(), coords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
+                }
             }
         }
     }

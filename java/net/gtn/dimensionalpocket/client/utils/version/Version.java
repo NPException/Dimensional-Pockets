@@ -5,10 +5,14 @@ import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 public class Version {
     public final String version;
     public final String url;
+    public final String changelog;
+    public final String additionalInfo;
     
-    public Version(String version, String url) {
+    public Version(String version, String url, String changelog, String additionalInfo) {
         this.version = version;
         this.url = url;
+        this.changelog = changelog;
+        this.additionalInfo = additionalInfo;
     }
     
     public boolean isNewerThan(Version v) {

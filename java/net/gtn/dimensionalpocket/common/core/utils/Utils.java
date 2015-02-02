@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.List;
 
 import me.jezza.oc.client.gui.lib.Colour;
+import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -231,10 +233,32 @@ public class Utils {
        return lines;
     }
     
-    public static ChatComponentText createChatLink(String text, String url) {
+    public static ChatComponentText createChatLink(String text, String url, boolean bold, boolean underline, boolean italic, EnumChatFormatting color) {
         ChatComponentText link = new ChatComponentText(text);
-        link.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        link.getChatStyle().setUnderlined(Boolean.TRUE);
+        ChatStyle style = link.getChatStyle();
+        style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
+        style.setBold(Boolean.valueOf(bold));
+        style.setUnderlined(Boolean.valueOf(underline));
+        style.setItalic(Boolean.valueOf(italic));
+        style.setColor(color);
         return link;
+    }
+    
+    /**
+     * This method will only exist until the ChunkOffset methods in OmnisCore are fixed
+     * @param coords
+     * @return
+     */
+    public static CoordSet getOffsetInChunk(CoordSet coords) {
+        CoordSet offset = coords.toChunkOffset();
+        int x = offset.getX();
+        int y = offset.getY();
+        int z = offset.getZ();
+        
+        if (x<0) offset.setX(x+16);
+        if (y<0) offset.setY(y+16);
+        if (z<0) offset.setZ(z+16);
+        
+        return offset;
     }
 }

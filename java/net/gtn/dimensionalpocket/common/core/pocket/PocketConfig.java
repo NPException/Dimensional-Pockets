@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.server.MinecraftServer;
 
@@ -20,7 +21,7 @@ public class PocketConfig {
     private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final String backLinkFile = "teleportRegistry";
-    private static final String currentChunkFile = "currentChunk";
+    private static final String pocketGenParamsFile = "pocketGenParameters";
 
     /**
      * Adds .json to it.
@@ -85,38 +86,34 @@ public class PocketConfig {
         return backLinkMap;
     }
 
-    public static void saveCurrentChunk(CoordSet currentChunk) {
+    public static void savePocketGenParams(PocketGenParameters pocketGenParameters) {
         try {
-            File registryFile = getConfig(currentChunkFile);
+            File dataFile = getConfig(pocketGenParamsFile);
 
-            FileWriter writer = new FileWriter(registryFile);
-            GSON.toJson(currentChunk, writer);
-            writer.close();
-
+            try (FileWriter writer = new FileWriter(dataFile)) {
+                GSON.toJson(pocketGenParameters, writer);
+            }
         } catch (Exception e) {
             DPLogger.severe(e);
         }
     }
 
-    public static CoordSet loadCurrentChunk() {
-        Gson gson = new Gson();
-
+    public static PocketGenParameters loadPocketGenParams() {
         try {
-            File registryFile = getConfig(currentChunkFile);
-
-            final FileReader reader = new FileReader(registryFile);
-
-            CoordSet tempSet = gson.fromJson(reader, CoordSet.class);
-            reader.close();
-
-            if (tempSet == null)
-                tempSet = new CoordSet(0, 0, 0);
-
-            return tempSet;
+            File dataFile = getConfig(pocketGenParamsFile);
+            
+            if (dataFile.exists()) {
+                try (FileReader dataReader = new FileReader(dataFile)) {
+                    PocketGenParameters pocketGenParams = GSON.fromJson(dataReader, PocketGenParameters.class);
+                    if (pocketGenParams != null)
+                        return pocketGenParams;
+                }
+            }
         } catch (Exception e) {
             DPLogger.severe(e);
         }
-        return new CoordSet(0, 0, 0);
+        
+        return new PocketGenParameters();
     }
 
 }

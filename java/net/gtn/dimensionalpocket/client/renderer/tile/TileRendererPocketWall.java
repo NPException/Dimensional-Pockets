@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.client.renderer.Tessellator;
@@ -65,7 +66,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glDisable(GL_FOG);
         
-        CoordSet offsetCoords = tile.getCoordSet().asChunkOffset();
+        CoordSet offsetCoords = Utils.getOffsetInChunk(tile.getCoordSet());
         ForgeDirection wallVisibleSide = Pocket.getSideForBlock(offsetCoords).getOpposite();
         
         // %15 is to ensure that only the two coordinates that build the plane of the wall are non zero

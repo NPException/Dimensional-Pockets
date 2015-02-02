@@ -167,8 +167,10 @@ public class Pocket {
 
         World world = PocketRegistry.getWorldForPockets();
         CoordSet connectorCoords = getConnectorCoords(side);
-        world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
-        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
+        if (connectorCoords != null) {
+            world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
+            world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
+        }
 
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();
@@ -211,7 +213,9 @@ public class Pocket {
         Map<ForgeDirection, CoordSet> cMap = getConnectorMap();
         if (cMap.size() < 6)
             generateDefaultConnectors();
-        return cMap.get(side).copy();
+        
+        CoordSet connectorCoords = cMap.get(side);
+        return (connectorCoords == null) ? null : connectorCoords.copy();
     }
 
     /**
@@ -227,9 +231,11 @@ public class Pocket {
         
         if (getConnectorMap().size() == 6) { // the check is needed to prevent a stack overflow on first connector creation
             CoordSet oldCoords = getConnectorCoords(side);
-            TileEntity te = oldCoords.getTileEntity(world);
-            if (te instanceof TileDimensionalPocketWallConnector) {
-                ((TileDimensionalPocketWallConnector) te).invalidateConnector();
+            if (oldCoords != null) {
+                TileEntity te = oldCoords.getTileEntity(world);
+                if (te instanceof TileDimensionalPocketWallConnector) {
+                    ((TileDimensionalPocketWallConnector) te).invalidateConnector();
+                }
             }
         }
 

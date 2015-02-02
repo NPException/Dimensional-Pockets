@@ -15,6 +15,8 @@ import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -56,7 +58,9 @@ public class VersionChecker {
         else 
             versionMap = new HashMap<>(versionMap);
         
-        versionMap.put("1.7.10", new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL));
+        Version version = new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, "Go get it!");
+            
+        versionMap.put("1.7.10", version);
         
         try (FileWriter writer = new FileWriter(args[0])) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -140,7 +144,7 @@ public class VersionChecker {
             if (versionMap != null) {
                 Version remoteLatest = versionMap.get(mcVersion);
                 if (remoteLatest != null) {
-                    if (remoteLatest.isNewerThan(new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL))) {
+                    if (remoteLatest.isNewerThan(new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, null))) {
                         return remoteLatest;
                     }
                 }
@@ -158,9 +162,22 @@ public class VersionChecker {
         Version latest = getLatestVersion();
         if (latest != null) {
             player.addChatMessage(new ChatComponentText(Utils.translate("info.update.available.1", latest.version)));
+            player.addChatMessage(new ChatComponentText(Utils.translate("info.update.available.2", Reference.VERSION)));
             
-            ChatComponentText linkLine = new ChatComponentText(Utils.translate("info.update.available.2") + " ");
-            linkLine.appendSibling(Utils.createChatLink(Utils.translate("info.update.available.clickme"), latest.url));
+            if (latest.additionalInfo != null) {
+                player.addChatMessage(new ChatComponentText(latest.additionalInfo));
+            }
+            
+            IChatComponent linkLine = new ChatComponentText("[ ");
+            linkLine.appendSibling(Utils.createChatLink("DOWNLOAD", latest.url, true, false, false, EnumChatFormatting.AQUA));
+            linkLine.appendSibling(new ChatComponentText(" ]"));
+            
+            if (latest.changelog != null) {
+                linkLine.appendSibling(new ChatComponentText(" - [ "));
+                linkLine.appendSibling(Utils.createChatLink("CHANGELOG", latest.changelog, false, false, false, EnumChatFormatting.DARK_AQUA));
+                linkLine.appendSibling(new ChatComponentText(" ]"));
+            }
+            
             player.addChatMessage(linkLine);
         }
     }

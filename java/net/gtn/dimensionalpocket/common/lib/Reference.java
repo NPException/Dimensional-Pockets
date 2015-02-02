@@ -7,7 +7,7 @@ public class Reference {
 
     public static final String MOD_ID = "dimensionalPockets";
     public static final String MOD_NAME = "Dimensional Pockets";
-    public static final String VERSION = "0.10.2";
+    public static final String VERSION = "0.10.3";
 
     public static final String MOD_IDENTIFIER = MOD_ID + ":";
 
@@ -15,7 +15,7 @@ public class Reference {
     public static final String SERVER_PROXY_CLASS = "net.gtn.dimensionalpocket.common.CommonProxy";
     
     public static final String MOD_DOWNLOAD_URL = "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets";
-    
+    public static final String MOD_CHANGELOG_URL = "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog";
     public static final String REMOTE_VERSION_FILE = "https://raw.githubusercontent.com/NPException42/Dimensional-Pockets/master/latest_versions.json";
 
     /*

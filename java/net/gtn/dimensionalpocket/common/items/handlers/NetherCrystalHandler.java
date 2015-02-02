@@ -43,15 +43,16 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
                 DPLogger.warning("Could not find pocket for ChunkSet: " + coordSet.toChunkCoords().toString());
                 return false;
             }
-            ForgeDirection wallSide = Pocket.getSideForBlock(coordSet.toChunkOffset());
+            
+            ForgeDirection wallSide = Pocket.getSideForBlock( Utils.getOffsetInChunk(coordSet) );
             if (wallSide == ForgeDirection.UNKNOWN) {
-                DPLogger.warning("Got ForgeDirection UNKNOWN for new Connector CoordSet: " + coordSet.toChunkOffset());
+                DPLogger.warning("Got ForgeDirection UNKNOWN for new Connector CoordSet: " + Utils.getOffsetInChunk(coordSet));
                 return false;
             }
             
             if (player.isSneaking()) {
                 CoordSet oldConnectorCoords = pocket.getConnectorCoords(wallSide);
-                if (oldConnectorCoords.equals(coordSet))
+                if (coordSet.equals(oldConnectorCoords))
                     return false;
                 
                 pocket.setConnectorForSide(wallSide, coordSet);

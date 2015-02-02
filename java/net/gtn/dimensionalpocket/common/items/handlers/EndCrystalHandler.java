@@ -31,7 +31,7 @@ public class EndCrystalHandler extends UsableHandlerAbstract {
         if (pocket == null)
             return itemStack;
 
-        pocket.setSpawnInPocket(coordSet.toChunkOffset(), player.rotationYaw, player.rotationPitch);
+        pocket.setSpawnInPocket(Utils.getOffsetInChunk(coordSet), player.rotationYaw, player.rotationPitch);
         
         ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
         comp.getChatStyle().setItalic(Boolean.TRUE);

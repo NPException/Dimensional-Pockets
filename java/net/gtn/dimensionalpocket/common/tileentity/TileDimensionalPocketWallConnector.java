@@ -5,6 +5,7 @@ import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -51,10 +52,10 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
     		
     		Pocket p = getPocket();
         	if (p != null) {
-        	    ForgeDirection wallSide = Pocket.getSideForBlock(getCoordSet().asChunkOffset());
+        	    ForgeDirection wallSide = Pocket.getSideForBlock(Utils.getOffsetInChunk(getCoordSet()));
         	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
         	    if (!getCoordSet().equals(connectorCoords)) {
-        	        DPLogger.debug("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + connectorCoords.toString());
+        	        DPLogger.debug("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + String.valueOf(connectorCoords));
         	        invalidateConnector();
         	    }
         	}
@@ -190,11 +191,11 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IEnerg
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-	    CoordSet offSet = getCoordSet().asChunkOffset();
+	    CoordSet offSet = Utils.getOffsetInChunk(getCoordSet());
 	    
-	    boolean ignoreX = offSet.getX() % 15 == 0;
-	    boolean ignoreY = offSet.getY() % 15 == 0;
-	    boolean ignoreZ = offSet.getZ() % 15 == 0;
+	    boolean ignoreX = offSet.getX() == 0 || offSet.getX() == 15;
+	    boolean ignoreY = offSet.getY() == 0 || offSet.getY() == 15;
+	    boolean ignoreZ = offSet.getZ() == 0 || offSet.getZ() == 15;
 	    
 	    int ox = offSet.getX()-1;
 	    int oy = offSet.getY()-1;
