@@ -25,7 +25,7 @@ public class PocketRegistry {
     private static PocketGenParameters pocketGenParameters = new PocketGenParameters();
     
     static class PocketGenParameters {
-        private CoordSet currentChunk = new CoordSet(0, 0, PocketRegistry.pocketChunkSpacing);
+        private CoordSet currentChunk = new CoordSet(0, 0, 0);
         private ForgeDirection nextPocketCoordsDirection = ForgeDirection.NORTH;
     }
 
@@ -41,16 +41,20 @@ public class PocketRegistry {
     }
     
     private static CoordSet getNextPocketCoords(CoordSet currentCoords) {
+        CoordSet result = currentCoords;
         
-        // create offset for next pocket
-        CoordSet offset = new CoordSet().addForgeDirection(pocketGenParameters.nextPocketCoordsDirection);
-        offset.setX(offset.getX() * pocketChunkSpacing);
-        offset.setZ(offset.getZ() * pocketChunkSpacing);
-        
-        // create result coordset
-        CoordSet result = currentCoords.copy().addCoordSet(offset);
-        // needed to bring old saves to this height
-        result.setY(0);
+        // step until an empty spot has been reached
+        while (backLinkMap.containsKey(result)) {
+            // create offset for next pocket
+            CoordSet offset = new CoordSet().addForgeDirection(pocketGenParameters.nextPocketCoordsDirection);
+            offset.setX(offset.getX() * pocketChunkSpacing);
+            offset.setZ(offset.getZ() * pocketChunkSpacing);
+            
+            // create result coordset
+            result = currentCoords.copy().addCoordSet(offset);
+            // needed to bring old saves to this height
+            result.setY(4);
+        }
         
         // create test offset to check for the next pockets direction
         ForgeDirection clockwiseTurn = pocketGenParameters.nextPocketCoordsDirection.getRotation(ForgeDirection.UP);
