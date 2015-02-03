@@ -11,6 +11,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -72,6 +73,9 @@ public class ChunkLoaderHandler implements LoadingCallback {
     }
 
     public static void addPocketToChunkLoader(Pocket pocket) {
+        if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
+            return;
+        
         Utils.enforceServer();
         if (pocket == null)
             return;

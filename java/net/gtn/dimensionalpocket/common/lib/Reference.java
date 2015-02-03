@@ -63,6 +63,9 @@ public class Reference {
      * GENERAL CONFIGS
      */
     
+    @ConfigBoolean(category = "General")
+    public static boolean KEEP_POCKET_ROOMS_CHUNK_LOADED = true;
+    
     @ConfigBoolean(category = "General", comment = "If you do not want the mod to check for more recent versions, set this to \"false\".")
     public static boolean DO_VERSION_CHECK = true;
     
