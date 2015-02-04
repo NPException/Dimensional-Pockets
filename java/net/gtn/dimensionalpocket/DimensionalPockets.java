@@ -67,7 +67,8 @@ public class DimensionalPockets {
 
         BiomeHelper.init();
 
-        ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
+        if (Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
+            ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
     }
 
     @EventHandler

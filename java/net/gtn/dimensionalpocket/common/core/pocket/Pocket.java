@@ -165,18 +165,36 @@ public class Pocket {
         getSideStateMap().put(side, flowState);
         getNBT().getCompoundTag(NBT_FLOW_STATE_MAP_KEY).setString(side.name(), flowState.name());
 
+        markConnectorForUpdate(side);
+        markSourceBlockForUpdate();
+    }
+    
+    public void markConnectorForUpdate(ForgeDirection side) {
         World world = PocketRegistry.getWorldForPockets();
         CoordSet connectorCoords = getConnectorCoords(side);
+        
         if (connectorCoords != null) {
-            world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
-            world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
+            int conX = connectorCoords.getX();
+            int conY = connectorCoords.getY();
+            int conZ = connectorCoords.getZ();
+            if (world.blockExists(conX, conY, conZ)) {
+                world.markBlockForUpdate(conX,conY,conZ);
+                world.notifyBlockChange(conX,conY,conZ, ModBlocks.dimensionalPocketWall);
+            }
         }
-
+    }
+    
+    public void markSourceBlockForUpdate() {
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();
             World blockWorld = getBlockWorld();
-            blockWorld.markBlockForUpdate(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ());
-            blockWorld.notifyBlockChange(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ(), ModBlocks.dimensionalPocket);
+            int srcX = srcCoords.getX();
+            int srcY = srcCoords.getY();
+            int srcZ = srcCoords.getZ();
+            if (blockWorld.blockExists(srcX, srcY, srcZ)) {
+                blockWorld.markBlockForUpdate(srcX, srcY, srcZ);
+                blockWorld.notifyBlockChange(srcX, srcY, srcZ, ModBlocks.dimensionalPocket);
+            }
         }
     }
     
@@ -375,7 +393,7 @@ public class Pocket {
 
     
 
-    public static ForgeDirection getSideForBlock(CoordSet coordSet) {
+    public static ForgeDirection getSideForConnector(CoordSet coordSet) {
         ForgeDirection direction = ForgeDirection.UNKNOWN;
 
         if (coordSet.getX() == 0)

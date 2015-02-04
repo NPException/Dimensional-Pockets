@@ -11,10 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -260,5 +263,43 @@ public class Utils {
         if (z<0) offset.setZ(z+16);
         
         return offset;
+    }
+    
+    /**
+     * Ensures that the given inventory is the full inventory, i.e. takes double
+     * chests into account.<br>
+     * <i>METHOD COPIED FROM BUILDCRAFT</i>
+     *
+     * @param inv
+     * @return Modified inventory if double chest, unmodified otherwise.
+     */
+    public static IInventory getInventory(IInventory inv) {
+        if (inv instanceof TileEntityChest) {
+            TileEntityChest chest = (TileEntityChest) inv;
+
+            TileEntityChest adjacent = null;
+
+            if (chest.adjacentChestXNeg != null) {
+                adjacent = chest.adjacentChestXNeg;
+            }
+
+            if (chest.adjacentChestXPos != null) {
+                adjacent = chest.adjacentChestXPos;
+            }
+
+            if (chest.adjacentChestZNeg != null) {
+                adjacent = chest.adjacentChestZNeg;
+            }
+
+            if (chest.adjacentChestZPos != null) {
+                adjacent = chest.adjacentChestZPos;
+            }
+
+            if (adjacent != null) {
+                return new InventoryLargeChest("", inv, adjacent);
+            }
+            return inv;
+        }
+        return inv;
     }
 }

@@ -67,7 +67,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         glDisable(GL_FOG);
         
         CoordSet offsetCoords = Utils.getOffsetInChunk(tile.getCoordSet());
-        ForgeDirection wallVisibleSide = Pocket.getSideForBlock(offsetCoords).getOpposite();
+        ForgeDirection wallVisibleSide = Pocket.getSideForConnector(offsetCoords).getOpposite();
         
         // %15 is to ensure that only the two coordinates that build the plane of the wall are non zero
         int offX = offsetCoords.getX() % 15;

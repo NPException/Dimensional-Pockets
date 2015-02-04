@@ -1,5 +1,9 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.jezza.oc.common.interfaces.IBlockInteract;
 import me.jezza.oc.common.interfaces.IBlockNotifier;
 import me.jezza.oc.common.utils.CoordSet;
@@ -17,6 +21,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -30,7 +36,9 @@ import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider, IEnergyHandler {
+public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract,
+                                                             IEnergyReceiver, IEnergyProvider, IEnergyHandler,
+                                                             ISidedInventory {
 
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
@@ -43,7 +51,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public void updateEntity() {
-        if (!worldObj.isRemote && telePrep != null)
+        if (worldObj.isRemote)
+            return;
+        
+        if (telePrep != null)
             if (telePrep.doPrepareTick())
                 telePrep = null;
     }
@@ -59,12 +70,32 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
     @Override
     public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-        // do nothing
+        if (world.isRemote) return;
+        
+        Pocket p = getPocket();
+        if (p != null) {
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+                p.markConnectorForUpdate(side);
+            }
+        }
     }
 
     @Override
     public void onNeighbourTileChanged(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-        // do nothing
+        if (!(world instanceof World) || ((World)world).isRemote) return;
+        
+        Pocket p = getPocket();
+        if (p != null) {
+            int ox = tileX - x;
+            int oy = tileY - y;
+            int oz = tileZ - z;
+            
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+                if (side.offsetX == ox && side.offsetY == oy && side.offsetZ == oz) {
+                    p.markConnectorForUpdate(side);
+                }
+            }
+        }
     }
 
     @Override
@@ -182,20 +213,7 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
                 UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
         }
     }
-
-    @Override
-    public boolean canConnectEnergy(ForgeDirection from) {
-        Pocket p = getPocket();
-        if (p == null) return false;
-
-        switch (p.getFlowState(from)) {
-            case ENERGY:
-                return true;
-            default:
-                return false;
-        }
-    }
-
+    
     /**
      * Returns the neighboring TileEntity of the Frame connector block at the given side.
      *
@@ -219,6 +237,23 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         }
 
         return targetWorld.getTileEntity(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ());
+    }
+    
+    ///////////////////////
+    // RF ENERGY METHODS //
+    ///////////////////////
+
+    @Override
+    public boolean canConnectEnergy(ForgeDirection from) {
+        Pocket p = getPocket();
+        if (p == null) return false;
+
+        switch (p.getFlowState(from)) {
+            case ENERGY:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -285,5 +320,195 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         }
 
         return 0;
+    }
+    
+    ///////////////////////
+    // INVENTORY METHODS //
+    ///////////////////////
+    
+    private static final int SIDE_BITS = 3;
+    
+    private IInventory getInventoryOnInsideWall(int side) {
+        Pocket p = getPocket();
+        if (p == null) return null;
+        
+        ForgeDirection fdSide = ForgeDirection.getOrientation(side);
+        
+        switch (p.getFlowState(fdSide)) {
+            case ENERGY:
+                TileEntity te = getFrameConnectorNeighborTileEntity(fdSide);
+                if (te instanceof IInventory) {
+                    return Utils.getInventory((IInventory) te);
+                }
+                return null;
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 6; // just doing the same as Compact Machines here.
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        int maskedSide = slot & 0b111;
+        int innerSlot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(maskedSide);
+        if (inventory == null)
+            return null;
+        
+        return inventory.getStackInSlot(innerSlot);
+    }
+
+    @Override
+    public ItemStack decrStackSize(int slot, int count) {
+        int maskedSide = slot & 0b111;
+        int innerSlot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(maskedSide);
+        if (inventory == null)
+            return null;
+        
+        return inventory.decrStackSize(innerSlot, count);
+    }
+
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slot) {
+        return null; // not used, since the DP does not have an inventory GUI
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        int maskedSide = slot & 0b111;
+        int innerSlot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(maskedSide);
+        if (inventory != null)
+            inventory.setInventorySlotContents(innerSlot, stack);
+    }
+
+    @Override
+    public String getInventoryName() {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return false;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+        return 64;
+    }
+
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public void openInventory() {
+        // do nothing
+    }
+
+    @Override
+    public void closeInventory() {
+     // do nothing
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        int side = slot & 0b111;
+        slot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(side);
+        if (inventory == null)
+            return false;
+        
+        return inventory.isItemValidForSlot(slot, stack);
+    }
+    
+    // Sided inventory //
+    
+    private static final int[] EMPTY_SLOT_ARRAY = new int[0];
+    // cache for inventory slot arrays to prevent frequent allocation of arrays.
+    // REMOVE the caching IF it turns out something is modifying the cached arrays.
+    // Using weak references so the GC can still recycle TEs that are only referenced here. (after their chunk unloaded f.e.)
+    private transient List<WeakReference<IInventory>> lastKnownInventories;
+    private transient int[][] lastKnownInventorySlots;
+
+    @Override
+    public int[] getAccessibleSlotsFromSide(int side) {
+        if (side>5)
+            return EMPTY_SLOT_ARRAY;
+        
+        IInventory inventory = getInventoryOnInsideWall(side);
+        if (inventory == null)
+            return EMPTY_SLOT_ARRAY;
+        
+        // lazy init of "lastKnown" cache
+        if (lastKnownInventories == null || lastKnownInventorySlots == null) {
+            lastKnownInventories = new ArrayList<>(6);
+            for(int i=0; i<6; i++) {
+                lastKnownInventories.add(null);
+            }
+            lastKnownInventorySlots = new int[6][];
+        }
+        
+        if (inventory instanceof ISidedInventory)
+            return ((ISidedInventory) inventory).getAccessibleSlotsFromSide(side);
+        
+        // use cache for plain IInventory if possible
+        WeakReference<IInventory> cachedInventory = lastKnownInventories.get(side);
+        
+        if (cachedInventory != null && cachedInventory.get() == inventory
+                && inventory.getSizeInventory() == lastKnownInventorySlots[side].length) {
+            return lastKnownInventorySlots[side];
+        }
+        
+        int[] slots = new int[inventory.getSizeInventory()];
+        for (int i=0; i < slots.length; i++) {
+            slots[i] = (i<<SIDE_BITS) | side;
+        }
+        
+        // store in cache
+        lastKnownInventories.set(side, new WeakReference<>(inventory));
+        lastKnownInventorySlots[side] = slots;
+        
+        return slots;
+    }
+
+    @Override
+    public boolean canInsertItem(int slot, ItemStack stack, int side) {
+        int maskedSide = slot & 0b111;
+        if (maskedSide != side)
+            return false;
+        
+        int innerSlot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(side);
+        if (inventory == null)
+            return false;
+        
+        return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canInsertItem(innerSlot, stack, side);
+    }
+
+    @Override
+    public boolean canExtractItem(int slot, ItemStack stack, int side) {
+        int maskedSide = slot & 0b111;
+        if (maskedSide != side)
+            return false;
+        
+        int innerSlot = slot >> SIDE_BITS;
+            
+        IInventory inventory = getInventoryOnInsideWall(side);
+        if (inventory == null)
+            return false;
+        
+        return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(innerSlot, stack, side);
     }
 }

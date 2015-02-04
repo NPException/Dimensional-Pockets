@@ -44,7 +44,7 @@ public class NetherCrystalHandler extends UsableHandlerAbstract {
                 return false;
             }
             
-            ForgeDirection wallSide = Pocket.getSideForBlock( Utils.getOffsetInChunk(coordSet) );
+            ForgeDirection wallSide = Pocket.getSideForConnector( Utils.getOffsetInChunk(coordSet) );
             if (wallSide == ForgeDirection.UNKNOWN) {
                 DPLogger.warning("Got ForgeDirection UNKNOWN for new Connector CoordSet: " + Utils.getOffsetInChunk(coordSet));
                 return false;
