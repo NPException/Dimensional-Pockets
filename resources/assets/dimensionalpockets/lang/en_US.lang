@@ -8,7 +8,7 @@ item.endCrystal.name=§5End Crystal§r
 item.netherCrystal.name=§cNether Crystal§r
 
 pocket.side.state.NONE=§7§oNone
-pocket.side.state.ENERGY=§6§oRF Transfer
+pocket.side.state.ENERGY=§6§oTransfer
 
 info.trapped.1=You're trapped! Maybe someone broke the Dimensional Pocket...
 info.trapped.2=For some reason, you can't rematerialize! It's almost like there is something blocking it...
@@ -19,7 +19,7 @@ info.pocket.side.state.set.to=§7§o{0} §8§oset to: {1}
 
 info.tooltip.shift={0}Press {1}Shift {0}for more info.
 info.tooltip.endCrystal.shift=When used inside a Dimensional Pocket, it will set the spawn point inside that Pocket to the position you are currently at.
-info.tooltip.netherCrystal.shift=You can use this on the face of a Dimensional Pocket to cycle through the transfer modes of that face. (Only RF transfer available atm.) This also works on the inside of the Pocket.\nIf you use this crystal on the inside wall of a Pocket while sneaking, you can set the position of the "Connector" spot on that wall.
+info.tooltip.netherCrystal.shift=You can use this on the face of a Dimensional Pocket to cycle through the modes of that face. This also works on the inside of the Pocket.\nIf you use this crystal on the inside wall of a Pocket while sneaking, you can set the position of the "Connector" spot on that wall.
 
 info.page.maxPage=9
 
@@ -41,3 +41,5 @@ info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NP
 
 info.update.available.1=§7Version §6[{0}]§7 of Dimensional Pockets is available!
 info.update.available.2=§7(You are running version [{0}])
+
+functionality.disabled.in.pocket=This seems to have no effect in a Dimensional Pocket...

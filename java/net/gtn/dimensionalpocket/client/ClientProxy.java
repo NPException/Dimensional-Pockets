@@ -1,12 +1,13 @@
 package net.gtn.dimensionalpocket.client;
 
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
+import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
+import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.gui.GuiPocketConfig;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
-import net.gtn.dimensionalpocket.client.tickhandler.ClientPlayerTickEventHandler;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
@@ -37,6 +38,7 @@ public class ClientProxy extends CommonProxy {
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
         
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
     
     @Override

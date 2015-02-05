@@ -1,4 +1,4 @@
-package net.gtn.dimensionalpocket.client.tickhandler;
+package net.gtn.dimensionalpocket.client.event;
 
 import java.lang.reflect.Method;
 

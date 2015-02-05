@@ -4,7 +4,7 @@ import net.minecraft.util.StatCollector;
 
 public enum PocketSideState {
     NONE,
-    ENERGY;
+    ENERGY; // used for RF & Items atm.
     
     public String translateName() {
         return StatCollector.translateToLocal("pocket.side.state." + name());

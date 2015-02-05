@@ -4,6 +4,7 @@ import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
 import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.event.InsidePocketEventHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
@@ -31,6 +32,7 @@ public class CommonProxy implements IGuiHandler {
         InterModConfigHandler.initComms();
         
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+        MinecraftForge.EVENT_BUS.register(new InsidePocketEventHandler());
     }
 
     public void registerTileEntities() {
