@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+
 import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
@@ -90,7 +91,7 @@ public class GuiInfoBook extends GuiContainerAbstract {
     @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int mouseX, int mouseY) {
         glPushMatrix();
-        
+
         bindTexture();
         drawTexturedModalRect(middleX, middleY, 0, 0, xSize, ySize);
 
@@ -100,7 +101,7 @@ public class GuiInfoBook extends GuiContainerAbstract {
         }
 
         super.drawGuiContainerBackgroundLayer(var1, mouseX, mouseY);
-        
+
         glPopMatrix();
     }
 
@@ -121,6 +122,8 @@ public class GuiInfoBook extends GuiContainerAbstract {
             tempString = "";
 
         drawWrappedString(tempString, 0, 0, 140, new Colour(0.2, 0.2, 0.2, 1.0));
+
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         glPopMatrix();
     }

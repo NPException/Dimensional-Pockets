@@ -11,7 +11,7 @@ public class GuiToggleProcess extends GuiCycle<GuiToggleProcess> {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+    public void renderForeground(int mouseX, int mouseY) {
         if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             switch (typeState) {
@@ -25,7 +25,7 @@ public class GuiToggleProcess extends GuiCycle<GuiToggleProcess> {
                     list.add("Output");
                     break;
             }
-            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
+            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
         }
     }
 

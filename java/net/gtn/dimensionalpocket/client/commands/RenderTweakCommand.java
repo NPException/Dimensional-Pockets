@@ -1,13 +1,13 @@
 package net.gtn.dimensionalpocket.client.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RenderTweakCommand implements ICommand {
     
@@ -87,7 +87,7 @@ public class RenderTweakCommand implements ICommand {
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return (sender instanceof EntityPlayer);
+        return sender instanceof EntityPlayer;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.gtn.dimensionalpocket.client.event;
 
-import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import me.jezza.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.MouseEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientEventHandler {
     
@@ -25,7 +25,7 @@ public class ClientEventHandler {
                     event.setCanceled(true);
                     if (System.currentTimeMillis() > (lastTravelStaffWarningTime + 3000)) { // 3 second nag delay
                         lastTravelStaffWarningTime = System.currentTimeMillis();
-                        ChatComponentText text = new ChatComponentText(Utils.translate("functionality.disabled.in.pocket"));
+                        ChatComponentText text = new ChatComponentText(Localise.translate("functionality.disabled.in.pocket"));
                         text.getChatStyle().setItalic(Boolean.TRUE).setColor(EnumChatFormatting.GRAY);
                         player.addChatMessage(text);
                     }

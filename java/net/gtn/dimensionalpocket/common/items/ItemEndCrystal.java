@@ -1,20 +1,24 @@
-package net.gtn.dimensionalpocket.common.items.handlers;
+package net.gtn.dimensionalpocket.common.items;
 
-import java.util.List;
-
-import me.jezza.oc.common.items.ItemInformation;
+import me.jezza.oc.common.interfaces.IItemTooltip;
 import me.jezza.oc.common.utils.CoordSet;
+import me.jezza.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.items.framework.UsableHandlerAbstract;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
-public class EndCrystalHandler extends UsableHandlerAbstract {
+import java.util.List;
+
+public class ItemEndCrystal extends ItemDP {
+
+    public ItemEndCrystal(String name) {
+        super(name);
+        setEffect();
+    }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
@@ -31,23 +35,20 @@ public class EndCrystalHandler extends UsableHandlerAbstract {
         if (pocket == null)
             return itemStack;
 
-        pocket.setSpawnInPocket(Utils.getOffsetInChunk(coordSet), player.rotationYaw, player.rotationPitch);
-        
+        pocket.setSpawnInPocket(coordSet.toChunkOffset(), player.rotationYaw, player.rotationPitch);
+
         ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
         comp.getChatStyle().setItalic(Boolean.TRUE);
         player.addChatMessage(comp);
-            
+
         return itemStack;
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, ItemInformation information) {
-        addShiftInformation(information);
-        
-        String text = Utils.translate("info.tooltip.endCrystal.shift");
-        List<String> lines = Utils.formatToLines(text, 40);
-        for (String line : lines) {
-            information.addShiftList(line);
-        }
+    public void addInformation(ItemStack stack, EntityPlayer player, IItemTooltip information) {
+        information.defaultInfoList();
+        String text = Localise.translate("info.tooltip.endCrystal.shift");
+        List<String> lines = Localise.wrapToSize(text, 40);
+        information.addAllToShiftList(lines);
     }
 }

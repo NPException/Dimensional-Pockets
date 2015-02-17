@@ -1,8 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
@@ -15,6 +12,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PocketRegistry {
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
@@ -47,9 +47,9 @@ public class PocketRegistry {
         while (backLinkMap.containsKey(result)) {
             // create offset for next pocket
             CoordSet offset = new CoordSet().addForgeDirection(pocketGenParameters.nextPocketCoordsDirection);
-            offset.setX(offset.getX() * pocketChunkSpacing);
-            offset.setZ(offset.getZ() * pocketChunkSpacing);
-            
+            offset.multiplyX(pocketChunkSpacing);
+            offset.multiplyZ(pocketChunkSpacing);
+
             // create result coordset
             result = currentCoords.copy().addCoordSet(offset);
             // needed to bring old saves to this height

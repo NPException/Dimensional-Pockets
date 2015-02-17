@@ -33,8 +33,8 @@ public class GuiItemStack extends GuiWidget<GuiItemStack> {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+    public void renderForeground(int mouseX, int mouseY) {
         if (canClick(mouseX, mouseY))
-            renderToolTip(itemStack, translatedX, translatedY);
+            renderToolTip(itemStack, mouseX, mouseY);
     }
 }

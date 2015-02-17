@@ -1,7 +1,10 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import java.lang.ref.WeakReference;
-
+import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.common.interfaces.IBlockInteract;
 import me.jezza.oc.common.interfaces.IBlockNotifier;
 import me.jezza.oc.common.utils.CoordSet;
@@ -22,11 +25,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.lang.ref.WeakReference;
 
 public class TileDimensionalPocketWallConnector extends TileDP implements IBlockNotifier, IBlockInteract,
                                                                     IEnergyReceiver, IEnergyProvider, IEnergyHandler,
@@ -65,7 +65,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
     		
     		Pocket p = getPocket();
         	if (p != null) {
-        	    ForgeDirection wallSide = Pocket.getSideForConnector(Utils.getOffsetInChunk(getCoordSet()));
+        	    ForgeDirection wallSide = Pocket.getSideForConnector(getCoordSet().toChunkOffset());
         	    CoordSet connectorCoords = p.getConnectorCoords(wallSide);
         	    if (!getCoordSet().equals(connectorCoords)) {
         	        DPLogger.debug("Connector:"+ wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + String.valueOf(connectorCoords));
@@ -204,7 +204,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
 	
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-	    CoordSet offSet = Utils.getOffsetInChunk(getCoordSet());
+	    CoordSet offSet = getCoordSet().asChunkOffset();
 	    
 	    boolean ignoreX = offSet.getX() == 0 || offSet.getX() == 15;
 	    boolean ignoreY = offSet.getY() == 0 || offSet.getY() == 15;
@@ -266,7 +266,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
         if (p == null)
             return null;
 
-        ForgeDirection fdSide = Pocket.getSideForConnector(Utils.getOffsetInChunk(getCoordSet()));
+        ForgeDirection fdSide = Pocket.getSideForConnector(getCoordSet().asChunkOffset());
 
         switch (p.getFlowState(fdSide)) {
             case ENERGY:

@@ -1,7 +1,9 @@
 package net.gtn.dimensionalpocket.client.event;
 
-import java.lang.reflect.Method;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -10,10 +12,8 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Method;
 
 @SideOnly(Side.CLIENT)
 public class ClientPlayerTickEventHandler {
@@ -37,7 +37,7 @@ public class ClientPlayerTickEventHandler {
     
     private static void checkPlayerForNetherCrystal(EntityPlayer player) {
         ItemStack equippedItem = player.getCurrentEquippedItem();
-        TileRendererPocket.doIndicateSides = (equippedItem != null) && (equippedItem.getItem() == ModItems.netherCrystal);
+        TileRendererPocket.doIndicateSides = equippedItem != null && equippedItem.getItem() == ModItems.netherCrystal;
     }
     
     

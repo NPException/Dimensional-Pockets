@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.common;
 
-import net.gtn.dimensionalpocket.common.items.ItemUsable;
-import net.gtn.dimensionalpocket.common.items.handlers.BookHandler;
-import net.gtn.dimensionalpocket.common.items.handlers.EndCrystalHandler;
-import net.gtn.dimensionalpocket.common.items.handlers.NetherCrystalHandler;
+import net.gtn.dimensionalpocket.common.items.ItemBook;
+import net.gtn.dimensionalpocket.common.items.ItemDP;
+import net.gtn.dimensionalpocket.common.items.ItemEndCrystal;
+import net.gtn.dimensionalpocket.common.items.ItemNetherCrystal;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -12,19 +12,14 @@ import net.minecraft.item.crafting.CraftingManager;
 
 public class ModItems {
 
-    public static ItemUsable book;
-    public static ItemUsable endCrystal;
-    public static ItemUsable netherCrystal;
+    public static ItemDP book;
+    public static ItemDP endCrystal;
+    public static ItemDP netherCrystal;
 
     public static void init() {
-        book = new ItemUsable(Strings.INFO_BOOK, new BookHandler());
-        book.setMaxStackSize(1);
-        
-        endCrystal = new ItemUsable(Strings.END_CRYSTAL, new EndCrystalHandler());
-        endCrystal.hasEffect = true;
-        
-        netherCrystal = new ItemUsable(Strings.NETHER_CRYSTAL, new NetherCrystalHandler());
-        netherCrystal.hasEffect = true;
+        book = new ItemBook(Strings.INFO_BOOK);
+        endCrystal = new ItemEndCrystal(Strings.END_CRYSTAL);
+        netherCrystal = new ItemNetherCrystal(Strings.NETHER_CRYSTAL);
     }
 
     @SuppressWarnings("boxing")

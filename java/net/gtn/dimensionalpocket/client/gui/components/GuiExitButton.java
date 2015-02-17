@@ -22,11 +22,11 @@ public class GuiExitButton extends GuiTexturedButton<GuiExitButton> {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+    public void renderForeground(int mouseX, int mouseY) {
         if (isWithinBounds(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             list.add(isShiftKeyDown() ? (EnumChatFormatting.RED + "Reset to Default State") : ("Hold Down Shift"));
-            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
+            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
         }
     }
 

@@ -25,11 +25,11 @@ public class GuiSideButton extends GuiUntexturedButton {
 
 
     @Override
-    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+    public void renderForeground(int mouseX, int mouseY) {
         if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             list.add(Utils.capitalizeString(direction.name()));
-            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
+            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
         }
     }
 }

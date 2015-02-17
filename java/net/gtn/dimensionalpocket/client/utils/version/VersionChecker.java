@@ -1,5 +1,18 @@
 package net.gtn.dimensionalpocket.client.utils.version;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import cpw.mods.fml.common.Loader;
+import me.jezza.oc.common.utils.Localise;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -9,20 +22,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import cpw.mods.fml.common.Loader;
 
 public class VersionChecker {
     
@@ -161,8 +160,8 @@ public class VersionChecker {
     public static void checkUpToDate(EntityPlayer player) {
         Version latest = getLatestVersion();
         if (latest != null) {
-            player.addChatMessage(new ChatComponentText(Utils.translate("info.update.available.1", latest.version)));
-            player.addChatMessage(new ChatComponentText(Utils.translate("info.update.available.2", Reference.VERSION)));
+            player.addChatMessage(new ChatComponentText(Localise.format("info.update.available.1", latest.version)));
+            player.addChatMessage(new ChatComponentText(Localise.format("info.update.available.2", Reference.VERSION)));
             
             if (latest.additionalInfo != null) {
                 player.addChatMessage(new ChatComponentText(latest.additionalInfo));

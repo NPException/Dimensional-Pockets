@@ -1,11 +1,7 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import java.nio.FloatBuffer;
-import java.util.EnumMap;
-import java.util.Random;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
@@ -18,121 +14,117 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.nio.FloatBuffer;
+import java.util.EnumMap;
+import java.util.Random;
+
+import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
 public class TileRendererPocket extends TileEntitySpecialRenderer {
-    
+
+    public static boolean doIndicateSides = false;
+
     static EnumMap<PocketSideState, Colour> stateColours = new EnumMap<>(PocketSideState.class);
+
     static {
-        Colour white = Colour.WHITE.copy(); white.a = 100.0 / 255.0;
-        Colour green = Colour.GREEN.copy(); green.a = 100.0 / 255.0;
-        
+        float alpha = 0.392F;
+        Colour white = Colour.WHITE.copy();
+        white.a = alpha;
+        Colour green = Colour.GREEN.copy();
+        green.a = alpha;
+
         stateColours.put(PocketSideState.NONE, white);
         stateColours.put(PocketSideState.ENERGY, green);
     }
-    
-    FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
-    
-    public static boolean doIndicateSides = false;
+
+    protected FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     protected boolean inRange;
-    private ResourceLocation currentParticleFieldTexture;
     private float stateColorLevel;
     private float fieldTranslation;
-    private ItemStack itemStack;
-    
-    
+
     private static float maxPlaneDepth = 16f;
     private static float minPlaneDepth = 1f;
-    // add one to planecount because the "tunnel" layer is added
+
+    // add one to planeCount because the "tunnel" layer is added
     private int planeCount;
     private float planeDepthIncrement;
-    
-    
+
     private static final int maxBrightness = 240;
     private static final int fieldBrightness = maxBrightness;
 
     private final Random random = new Random();
-    private final long seed  = random.nextLong()/6; // ensure that it will always be mutlipliable by the side ids
+    private final long seed = random.nextLong() / 6; // ensure that it will always be mutlipliable by the side ids
+
+    protected static ResourceLocation[] particleFieldTextures = {
+            new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png"),
+            new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleFieldStatic.png")
+    };
+
+    protected ResourceLocation currentParticleFieldTexture = particleFieldTextures[0];
 
     private static ResourceLocation blank = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/blank.png");
     protected static ResourceLocation tunnel = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/tunnel.png");
-    protected static ResourceLocation[] particleFieldTextures = {
-        new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField.png"),
-        new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleFieldStatic.png")
-    };
-    
+
+    protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_basic.png");
     protected static ResourceLocation reducedParticleField = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/misc/particleField32.png");
 
+    protected static EnumMap<ForgeDirection, ResourceLocation> noTextures = new EnumMap<>(ForgeDirection.class);
     protected static EnumMap<ForgeDirection, ResourceLocation> frameTextures = new EnumMap<>(ForgeDirection.class);
-    static {
-        ResourceLocation frameTexture = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
-        for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS) {
-            frameTextures.put(fd, frameTexture);
-        }
-    }
-    
     protected static EnumMap<ForgeDirection, ResourceLocation> sideIndicators = new EnumMap<>(ForgeDirection.class);
     protected static EnumMap<ForgeDirection, ResourceLocation> colorblindSideIndicators = new EnumMap<>(ForgeDirection.class);
+
+    protected static EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
+    protected static EnumMap<PocketSideState, ResourceLocation> cbOverlays = new EnumMap<>(PocketSideState.class);
+
     static {
+        ResourceLocation frameTexture = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocket.png");
         ResourceLocation indicator = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicators.png");
+
         for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS) {
+            frameTextures.put(fd, frameTexture);
             sideIndicators.put(fd, indicator);
             colorblindSideIndicators.put(fd, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_side_indicator_cb_" + fd.name() + ".png"));
         }
+
         colorblindSideIndicators.put(ForgeDirection.UP, blank);
         colorblindSideIndicators.put(ForgeDirection.DOWN, blank);
-    }
-    
-    protected static EnumMap<ForgeDirection, ResourceLocation> noTextures = new EnumMap<>(ForgeDirection.class);
-    
-    protected static ResourceLocation basicOverlay = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_basic.png");
-    
-    protected static EnumMap<PocketSideState, ResourceLocation> overlays = new EnumMap<>(PocketSideState.class);
-    protected static EnumMap<PocketSideState, ResourceLocation> cbOverlays = new EnumMap<>(PocketSideState.class);
-    static {
+
         overlays.put(PocketSideState.ENERGY, basicOverlay);
         cbOverlays.put(PocketSideState.ENERGY, new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_overlay_gear.png"));
     }
-    
+
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
         if (tile instanceof TileDimensionalPocket)
-            renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick, null, null, null);
+            renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick);
     }
 
     @Override
     protected void bindTexture(ResourceLocation texture) {
-        if (itemStack != null)
-            Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-        else
-            super.bindTexture(texture);
+        field_147501_a.field_147553_e.bindTexture(texture);
     }
-    
+
     protected void updateStateColorLevel() {
         long colorCycleTime = 1337000000L;
         double minColorLevel = 0.5;
-        this.stateColorLevel = (float) (minColorLevel + (1-minColorLevel) * Math.sin((System.nanoTime()%colorCycleTime) * Math.PI / colorCycleTime));
+        this.stateColorLevel = (float) (minColorLevel + (1 - minColorLevel) * Math.sin((System.nanoTime() % colorCycleTime) * Math.PI / colorCycleTime));
     }
-    
+
     /**
      * Set time in ms it should take the particle field to translate once completely
-     * @param cycleTime
      */
     protected void updateParticleField(float speed) {
-        long cycleTime = (long) (250000L/speed);
+        long cycleTime = (long) (250000L / speed);
         this.fieldTranslation = System.currentTimeMillis() % cycleTime / ((float) cycleTime);
-        currentParticleFieldTexture = (Reference.USE_FANCY_RENDERING && itemStack == null) // disable the field rendering for the item. FIXME: entity item rendering of planes is buggy
-                                                    ? particleFieldTextures[0] : particleFieldTextures[1];
+        currentParticleFieldTexture = Reference.USE_FANCY_RENDERING ? particleFieldTextures[0] : particleFieldTextures[1];
         planeCount = Reference.NUMBER_OF_PARTICLE_PLANES;
-        planeDepthIncrement = (maxPlaneDepth-minPlaneDepth) / (planeCount+1);
+        planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / (planeCount + 1);
     }
 
     /**
@@ -141,23 +133,15 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
      * if itemStack is null (and tile is not null) it is rendering a tile,
      * otherwise it is rendering an item
      */
-    public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float f, ItemStack itemStack, ItemRenderType itemRenderType, Object[] data) {
-        this.itemStack = itemStack;
+    public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float tick) {
         double maxDistance = 32.0; // distance to block
-        this.inRange = (tile == null) || Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+        this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
 
         glPushMatrix();
-        if (itemStack == null)
-            glDisable(GL_FOG);
-        else {
-            glPushMatrix();
-            if (itemRenderType == ItemRenderType.INVENTORY)
-                glTranslatef(0.0F, -0.1F, 0.0F);
-            if (itemRenderType == ItemRenderType.ENTITY)
-                glTranslatef(-0.5F, -0.4F, -0.5F);
-        }
+        glDisable(GL_FOG);
 
         updateParticleField(2F);
+
         // Y Neg
         drawParticleField(0, x, y, z, 0.001, 1.0);
         // Y Pos
@@ -181,39 +165,29 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         instance.setBrightness(maxBrightness);
 
         renderFaces(x, y, z, 0, null, Colour.WHITE, frameTextures);
-        
-        if (doIndicateSides && itemStack == null) {
+
+        if (doIndicateSides) {
             renderFaces(x, y, z, 0.0001, null, null, sideIndicators);
             if (Reference.COLOR_BLIND_MODE) {
                 renderFaces(x, y, z, 0.0003, null, Colour.WHITE, colorblindSideIndicators);
             }
         }
 
-        Pocket pocket = (tile == null) ? null : tile.getPocket();
-        
+        Pocket pocket = tile.getPocket();
+
         updateStateColorLevel();
-        
+
         renderFaces(x, y, z, 0.0002, pocket, null, noTextures);
 
         glDisable(GL_BLEND);
 
         glEnable(GL_LIGHTING);
-        if (itemStack == null) {
-            glEnable(GL_FOG);
-        } else {
-            glPopMatrix();
-        }
-        
+        glEnable(GL_FOG);
         glPopMatrix();
     }
-    
+
     /**
      * Prepares the rendering for the given side and returns whether the rendering should proceed or not.
-     * @param isOverlay
-     * @param side
-     * @param pocket
-     * @param instance
-     * @return
      */
     protected boolean prepareRenderForSide(ResourceLocation texture, Colour texColour, ForgeDirection side, Pocket pocket, Tessellator instance) {
         if (texture == null) {
@@ -221,23 +195,21 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             ResourceLocation overlayTexture = Reference.COLOR_BLIND_MODE ? cbOverlays.get(state) : overlays.get(state);
             if (overlayTexture == null)
                 return false;
-            
+
             instance.startDrawingQuads();
             bindTexture(overlayTexture);
             instance.setBrightness(maxBrightness);
             Colour c = stateColours.get(state);
-            instance.setColorRGBA_F((float) c.r * stateColorLevel,
-                                    (float) c.g * stateColorLevel,
-                                    (float) c.b * stateColorLevel,
-                                    (float) c.a);
+            instance.setColorRGBA_F((float) c.r * stateColorLevel, (float) c.g * stateColorLevel, (float) c.b * stateColorLevel, (float) c.a);
         } else {
             instance.startDrawingQuads();
             bindTexture(texture);
             instance.setBrightness(maxBrightness);
+
             // use color code for forge direction if necessary
             if (texColour == null)
                 texColour = Utils.FD_COLOURS.get(side);
-            
+
             instance.setColorRGBA_F((float) texColour.r, (float) texColour.g, (float) texColour.b, (float) texColour.a);
         }
         return true;
@@ -304,59 +276,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 		// @formatter:on
     }
 
-    protected void drawParticleField(int side, double x, double y, double z, double offset, double scale) {
-        float dX = (float) TileEntityRendererDispatcher.staticPlayerX;
-        float dY = (float) TileEntityRendererDispatcher.staticPlayerY;
-        float dZ = (float) TileEntityRendererDispatcher.staticPlayerZ;
-
-        glPushMatrix();
-        glDisable(GL_LIGHTING);
-        random.setSeed(seed*(side+1)); // ensures different seed per side, but same seed for same side
-        
-        if (inRange && Reference.USE_FANCY_RENDERING
-                && itemStack == null // disable the field rendering for the item. FIXME: entity item rendering of planes is buggy
-                ) {
-            switch (side) {
-                case 0:
-                    drawPlaneYNeg(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-                case 1:
-                    drawPlaneYPos(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-                case 2:
-                    drawPlaneZNeg(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-                case 3:
-                    drawPlaneZPos(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-                case 4:
-                    drawPlaneXNeg(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-                case 5:
-                    drawPlaneXPos(dX, dY, dZ, x, y, z, offset, scale);
-                    break;
-            }
-        } else {
-            renderParticleFieldOutOfRangeOrStatic(side, x, y, z, offset, scale);
-        }
-
-        glDisable(GL_BLEND);
-        glDisable(GL_TEXTURE_GEN_S);
-        glDisable(GL_TEXTURE_GEN_T);
-        glDisable(GL_TEXTURE_GEN_R);
-        glDisable(GL_TEXTURE_GEN_Q);
-        glEnable(GL_LIGHTING);
-        glPopMatrix();
-    }
-
     public void renderParticleFieldOutOfRangeOrStatic(int side, double x, double y, double z, double offset, double scale) {
         glPushMatrix();
-        
+
         if (inRange)
             bindTexture(currentParticleFieldTexture);
         else
             bindTexture(reducedParticleField);
-        
+
         Tessellator instance = Tessellator.instance;
         instance.startDrawingQuads();
         instance.setBrightness(fieldBrightness);
@@ -418,9 +345,48 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glPopMatrix();
     }
 
-    private void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {        
+    protected void drawParticleField(int side, double x, double y, double z, double offset, double scale) {
+        float dX = (float) TileEntityRendererDispatcher.staticPlayerX;
+        float dY = (float) TileEntityRendererDispatcher.staticPlayerY;
+        float dZ = (float) TileEntityRendererDispatcher.staticPlayerZ;
+
+        glPushMatrix();
+        glDisable(GL_LIGHTING);
+        random.setSeed(seed * (side + 1)); // ensures different seed per side, but same seed for same side
+
+        switch (side) {
+            case 0:
+                drawPlaneYNeg(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+            case 1:
+                drawPlaneYPos(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+            case 2:
+                drawPlaneZNeg(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+            case 3:
+                drawPlaneZPos(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+            case 4:
+                drawPlaneXNeg(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+            case 5:
+                drawPlaneXPos(dX, dY, dZ, x, y, z, offset, scale);
+                break;
+        }
+
+        glDisable(GL_BLEND);
+        glDisable(GL_TEXTURE_GEN_S);
+        glDisable(GL_TEXTURE_GEN_T);
+        glDisable(GL_TEXTURE_GEN_R);
+        glDisable(GL_TEXTURE_GEN_Q);
+        glEnable(GL_LIGHTING);
+        glPopMatrix();
+    }
+
+    private void drawPlaneYPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;
@@ -495,7 +461,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private void drawPlaneYNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;
@@ -570,7 +536,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private void drawPlaneZPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;
@@ -645,7 +611,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private void drawPlaneZNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;
@@ -720,7 +686,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private void drawPlaneXPos(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;
@@ -795,7 +761,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     private void drawPlaneXNeg(float dX, float dY, float dZ, double x, double y, double z, double offset, double scale) {
         int i = -1;
-        for (float depthDecrease = 0f; i < planeCount+1; depthDecrease += planeDepthIncrement) {
+        for (float depthDecrease = 0f; i < planeCount + 1; depthDecrease += planeDepthIncrement) {
             i++;
             glPushMatrix();
             float f5 = maxPlaneDepth - depthDecrease;

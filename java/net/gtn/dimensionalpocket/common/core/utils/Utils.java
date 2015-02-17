@@ -1,11 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-
 import me.jezza.oc.client.gui.lib.Colour;
-import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -21,14 +16,16 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.EnumMap;
+
 public class Utils {
-    
+
     public static EnumMap<ForgeDirection, Colour> FD_COLOURS = new EnumMap<>(ForgeDirection.class);
+
     static {
         // @formatter:off
         double alpha = 7.0;
@@ -74,20 +71,6 @@ public class Utils {
         String rest = string.substring(1).toLowerCase();
         return firstLetter + rest;
     }
-    
-    public static String translate(String key) {
-        return translate(key, (Object[])null);
-    }
-    
-    public static String translate(String key, Object ... params) {
-        String result = StatCollector.translateToLocal(key);
-        if (params != null) {
-            for(int i=0; i<params.length; i++) {
-                result = result.replace("{"+(i)+"}", String.valueOf(params[i]));
-            }
-        }
-        return result;
-    }
 
     public static NBTTagCompound getPlayerPersistTag(EntityPlayer player) {
         NBTTagCompound tag = player.getEntityData();
@@ -114,25 +97,20 @@ public class Utils {
     }
 
     /**
-     * This method will write the given name and lore to the itemstack's "display"-nbt tag. (Thanks to oku)
-     *
-     * @param stack
-     * @param name
-     * @param loreStrings
-     * @return
+     * This method will write the given name and lore to the itemStack's "display"-nbt tag. (Thanks to oku)
      */
-    public static ItemStack generateItem(ItemStack stack, String name, boolean forceCleanName, String... loreStrings) {
-        NBTTagCompound nbt = stack.getTagCompound();
+    public static ItemStack generateItem(ItemStack itemStack, String name, boolean forceCleanName, String... loreStrings) {
+        NBTTagCompound nbt = itemStack.getTagCompound();
         NBTTagCompound display;
         if (nbt == null) {
             nbt = new NBTTagCompound();
-            stack.setTagCompound(nbt);
+            itemStack.setTagCompound(nbt);
         }
-        if (!stack.getTagCompound().hasKey("display")) {
-            stack.setTagInfo("display", new NBTTagCompound());
+        if (!itemStack.getTagCompound().hasKey("display")) {
+            itemStack.setTagInfo("display", new NBTTagCompound());
         }
 
-        display = stack.getTagCompound().getCompoundTag("display");
+        display = itemStack.getTagCompound().getCompoundTag("display");
 
         if (loreStrings != null && loreStrings.length > 0) {
             NBTTagList lore = new NBTTagList();
@@ -152,7 +130,7 @@ public class Utils {
             display.setString("Name", sb.toString());
         }
 
-        return stack;
+        return itemStack;
     }
 
     /**
@@ -164,7 +142,7 @@ public class Utils {
 
         world.spawnEntityInWorld(entityItem);
     }
-    
+
     /**
      * Tries to check if this is a server side call. If it is a remote call, this throws an exception.
      */
@@ -176,7 +154,7 @@ public class Utils {
             }
         }
     }
-    
+
     /**
      * Tries to check if this is a client side call. If it is a non remote call, this throws an exception.
      */
@@ -188,7 +166,7 @@ public class Utils {
             }
         }
     }
-    
+
     public static boolean isOreDictItem(ItemStack stack, String oreDictName) {
         int targetOreDictID = OreDictionary.getOreID(oreDictName);
         for (int stackOreDictID : OreDictionary.getOreIDs(stack)) {
@@ -197,74 +175,33 @@ public class Utils {
         }
         return false;
     }
-    
+
     public static boolean isItemPocketWrench(ItemStack stack) {
         if (!Utils.isOreDictItem(stack, "stickWood"))
             return false;
-        
+
         if (!stack.hasTagCompound())
             return false;
-        
+
         NBTTagCompound itemCompound = stack.getTagCompound();
-        if (!itemCompound.hasKey("display")) 
+        if (!itemCompound.hasKey("display"))
             return false;
-        
+
         String customName = itemCompound.getCompoundTag("display").getString("Name");
         return "Pocket Wrench".equalsIgnoreCase(customName);
     }
 
-    public static List<String> formatToLines(String text, int maxLineLength) {
-       List<String> lines = new ArrayList<>();
-       for (String part : text.split("\\\\n")) {
-           if (part.length() <= maxLineLength) {
-               lines.add(part);
-           } else {
-               String[] words = part.split(" ");
-               StringBuilder sb = new StringBuilder();
-               for (String word : words) {
-                   String space = (sb.length() == 0) ? "" : " ";
-                   if (sb.length() + space.length() + word.length() > maxLineLength) {
-                       lines.add(sb.toString());
-                       sb = new StringBuilder();
-                       space = "";
-                   }
-                   sb.append(space).append(word);
-               }
-               lines.add(sb.toString());
-           }
-       }
-       return lines;
-    }
-    
     public static ChatComponentText createChatLink(String text, String url, boolean bold, boolean underline, boolean italic, EnumChatFormatting color) {
         ChatComponentText link = new ChatComponentText(text);
         ChatStyle style = link.getChatStyle();
         style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        style.setBold(Boolean.valueOf(bold));
-        style.setUnderlined(Boolean.valueOf(underline));
-        style.setItalic(Boolean.valueOf(italic));
+        style.setBold(bold);
+        style.setUnderlined(underline);
+        style.setItalic(italic);
         style.setColor(color);
         return link;
     }
-    
-    /**
-     * This method will only exist until the ChunkOffset methods in OmnisCore are fixed
-     * @param coords
-     * @return
-     */
-    public static CoordSet getOffsetInChunk(CoordSet coords) {
-        CoordSet offset = coords.toChunkOffset();
-        int x = offset.getX();
-        int y = offset.getY();
-        int z = offset.getZ();
-        
-        if (x<0) offset.setX(x+16);
-        if (y<0) offset.setY(y+16);
-        if (z<0) offset.setZ(z+16);
-        
-        return offset;
-    }
-    
+
     /**
      * Ensures that the given inventory is the full inventory, i.e. takes double
      * chests into account.<br>

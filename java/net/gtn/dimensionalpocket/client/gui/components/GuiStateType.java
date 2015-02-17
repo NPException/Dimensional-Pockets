@@ -16,14 +16,14 @@ public class GuiStateType extends GuiToggle {
     }
 
     @Override
-    public void renderForeground(int mouseX, int mouseY, int translatedX, int translatedY) {
+    public void renderForeground(int mouseX, int mouseY) {
         if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
             if (typeState == 0)
                 list.add("Enabled");
             else if (typeState == 1)
                 list.add("Disabled");
-            renderHoveringText(list, translatedX, translatedY, fontRendererObj);
+            renderHoveringText(list, mouseX, mouseY, fontRendererObj);
         }
     }
 
