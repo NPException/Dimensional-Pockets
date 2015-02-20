@@ -108,9 +108,4 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
             return new TileDimensionalPocketWallConnector();
         return null;
     }
-
-    @Override
-    public String getModIdentifier() {
-        return Reference.MOD_IDENTIFIER;
-    }
 }

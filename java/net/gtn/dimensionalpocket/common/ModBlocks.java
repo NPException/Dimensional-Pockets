@@ -6,6 +6,7 @@ import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
+//@BlockRegistar(package = "block")
 public class ModBlocks {
 
     public static Block dimensionalPocket;

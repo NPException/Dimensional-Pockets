@@ -14,6 +14,7 @@ public class TinkersConstructConfig extends AbstractConfig {
         super(modID);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void runModSpecificComms() {
         try {
@@ -25,7 +26,7 @@ public class TinkersConstructConfig extends AbstractConfig {
             ArrayList<Integer> temp = new ArrayList<Integer>();
             ArrayList<Integer> blackListedDims = (ArrayList<Integer>) field.get(temp);
 
-            blackListedDims.add(Integer.valueOf(Reference.DIMENSION_ID));
+            blackListedDims.add(Reference.DIMENSION_ID);
         } catch (Exception e) {
             e.printStackTrace();
         }

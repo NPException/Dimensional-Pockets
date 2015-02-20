@@ -1,14 +1,11 @@
 package net.gtn.dimensionalpocket.common.block;
 
 import cofh.api.block.IDismantleable;
-
 import com.google.common.collect.Lists;
-
 import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,11 +59,6 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
     @Override
     public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
         return true;
-    }
-
-    @Override
-    public String getModIdentifier() {
-        return Reference.MOD_IDENTIFIER;
     }
 
     @Override
