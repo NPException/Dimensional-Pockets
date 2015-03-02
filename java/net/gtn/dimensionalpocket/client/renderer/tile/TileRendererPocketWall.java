@@ -2,31 +2,35 @@ package net.gtn.dimensionalpocket.client.renderer.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import me.jezza.oc.client.gui.lib.Colour;
+import me.jezza.oc.client.lib.Colour;
+import me.jezza.oc.client.renderer.BlockRenderer;
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
+import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import static net.gtn.dimensionalpocket.common.lib.Reference.THEME;
 import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
 public class TileRendererPocketWall extends TileRendererPocket {
 
-    private static ResourceLocation innerPocketFrame = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dimensionalPocketInside.png");
-    private static ResourceLocation wallConnector = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_wall_connector.png");
-    private static ResourceLocation wallConnectorBackground = new ResourceLocation(Reference.MOD_IDENTIFIER + "textures/blocks/dp_wall_connector_bg.png");
-
-    private Colour connectorBaseColor = Colour.WHITE.copy();
-    private Colour connectorColor = connectorBaseColor.copy();
-    private Colour connectorBGColour = Colour.WHITE.copy();
+    private Colour connectorBaseColor, connectorColor, connectorBGColour;
 
     {
+        connectorBaseColor = Colour.WHITE.copy();
+        connectorColor = Colour.WHITE.copy();
+        connectorBGColour = Colour.WHITE.copy();
         connectorBGColour.a = 0.80;
+    }
+
+    public TileRendererPocketWall() {
+        inRange = true;
     }
 
     private void updateConnectorColor() {
@@ -40,16 +44,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
         connectorColor.a = connectorBaseColor.a * level;
     }
 
-    public TileRendererPocketWall() {
-        inRange = true;
-    }
-
-    @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
-        if (tile instanceof TileDimensionalPocketWallConnector)
-            renderDimensionalPocketWallAt((TileDimensionalPocketWallConnector) tile, x, y, z, tick);
-    }
-
     /**
      * Method is used by tile and item renderer.
      * Last three arguments are passed by the item renderer.
@@ -61,17 +55,12 @@ public class TileRendererPocketWall extends TileRendererPocket {
         ForgeDirection wallVisibleSide = Pocket.getSideForConnector(offsetCoords).getOpposite();
 
         // % 15 is to ensure that only the two coordinates that build the plane of the wall are non zero
-        int offX = offsetCoords.getX() % 15;
-        int offY = offsetCoords.getY() % 15;
-        int offZ = offsetCoords.getZ() % 15;
-
-        glPushMatrix();
-
-        glDisable(GL_FOG);
+        int offX = offsetCoords.x % 15;
+        int offY = offsetCoords.y % 15;
+        int offZ = offsetCoords.z % 15;
 
         int ordinal = wallVisibleSide.ordinal();
-        double offset = (ordinal % 2 == 0) ? 0.001 : 0.999;
-        updateParticleField(3F);
+        float offset = (ordinal % 2 == 0) ? 0.001F : 0.999F;
 
         int tempX = offX;
         int tempY = offY;
@@ -95,11 +84,16 @@ public class TileRendererPocketWall extends TileRendererPocket {
             default:
                 break;
         }
+        glPushMatrix();
+
+        glDisable(GL_FOG);
+        updateParticleField(3F);
+
         drawParticleField(ordinal, x - tempX, y - tempY, z - tempZ, offset, 14.0);
 
         glDisable(GL_LIGHTING);
-
         glEnable(GL_BLEND);
+        glEnable(GL_FOG);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         Pocket pocket = tile.getPocket();
@@ -108,92 +102,53 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int ox = (offX == 0) ? 0 : offX - 1;
         int oy = (offY == 0) ? 0 : offY - 1;
         int oz = (offZ == 0) ? 0 : offZ - 1;
-        renderFaceOnWall(wallVisibleSide, x - ox, y - oy, z - oz, 0.001d, 14.0, pocket, Colour.WHITE, innerPocketFrame);
 
-        // corners
+        glTranslated(x, y, z);
+
+        glPushMatrix();
+        glTranslatef(-ox, -oy, -oz);
+        BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.0001F, 14F);
+        glPopMatrix();
+
+        // Connectors
+        updateConnectorColor();
+
+        connectorBGColour.doGLColor4();
+        BlockRenderer.drawFace(wallVisibleSide, THEME.getConnectorBG(), 0.004F);
+
+        connectorColor.doGLColor4();
+        BlockRenderer.drawFace(wallVisibleSide, THEME.getConnector(), 0.005F);
+
+        glTranslatef(-offX, -offY, -offZ);
+
+        // Indicators
         if (doIndicateSides) {
-            renderFaceOnWall(wallVisibleSide, x - offX, y - offY, z - offZ, 0.0015, 16.0, pocket, null, sideIndicators.get(wallVisibleSide));
-            if (Reference.COLOR_BLIND_MODE) {
-                renderFaceOnWall(wallVisibleSide, x - offX, y - offY + 2F, z - offZ, 0.0025, 16.0, pocket, Colour.WHITE, colorblindSideIndicators.get(wallVisibleSide.getOpposite()));
+            Colour texColour = Utils.FD_COLOURS.get(wallVisibleSide);
+            glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
+            BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(Reference.COLOR_BLIND_MODE), 0.002F, 16);
+
+            // Overlays
+            updateStateColorLevel();
+            if (pocket != null) {
+                PocketSideState state = pocket.getFlowState(wallVisibleSide);
+                IColourBlindTexture texture = THEME.getOverlay(state);
+                if (texture != null) {
+                    Colour colour = state.getColour();
+                    glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
+                    BlockRenderer.drawFace(wallVisibleSide, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.001F, 16);
+                }
             }
         }
 
-        // overlays
-        updateStateColorLevel();
-        renderFaceOnWall(wallVisibleSide, x - offX, y - offY, z - offZ, 0.0020, 16.0, pocket, null, null);
-
-        // connector
-        updateConnectorColor();
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0030, 1.0, pocket, connectorBGColour, wallConnectorBackground);
-        renderFaceOnWall(wallVisibleSide, x, y, z, 0.0035, 1.0, pocket, connectorColor, wallConnector);
-
         glDisable(GL_BLEND);
-
         glEnable(GL_LIGHTING);
-
-        glEnable(GL_FOG);
 
         glPopMatrix();
     }
 
-    private void renderFaceOnWall(ForgeDirection side, double x, double y, double z, double offset, double scale, Pocket pocket, Colour colour, ResourceLocation texture) {
-        Tessellator instance = Tessellator.instance;
-
-        // @formatter:off
-		// Y Neg
-        if (side == ForgeDirection.DOWN && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y - offset, z          , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y - offset, z          , 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y - offset, z + scale  , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x          , y - offset, z + scale  , 1.0D, 1.0D);
-    		instance.draw();
-        }
-		
-		// Y Pos
-        if (side == ForgeDirection.UP && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z + scale, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z + scale, 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y + 1.0D + offset, z        , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x          , y + 1.0D + offset, z        , 1.0D, 1.0D);
-    		instance.draw();
-        }
-		
-		// Z Neg
-        if (side == ForgeDirection.NORTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + scale , z - offset, 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y + scale , z - offset, 0.0D, 0.0D);
-    		instance.addVertexWithUV(x + scale  , y         , z - offset, 0.0D, 1.0D);
-    		instance.addVertexWithUV(x          , y         , z - offset, 1.0D, 1.0D);
-    		instance.draw();
-        }
-		
-		// Z Pos
-        if (side == ForgeDirection.SOUTH && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x          , y + scale , z + 1.0D + offset, 0.0D, 0.0D);
-    		instance.addVertexWithUV(x          , y         , z + 1.0D + offset, 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y         , z + 1.0D + offset, 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + scale  , y + scale , z + 1.0D + offset, 1.0D, 0.0D);
-    		instance.draw();
-        }
-		
-		// X Neg
-        if (side == ForgeDirection.WEST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x - offset, y        , z          , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x - offset, y        , z + scale  , 1.0D, 1.0D);
-    		instance.addVertexWithUV(x - offset, y + scale, z + scale  , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x - offset, y + scale, z          , 0.0D, 0.0D);
-    		instance.draw();
-        }
-		
-		// X Pos
-        if (side == ForgeDirection.EAST && prepareRenderForSide(texture, colour, side.getOpposite(), pocket, instance)) {
-    		instance.addVertexWithUV(x + 1.0D + offset, y         , z + scale  , 0.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y         , z          , 1.0D, 1.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z          , 1.0D, 0.0D);
-    		instance.addVertexWithUV(x + 1.0D + offset, y + scale , z + scale  , 0.0D, 0.0D);
-    		instance.draw();
-        }
-		
-		// @formatter:on
+    @Override
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
+        if (tile instanceof TileDimensionalPocketWallConnector)
+            renderDimensionalPocketWallAt((TileDimensionalPocketWallConnector) tile, x, y, z, tick);
     }
 }

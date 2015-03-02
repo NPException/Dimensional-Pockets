@@ -1,28 +1,36 @@
 package net.gtn.dimensionalpocket.client.commands;
 
+import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RenderTweakCommand implements ICommand {
-    
+
     private static final String OPTION_COLORBLIND = "colorblindMode";
     private static final String OPTION_FANCY = "fancyRendering";
     private static final String OPTION_PLANE_COUNT = "particlePlanes";
-    
+    private static final String OPTION_HELP = "help";
+    private static final String OPTION_THEME = "theme";
+
     private static final List<String> ALL_OPTIONS = new ArrayList<>();
-    static{ 
+
+    static {
         ALL_OPTIONS.add(OPTION_COLORBLIND);
         ALL_OPTIONS.add(OPTION_FANCY);
         ALL_OPTIONS.add(OPTION_PLANE_COUNT);
+        ALL_OPTIONS.add(OPTION_HELP);
+        ALL_OPTIONS.add(OPTION_THEME);
     }
-    
+
     private List<String> aliases = new ArrayList<>();
+
     {
         aliases.add("dimptweak");
     }
@@ -53,16 +61,14 @@ public class RenderTweakCommand implements ICommand {
             switch (args[0]) {
                 case OPTION_COLORBLIND:
                     if (args.length > 1) {
-                        boolean newValue = Boolean.parseBoolean(args[1]);
-                        Reference.COLOR_BLIND_MODE = newValue;
+                        Reference.COLOR_BLIND_MODE = Boolean.parseBoolean(args[1]);
                     } else {
                         sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_COLORBLIND + ": " + Reference.COLOR_BLIND_MODE));
                     }
                     return;
                 case OPTION_FANCY:
                     if (args.length > 1) {
-                        boolean newValue = Boolean.parseBoolean(args[1]);
-                        Reference.USE_FANCY_RENDERING = newValue;
+                        Reference.USE_FANCY_RENDERING = Boolean.parseBoolean(args[1]);
                     } else {
                         sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_FANCY + ": " + Reference.USE_FANCY_RENDERING));
                     }
@@ -75,14 +81,36 @@ public class RenderTweakCommand implements ICommand {
                                 Reference.NUMBER_OF_PARTICLE_PLANES = newValue;
                                 return;
                             }
-                        } catch (NumberFormatException nfe) {/* do nothing */ }
+                        } catch (NumberFormatException ignored) {
+                        }
                         sender.addChatMessage(new ChatComponentText("Valid values for " + OPTION_PLANE_COUNT + " range from 1 to 50"));
                     }
                     sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_PLANE_COUNT + ": " + Reference.NUMBER_OF_PARTICLE_PLANES));
                     return;
+                case OPTION_HELP:
+                    sender.addChatMessage(new ChatComponentText("Valid options: "));
+                    for (String option : ALL_OPTIONS)
+                        sender.addChatMessage(new ChatComponentText(option));
+                    return;
+                case OPTION_THEME:
+                    if (args.length > 1) {
+                        try {
+                            int newValue = Integer.parseInt(args[1]);
+                            newValue = MathHelper.clamp_int(newValue, 0, 1);
+                            Reference.CURRENT_THEME = newValue;
+                            Reference.THEME = Theme.values()[Reference.CURRENT_THEME];
+                        } catch (NumberFormatException ignored) {
+                        }
+                        sender.addChatMessage(new ChatComponentText("Valid values between 0 and 1"));
+                    }
+                    sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.CURRENT_THEME));
+                    return;
             }
         }
         sender.addChatMessage(new ChatComponentText(getCommandUsage(sender)));
+        sender.addChatMessage(new ChatComponentText("Valid options: "));
+        for (String option : ALL_OPTIONS)
+            sender.addChatMessage(new ChatComponentText(option));
     }
 
     @Override

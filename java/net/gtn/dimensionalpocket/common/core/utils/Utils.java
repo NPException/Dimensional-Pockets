@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
-import me.jezza.oc.client.gui.lib.Colour;
+import me.jezza.oc.client.lib.Colour;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -29,12 +29,18 @@ public class Utils {
     static {
         // @formatter:off
         double alpha = 7.0;
-        Colour purple = Colour.PURPLE.copy(); purple.a = alpha;
-        Colour orange = Colour.ORANGE.copy(); orange.a = alpha;
-        Colour yellow = Colour.YELLOW.copy(); yellow.a = alpha;
-        Colour blue = Colour.BLUE.copy(); blue.a = alpha;
-        Colour green = Colour.GREEN.copy(); green.a = alpha;
-        Colour red = Colour.RED.copy(); red.a = alpha;
+        Colour purple = Colour.PURPLE.copy();
+        purple.a = alpha;
+        Colour orange = Colour.ORANGE.copy();
+        orange.a = alpha;
+        Colour yellow = Colour.YELLOW.copy();
+        yellow.a = alpha;
+        Colour blue = Colour.BLUE.copy();
+        blue.a = alpha;
+        Colour green = Colour.GREEN.copy();
+        green.a = alpha;
+        Colour red = Colour.RED.copy();
+        red.a = alpha;
         
         FD_COLOURS.put(ForgeDirection.DOWN,  purple);
         FD_COLOURS.put(ForgeDirection.UP,    orange);

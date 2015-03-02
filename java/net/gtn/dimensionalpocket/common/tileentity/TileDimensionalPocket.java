@@ -155,14 +155,12 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         CoordSet chunkSet = getPocket().getChunkCoords();
         chunkSet.writeToNBT(itemStack.getTagCompound());
 
-        int id = chunkSet.getX() * 16 + chunkSet.getY() + 1;
-
         String creatorLore = null;
         Pocket pocket = getPocket();
-        if (pocket != null && pocket.getCreator() != null) {
+        if (pocket != null && pocket.getCreator() != null)
             creatorLore = "Creator: §3§o" + pocket.getCreator();
-        }
 
+        int id = chunkSet.x * 16 + chunkSet.y + 1;
         itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + id + "§8 ~", creatorLore);
         return itemStack;
     }
@@ -219,21 +217,18 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
      */
     private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
         Pocket p = getPocket();
-        if (p == null) return null;
+        if (p == null)
+            return null;
 
         World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
         CoordSet targetCoords = p.getConnectorCoords(side);
-        if (targetCoords == null || !targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
+        if (targetCoords == null || !targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z))
             return null;
-        }
 
         targetCoords.addForgeDirection(side.getOpposite());
-        if (!targetWorld.blockExists(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ())) {
-            return null;
-        }
+        return targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z) ? targetWorld.getTileEntity(targetCoords.x, targetCoords.y, targetCoords.z) : null;
 
-        return targetWorld.getTileEntity(targetCoords.getX(), targetCoords.getY(), targetCoords.getZ());
     }
 
     ///////////////////////
@@ -243,7 +238,8 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     @Override
     public boolean canConnectEnergy(ForgeDirection from) {
         Pocket p = getPocket();
-        if (p == null) return false;
+        if (p == null)
+            return false;
 
         switch (p.getFlowState(from)) {
             case ENERGY:
@@ -326,17 +322,20 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
     private static final int SIDE_BITS = 3;
 
     private IInventory getInventoryOnInsideWall(int side) {
+        if (worldObj.isRemote)
+            return null;
+
         Pocket p = getPocket();
-        if (p == null) return null;
+        if (p == null)
+            return null;
 
         ForgeDirection fdSide = ForgeDirection.getOrientation(side);
 
         switch (p.getFlowState(fdSide)) {
             case ENERGY:
                 TileEntity te = getFrameConnectorNeighborTileEntity(fdSide);
-                if (te instanceof IInventory) {
+                if (te instanceof IInventory)
                     return Utils.getInventory((IInventory) te);
-                }
                 return null;
             default:
                 return null;

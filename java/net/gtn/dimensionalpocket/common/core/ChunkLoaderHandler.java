@@ -1,10 +1,5 @@
 package net.gtn.dimensionalpocket.common.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -18,6 +13,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ChunkLoaderHandler implements LoadingCallback {
 
@@ -69,19 +69,20 @@ public class ChunkLoaderHandler implements LoadingCallback {
 
         wrapper.ticket = currentTicket;
 
-        ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.getX(), chunkXZSet.getZ()));
+        ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.x, chunkXZSet.z));
     }
 
     public static void addPocketToChunkLoader(Pocket pocket) {
         if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
             return;
-        
+
         Utils.enforceServer();
         if (pocket == null)
             return;
 
         CoordSet pocketSet = pocket.getChunkCoords();
-        CoordSet chunkXZSet = pocketSet.copy().setY(0); // set to 0 to get the same CoordSet for every pocket in the same chunk
+        CoordSet chunkXZSet = pocketSet.copy();
+        chunkXZSet.y = 0; // set to 0 to get the same CoordSet for every pocket in the same chunk
 
         TicketWrapper wrapper = ticketMap.get(chunkXZSet);
         if (wrapper == null) {
@@ -109,7 +110,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
             if (wrapper.ticket != null) {
                 NBTTagCompound tag = wrapper.ticket.getModData();
                 chunkXZSet.writeToNBT(tag);
-                ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.getX(), chunkXZSet.getZ()));
+                ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.x, chunkXZSet.x));
             } else {
                 DPLogger.warning("No new tickets available from the ForgeChunkManager.", ChunkLoaderHandler.class);
             }
@@ -119,7 +120,8 @@ public class ChunkLoaderHandler implements LoadingCallback {
     public static void removePocketFromChunkLoader(Pocket pocket) {
         Utils.enforceServer();
         CoordSet pocketSet = pocket.getChunkCoords();
-        CoordSet chunkXZSet = pocketSet.copy().setY(0);
+        CoordSet chunkXZSet = pocketSet.copy();
+        chunkXZSet.y = 0;
 
         if (!ticketMap.containsKey(chunkXZSet)) {
             DPLogger.warning("Something tried to remove a loaded pocket from a chunk that was never loaded before...");

@@ -9,7 +9,7 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 
 import java.util.Random;
 
-import me.jezza.oc.client.gui.lib.Colour;
+import me.jezza.oc.client.lib.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;

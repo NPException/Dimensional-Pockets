@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.client.particles;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import me.jezza.oc.client.gui.lib.Colour;
+import me.jezza.oc.client.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -31,9 +31,9 @@ public class PlayerStreamFX extends EntityFX {
         this.colour = colour.copy();
         particleMaxAge = ticksToTake;
 
-        motionX = (targetSet.getX() + 0.5F - posX) / ticksToTake;
-        motionY = (targetSet.getY() + 0.5F - posY) / ticksToTake;
-        motionZ = (targetSet.getZ() + 0.5F - posZ) / ticksToTake;
+        motionX = (targetSet.x + 0.5F - posX) / ticksToTake;
+        motionY = (targetSet.y + 0.5F - posY) / ticksToTake;
+        motionZ = (targetSet.z + 0.5F - posZ) / ticksToTake;
         
         particleNumber = random.nextInt(3) + 1;
     }

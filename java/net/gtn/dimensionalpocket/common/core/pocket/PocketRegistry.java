@@ -47,21 +47,21 @@ public class PocketRegistry {
         while (backLinkMap.containsKey(result)) {
             // create offset for next pocket
             CoordSet offset = new CoordSet().addForgeDirection(pocketGenParameters.nextPocketCoordsDirection);
-            offset.multiplyX(pocketChunkSpacing);
-            offset.multiplyZ(pocketChunkSpacing);
+            offset.x *= pocketChunkSpacing;
+            offset.z *= pocketChunkSpacing;
 
             // create result coordset
             result = currentCoords.copy().addCoordSet(offset);
             // needed to bring old saves to this height
-            result.setY(4);
+            result.y = 4;
         }
         
         // create test offset to check for the next pockets direction
         ForgeDirection clockwiseTurn = pocketGenParameters.nextPocketCoordsDirection.getRotation(ForgeDirection.UP);
         CoordSet probeOffset = new CoordSet().addForgeDirection(clockwiseTurn);
-        probeOffset.setX(probeOffset.getX() * pocketChunkSpacing);
-        probeOffset.setZ(probeOffset.getZ() * pocketChunkSpacing);
-        
+        probeOffset.x *= pocketChunkSpacing;
+        probeOffset.z *= pocketChunkSpacing;
+
         // check if probed coordset is mapped to a pocket already
         CoordSet probeCoords = result.copy().addCoordSet(probeOffset);
         if (!backLinkMap.containsKey(probeCoords))
@@ -124,7 +124,7 @@ public class PocketRegistry {
                 if (coords != null) {
                     Block block = coords.getBlock(pocketWorld);
                     if (block == ModBlocks.dimensionalPocketWall)
-                        pocketWorld.setBlockMetadataWithNotify(coords.getX(), coords.getY(), coords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
+                        pocketWorld.setBlockMetadataWithNotify(coords.x, coords.y, coords.z, BlockDimensionalPocketWall.CONNECTOR_META, 3);
                 }
             }
         }

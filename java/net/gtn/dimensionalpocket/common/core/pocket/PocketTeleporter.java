@@ -28,9 +28,9 @@ public class PocketTeleporter extends Teleporter {
 
         EntityPlayerMP player = (EntityPlayerMP) entity;
 
-        double posX = targetSet.getX() + 0.5F;
-        double posY = targetSet.getY() + 1;
-        double posZ = targetSet.getZ() + 0.5F;
+        double posX = targetSet.x + 0.5F;
+        double posY = targetSet.y + 1;
+        double posZ = targetSet.z + 0.5F;
 
         player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, spawnYaw, spawnPitch);
         player.fallDistance = 0;

@@ -105,11 +105,11 @@ public class Pocket {
 
         World world = PocketRegistry.getWorldForPockets();
 
-        int worldX = chunkCoords.getX() * 16;
-        int worldY = chunkCoords.getY() * 16;
-        int worldZ = chunkCoords.getZ() * 16;
+        int worldX = chunkCoords.x * 16;
+        int worldY = chunkCoords.y * 16;
+        int worldZ = chunkCoords.z * 16;
 
-        Chunk chunk = world.getChunkFromChunkCoords(chunkCoords.getX(), chunkCoords.getZ());
+        Chunk chunk = world.getChunkFromChunkCoords(chunkCoords.x, chunkCoords.z);
 
         int l = worldY >> 4;
         ExtendedBlockStorage extendedBlockStorage = chunk.getBlockStorageArray()[l];
@@ -179,9 +179,9 @@ public class Pocket {
         CoordSet connectorCoords = getConnectorCoords(side);
 
         if (connectorCoords != null) {
-            int conX = connectorCoords.getX();
-            int conY = connectorCoords.getY();
-            int conZ = connectorCoords.getZ();
+            int conX = connectorCoords.x;
+            int conY = connectorCoords.y;
+            int conZ = connectorCoords.z;
             if (world.blockExists(conX, conY, conZ)) {
                 world.markBlockForUpdate(conX, conY, conZ);
                 world.notifyBlockChange(conX, conY, conZ, ModBlocks.dimensionalPocketWall);
@@ -193,9 +193,9 @@ public class Pocket {
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();
             World blockWorld = getBlockWorld();
-            int srcX = srcCoords.getX();
-            int srcY = srcCoords.getY();
-            int srcZ = srcCoords.getZ();
+            int srcX = srcCoords.x;
+            int srcY = srcCoords.y;
+            int srcZ = srcCoords.z;
             if (blockWorld.blockExists(srcX, srcY, srcZ)) {
                 blockWorld.markBlockForUpdate(srcX, srcY, srcZ);
                 blockWorld.notifyBlockChange(srcX, srcY, srcZ, ModBlocks.dimensionalPocket);
@@ -265,15 +265,15 @@ public class Pocket {
         getConnectorMap().put(side, connectorCoords);
         connectorCoords.writeToNBT(getNBT().getCompoundTag(NBT_CONNECTOR_MAP_KEY), side.name());
 
-        world.setBlockMetadataWithNotify(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), BlockDimensionalPocketWall.CONNECTOR_META, 3);
-        world.markBlockForUpdate(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ());
-        world.notifyBlockChange(connectorCoords.getX(), connectorCoords.getY(), connectorCoords.getZ(), ModBlocks.dimensionalPocketWall);
+        world.setBlockMetadataWithNotify(connectorCoords.x, connectorCoords.y, connectorCoords.z, BlockDimensionalPocketWall.CONNECTOR_META, 3);
+        world.markBlockForUpdate(connectorCoords.x, connectorCoords.y, connectorCoords.z);
+        world.notifyBlockChange(connectorCoords.x, connectorCoords.y, connectorCoords.z, ModBlocks.dimensionalPocketWall);
 
         if (isSourceBlockPlaced()) {
             CoordSet srcCoords = getBlockCoords();
             World blockWorld = getBlockWorld();
-            blockWorld.markBlockForUpdate(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ());
-            blockWorld.notifyBlockChange(srcCoords.getX(), srcCoords.getY(), srcCoords.getZ(), ModBlocks.dimensionalPocket);
+            blockWorld.markBlockForUpdate(srcCoords.x, srcCoords.y, srcCoords.z);
+            blockWorld.notifyBlockChange(srcCoords.x, srcCoords.y, srcCoords.z, ModBlocks.dimensionalPocket);
         }
 
         return true;
@@ -285,7 +285,7 @@ public class Pocket {
 
 
         World world = getBlockWorld();
-        TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.x, blockCoords.y, blockCoords.z);
         if (teleportSide == TeleportDirection.UNKNOWN) {
             ChatComponentTranslation comp = new ChatComponentTranslation("info.exit.blocked");
             comp.getChatStyle().setItalic(Boolean.TRUE);
@@ -319,9 +319,10 @@ public class Pocket {
         World world = getBlockWorld();
 
         if (isSourceBlockPlaced()) {
-            TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+            TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.x, blockCoords.y, blockCoords.z);
             if (teleportSide != TeleportDirection.UNKNOWN) {
-                CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet()).addY(-1);
+                CoordSet tempBlockSet = blockCoords.copy().addCoordSet(teleportSide.toCoordSet());
+                tempBlockSet.y += -1;
                 PocketTeleporter teleporter = PocketTeleporter.createTeleporter(blockDim, tempBlockSet, player.rotationYaw, player.rotationPitch);
 
                 if (blockDim != Reference.DIMENSION_ID)
@@ -349,7 +350,7 @@ public class Pocket {
     }
 
     public Block getBlock() {
-        return getBlockWorld().getBlock(blockCoords.getX(), blockCoords.getY(), blockCoords.getZ());
+        return getBlockWorld().getBlock(blockCoords.x, blockCoords.y, blockCoords.z);
     }
 
     public int getBlockDim() {
@@ -400,17 +401,17 @@ public class Pocket {
     public static ForgeDirection getSideForConnector(CoordSet coordSet) {
         ForgeDirection direction = ForgeDirection.UNKNOWN;
 
-        if (coordSet.getX() == 0)
+        if (coordSet.x == 0)
             return ForgeDirection.WEST;
-        if (coordSet.getX() == 15)
+        if (coordSet.x == 15)
             return ForgeDirection.EAST;
-        if (coordSet.getY() == 0)
+        if (coordSet.y == 0)
             return ForgeDirection.DOWN;
-        if (coordSet.getY() == 15)
+        if (coordSet.y == 15)
             return ForgeDirection.UP;
-        if (coordSet.getZ() == 0)
+        if (coordSet.z == 0)
             return ForgeDirection.NORTH;
-        if (coordSet.getZ() == 15)
+        if (coordSet.z == 15)
             return ForgeDirection.SOUTH;
 
         return direction;
