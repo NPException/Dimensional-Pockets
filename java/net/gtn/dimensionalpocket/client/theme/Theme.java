@@ -11,6 +11,7 @@ import static net.gtn.dimensionalpocket.client.lib.TextureMaps.TEXTURE_BLOCK_ROO
 import static net.gtn.dimensionalpocket.common.core.pocket.PocketSideState.TEXTURED_STATES;
 
 public enum Theme {
+    // Add new themes here.
     DEFAULT, METAL;
 
     private boolean init = false;
