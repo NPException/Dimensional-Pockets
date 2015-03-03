@@ -154,9 +154,7 @@ public class Pocket {
 
     public PocketSideState getFlowState(ForgeDirection side) {
         Map<ForgeDirection, PocketSideState> fMap = getSideStateMap();
-        if (fMap.containsKey(side))
-            return fMap.get(side);
-        return PocketSideState.NONE;
+        return fMap.containsKey(side) ? fMap.get(side) : PocketSideState.NONE;
     }
 
     public void setFlowState(ForgeDirection side, PocketSideState flowState) {

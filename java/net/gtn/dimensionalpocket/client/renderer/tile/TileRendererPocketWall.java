@@ -121,16 +121,22 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glTranslatef(-offX, -offY, -offZ);
 
-        // Indicators
+        updateStateColorLevel();
+
         if (doIndicateSides) {
+            // Indicators
             Colour texColour = Utils.FD_COLOURS.get(wallVisibleSide);
             glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-            BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(Reference.COLOR_BLIND_MODE), 0.002F, 16);
+            BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(false), 0.002F, 16);
+            if (Reference.COLOR_BLIND_MODE) {
+                texColour = Colour.WHITE;
+                glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
+                BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(true), 0.003F, 16);
+            }
 
             // Overlays
-            updateStateColorLevel();
             if (pocket != null) {
-                PocketSideState state = pocket.getFlowState(wallVisibleSide);
+                PocketSideState state = pocket.getFlowState(wallVisibleSide.getOpposite());
                 IColourBlindTexture texture = THEME.getOverlay(state);
                 if (texture != null) {
                     Colour colour = state.getColour();
@@ -138,6 +144,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
                     BlockRenderer.drawFace(wallVisibleSide, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.001F, 16);
                 }
             }
+
         }
 
         glDisable(GL_BLEND);

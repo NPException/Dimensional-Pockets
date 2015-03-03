@@ -31,7 +31,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     public static boolean doIndicateSides = false;
-    protected FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     protected boolean inRange;
     protected float stateColorLevel;
@@ -116,6 +115,19 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         // Rendering sides
         if (doIndicateSides) {
 
+            instance.startDrawingQuads();
+            instance.setBrightness(maxBrightness);
+            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+                Colour texColour = Utils.FD_COLOURS.get(direction);
+                glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
+                BlockRenderer.drawFace(direction, THEME.getSideIndicator(direction).getTexture(false), 0.0003F);
+                if (Reference.COLOR_BLIND_MODE) {
+                    texColour = Colour.WHITE;
+                    glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
+                    BlockRenderer.drawFace(direction, THEME.getSideIndicator(direction).getTexture(true), 0.0003F);
+                }
+            }
+
             Pocket pocket = tile.getPocket();
             updateStateColorLevel();
 
@@ -127,15 +139,6 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
                 Colour colour = state.getColour();
                 glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
                 BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
-            }
-
-
-            instance.startDrawingQuads();
-            instance.setBrightness(maxBrightness);
-            for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-                Colour texColour = Utils.FD_COLOURS.get(direction);
-                glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-                BlockRenderer.drawFace(direction, THEME.getSideIndicator(direction).getTexture(Reference.COLOR_BLIND_MODE), 0.0001F);
             }
         }
 
@@ -649,13 +652,6 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glPopMatrix();
             glMatrixMode(5888);
         }
-    }
-
-    private FloatBuffer calcFloatBuffer(float f, float f1, float f2, float f3) {
-        this.floatBuffer.clear();
-        this.floatBuffer.put(f).put(f1).put(f2).put(f3);
-        this.floatBuffer.flip();
-        return this.floatBuffer;
     }
 
     @Override
