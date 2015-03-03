@@ -11,7 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 import static org.lwjgl.opengl.GL11.*;
 
 @SideOnly(Side.CLIENT)
-public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
+public class ItemPocketRenderer implements IItemRenderer {
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -34,14 +34,10 @@ public class ItemPocketRenderer extends BlockRenderer implements IItemRenderer {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        drawFaces(Reference.THEME.getPocketTexture());
+        BlockRenderer.drawFaces(Reference.THEME.getPocketTexture());
 
-
-        if (type == ItemRenderType.INVENTORY)
-            glColor4f(0.0F, 0.0F, 0.0F, 1.0F);
-        else
-            glColor4f(1.0F, 1.0F, 1.0F, 0.7F);
-        drawFaces(TileRendererPocket.particleFieldTextures[1], new float[]{-0.002F, -0.002F, -0.002F, -0.002F, -0.002F, -0.002F});
+        glColor4f(1.0F, 1.0F, 1.0F, 0.7F);
+        BlockRenderer .drawFaces(TileRendererPocket.particleFieldTextures[1], new float[]{-0.002F, -0.002F, -0.002F, -0.002F, -0.002F, -0.002F});
 
         glDisable(GL_BLEND);
         glPopMatrix();

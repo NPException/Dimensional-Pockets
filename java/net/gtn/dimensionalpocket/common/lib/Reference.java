@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common.lib;
 import me.jezza.oc.api.configuration.Config.ConfigBoolean;
 import me.jezza.oc.api.configuration.Config.ConfigInteger;
 import net.gtn.dimensionalpocket.client.theme.Theme;
+import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme.ConfigTheme;
 
 public class Reference {
 
@@ -55,9 +56,7 @@ public class Reference {
     @ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
     public static boolean SHOULD_SPAWN_WITH_BOOK = true;
 
-    @ConfigInteger(category = "Gameplay", minValue = 0, maxValue = 1, comment = "dp.info.theme")
-    public static int CURRENT_THEME = 0;
-
+    @ConfigTheme(category = "Gameplay", comment = "dp.info.theme")
     public static Theme THEME = Theme.DEFAULT;
 
     /*

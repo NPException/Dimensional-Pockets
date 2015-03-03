@@ -10,11 +10,9 @@ import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
-import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
-import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,8 +28,6 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initClientSide() {
-        Reference.THEME = Theme.values()[Reference.CURRENT_THEME];
-
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
     	
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());

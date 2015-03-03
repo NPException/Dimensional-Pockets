@@ -7,6 +7,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import me.jezza.oc.api.configuration.Config;
+import me.jezza.oc.api.configuration.ConfigHandler;
 import me.jezza.oc.client.CreativeTabSimple;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -16,6 +17,7 @@ import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -24,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 
 @Config.Controller(configFile = "DimensionalPockets")
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.5,);after:TConstruct;after:Thaumcraft;")
-public class DimensionalPockets {
+public class DimensionalPockets implements Config.IConfigRegistrar {
 
     @Instance(Reference.MOD_ID)
     public static DimensionalPockets instance;
@@ -68,7 +70,7 @@ public class DimensionalPockets {
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInitClientSide();
     }
-    
+
     @EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
         // PocketRegistry needs to be loaded before the TileEntities are read from NBT
@@ -85,5 +87,10 @@ public class DimensionalPockets {
     public void onServerStopping(FMLServerStoppingEvent event) {
         PocketRegistry.saveData();
         ChunkLoaderHandler.clearTicketMap();
+    }
+
+    @Override
+    public void registerCustomAnnotations() {
+        ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
     }
 }

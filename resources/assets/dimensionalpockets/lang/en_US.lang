@@ -44,4 +44,4 @@ info.update.available.2=§7(You are running version [{}])
 
 functionality.disabled.in.pocket=This seems to have no effect in a Dimensional Pocket...
 
-dp.info.theme=Sets the current theme. 0 - Default, 1 - Metal
+dp.info.theme=Sets the current theme. Options: DEFAULT, METAL

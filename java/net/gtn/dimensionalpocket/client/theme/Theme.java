@@ -14,6 +14,8 @@ public enum Theme {
     // Add new themes here.
     DEFAULT, METAL;
 
+    public static final int SIZE = Theme.values().length - 1;
+
     private boolean init = false;
 
     private ResourceLocation pocketFrame, pocketFrameInside, connector, connectorBG;
@@ -44,7 +46,7 @@ public enum Theme {
         sideIndicators.put(ForgeDirection.DOWN, new TextureWrapper(indicator));
 
         for (PocketSideState state : TEXTURED_STATES) {
-            String stateString = blockDir + "dpOverlay" + state.getTextureName();
+            String stateString = blockDir + "pocketOverlay" + state.getTextureName();
             overlays.put(state, new TextureWrapper(new ResourceLocation(stateString + ".png"), new ResourceLocation(stateString + "CB.png")));
         }
 

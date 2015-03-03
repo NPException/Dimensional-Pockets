@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket.client.commands;
 
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,17 +94,24 @@ public class RenderTweakCommand implements ICommand {
                         sender.addChatMessage(new ChatComponentText(option));
                     return;
                 case OPTION_THEME:
+                    boolean help = false;
                     if (args.length > 1) {
                         try {
                             int newValue = Integer.parseInt(args[1]);
-                            newValue = MathHelper.clamp_int(newValue, 0, 1);
-                            Reference.CURRENT_THEME = newValue;
-                            Reference.THEME = Theme.values()[Reference.CURRENT_THEME];
+                            newValue = MathHelper.clamp_int(newValue, 0, Theme.SIZE);
+                            Reference.THEME = Theme.values()[newValue];
                         } catch (NumberFormatException ignored) {
+                            // Check for refresh.
+                            if ("refresh".equals(args[1])) {
+                                Minecraft.getMinecraft().refreshResources();
+                                sender.addChatMessage(new ChatComponentText("Refreshing current theme"));
+                            } else
+                                help = true;
                         }
-                        sender.addChatMessage(new ChatComponentText("Valid values between 0 and 1"));
+                        if (help)
+                            sender.addChatMessage(new ChatComponentText("Valid values between 0 and " + Theme.SIZE));
                     }
-                    sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.CURRENT_THEME));
+                    sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
                     return;
             }
         }
