@@ -31,6 +31,7 @@ import static org.lwjgl.opengl.GL11.*;
 public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     public static boolean doIndicateSides = false;
+    protected FloatBuffer floatBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     protected boolean inRange;
     protected float stateColorLevel;
@@ -652,6 +653,13 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             glPopMatrix();
             glMatrixMode(5888);
         }
+    }
+
+    private FloatBuffer calcFloatBuffer(float f, float f1, float f2, float f3) {
+        this.floatBuffer.clear();
+        this.floatBuffer.put(f).put(f1).put(f2).put(f3);
+        this.floatBuffer.flip();
+        return this.floatBuffer;
     }
 
     @Override
