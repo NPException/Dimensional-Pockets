@@ -144,7 +144,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
                     BlockRenderer.drawFace(wallVisibleSide, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.001F, 16);
                 }
             }
-
         }
 
         glDisable(GL_BLEND);
