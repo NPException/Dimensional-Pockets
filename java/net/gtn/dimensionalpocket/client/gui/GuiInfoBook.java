@@ -112,11 +112,7 @@ public class GuiInfoBook extends GuiContainerAbstract {
         float scale = 0.75F;
         glScalef(scale, scale, scale);
 
-        String tempString;
-        if (shouldDrawRecipe())
-            tempString = StatCollector.translateToLocal(getRecipeString());
-        else
-            tempString = StatCollector.translateToLocal("info.page." + currentPage);
+        String tempString = shouldDrawRecipe() ? StatCollector.translateToLocal(getRecipeString()) : StatCollector.translateToLocal("info.page." + currentPage);
 
         if (tempString == null)
             tempString = "";

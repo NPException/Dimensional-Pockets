@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client.commands;
 
+import me.jezza.oc.api.configuration.ConfigHandler;
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -7,6 +8,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;
@@ -103,15 +105,17 @@ public class RenderTweakCommand implements ICommand {
                         } catch (NumberFormatException ignored) {
                             // Check for refresh.
                             if ("refresh".equals(args[1])) {
-                                Minecraft.getMinecraft().refreshResources();
-                                sender.addChatMessage(new ChatComponentText("Refreshing current theme"));
+                                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Prepare for lag."));
+                                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Refreshing current theme"));
+                                Minecraft.getMinecraft().scheduleResourcesRefresh();
                             } else
                                 help = true;
                         }
-                        if (help)
-                            sender.addChatMessage(new ChatComponentText("Valid values between 0 and " + Theme.SIZE));
                     }
+                    if (help)
+                        sender.addChatMessage(new ChatComponentText("Valid values from 0 to " + Theme.SIZE + " (Inclusive)"));
                     sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
+                    ConfigHandler.save(Reference.MOD_ID);
                     return;
             }
         }

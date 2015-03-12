@@ -56,7 +56,7 @@ public class Reference {
     @ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
     public static boolean SHOULD_SPAWN_WITH_BOOK = true;
 
-    @ConfigTheme(category = "Gameplay", comment = "dp.info.theme")
+    @ConfigTheme(category = "Gameplay", comment = "dp.config.theme")
     public static Theme THEME = Theme.DEFAULT;
 
     /*
