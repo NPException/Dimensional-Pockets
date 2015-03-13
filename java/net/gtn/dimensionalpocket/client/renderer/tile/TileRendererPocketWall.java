@@ -30,7 +30,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
     }
 
     public TileRendererPocketWall() {
-        inRange = true;
     }
 
     private void updateConnectorColor() {
@@ -86,14 +85,18 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
         glPushMatrix();
 
-        glDisable(GL_FOG);
-        updateParticleField(3F);
+        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING);
+        portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
 
-        drawParticleField(ordinal, x - tempX, y - tempY, z - tempZ, offset, 14.0);
+        portalRenderer.startDrawing();
+        portalRenderer.updateField(3F);
+        portalRenderer.setSeed(seeds[ordinal]);
+        portalRenderer.setInterpolatedPosition(x - tempX, y - tempY, z - tempZ);
+        portalRenderer.drawField(wallVisibleSide, offset, 14.0F);
+        portalRenderer.stopDrawing();
 
         glDisable(GL_LIGHTING);
         glEnable(GL_BLEND);
-        glEnable(GL_FOG);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         Pocket pocket = tile.getPocket();
