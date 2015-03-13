@@ -113,51 +113,51 @@ public class PortalRenderer {
         planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / (planeCount);
     }
 
-    public void drawFields(float offset) {
+    public void drawFaces(float offset) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
-        drawFieldYNeg(offset);
-        drawFieldYPos(offset);
-        drawFieldZNeg(offset);
-        drawFieldZPos(offset);
-        drawFieldXNeg(offset);
-        drawFieldXPos(offset);
+        drawFaceYNeg(offset);
+        drawFaceYPos(offset);
+        drawFaceZNeg(offset);
+        drawFaceZPos(offset);
+        drawFaceXNeg(offset);
+        drawFaceXPos(offset);
     }
 
-    public void drawFields(float offset, float scale) {
+    public void drawFaces(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
-        drawFieldYNeg(offset, scale);
-        drawFieldYPos(offset, scale);
-        drawFieldZNeg(offset, scale);
-        drawFieldZPos(offset, scale);
-        drawFieldXNeg(offset, scale);
-        drawFieldXPos(offset, scale);
+        drawFaceYNeg(offset, scale);
+        drawFaceYPos(offset, scale);
+        drawFaceZNeg(offset, scale);
+        drawFaceZPos(offset, scale);
+        drawFaceXNeg(offset, scale);
+        drawFaceXPos(offset, scale);
     }
 
-    public void drawField(ForgeDirection direction, float offset) {
+    public void drawFace(ForgeDirection direction, float offset) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
         switch (direction) {
             case DOWN:
-                drawFieldYNeg(offset);
+                drawFaceYNeg(offset);
                 break;
             case UP:
-                drawFieldYPos(offset);
+                drawFaceYPos(offset);
                 break;
             case NORTH:
-                drawFieldZNeg(offset);
+                drawFaceZNeg(offset);
                 break;
             case SOUTH:
-                drawFieldZPos(offset);
+                drawFaceZPos(offset);
                 break;
             case WEST:
-                drawFieldXNeg(offset);
+                drawFaceXNeg(offset);
                 break;
             case EAST:
-                drawFieldXPos(offset);
+                drawFaceXPos(offset);
                 break;
             default:
             case UNKNOWN:
@@ -165,27 +165,27 @@ public class PortalRenderer {
         }
     }
 
-    public void drawField(ForgeDirection direction, float offset, float scale) {
+    public void drawFace(ForgeDirection direction, float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
         switch (direction) {
             case DOWN:
-                drawFieldYNeg(offset, scale);
+                drawFaceYNeg(offset, scale);
                 break;
             case UP:
-                drawFieldYPos(offset, scale);
+                drawFaceYPos(offset, scale);
                 break;
             case NORTH:
-                drawFieldZNeg(offset, scale);
+                drawFaceZNeg(offset, scale);
                 break;
             case SOUTH:
-                drawFieldZPos(offset, scale);
+                drawFaceZPos(offset, scale);
                 break;
             case WEST:
-                drawFieldXNeg(offset, scale);
+                drawFaceXNeg(offset, scale);
                 break;
             case EAST:
-                drawFieldXPos(offset, scale);
+                drawFaceXPos(offset, scale);
                 break;
             default:
             case UNKNOWN:
@@ -193,11 +193,11 @@ public class PortalRenderer {
         }
     }
 
-    public void drawFieldXNeg(float offset) {
-        drawFieldXNeg(offset, 1.0F);
+    public void drawFaceXNeg(float offset) {
+        drawFaceXNeg(offset, 1.0F);
     }
 
-    public void drawFieldXNeg(float offset, float scale) {
+    public void drawFaceXNeg(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
         glPushMatrix();
@@ -292,11 +292,11 @@ public class PortalRenderer {
         glPopMatrix();
     }
 
-    public void drawFieldXPos(float offset) {
-        drawFieldXPos(offset, 1.0F);
+    public void drawFaceXPos(float offset) {
+        drawFaceXPos(offset, 1.0F);
     }
 
-    public void drawFieldXPos(float offset, float scale) {
+    public void drawFaceXPos(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
@@ -392,11 +392,11 @@ public class PortalRenderer {
         glPopMatrix();
     }
 
-    public void drawFieldYNeg(float offset) {
-        drawFieldYNeg(offset, 1.0F);
+    public void drawFaceYNeg(float offset) {
+        drawFaceYNeg(offset, 1.0F);
     }
 
-    public void drawFieldYNeg(float offset, float scale) {
+    public void drawFaceYNeg(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
@@ -492,11 +492,11 @@ public class PortalRenderer {
         glPopMatrix();
     }
 
-    public void drawFieldYPos(float offset) {
-        drawFieldYPos(offset, 1.0F);
+    public void drawFaceYPos(float offset) {
+        drawFaceYPos(offset, 1.0F);
     }
 
-    public void drawFieldYPos(float offset, float scale) {
+    public void drawFaceYPos(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
@@ -592,11 +592,11 @@ public class PortalRenderer {
         glPopMatrix();
     }
 
-    public void drawFieldZNeg(float offset) {
-        drawFieldZNeg(offset, 1.0F);
+    public void drawFaceZNeg(float offset) {
+        drawFaceZNeg(offset, 1.0F);
     }
 
-    public void drawFieldZNeg(float offset, float scale) {
+    public void drawFaceZNeg(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 
@@ -692,11 +692,11 @@ public class PortalRenderer {
         glPopMatrix();
     }
 
-    public void drawFieldZPos(float offset) {
-        drawFieldZPos(offset, 1.0F);
+    public void drawFaceZPos(float offset) {
+        drawFaceZPos(offset, 1.0F);
     }
 
-    public void drawFieldZPos(float offset, float scale) {
+    public void drawFaceZPos(float offset, float scale) {
         if (!isDrawing)
             throw new IllegalStateException("Renderer is not drawing!");
 

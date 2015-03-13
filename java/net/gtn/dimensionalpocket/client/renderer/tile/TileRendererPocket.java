@@ -62,17 +62,17 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         portalRenderer.updateField(2F);
 
         portalRenderer.setSeed(seeds[0]);
-        portalRenderer.drawFieldYNeg(0.001F);
+        portalRenderer.drawFaceYNeg(0.001F);
         portalRenderer.setSeed(seeds[1]);
-        portalRenderer.drawFieldYPos(0.999F);
+        portalRenderer.drawFaceYPos(0.999F);
         portalRenderer.setSeed(seeds[2]);
-        portalRenderer.drawFieldZNeg(0.001F);
+        portalRenderer.drawFaceZNeg(0.001F);
         portalRenderer.setSeed(seeds[3]);
-        portalRenderer.drawFieldZPos(0.999F);
+        portalRenderer.drawFaceZPos(0.999F);
         portalRenderer.setSeed(seeds[4]);
-        portalRenderer.drawFieldXNeg(0.001F);
+        portalRenderer.drawFaceXNeg(0.001F);
         portalRenderer.setSeed(seeds[5]);
-        portalRenderer.drawFieldXPos(0.999F);
+        portalRenderer.drawFaceXPos(0.999F);
 
         portalRenderer.stopDrawing();
 

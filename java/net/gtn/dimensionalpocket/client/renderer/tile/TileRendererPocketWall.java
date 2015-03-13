@@ -92,7 +92,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         portalRenderer.updateField(3F);
         portalRenderer.setSeed(seeds[ordinal]);
         portalRenderer.setInterpolatedPosition(x - tempX, y - tempY, z - tempZ);
-        portalRenderer.drawField(wallVisibleSide, offset, 14.0F);
+        portalRenderer.drawFace(wallVisibleSide, offset, 14.0F);
         portalRenderer.stopDrawing();
 
         glDisable(GL_LIGHTING);
