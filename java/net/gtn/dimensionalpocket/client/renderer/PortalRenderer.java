@@ -92,6 +92,9 @@ public class PortalRenderer {
     }
 
     public void startDrawing() {
+        if (isDrawing)
+            throw new IllegalStateException("Already drawing!");
+
         glPopMatrix();
         glDisable(GL_FOG);
         isDrawing = true;
