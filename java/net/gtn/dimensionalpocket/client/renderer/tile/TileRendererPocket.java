@@ -54,7 +54,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
 
         portalRenderer.setInterpolatedPosition(x, y, z);
-        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING && Minecraft.getMinecraft().gameSettings.fancyGraphics);
+        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING);
         portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
         portalRenderer.overrideRange(inRange);
 

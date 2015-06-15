@@ -201,9 +201,9 @@ public class Utils {
         ChatComponentText link = new ChatComponentText(text);
         ChatStyle style = link.getChatStyle();
         style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-        style.setBold(Boolean.valueOf(bold));
-        style.setUnderlined(Boolean.valueOf(underline));
-        style.setItalic(Boolean.valueOf(italic));
+        style.setBold(bold);
+        style.setUnderlined(underline);
+        style.setItalic(italic);
         style.setColor(color);
         return link;
     }

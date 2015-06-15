@@ -11,9 +11,9 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import static net.gtn.dimensionalpocket.common.lib.Reference.THEME;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -85,7 +85,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         }
         glPushMatrix();
 
-        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING && Minecraft.getMinecraft().gameSettings.fancyGraphics);
+        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING);
         portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
 
         portalRenderer.startDrawing();

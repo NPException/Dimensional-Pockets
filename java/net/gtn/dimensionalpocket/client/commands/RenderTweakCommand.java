@@ -85,7 +85,6 @@ public class RenderTweakCommand implements ICommand {
                                 return;
                             }
                         } catch (NumberFormatException ignored) {
-                        	// ignore
                         }
                         sender.addChatMessage(new ChatComponentText("Valid values for " + OPTION_PLANE_COUNT + " range from 1 to 50"));
                     }
