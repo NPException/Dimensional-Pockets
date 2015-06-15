@@ -216,6 +216,9 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
      * @return the neighboring TE, or null if the the chunk is not loaded or no TE exists at the spot.
      */
     private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
+        if (worldObj.isRemote)
+            return null;
+
         Pocket p = getPocket();
         if (p == null)
             return null;

@@ -116,6 +116,9 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
      * @return the neighboring TE, or null if the the chunk is not loaded or no TE exists at the spot.
      */
     private TileEntity getDimPocketNeighbourTileEntity(ForgeDirection direction) {
+        if (worldObj.isRemote)
+            return null;
+
         Pocket p = getPocket();
         if (p == null) return null;
 
@@ -257,6 +260,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
     private IInventory getInventoryOnOutsideWall() {
         if (worldObj.isRemote)
             return null;
+        
         Pocket p = getPocket();
         if (p == null)
             return null;
