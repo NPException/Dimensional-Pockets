@@ -2,10 +2,12 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 
 import com.google.common.base.Strings;
 import com.google.gson.annotations.SerializedName;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
@@ -348,7 +350,12 @@ public class Pocket {
     }
 
     public Block getBlock() {
-        return getBlockWorld().getBlock(blockCoords.x, blockCoords.y, blockCoords.z);
+        World world = getBlockWorld();
+        if (world == null) {
+            DPLogger.warning("Dimension with ID " + blockDim + " does not exist... (Mystcraft world?) Returning null for Pocket");
+            return null;
+        }
+        return world.getBlock(blockCoords.x, blockCoords.y, blockCoords.z);
     }
 
     public int getBlockDim() {
