@@ -80,8 +80,9 @@ public class TileRendererPocketWall extends TileRendererPocket {
             case 5:
                 tempY -= 1;
                 tempZ -= 1;
-            default:
                 break;
+            default:
+                return;
         }
         glPushMatrix();
 
@@ -128,7 +129,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         if (doIndicateSides) {
             // Indicators
-            Colour texColour = Utils.FD_COLOURS.get(wallVisibleSide);
+            Colour texColour = Utils.FD_COLOURS.get(wallVisibleSide.getOpposite());
             glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
             BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(false), 0.002F, 16);
             if (Reference.COLOR_BLIND_MODE) {

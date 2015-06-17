@@ -110,7 +110,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
             if (wrapper.ticket != null) {
                 NBTTagCompound tag = wrapper.ticket.getModData();
                 chunkXZSet.writeToNBT(tag);
-                ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.x, chunkXZSet.x));
+                ForgeChunkManager.forceChunk(wrapper.ticket, new ChunkCoordIntPair(chunkXZSet.x, chunkXZSet.z));
             } else {
                 DPLogger.warning("No new tickets available from the ForgeChunkManager.", ChunkLoaderHandler.class);
             }
@@ -123,7 +123,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
         CoordSet chunkXZSet = pocketSet.copy();
         chunkXZSet.y = 0;
 
-        if (!ticketMap.containsKey(chunkXZSet)) {
+        if (!ticketMap.containsKey(chunkXZSet) && Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
             DPLogger.warning("Something tried to remove a loaded pocket from a chunk that was never loaded before...");
             return;
         }
