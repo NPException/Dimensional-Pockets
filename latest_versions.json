@@ -2,7 +2,7 @@
   "1.7.10": {
     "version": "0.10.4",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "§aAdded the ability to transfer items into and out of the Pocket",
+    "additionalInfo": "§cFixed critical bugs that can crash the server and make it unable to restart!",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
