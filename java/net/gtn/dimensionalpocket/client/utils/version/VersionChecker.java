@@ -57,7 +57,7 @@ public class VersionChecker {
         else 
             versionMap = new HashMap<>(versionMap);
         
-        Version version = new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, "Go get it!");
+        Version version = new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, "Go get it!", EnumChatFormatting.AQUA.name());
             
         versionMap.put("1.7.10", version);
         
@@ -143,7 +143,7 @@ public class VersionChecker {
             if (versionMap != null) {
                 Version remoteLatest = versionMap.get(mcVersion);
                 if (remoteLatest != null) {
-                    if (remoteLatest.isNewerThan(new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, null))) {
+                    if (remoteLatest.isNewerThan(new Version(Reference.VERSION, Reference.MOD_DOWNLOAD_URL, Reference.MOD_CHANGELOG_URL, null, null))) {
                         return remoteLatest;
                     }
                 }
@@ -164,7 +164,14 @@ public class VersionChecker {
             player.addChatMessage(new ChatComponentText(Localise.format("info.update.available.2", Reference.VERSION)));
             
             if (latest.additionalInfo != null) {
-                player.addChatMessage(new ChatComponentText(latest.additionalInfo));
+                ChatComponentText info = new ChatComponentText(latest.additionalInfo);
+                for (EnumChatFormatting ecf : EnumChatFormatting.values()) {
+                    if (ecf.name().equals(latest.additionalInfoColour)) {
+                        info.getChatStyle().setColor(ecf);
+                        break;
+                    }
+                }
+                player.addChatMessage(info);
             }
             
             IChatComponent linkLine = new ChatComponentText("[ ");

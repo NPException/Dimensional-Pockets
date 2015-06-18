@@ -7,12 +7,14 @@ public class Version {
     public final String url;
     public final String changelog;
     public final String additionalInfo;
+    public final String additionalInfoColour;
     
-    public Version(String version, String url, String changelog, String additionalInfo) {
+    public Version(String version, String url, String changelog, String additionalInfo, String additionalInfoColour) {
         this.version = version;
         this.url = url;
         this.changelog = changelog;
         this.additionalInfo = additionalInfo;
+        this.additionalInfoColour = additionalInfoColour;
     }
     
     public boolean isNewerThan(Version v) {
