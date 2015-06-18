@@ -1,8 +1,8 @@
 {
   "1.7.10": {
-    "version": "0.10.4",
+    "version": "0.10.5",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "§cFixed critical bugs that can crash the server and make it unable to restart!",
+    "additionalInfo": "§cCRITICAL UPDATE. Fixes some serious bugs!",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
