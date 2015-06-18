@@ -3,7 +3,7 @@
     "version": "0.10.5",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
     "additionalInfo": "CRITICAL UPDATE. Fixes some serious bugs!",
-    "additionalInfoColor": "RED",
+    "additionalInfoColour": "RED",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
