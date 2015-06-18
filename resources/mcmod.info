@@ -11,6 +11,8 @@
   "credits": "The MCP team for hosting an awesome ModJam4, and everyone on the team!",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": []
+  "requiredMods": [ "Forge", "OmnisCore" ],
+  "dependencies": [ "OmnisCore" ],
+  "useDependencyInformation": true
 }
 ]
