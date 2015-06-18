@@ -34,11 +34,6 @@ public class BiomeHelper {
             }
 
             @Override
-            public void addDefaultFlowers() {
-                // do nothing
-            }
-
-            @Override
             public float getSpawningChance() {
                 return 0.0F;
             }
