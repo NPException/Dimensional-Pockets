@@ -352,7 +352,7 @@ public class Pocket {
     public Block getBlock() {
         World world = getBlockWorld();
         if (world == null) {
-            DPLogger.warning("Dimension with ID " + blockDim + " does not exist... (Mystcraft world?) Returning null for Pocket");
+            DPLogger.warning("Dimension with ID " + blockDim + " does not exist... (Mystcraft or GalactiCraft world?) Returning null for Pocket");
             return null;
         }
         return world.getBlock(blockCoords.x, blockCoords.y, blockCoords.z);
