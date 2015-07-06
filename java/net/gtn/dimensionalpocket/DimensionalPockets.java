@@ -6,7 +6,6 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import me.jezza.oc.api.configuration.lib.IConfigRegistry;
 import me.jezza.oc.client.CreativeTabSimple;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -21,13 +20,14 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+
 import org.apache.logging.log4j.LogManager;
 
 import static me.jezza.oc.api.configuration.Config.Controller;
 import static me.jezza.oc.api.configuration.Config.IConfigRegistrar;
 
 @Controller(configFile = "DimensionalPockets")
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.7,);after:TConstruct;after:Thaumcraft;")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets implements IConfigRegistrar {
 
     @Instance(Reference.MOD_ID)
@@ -91,8 +91,13 @@ public class DimensionalPockets implements IConfigRegistrar {
         ChunkLoaderHandler.clearTicketMap();
     }
 
+//    @Override
+//    public void registerCustomAnnotations(IConfigRegistry registry) {
+//        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+//    }
+    
     @Override
-    public void registerCustomAnnotations(IConfigRegistry registry) {
-        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+    public void registerCustomAnnotations() {
+        me.jezza.oc.api.configuration.ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
     }
 }

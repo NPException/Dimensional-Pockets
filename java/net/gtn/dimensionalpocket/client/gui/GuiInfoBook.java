@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.client.gui.GuiContainerAbstract;
 import me.jezza.oc.client.gui.components.GuiWidget;
-import me.jezza.oc.client.lib.Colour;
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.gui.components.GuiArrow;
 import net.gtn.dimensionalpocket.client.gui.components.GuiItemStack;

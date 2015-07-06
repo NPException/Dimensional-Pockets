@@ -5,6 +5,7 @@ import me.jezza.oc.common.utils.CoordSet;
 import me.jezza.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -35,7 +36,7 @@ public class ItemEndCrystal extends ItemDP {
         if (pocket == null)
             return itemStack;
 
-        pocket.setSpawnInPocket(coordSet.toChunkOffset(), player.rotationYaw, player.rotationPitch);
+        pocket.setSpawnInPocket(Hacks.toChunkOffset(coordSet), player.rotationYaw, player.rotationPitch);
 
         ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
         comp.getChatStyle().setItalic(Boolean.TRUE);

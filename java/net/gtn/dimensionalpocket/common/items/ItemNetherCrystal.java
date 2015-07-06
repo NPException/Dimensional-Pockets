@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.Block;
@@ -49,9 +50,9 @@ public class ItemNetherCrystal extends ItemDP {
                 return false;
             }
 
-            ForgeDirection wallSide = Pocket.getSideForConnector(coordSet.toChunkOffset());
+            ForgeDirection wallSide = Pocket.getSideForConnector(Hacks.toChunkOffset(coordSet));
             if (wallSide == ForgeDirection.UNKNOWN) {
-                DPLogger.warning("Got ForgeDirection UNKNOWN for new Connector CoordSet: " + coordSet.toChunkOffset());
+                DPLogger.warning("Got ForgeDirection UNKNOWN for new Connector CoordSet: " + Hacks.toChunkOffset(coordSet));
                 return false;
             }
 

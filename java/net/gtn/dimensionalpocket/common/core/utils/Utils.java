@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
-import me.jezza.oc.client.lib.Colour;
+import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;

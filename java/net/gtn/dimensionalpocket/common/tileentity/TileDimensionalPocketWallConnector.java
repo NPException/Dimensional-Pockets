@@ -13,6 +13,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -63,10 +64,11 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
 
             Pocket p = getPocket();
             if (p != null) {
-                ForgeDirection wallSide = Pocket.getSideForConnector(getCoordSet().toChunkOffset());
+                CoordSet tileCoords = getCoordSet();
+                ForgeDirection wallSide = Pocket.getSideForConnector(Hacks.toChunkOffset(tileCoords));
                 CoordSet connectorCoords = p.getConnectorCoords(wallSide);
-                if (!getCoordSet().equals(connectorCoords)) {
-                    DPLogger.debug("Connector:" + wallSide.name() + ":" + getCoordSet().toString() + " invalid -> current Connector=" + String.valueOf(connectorCoords));
+                if (!tileCoords.equals(connectorCoords)) {
+                    DPLogger.debug("Connector:" + wallSide.name() + ":" + tileCoords.toString() + " invalid -> current Connector=" + String.valueOf(connectorCoords));
                     invalidateConnector();
                 }
             }
@@ -125,9 +127,11 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
         World targetWorld = p.getBlockWorld();
         CoordSet targetCoords = p.getBlockCoords();
 
+        // check if a DP is placed
         if (!targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z))
             return null;
 
+        // check the neigbouring TE
         targetCoords.addForgeDirection(direction);
         return targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z) ? targetWorld.getTileEntity(targetCoords.x, targetCoords.y, targetCoords.z) : null;
     }
@@ -200,7 +204,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        CoordSet offSet = getCoordSet().asChunkOffset();
+        CoordSet offSet = Hacks.asChunkOffset(getCoordSet());
 
         boolean ignoreX = offSet.x == 0 || offSet.x == 15;
         boolean ignoreY = offSet.y == 0 || offSet.y == 15;
@@ -265,7 +269,7 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
         if (p == null)
             return null;
 
-        ForgeDirection fdSide = Pocket.getSideForConnector(getCoordSet().asChunkOffset());
+        ForgeDirection fdSide = Pocket.getSideForConnector(Hacks.asChunkOffset(getCoordSet()));
 
         switch (p.getFlowState(fdSide)) {
             case ENERGY:

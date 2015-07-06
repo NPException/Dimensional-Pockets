@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.client.particles;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import me.jezza.oc.client.lib.Colour;
+import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;

@@ -2,13 +2,13 @@ package net.gtn.dimensionalpocket.client.renderer.tile;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import me.jezza.oc.client.lib.Colour;
-import me.jezza.oc.client.renderer.BlockRenderer;
+import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
      * otherwise it is rendering an item
      */
     private void renderDimensionalPocketWallAt(TileDimensionalPocketWallConnector tile, double x, double y, double z, float f) {
-        CoordSet offsetCoords = tile.getCoordSet().asChunkOffset();
+        CoordSet offsetCoords = Hacks.asChunkOffset(tile.getCoordSet());
         ForgeDirection wallVisibleSide = Pocket.getSideForConnector(offsetCoords).getOpposite();
 
         // % 15 is to ensure that only the two coordinates that build the plane of the wall are non zero
@@ -111,17 +111,17 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glPushMatrix();
         glTranslatef(-ox, -oy, -oz);
-        BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.0001F, 14F);
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.0001F, 14F);
         glPopMatrix();
 
         // Connectors
         updateConnectorColor();
 
         connectorBGColour.doGLColor4();
-        BlockRenderer.drawFace(wallVisibleSide, THEME.getConnectorBG(), 0.004F);
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnectorBG(), 0.004F);
 
         connectorColor.doGLColor4();
-        BlockRenderer.drawFace(wallVisibleSide, THEME.getConnector(), 0.005F);
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnector(), 0.005F);
 
         glTranslatef(-offX, -offY, -offZ);
 
@@ -131,11 +131,11 @@ public class TileRendererPocketWall extends TileRendererPocket {
             // Indicators
             Colour texColour = Utils.FD_COLOURS.get(wallVisibleSide.getOpposite());
             glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-            BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(false), 0.002F, 16);
+            Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(false), 0.002F, 16);
             if (Reference.COLOR_BLIND_MODE) {
                 texColour = Colour.WHITE;
                 glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-                BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(true), 0.003F, 16);
+                Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(true), 0.003F, 16);
             }
 
             // Overlays
@@ -145,7 +145,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
                 if (texture != null) {
                     Colour colour = state.getColour();
                     glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
-                    BlockRenderer.drawFace(wallVisibleSide, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.001F, 16);
+                    Hacks.BlockRenderer.drawFace(wallVisibleSide, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.001F, 16);
                 }
             }
         }

@@ -1,19 +1,19 @@
 package net.gtn.dimensionalpocket.client.renderer;
 
-import me.jezza.oc.client.renderer.BlockRenderer;
+import static net.gtn.dimensionalpocket.client.lib.TextureMaps.*;
+import static net.gtn.dimensionalpocket.common.lib.Hacks.BlockRenderer.*;
+import static net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.*;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.nio.FloatBuffer;
+import java.util.Random;
+
+import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.nio.FloatBuffer;
-import java.util.Random;
-
-import static me.jezza.oc.client.renderer.BlockRenderer.bindTexture;
-import static net.gtn.dimensionalpocket.client.lib.TextureMaps.TEXTURE_PARTICLE_FIELD_ROOT;
-import static net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.*;
-import static org.lwjgl.opengl.GL11.*;
 
 public class PortalRenderer {
 
@@ -208,7 +208,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceXNeg(currentTexture, -offset, scale);
+            Hacks.BlockRenderer.drawFaceXNeg(currentTexture, -offset, scale);
             glPopMatrix();
             return;
         }
@@ -308,7 +308,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceXPos(currentTexture, -1 + offset, scale);
+            Hacks.BlockRenderer.drawFaceXPos(currentTexture, -1 + offset, scale);
             glPopMatrix();
             return;
         }
@@ -408,7 +408,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceYNeg(currentTexture, -offset, scale);
+            Hacks.BlockRenderer.drawFaceYNeg(currentTexture, -offset, scale);
             glPopMatrix();
             return;
         }
@@ -508,7 +508,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceYPos(currentTexture, -1 + offset, scale);
+            Hacks.BlockRenderer.drawFaceYPos(currentTexture, -1 + offset, scale);
             glPopMatrix();
             return;
         }
@@ -608,7 +608,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceZNeg(currentTexture, -offset, scale);
+            Hacks.BlockRenderer.drawFaceZNeg(currentTexture, -offset, scale);
             glPopMatrix();
             return;
         }
@@ -708,7 +708,7 @@ public class PortalRenderer {
 
         if (!fancyRendering) {
             glTranslated(x, y, z);
-            BlockRenderer.drawFaceZPos(currentTexture, -1 + offset, scale);
+            Hacks.BlockRenderer.drawFaceZPos(currentTexture, -1 + offset, scale);
             glPopMatrix();
             return;
         }

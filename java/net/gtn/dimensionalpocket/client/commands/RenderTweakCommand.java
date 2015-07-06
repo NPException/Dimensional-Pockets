@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.client.commands;
 
-import me.jezza.oc.api.configuration.ConfigHandler;
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -116,7 +115,7 @@ public class RenderTweakCommand implements ICommand {
                     if (help)
                         sender.addChatMessage(new ChatComponentText("Valid values from 0 to " + Theme.SIZE + " (Inclusive)"));
                     sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
-                    ConfigHandler.save(Reference.MOD_ID);
+                    //TODO ConfigHandler.save(Reference.MOD_ID);
                     return;
             }
         }

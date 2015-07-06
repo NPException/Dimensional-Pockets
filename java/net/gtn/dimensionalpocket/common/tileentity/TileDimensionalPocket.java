@@ -159,9 +159,10 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
         Pocket pocket = getPocket();
         if (pocket != null && pocket.getCreator() != null)
             creatorLore = "Creator: §3§o" + pocket.getCreator();
+        
+        CoordSet blockSet = chunkSet.toBlockCoords();
 
-        int id = chunkSet.x * 16 + chunkSet.y + 1;
-        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + id + "§8 ~", creatorLore);
+        itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + blockSet.x + "," + blockSet.y + "," + blockSet.z + "§8 ~", creatorLore);
         return itemStack;
     }
 
@@ -191,7 +192,6 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
 
         if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
             pocket = Pocket.readFromNBT(tag);
-        ;
 
         String tempString = tag.getString(TAG_CUSTOM_DP_NAME);
         if (!tempString.isEmpty())
