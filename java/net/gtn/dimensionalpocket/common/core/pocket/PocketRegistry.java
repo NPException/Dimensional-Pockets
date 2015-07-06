@@ -132,7 +132,6 @@ public class PocketRegistry {
     
     public static void initChunkLoading() {
         for (Pocket pocket : backLinkMap.values())
-            if (pocket.isSourceBlockPlaced())
-                ChunkLoaderHandler.addPocketToChunkLoader(pocket);
+            ChunkLoaderHandler.addPocketToChunkLoader(pocket);
     }
 }

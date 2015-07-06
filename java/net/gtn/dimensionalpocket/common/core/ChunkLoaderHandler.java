@@ -39,6 +39,10 @@ public class ChunkLoaderHandler implements LoadingCallback {
                 continue;
 
             CoordSet chunkXZSet = CoordSet.readFromNBT(ticket.getModData());
+            
+            if (chunkXZSet == null) // probably not our ticket then
+                continue;
+            
             TicketWrapper wrapper = ticketMap.get(chunkXZSet);
 
             if (wrapper == null) {
