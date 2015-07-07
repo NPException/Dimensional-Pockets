@@ -13,6 +13,7 @@ import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
+import net.gtn.dimensionalpocket.common.core.network.DPNetwork;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme;
@@ -48,6 +49,8 @@ public class DimensionalPockets implements IConfigRegistrar {
         creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
         ModItems.initRecipes();
+        
+        DPNetwork.init();
     }
 
     @EventHandler
