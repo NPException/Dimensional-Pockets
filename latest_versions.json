@@ -1,9 +1,9 @@
 {
   "1.7.10": {
-    "version": "0.10.5",
+    "version": "0.10.6",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "CRITICAL UPDATE. Fixes some serious bugs!",
-    "additionalInfoColour": "RED",
+    "additionalInfo": "Updated to use OmnisCore 0.0.6",
+    "additionalInfoColour": "GOLD",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
