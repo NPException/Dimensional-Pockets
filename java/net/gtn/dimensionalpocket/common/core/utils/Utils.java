@@ -1,5 +1,9 @@
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
 import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -20,11 +24,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.EnumMap;
-
 public class Utils {
 
     public static EnumMap<ForgeDirection, Colour> FD_COLOURS = new EnumMap<>(ForgeDirection.class);
+    
+    private static Map<String, EnumChatFormatting> chatColours = new HashMap<>();
 
     static {
         // @formatter:off
@@ -49,6 +53,23 @@ public class Utils {
         FD_COLOURS.put(ForgeDirection.WEST,  green);
         FD_COLOURS.put(ForgeDirection.EAST,  red);
         // @formatter:on
+        
+        chatColours.put("BLACK", EnumChatFormatting.BLACK);
+        chatColours.put("DARK_BLUE", EnumChatFormatting.DARK_BLUE);
+        chatColours.put("DARK_GREEN", EnumChatFormatting.DARK_GREEN);
+        chatColours.put("DARK_AQUA", EnumChatFormatting.DARK_AQUA);
+        chatColours.put("DARK_RED", EnumChatFormatting.DARK_RED);
+        chatColours.put("DARK_PURPLE", EnumChatFormatting.DARK_PURPLE);
+        chatColours.put("GOLD", EnumChatFormatting.GOLD);
+        chatColours.put("GRAY", EnumChatFormatting.GRAY);
+        chatColours.put("DARK_GRAY", EnumChatFormatting.DARK_GRAY);
+        chatColours.put("BLUE", EnumChatFormatting.BLUE);
+        chatColours.put("GREEN", EnumChatFormatting.GREEN);
+        chatColours.put("AQUA", EnumChatFormatting.AQUA);
+        chatColours.put("RED", EnumChatFormatting.RED);
+        chatColours.put("LIGHT_PURPLE", EnumChatFormatting.LIGHT_PURPLE);
+        chatColours.put("YELLOW", EnumChatFormatting.YELLOW);
+        chatColours.put("WHITE", EnumChatFormatting.WHITE);
     }
 
     public static ForgeDirection getDirectionFromBitMask(int num) {
@@ -244,5 +265,15 @@ public class Utils {
             return inv;
         }
         return inv;
+    }
+    
+    /**
+     * Gets the {@link EnumChatFormatting} colour for the given name. (which must match the unobuscated name of the enum value exactly)
+     * @param colourName
+     * @return the ECF colour for the given name, or {@link EnumChatFormatting#WHITE} if not found
+     */
+    public static EnumChatFormatting getColourByName(String colourName) {
+        EnumChatFormatting colour = chatColours.get(colourName);
+        return colour != null ? colour : EnumChatFormatting.WHITE;
     }
 }

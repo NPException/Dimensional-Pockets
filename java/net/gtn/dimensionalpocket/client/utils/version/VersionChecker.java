@@ -165,11 +165,10 @@ public class VersionChecker {
             
             if (latest.additionalInfo != null) {
                 ChatComponentText info = new ChatComponentText(latest.additionalInfo);
-                for (EnumChatFormatting ecf : EnumChatFormatting.values()) {
-                    if (ecf.name().equals(latest.additionalInfoColour)) {
-                        info.getChatStyle().setColor(ecf);
-                        break;
-                    }
+                
+                if (latest.additionalInfoColour != null) {
+                    EnumChatFormatting ecf = Utils.getColourByName(latest.additionalInfoColour.toUpperCase());
+                    info.getChatStyle().setColor(ecf);
                 }
                 player.addChatMessage(info);
             }
