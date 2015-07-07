@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +32,7 @@ public class ClientPlayerTickEventHandler {
             Method hideItemMethod = neiApiClass.getDeclaredMethod("hideItem", ItemStack.class);
             hideItemMethod.invoke(null, new ItemStack(ModBlocks.dimensionalPocketWall));
         } catch (Exception e) {
-            e.printStackTrace();
+            DPLogger.warning("could not finish method \"hideStuffFromNEI()\"");
         }
     }
     

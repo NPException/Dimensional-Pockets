@@ -28,8 +28,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class TileDimensionalPocketWallConnector extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider, IEnergyHandler, ISidedInventory {
+import de.cdmp.api.wormhole.IWormhole;
+import de.cdmp.api.wormhole.WormholeTarget;
+
+public class TileDimensionalPocketWallConnector extends TileDP implements
+        IBlockNotifier, IBlockInteract,
+        IEnergyReceiver, IEnergyProvider, IEnergyHandler,
+        ISidedInventory,
+        IWormhole {
 
     boolean newTile = true;
 
@@ -122,7 +132,8 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
             return null;
 
         Pocket p = getPocket();
-        if (p == null) return null;
+        if (p == null)
+            return null;
 
         World targetWorld = p.getBlockWorld();
         CoordSet targetCoords = p.getBlockCoords();
@@ -414,5 +425,34 @@ public class TileDimensionalPocketWallConnector extends TileDP implements IBlock
             return false;
 
         return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(slot, stack, side);
+    }
+    
+    // ////////////////
+    // WORMHOLE API //
+    // ////////////////
+
+    @Override
+    public List<WormholeTarget<Block, TileEntity>> getAllTargets(ForgeDirection fromDirection) {
+        if (worldObj.isRemote)
+            return Collections.emptyList();
+        
+        Pocket p = getPocket();
+        if (p == null)
+            return Collections.emptyList();
+
+        World targetWorld = p.getBlockWorld();
+        CoordSet targetCoords = p.getBlockCoords();
+
+        // check if a DP is placed
+        if (!targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z))
+            return Collections.emptyList();
+
+        ForgeDirection direction = fromDirection.getOpposite();
+        targetCoords.addForgeDirection(direction);
+
+        List<WormholeTarget<Block, TileEntity>> wormholeTargets = new ArrayList<>(1);
+        wormholeTargets.add(new WormholeTarget<Block, TileEntity>(targetWorld, targetCoords.x, targetCoords.y, targetCoords.z, direction));
+
+        return wormholeTargets;
     }
 }

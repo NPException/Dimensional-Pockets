@@ -72,21 +72,24 @@ public class CommonProxy implements IGuiHandler {
 
         if (!world.isRemote && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            NBTTagCompound persistTag = Utils.getPlayerPersistTag(player);
-
-            boolean shouldGiveManual = Reference.SHOULD_SPAWN_WITH_BOOK && !persistTag.getBoolean(GIVEN_INFO_BOOK);
-            if (shouldGiveManual) {
-                ItemStack infoBook = new ItemStack(ModItems.book);
-                if (!player.inventory.addItemStackToInventory(infoBook)) {
-                    World playerWorld = player.worldObj;
-                    EntityItem entityItem = new EntityItem(playerWorld, player.posX, player.posY, player.posZ, infoBook);
-                    entityItem.delayBeforeCanPickup = 0;
-
-                    playerWorld.spawnEntityInWorld(entityItem);
-                }
-                persistTag.setBoolean(GIVEN_INFO_BOOK, true);
-            }
+            
+            checkIfSpawnWithBook(player);
         }
     }
 
+    private static void checkIfSpawnWithBook(EntityPlayer player) {
+        NBTTagCompound persistTag = Utils.getPlayerPersistTag(player);
+        boolean shouldGiveManual = Reference.SHOULD_SPAWN_WITH_BOOK && !persistTag.getBoolean(GIVEN_INFO_BOOK);
+        if (shouldGiveManual) {
+            ItemStack infoBook = new ItemStack(ModItems.book);
+            if (!player.inventory.addItemStackToInventory(infoBook)) {
+                World playerWorld = player.worldObj;
+                EntityItem entityItem = new EntityItem(playerWorld, player.posX, player.posY, player.posZ, infoBook);
+                entityItem.delayBeforeCanPickup = 0;
+
+                playerWorld.spawnEntityInWorld(entityItem);
+            }
+            persistTag.setBoolean(GIVEN_INFO_BOOK, true);
+        }
+    }
 }

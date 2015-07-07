@@ -34,9 +34,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBlockInteract, IEnergyReceiver, IEnergyProvider, IEnergyHandler, ISidedInventory {
+import de.cdmp.api.wormhole.IWormhole;
+import de.cdmp.api.wormhole.WormholeTarget;
+
+public class TileDimensionalPocket extends TileDP implements
+        IBlockNotifier, IBlockInteract,
+        IEnergyReceiver, IEnergyProvider, IEnergyHandler,
+        ISidedInventory,
+        IWormhole {
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
     private String customName;
@@ -509,5 +517,34 @@ public class TileDimensionalPocket extends TileDP implements IBlockNotifier, IBl
             return false;
 
         return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(innerSlot, stack, side);
+    }
+    
+    //////////////////
+    // WORMHOLE API //
+    //////////////////
+
+    @Override
+    public List<WormholeTarget<Block, TileEntity>> getAllTargets(ForgeDirection fromDirection) {
+        if (worldObj.isRemote)
+            return Collections.emptyList();
+
+        Pocket p = getPocket();
+        if (p == null)
+            return Collections.emptyList();
+
+        World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
+
+        CoordSet targetCoords = p.getConnectorCoords(fromDirection);
+        
+        if (targetCoords == null)
+            return Collections.emptyList();
+
+        ForgeDirection toDirection = fromDirection.getOpposite();
+        targetCoords.addForgeDirection(toDirection);
+        
+        List<WormholeTarget<Block, TileEntity>> wormholeTargets = new ArrayList<>(1);
+        wormholeTargets.add(new WormholeTarget<>(targetWorld, targetCoords.x, targetCoords.y, targetCoords.z, toDirection));
+        
+        return wormholeTargets;
     }
 }
