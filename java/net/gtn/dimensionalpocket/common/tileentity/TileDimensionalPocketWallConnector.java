@@ -3,8 +3,12 @@ package net.gtn.dimensionalpocket.common.tileentity;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import li.cil.oc.api.network.Environment;
+import li.cil.oc.api.network.Node;
+import li.cil.oc.api.network.SidedEnvironment;
 import me.jezza.oc.common.interfaces.IBlockInteract;
 import me.jezza.oc.common.interfaces.IBlockNotifier;
 import me.jezza.oc.common.utils.CoordSet;
@@ -35,11 +39,13 @@ import java.util.List;
 import de.cdmp.api.wormhole.IWormhole;
 import de.cdmp.api.wormhole.WormholeTarget;
 
+@Optional.Interface(iface="li.cil.oc.api.network.SidedEnvironment", modid="OpenComputers")
 public class TileDimensionalPocketWallConnector extends TileDP implements
         IBlockNotifier, IBlockInteract,
         IEnergyReceiver, IEnergyProvider, IEnergyHandler,
         ISidedInventory,
-        IWormhole {
+        IWormhole,
+        SidedEnvironment {
 
     boolean newTile = true;
 
@@ -454,5 +460,41 @@ public class TileDimensionalPocketWallConnector extends TileDP implements
         wormholeTargets.add(new WormholeTarget<Block, TileEntity>(targetWorld, targetCoords.x, targetCoords.y, targetCoords.z, direction));
 
         return wormholeTargets;
+    }
+    
+    ///////////////////
+    // OpenComputers //
+    ///////////////////
+
+    @Optional.Method(modid="OpenComputers")
+    @Override
+    public Node sidedNode(ForgeDirection side) {
+        if (worldObj.isRemote)
+            return null;
+
+        Pocket p = getPocket();
+        if (p == null)
+            return null;
+        
+        side = side.getOpposite();
+
+        switch (p.getFlowState(side)) {
+            case ENERGY:
+                TileEntity te = getDimPocketNeighbourTileEntity(side);
+                if (te instanceof SidedEnvironment)
+                    return ((SidedEnvironment) te).sidedNode(side);
+                else if (te instanceof Environment)
+                    return ((Environment) te).node();
+                return null;
+            default:
+                return null;
+        }
+    }
+
+    @Optional.Method(modid="OpenComputers")
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean canConnect(ForgeDirection side) {
+        return true;
     }
 }
