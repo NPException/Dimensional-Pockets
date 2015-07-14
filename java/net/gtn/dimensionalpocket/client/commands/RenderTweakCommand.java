@@ -17,6 +17,7 @@ public class RenderTweakCommand implements ICommand {
 
     private static final String OPTION_COLORBLIND = "colorblindMode";
     private static final String OPTION_FANCY = "fancyRendering";
+    private static final String OPTION_FIELD_SHADER = "useFieldShader";
     private static final String OPTION_PLANE_COUNT = "particlePlanes";
     private static final String OPTION_HELP = "help";
     private static final String OPTION_THEME = "theme";
@@ -26,6 +27,7 @@ public class RenderTweakCommand implements ICommand {
     static {
         ALL_OPTIONS.add(OPTION_COLORBLIND);
         ALL_OPTIONS.add(OPTION_FANCY);
+        ALL_OPTIONS.add(OPTION_FIELD_SHADER);
         ALL_OPTIONS.add(OPTION_PLANE_COUNT);
         ALL_OPTIONS.add(OPTION_HELP);
         ALL_OPTIONS.add(OPTION_THEME);
@@ -70,9 +72,16 @@ public class RenderTweakCommand implements ICommand {
                     return;
                 case OPTION_FANCY:
                     if (args.length > 1) {
-                        Reference.USE_FANCY_RENDERING = Boolean.parseBoolean(args[1]);
+                        Reference.FORCE_FANCY_RENDERING = Integer.parseInt(args[1]);
                     } else {
-                        sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_FANCY + ": " + Reference.USE_FANCY_RENDERING));
+                        sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_FANCY + ": " + Reference.FORCE_FANCY_RENDERING));
+                    }
+                    return;
+                case OPTION_FIELD_SHADER:
+                    if (args.length > 1) {
+                        Reference.USE_SHADER_FOR_PARTICLE_FIELD = Boolean.parseBoolean(args[1]);
+                    } else {
+                        sender.addChatMessage(new ChatComponentText("Current value for " + OPTION_FIELD_SHADER + ": " + Reference.USE_SHADER_FOR_PARTICLE_FIELD));
                     }
                     return;
                 case OPTION_PLANE_COUNT:
@@ -108,8 +117,9 @@ public class RenderTweakCommand implements ICommand {
                                 sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Prepare for lag."));
                                 sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Refreshing current theme"));
                                 Minecraft.getMinecraft().scheduleResourcesRefresh();
-                            } else
+                            } else {
                                 help = true;
+                            }
                         }
                     }
                     if (help)

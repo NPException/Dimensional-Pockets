@@ -8,6 +8,7 @@ import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
+import net.gtn.dimensionalpocket.client.renderer.shader.ShaderHelper;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
 import net.gtn.dimensionalpocket.common.CommonProxy;
@@ -28,13 +29,18 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void initClientSide() {
+        ShaderHelper.initShaders();
+        
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
     	
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
         
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
-        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+
+        ClientEventHandler ceh = new ClientEventHandler();
+        MinecraftForge.EVENT_BUS.register(ceh);
+        FMLCommonHandler.instance().bus().register(ceh);
     }
     
     @Override

@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import static net.gtn.dimensionalpocket.common.lib.Reference.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Random;
@@ -8,6 +7,7 @@ import java.util.Random;
 import me.jezza.oc.client.gui.lib.Colour;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
+import net.gtn.dimensionalpocket.client.renderer.shader.ParticleFieldShader;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
@@ -40,9 +40,15 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         for (int i = 1; i <= 6; i++)
             seeds[i - 1] = base * i;
     }
+    
+    private static float [] fieldOffsets = new float[6];
+    static {
+        for(int i=0; i<6; i++)
+            fieldOffsets[i] = -0.0001f;
+    }
 
     protected float stateColorLevel;
-    protected boolean inRange = false;
+    private boolean inRange = false;
 
     @Override
     protected void bindTexture(ResourceLocation texture) {
@@ -53,34 +59,39 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         double maxDistance = 32.0; // distance to block
         this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
 
-        portalRenderer.setInterpolatedPosition(x, y, z);
-        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING && Minecraft.getMinecraft().gameSettings.fancyGraphics);
-        portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
-        portalRenderer.overrideRange(inRange);
+        boolean fancy = Reference.useFancyField();
+        boolean useFieldShader = Reference.USE_SHADER_FOR_PARTICLE_FIELD && fancy && inRange;
+        
+        if (!useFieldShader) {
+            portalRenderer.setInterpolatedPosition(x, y, z);
+            portalRenderer.overrideFancyRendering(fancy);
+            portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
+            portalRenderer.overrideRange(inRange);
 
-        portalRenderer.startDrawing();
-        portalRenderer.updateField(2F);
+            portalRenderer.startDrawing();
+            portalRenderer.updateField(2F);
 
-        portalRenderer.setSeed(seeds[0]);
-        portalRenderer.drawFaceYNeg(0.001F);
-        portalRenderer.setSeed(seeds[1]);
-        portalRenderer.drawFaceYPos(0.999F);
-        portalRenderer.setSeed(seeds[2]);
-        portalRenderer.drawFaceZNeg(0.001F);
-        portalRenderer.setSeed(seeds[3]);
-        portalRenderer.drawFaceZPos(0.999F);
-        portalRenderer.setSeed(seeds[4]);
-        portalRenderer.drawFaceXNeg(0.001F);
-        portalRenderer.setSeed(seeds[5]);
-        portalRenderer.drawFaceXPos(0.999F);
+            portalRenderer.setSeed(seeds[0]);
+            portalRenderer.drawFaceYNeg(0.001F);
+            portalRenderer.setSeed(seeds[1]);
+            portalRenderer.drawFaceYPos(0.999F);
+            portalRenderer.setSeed(seeds[2]);
+            portalRenderer.drawFaceZNeg(0.001F);
+            portalRenderer.setSeed(seeds[3]);
+            portalRenderer.drawFaceZPos(0.999F);
+            portalRenderer.setSeed(seeds[4]);
+            portalRenderer.drawFaceXNeg(0.001F);
+            portalRenderer.setSeed(seeds[5]);
+            portalRenderer.drawFaceXPos(0.999F);
 
-        portalRenderer.stopDrawing();
+            portalRenderer.stopDrawing();
+        }
 
         glPushMatrix();
         glDisable(GL_LIGHTING);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//
+
         Tessellator instance = Tessellator.instance;
 
         instance.startDrawingQuads();
@@ -89,7 +100,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         glTranslated(x, y, z);
         glColor3f(1.0F, 1.0F, 1.0F);
 
-        Hacks.BlockRenderer.drawFaces(THEME.getPocketTexture());
+        if (useFieldShader) {
+            ParticleFieldShader.use();
+            Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[0], fieldOffsets);
+            ParticleFieldShader.release();
+        }
+        Hacks.BlockRenderer.drawFaces(Reference.THEME.getPocketTexture());
 
         if (!inRange) {
             glDisable(GL_BLEND);
@@ -107,11 +123,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 Colour texColour = Utils.FD_COLOURS.get(direction);
                 glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-                Hacks.BlockRenderer.drawFace(direction, THEME.getSideIndicator(direction).getTexture(false), 0.0003F);
+                Hacks.BlockRenderer.drawFace(direction, Reference.THEME.getSideIndicator(direction).getTexture(false), 0.0003F);
                 if (Reference.COLOR_BLIND_MODE) {
                     texColour = Colour.WHITE;
                     glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-                    Hacks.BlockRenderer.drawFace(direction, THEME.getSideIndicator(direction).getTexture(true), 0.0003F);
+                    Hacks.BlockRenderer.drawFace(direction, Reference.THEME.getSideIndicator(direction).getTexture(true), 0.0003F);
                 }
             }
 
@@ -120,7 +136,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 PocketSideState state = pocket.getFlowState(direction);
-                IColourBlindTexture texture = THEME.getOverlay(state);
+                IColourBlindTexture texture = Reference.THEME.getOverlay(state);
                 if (texture == null)
                     continue;
                 Colour colour = state.getColour();

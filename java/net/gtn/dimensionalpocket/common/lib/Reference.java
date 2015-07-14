@@ -4,6 +4,7 @@ import me.jezza.oc.api.configuration.Config.ConfigBoolean;
 import me.jezza.oc.api.configuration.Config.ConfigInteger;
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme.ConfigTheme;
+import net.minecraft.client.Minecraft;
 
 public class Reference {
 
@@ -33,16 +34,28 @@ public class Reference {
     /*
      * CLIENT PERFORMANCE CONFIGS
      */
-    @ConfigInteger(category = "Performance", minValue = 1, maxValue = 50, comment = {"If you experience low FPS, try reducing this number first",
+    @ConfigInteger(category = "Graphics", minValue = 1, maxValue = 50, comment = {"If you experience low FPS, try reducing this number first",
             "before switching fancy rendering off entirely.",
             "Or if you have render power to spare you could raise this value.",
-            "(This setting only affects the client)"})
+            "(This setting only affects the client. This setting will have no effect if you use the particle field shader)"})
     public static int NUMBER_OF_PARTICLE_PLANES = 15;
 
-    @ConfigBoolean(category = "Performance", comment = {"Set this to false if you experience low FPS due to",
-            "the particle field rendering of the Dimensional Pocket.",
+    @ConfigInteger(category = "Graphics", minValue = 0, maxValue = 2,
+            comment = {"0 = Particle field appearance based on Minecraft's Graphics settings (fancy or fast)",
+            "1 = Particle field appearance forced to non-fancy version",
+            "2 = Particle field appearance forced to fancy version",
             "(This setting only affects the client)"})
-    public static boolean USE_FANCY_RENDERING = true; // Minecraft.getMinecraft().gameSettings.fancyGraphics - use this at some point.
+    public static int FORCE_FANCY_RENDERING = 0;
+    
+    public static boolean useFancyField() {
+        return FORCE_FANCY_RENDERING != 1 && (FORCE_FANCY_RENDERING == 2 || Minecraft.getMinecraft().gameSettings.fancyGraphics);
+    }
+    
+    @ConfigTheme(category = "Graphics", comment = "dp.config.theme")
+    public static Theme THEME = Theme.DEFAULT;
+    
+    @ConfigBoolean(category = "Graphics", comment = "If set to true, a shader will be used for the particle field rendering instead of the old method.")
+    public static boolean USE_SHADER_FOR_PARTICLE_FIELD = false;
 
     /*
      * GAMEPLAY CONFIGS
@@ -54,10 +67,7 @@ public class Reference {
     public static int BIOME_ID = 99;
 
     @ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
-    public static boolean SHOULD_SPAWN_WITH_BOOK = true;
-
-    @ConfigTheme(category = "Gameplay", comment = "dp.config.theme")
-    public static Theme THEME = Theme.DEFAULT;
+    public static boolean SHOULD_SPAWN_WITH_BOOK = true;    
 
     /*
      * GENERAL CONFIGS

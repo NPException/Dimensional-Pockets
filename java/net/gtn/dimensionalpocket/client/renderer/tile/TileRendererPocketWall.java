@@ -5,13 +5,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
+import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
+import net.gtn.dimensionalpocket.client.renderer.shader.ParticleFieldShader;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import static net.gtn.dimensionalpocket.common.lib.Reference.THEME;
@@ -59,7 +60,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         int offZ = offsetCoords.z % 15;
 
         int ordinal = wallVisibleSide.ordinal();
-        float offset = (ordinal % 2 == 0) ? 0.001F : 0.999F;
+        float offset = (ordinal % 2 == 0) ? 0.0F : 1.0F;
 
         int tempX = offX;
         int tempY = offY;
@@ -85,16 +86,21 @@ public class TileRendererPocketWall extends TileRendererPocket {
                 return;
         }
         glPushMatrix();
-
-        portalRenderer.overrideFancyRendering(Reference.USE_FANCY_RENDERING && Minecraft.getMinecraft().gameSettings.fancyGraphics);
-        portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
-
-        portalRenderer.startDrawing();
-        portalRenderer.updateField(3F);
-        portalRenderer.setSeed(seeds[ordinal]);
-        portalRenderer.setInterpolatedPosition(x - tempX, y - tempY, z - tempZ);
-        portalRenderer.drawFace(wallVisibleSide, offset, 14.0F);
-        portalRenderer.stopDrawing();
+        
+        boolean fancy = Reference.useFancyField();
+        boolean useFieldShader = Reference.USE_SHADER_FOR_PARTICLE_FIELD && fancy;
+        
+        if (!useFieldShader) {
+            portalRenderer.overrideFancyRendering(fancy);
+            portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
+    
+            portalRenderer.startDrawing();
+            portalRenderer.updateField(3F);
+            portalRenderer.setSeed(seeds[ordinal]);
+            portalRenderer.setInterpolatedPosition(x - tempX, y - tempY, z - tempZ);
+            portalRenderer.drawFace(wallVisibleSide, offset, 14.0F);
+            portalRenderer.stopDrawing();
+        }
 
         glDisable(GL_LIGHTING);
         glEnable(GL_BLEND);
@@ -111,7 +117,15 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glPushMatrix();
         glTranslatef(-ox, -oy, -oz);
-        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.0001F, 14F);
+        
+        if (useFieldShader) {
+            ParticleFieldShader.use();
+            Hacks.BlockRenderer.drawFace(wallVisibleSide, PortalRenderer.fieldTextures[0], 0.0F, 14F);
+            ParticleFieldShader.release();
+        }
+        
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.001F, 14F);
+        
         glPopMatrix();
 
         // Connectors
