@@ -1,11 +1,12 @@
 package net.gtn.dimensionalpocket.common.block;
 
-import cofh.api.block.IDismantleable;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+
 import me.jezza.oc.common.blocks.BlockAbstractModel;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +16,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cofh.api.block.IDismantleable;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
 
 public class BlockDimensionalPocket extends BlockAbstractModel implements IDismantleable, ITileProvider {
 
@@ -25,7 +27,7 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
         setHardness(4F);
         setLightOpacity(255);
         setLightLevel(1F);
-        setResistance(15F);
+        setResistance(Reference.DIMENSIONAL_POCKET_RESISTANCE);
         setCreativeTab(DimensionalPockets.creativeTab);
     }
 
@@ -65,12 +67,12 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileDimensionalPocket();
     }
-    
+
     @Override
     public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
-       return false;
+        return false;
     }
-    
+
     @Override
     public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_) {
         // do nothing, since ItemStack spawning happens in the TileEntity
