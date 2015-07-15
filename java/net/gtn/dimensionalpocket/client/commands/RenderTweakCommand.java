@@ -21,6 +21,7 @@ public class RenderTweakCommand implements ICommand {
     private static final String OPTION_PLANE_COUNT = "particlePlanes";
     private static final String OPTION_HELP = "help";
     private static final String OPTION_THEME = "theme";
+    private static final String OPTION_SAVE = "saveConfig";
 
     private static final List<String> ALL_OPTIONS = new ArrayList<>();
 
@@ -31,6 +32,7 @@ public class RenderTweakCommand implements ICommand {
         ALL_OPTIONS.add(OPTION_PLANE_COUNT);
         ALL_OPTIONS.add(OPTION_HELP);
         ALL_OPTIONS.add(OPTION_THEME);
+        ALL_OPTIONS.add(OPTION_SAVE);
     }
 
     private List<String> aliases = new ArrayList<>();
@@ -93,7 +95,7 @@ public class RenderTweakCommand implements ICommand {
                                 return;
                             }
                         } catch (NumberFormatException ignored) {
-                        	// ignore
+                            // ignore
                         }
                         sender.addChatMessage(new ChatComponentText("Valid values for " + OPTION_PLANE_COUNT + " range from 1 to 50"));
                     }
@@ -124,8 +126,12 @@ public class RenderTweakCommand implements ICommand {
                     }
                     if (help)
                         sender.addChatMessage(new ChatComponentText("Valid values from 0 to " + Theme.SIZE + " (Inclusive)"));
+
                     sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
-                    //TODO ConfigHandler.save(Reference.MOD_ID);
+                    return;
+                case OPTION_SAVE:
+                    // TODO: ConfigHandler.save(Reference.MOD_ID);
+                    sender.addChatMessage(new ChatComponentText("In the future, this command will save the current DP config."));
                     return;
             }
         }
