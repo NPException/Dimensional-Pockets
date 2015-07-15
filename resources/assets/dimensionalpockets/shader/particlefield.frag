@@ -76,8 +76,8 @@ void main() {
 		
 		// get end-portal-y colours
 		float r = (mod(rand1, 29.0)/29.0) * 0.5 + 0.2; // 0.1
-    	float g = (mod(rand2, 35.0)/35.0) * 0.5 + 0.4; // 0.4
-    	float b = (mod(rand1, 17.0)/17.0) * 0.4 + 0.5; // 0.5
+		float g = (mod(rand2, 35.0)/35.0) * 0.5 + 0.4; // 0.4
+		float b = (mod(rand1, 17.0)/17.0) * 0.4 + 0.5; // 0.5
 		
 		// mix the colours
 		col = col*(1-a) + vec4(r,g,b,1)*a;
