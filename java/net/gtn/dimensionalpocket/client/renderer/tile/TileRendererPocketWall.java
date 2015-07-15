@@ -1,9 +1,10 @@
 package net.gtn.dimensionalpocket.client.renderer.tile;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static net.gtn.dimensionalpocket.common.lib.Reference.*;
+import static org.lwjgl.opengl.GL11.*;
 import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.client.event.RenderEventHandler;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
 import net.gtn.dimensionalpocket.client.renderer.shader.ParticleFieldShader;
@@ -15,8 +16,8 @@ import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-import static net.gtn.dimensionalpocket.common.lib.Reference.THEME;
-import static org.lwjgl.opengl.GL11.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class TileRendererPocketWall extends TileRendererPocket {
@@ -33,7 +34,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
     public TileRendererPocketWall() {
     }
 
-    private void updateConnectorColor() {
+    private void updateConnectorColor(boolean isInGUI) {
         long colorCycleTime = 5000000000L;
         double minColorLevel = 0.5;
         double level = (minColorLevel + (1 - minColorLevel) * Math.sin((System.nanoTime() % colorCycleTime) * Math.PI / colorCycleTime));
@@ -42,13 +43,14 @@ public class TileRendererPocketWall extends TileRendererPocket {
         connectorColor.g = connectorBaseColor.g * level;
         connectorColor.b = connectorBaseColor.b * level;
         connectorColor.a = connectorBaseColor.a * level;
+        
+        connectorBGColour.a = isInGUI ? 0.2 : 0.8;
     }
 
     /**
-     * Method is used by tile and item renderer.
-     * Last three arguments are passed by the item renderer.
-     * if itemStack is null (and tile is not null) it is rendering a tile,
-     * otherwise it is rendering an item
+     * Method is used by tile and item renderer. Last three arguments are passed
+     * by the item renderer. if itemStack is null (and tile is not null) it is
+     * rendering a tile, otherwise it is rendering an item
      */
     private void renderDimensionalPocketWallAt(TileDimensionalPocketWallConnector tile, double x, double y, double z, float f) {
         CoordSet offsetCoords = Hacks.asChunkOffset(tile.getCoordSet());
@@ -85,15 +87,17 @@ public class TileRendererPocketWall extends TileRendererPocket {
             default:
                 return;
         }
+
         glPushMatrix();
-        
+
+        boolean isInGUI = RenderEventHandler.isRenderingGUI;
         boolean fancy = Reference.useFancyField();
         boolean useFieldShader = Reference.USE_SHADER_FOR_PARTICLE_FIELD && fancy;
-        
-        if (!useFieldShader) {
+
+        if (!useFieldShader && !isInGUI) {
             portalRenderer.overrideFancyRendering(fancy);
             portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
-    
+
             portalRenderer.startDrawing();
             portalRenderer.updateField(3F);
             portalRenderer.setSeed(seeds[ordinal]);
@@ -115,31 +119,33 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
         glTranslated(x, y, z);
 
-        glPushMatrix();
-        glTranslatef(-ox, -oy, -oz);
-        
-        if (useFieldShader) {
-            ParticleFieldShader.use();
-            Hacks.BlockRenderer.drawFace(wallVisibleSide, PortalRenderer.fieldTextures[0], 0.0F, 14F);
-            ParticleFieldShader.release();
+        if (!isInGUI) {
+            glPushMatrix();
+            glTranslatef(-ox, -oy, -oz);
+
+            if (useFieldShader) {
+                ParticleFieldShader.use();
+                Hacks.BlockRenderer.drawFace(wallVisibleSide, PortalRenderer.fieldTextures[0], 0.0F, 14F);
+                ParticleFieldShader.release();
+            }
+
+            Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.001F, 14F);
+
+            glPopMatrix();
         }
-        
-        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getPocketInsideTexture(), 0.001F, 14F);
-        
-        glPopMatrix();
 
         // Connectors
-        updateConnectorColor();
+        updateConnectorColor(isInGUI);
+
+        glDisable(GL_CULL_FACE);
+        connectorColor.doGLColor4();
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnector(), 0.005F - (isInGUI ? 0.1f : 0f));
 
         connectorBGColour.doGLColor4();
-        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnectorBG(), 0.004F);
-
-        connectorColor.doGLColor4();
-        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnector(), 0.005F);
+        Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getConnectorBG(), 0.004F - (isInGUI ? 0.1f : 0f));
+        glEnable(GL_CULL_FACE);
 
         glTranslatef(-offX, -offY, -offZ);
-
-        updateStateColorLevel();
 
         if (doIndicateSides) {
             // Indicators
@@ -151,6 +157,8 @@ public class TileRendererPocketWall extends TileRendererPocket {
                 glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
                 Hacks.BlockRenderer.drawFace(wallVisibleSide, THEME.getSideIndicator(wallVisibleSide).getTexture(true), 0.003F, 16);
             }
+
+            updateStateColorLevel();
 
             // Overlays
             if (pocket != null) {

@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
+import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
@@ -95,8 +96,7 @@ public class PortalRenderer {
         if (isDrawing)
             throw new IllegalStateException("Already drawing!");
 
-        glPopMatrix();
-        glDisable(GL_FOG);
+        glPushMatrix();
         isDrawing = true;
     }
 
@@ -105,13 +105,12 @@ public class PortalRenderer {
             throw new IllegalStateException("Can't stop renderer! It's not drawing!");
 
         resetRenderer();
-        glEnable(GL_FOG);
-        glPushMatrix();
+        glPopMatrix();
     }
 
     public void updateField(float distance) {
-        long cycleTime = (long) (250000L / distance);
-        fieldTranslation = System.currentTimeMillis() % cycleTime / ((float) cycleTime);
+        long cycleTime = (long) (5000L / distance);
+        fieldTranslation = ClientEventHandler.gameTicks % cycleTime / ((float) cycleTime);
         currentTexture = fancyRendering ? fieldTextures[0] : fieldTextures[1];
         planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / (planeCount);
     }

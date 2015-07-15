@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Loader;
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
+import net.gtn.dimensionalpocket.client.event.RenderEventHandler;
 import net.gtn.dimensionalpocket.client.gui.GuiInfoBook;
 import net.gtn.dimensionalpocket.client.renderer.item.ItemPocketRenderer;
 import net.gtn.dimensionalpocket.client.renderer.shader.ShaderHelper;
@@ -41,6 +42,8 @@ public class ClientProxy extends CommonProxy {
         ClientEventHandler ceh = new ClientEventHandler();
         MinecraftForge.EVENT_BUS.register(ceh);
         FMLCommonHandler.instance().bus().register(ceh);
+        
+        MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
     }
     
     @Override

@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.Random;
 
 import me.jezza.oc.client.gui.lib.Colour;
+import net.gtn.dimensionalpocket.client.event.RenderEventHandler;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
 import net.gtn.dimensionalpocket.client.renderer.shader.ParticleFieldShader;
@@ -15,7 +16,6 @@ import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -40,10 +40,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         for (int i = 1; i <= 6; i++)
             seeds[i - 1] = base * i;
     }
-    
-    private static float [] fieldOffsets = new float[6];
+
+    private static float[] fieldOffsets = new float[6];
     static {
-        for(int i=0; i<6; i++)
+        for (int i = 0; i < 6; i++)
             fieldOffsets[i] = -0.0001f;
     }
 
@@ -59,11 +59,13 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         double maxDistance = 32.0; // distance to block
         this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
 
+        glPushMatrix();
+
+        boolean isInGUI = RenderEventHandler.isRenderingGUI;
         boolean fancy = Reference.useFancyField();
         boolean useFieldShader = Reference.USE_SHADER_FOR_PARTICLE_FIELD && fancy && inRange;
-        
-        if (!useFieldShader) {
-            portalRenderer.setInterpolatedPosition(x, y, z);
+
+        if (!useFieldShader && !isInGUI) {
             portalRenderer.overrideFancyRendering(fancy);
             portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
             portalRenderer.overrideRange(inRange);
@@ -71,6 +73,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             portalRenderer.startDrawing();
             portalRenderer.updateField(2F);
 
+            portalRenderer.setInterpolatedPosition(x, y, z);
             portalRenderer.setSeed(seeds[0]);
             portalRenderer.drawFaceYNeg(0.001F);
             portalRenderer.setSeed(seeds[1]);
@@ -87,20 +90,14 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             portalRenderer.stopDrawing();
         }
 
-        glPushMatrix();
         glDisable(GL_LIGHTING);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        Tessellator instance = Tessellator.instance;
-
-        instance.startDrawingQuads();
-        instance.setBrightness(maxBrightness);
-
         glTranslated(x, y, z);
         glColor3f(1.0F, 1.0F, 1.0F);
 
-        if (useFieldShader) {
+        if (useFieldShader && !isInGUI) {
             ParticleFieldShader.use();
             Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[0], fieldOffsets);
             ParticleFieldShader.release();
@@ -110,16 +107,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
         if (!inRange) {
             glDisable(GL_BLEND);
             glEnable(GL_LIGHTING);
-            glEnable(GL_FOG);
             glPopMatrix();
             return;
         }
 
-//        Rendering sides
+        // Rendering sides
         if (doIndicateSides) {
-
-            instance.startDrawingQuads();
-            instance.setBrightness(maxBrightness);
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 Colour texColour = Utils.FD_COLOURS.get(direction);
                 glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
@@ -147,7 +140,6 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
         glDisable(GL_BLEND);
         glEnable(GL_LIGHTING);
-        glEnable(GL_FOG);
         glPopMatrix();
     }
 
