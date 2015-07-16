@@ -34,6 +34,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTankInfo;
+import net.minecraftforge.fluids.IFluidHandler;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -46,7 +50,8 @@ import de.cdmp.api.wormhole.WormholeTarget;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = "OpenComputers")
 public class TileDimensionalPocket extends TileDP
-		implements IBlockNotifier, IBlockInteract, IEnergyHandler, ISidedInventory, IWormhole, SidedEnvironment {
+		implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISidedInventory, IWormhole, SidedEnvironment {
+
 	private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
 	private String customName;
@@ -627,5 +632,69 @@ public class TileDimensionalPocket extends TileDP
 	@SideOnly(Side.CLIENT)
 	public boolean canConnect(ForgeDirection side) {
 		return true;
+	}
+
+	////////////////////
+	// Fluid Handling //
+	////////////////////
+
+	@Override
+	public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).fill(from, resource, doFill);
+		}
+		return 0;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).drain(from, resource, doDrain);
+		}
+		return null;
+	}
+
+	@Override
+	public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).drain(from, maxDrain, doDrain);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean canFill(ForgeDirection from, Fluid fluid) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).canFill(from, fluid);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean canDrain(ForgeDirection from, Fluid fluid) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).canDrain(from, fluid);
+		}
+		return false;
+	}
+
+	@Override
+	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
+
+		if (targetTE instanceof IFluidHandler) {
+			return ((IFluidHandler) targetTE).getTankInfo(from);
+		}
+		return null;
 	}
 }
