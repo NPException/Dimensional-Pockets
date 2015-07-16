@@ -102,7 +102,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
 			wrapper.loadedRooms.add(pocketSet);
 			DPLogger.info("Marked the following pocket room to the be loaded: " + pocketSet.toString(), ChunkLoaderHandler.class);
 		} else {
-			DPLogger.warning("The following Pocket was already marked as loaded: " + pocketSet.toString(), ChunkLoaderHandler.class);
+			DPLogger.info("The following Pocket was already marked as loaded: " + pocketSet.toString(), ChunkLoaderHandler.class);
 		}
 
 		refreshWrapperTicket(chunkXZSet);

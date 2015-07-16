@@ -52,7 +52,6 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 				} else {
 					Utils.spawnItemStack(itemStack, world, x + 0.5F, y + 0.5F, z + 0.5F, 0);
 				}
-				tile.unloadPocket();
 			}
 
 			return Lists.newArrayList(itemStack);

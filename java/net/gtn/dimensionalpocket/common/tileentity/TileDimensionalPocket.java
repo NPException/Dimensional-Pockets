@@ -73,7 +73,6 @@ public class TileDimensionalPocket extends TileDP
 			return;
 
 		Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
-		unloadPocket();
 	}
 
 	@Override
@@ -182,10 +181,6 @@ public class TileDimensionalPocket extends TileDP
 
 		itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + blockSet.x + "," + blockSet.y + "," + blockSet.z + "§8 ~", creatorLore);
 		return itemStack;
-	}
-
-	public void unloadPocket() {
-		ChunkLoaderHandler.removePocketFromChunkLoader(getPocket());
 	}
 
 	@Override
