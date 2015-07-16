@@ -78,4 +78,17 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 	public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_) {
 		// do nothing, since ItemStack spawning happens in the TileEntity
 	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+		ArrayList<ItemStack> items = new ArrayList<>();
+
+		if (!world.isRemote) {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof TileDimensionalPocket) {
+				items.add(((TileDimensionalPocket) te).generateItemStack());
+			}
+		}
+		return items;
+	}
 }
