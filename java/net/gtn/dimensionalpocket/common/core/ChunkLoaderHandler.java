@@ -81,12 +81,14 @@ public class ChunkLoaderHandler implements LoadingCallback {
 	}
 
 	public static void addPocketToChunkLoader(Pocket pocket) {
-		if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
+		if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
 			return;
+		}
 
 		Utils.enforceServer();
-		if (pocket == null)
+		if (pocket == null) {
 			return;
+		}
 
 		CoordSet pocketSet = pocket.getChunkCoords();
 		CoordSet chunkXZSet = pocketSet.copy();

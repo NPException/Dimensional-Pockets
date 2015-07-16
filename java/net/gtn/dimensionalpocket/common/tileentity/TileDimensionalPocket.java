@@ -57,8 +57,9 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		if (telePrep != null) {
 			if (telePrep.doPrepareTick()) {
@@ -69,16 +70,18 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public void onBlockRemoval(World world, int x, int y, int z) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
 	}
 
 	@Override
 	public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return;
+		}
 
 		Pocket p = getPocket();
 		if (p != null) {
@@ -90,8 +93,9 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public void onNeighbourTileChanged(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		if (!(world instanceof World) || ((World) world).isRemote)
+		if (!(world instanceof World) || ((World) world).isRemote) {
 			return;
+		}
 
 		Pocket p = getPocket();
 		if (p != null) {
@@ -109,8 +113,9 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public void onBlockAdded(EntityLivingBase entityLivingBase, World world, int x, int y, int z, ItemStack itemStack) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		if (itemStack.hasTagCompound()) {
 			NBTTagCompound itemCompound = itemStack.getTagCompound();
@@ -118,8 +123,9 @@ public class TileDimensionalPocket extends TileDP
 			CoordSet chunkSet = CoordSet.readFromNBT(itemCompound);
 			boolean success = PocketRegistry.getPocket(chunkSet) != null;
 
-			if (!success)
+			if (!success) {
 				throw new RuntimeException("YOU DESERVED THIS!");
+			}
 
 			PocketRegistry.updatePocket(chunkSet, entityLivingBase.dimension, getCoordSet());
 
@@ -146,8 +152,9 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-		if (player == null)
+		if (player == null) {
 			return true;
+		}
 
 		ItemStack equippedItemStack = player.getCurrentEquippedItem();
 		if (equippedItemStack != null) {
@@ -185,8 +192,9 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public Pocket getPocket() {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return pocket;
+		}
 
 		return PocketRegistry.getOrCreatePocket(worldObj, getCoordSet());
 	}
@@ -235,18 +243,21 @@ public class TileDimensionalPocket extends TileDP
 	 *         TE exists at the spot.
 	 */
 	private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
 		CoordSet targetCoords = p.getConnectorCoords(side);
-		if (targetCoords == null || !targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z))
+		if (targetCoords == null || !targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z)) {
 			return null;
+		}
 
 		targetCoords.addForgeDirection(side.getOpposite());
 		return targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z) ? targetWorld.getTileEntity(targetCoords.x, targetCoords.y, targetCoords.z) : null;
@@ -260,8 +271,9 @@ public class TileDimensionalPocket extends TileDP
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return false;
+		}
 
 		switch (p.getFlowState(from)) {
 			case ENERGY:
@@ -348,20 +360,23 @@ public class TileDimensionalPocket extends TileDP
 	private static final int SIDE_BITS = 3;
 
 	private IInventory getInventoryOnInsideWall(int side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		ForgeDirection fdSide = ForgeDirection.getOrientation(side);
 
 		switch (p.getFlowState(fdSide)) {
 			case ENERGY:
 				TileEntity te = getFrameConnectorNeighborTileEntity(fdSide);
-				if (te instanceof IInventory)
+				if (te instanceof IInventory) {
 					return Utils.getInventory((IInventory) te);
+				}
 				return null;
 			default:
 				return null;
@@ -379,8 +394,9 @@ public class TileDimensionalPocket extends TileDP
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(maskedSide);
-		if (inventory == null)
+		if (inventory == null) {
 			return null;
+		}
 
 		return inventory.getStackInSlot(innerSlot);
 	}
@@ -391,8 +407,9 @@ public class TileDimensionalPocket extends TileDP
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(maskedSide);
-		if (inventory == null)
+		if (inventory == null) {
 			return null;
+		}
 
 		return inventory.decrStackSize(innerSlot, count);
 	}
@@ -449,8 +466,9 @@ public class TileDimensionalPocket extends TileDP
 		slot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return false;
+		}
 
 		return inventory.isItemValidForSlot(slot, stack);
 	}
@@ -466,12 +484,14 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		if (side > 5)
+		if (side > 5) {
 			return EMPTY_SLOT_ARRAY;
+		}
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return EMPTY_SLOT_ARRAY;
+		}
 
 		// lazy init of "lastKnown" cache
 		if (lastKnownInventories == null || lastKnownInventorySlots == null) {
@@ -482,15 +502,17 @@ public class TileDimensionalPocket extends TileDP
 			lastKnownInventorySlots = new int[6][];
 		}
 
-		if (inventory instanceof ISidedInventory)
+		if (inventory instanceof ISidedInventory) {
 			return ((ISidedInventory) inventory).getAccessibleSlotsFromSide(side);
+		}
 
 		// use cache for plain IInventory if possible
 		WeakReference<IInventory> cachedInventory = lastKnownInventories.get(side);
 
 		if (cachedInventory != null && cachedInventory.get() == inventory
-				&& inventory.getSizeInventory() == lastKnownInventorySlots[side].length)
+				&& inventory.getSizeInventory() == lastKnownInventorySlots[side].length) {
 			return lastKnownInventorySlots[side];
+		}
 
 		int[] slots = new int[inventory.getSizeInventory()];
 		for (int i = 0; i < slots.length; i++) {
@@ -507,14 +529,16 @@ public class TileDimensionalPocket extends TileDP
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int side) {
 		int maskedSide = slot & 0b111;
-		if (maskedSide != side)
+		if (maskedSide != side) {
 			return false;
+		}
 
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return false;
+		}
 
 		return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canInsertItem(innerSlot, stack, side);
 	}
@@ -522,14 +546,16 @@ public class TileDimensionalPocket extends TileDP
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, int side) {
 		int maskedSide = slot & 0b111;
-		if (maskedSide != side)
+		if (maskedSide != side) {
 			return false;
+		}
 
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return false;
+		}
 
 		return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(innerSlot, stack, side);
 	}
@@ -540,19 +566,22 @@ public class TileDimensionalPocket extends TileDP
 
 	@Override
 	public List<WormholeTarget<Block, TileEntity>> getAllTargets(ForgeDirection fromDirection) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return Collections.emptyList();
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return Collections.emptyList();
+		}
 
 		World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
 		CoordSet targetCoords = p.getConnectorCoords(fromDirection);
 
-		if (targetCoords == null)
+		if (targetCoords == null) {
 			return Collections.emptyList();
+		}
 
 		ForgeDirection toDirection = fromDirection.getOpposite();
 		targetCoords.addForgeDirection(toDirection);
@@ -570,20 +599,23 @@ public class TileDimensionalPocket extends TileDP
 	@Optional.Method(modid = "OpenComputers")
 	@Override
 	public Node sidedNode(ForgeDirection side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		switch (p.getFlowState(side)) {
 			case ENERGY:
 				TileEntity te = getFrameConnectorNeighborTileEntity(side);
-				if (te instanceof SidedEnvironment)
+				if (te instanceof SidedEnvironment) {
 					return ((SidedEnvironment) te).sidedNode(side);
-				else if (te instanceof Environment)
+				} else if (te instanceof Environment) {
 					return ((Environment) te).node();
+				}
 				return null;
 			default:
 				return null;

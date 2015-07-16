@@ -34,8 +34,9 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 
 	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return null;
+		}
 
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
