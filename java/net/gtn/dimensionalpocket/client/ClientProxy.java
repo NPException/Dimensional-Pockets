@@ -24,44 +24,45 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 
+
 public class ClientProxy extends CommonProxy {
 
-    public static int currentPage = 0;
+	public static int currentPage = 0;
 
-    @Override
-    public void initClientSide() {
-        ShaderHelper.initShaders();
+	@Override
+	public void initClientSide() {
+		ShaderHelper.initShaders();
 
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
 
-        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
 
-        MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+		MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
 
-        ClientEventHandler ceh = new ClientEventHandler();
-        MinecraftForge.EVENT_BUS.register(ceh);
-        FMLCommonHandler.instance().bus().register(ceh);
+		ClientEventHandler ceh = new ClientEventHandler();
+		MinecraftForge.EVENT_BUS.register(ceh);
+		FMLCommonHandler.instance().bus().register(ceh);
 
-        MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
-    }
+		MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
+	}
 
-    @Override
-    public void postInitClientSide() {
-        FMLCommonHandler.instance().bus().register(new ClientPlayerTickEventHandler());
-        ClientCommandHandler.instance.registerCommand(new RenderTweakCommand());
+	@Override
+	public void postInitClientSide() {
+		FMLCommonHandler.instance().bus().register(new ClientPlayerTickEventHandler());
+		ClientCommandHandler.instance.registerCommand(new RenderTweakCommand());
 
-        ClientPlayerTickEventHandler.hideStuffFromNEI = Loader.isModLoaded("NotEnoughItems");
-    }
+		ClientPlayerTickEventHandler.hideStuffFromNEI = Loader.isModLoaded("NotEnoughItems");
+	}
 
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID) {
-            case 0:
-                return new GuiInfoBook(player);
-            default:
-                return null;
-        }
-    }
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		switch (ID) {
+			case 0:
+				return new GuiInfoBook(player);
+			default:
+				return null;
+		}
+	}
 
 }

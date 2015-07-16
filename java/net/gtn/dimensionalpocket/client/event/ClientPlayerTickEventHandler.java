@@ -17,56 +17,57 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+
 @SideOnly(Side.CLIENT)
 public class ClientPlayerTickEventHandler {
 
-    public static boolean hideStuffFromNEI = false;
+	public static boolean hideStuffFromNEI = false;
 
-    private static boolean checkForVersion = Reference.DO_VERSION_CHECK;
+	private static boolean checkForVersion = Reference.DO_VERSION_CHECK;
 
-    private static boolean sendSnooper = true;
+	private static boolean sendSnooper = true;
 
-    /**
-     * Hides blocks and items from NEI that it should not show. The Dimensional
-     * Pocket Wall f.e.
-     */
-    private static void hideStuffFromNEI() {
-        try {
-            Class<?> neiApiClass = Class.forName("codechicken.nei.api.API");
-            Method hideItemMethod = neiApiClass.getDeclaredMethod("hideItem", ItemStack.class);
-            hideItemMethod.invoke(null, new ItemStack(ModBlocks.dimensionalPocketWall));
-        } catch (Exception e) {
-            DPLogger.warning("could not finish method \"hideStuffFromNEI()\"");
-        }
-    }
+	/**
+	 * Hides blocks and items from NEI that it should not show. The Dimensional
+	 * Pocket Wall f.e.
+	 */
+	private static void hideStuffFromNEI() {
+		try {
+			Class<?> neiApiClass = Class.forName("codechicken.nei.api.API");
+			Method hideItemMethod = neiApiClass.getDeclaredMethod("hideItem", ItemStack.class);
+			hideItemMethod.invoke(null, new ItemStack(ModBlocks.dimensionalPocketWall));
+		} catch (Exception e) {
+			DPLogger.warning("could not finish method \"hideStuffFromNEI()\"");
+		}
+	}
 
-    private static void checkPlayerForNetherCrystal(EntityPlayer player) {
-        ItemStack equippedItem = player.getCurrentEquippedItem();
-        TileRendererPocket.doIndicateSides = equippedItem != null && equippedItem.getItem() == ModItems.netherCrystal;
-    }
+	private static void checkPlayerForNetherCrystal(EntityPlayer player) {
+		ItemStack equippedItem = player.getCurrentEquippedItem();
+		TileRendererPocket.doIndicateSides = equippedItem != null && equippedItem.getItem() == ModItems.netherCrystal;
+	}
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void event(PlayerTickEvent evt) {
-        if (evt.player != Minecraft.getMinecraft().thePlayer)
-            return;
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void event(PlayerTickEvent evt) {
+		if (evt.player != Minecraft.getMinecraft().thePlayer)
+			return;
 
-        if (hideStuffFromNEI) {
-            hideStuffFromNEI = false;
-            hideStuffFromNEI();
-        }
+		if (hideStuffFromNEI) {
+			hideStuffFromNEI = false;
+			hideStuffFromNEI();
+		}
 
-        if (checkForVersion) {
-            checkForVersion = false;
-            VersionChecker.checkUpToDate(evt.player);
-        }
+		if (checkForVersion) {
+			checkForVersion = false;
+			VersionChecker.checkUpToDate(evt.player);
+		}
 
-        if (sendSnooper) {
-            sendSnooper = false;
-            DPNetwork.sendSnooperSetting();
-        }
+		if (sendSnooper) {
+			sendSnooper = false;
+			DPNetwork.sendSnooperSetting();
+		}
 
-        // check for Nether Crystal in hand to trigger side color coding of pockets
-        checkPlayerForNetherCrystal(evt.player);
-    }
+		// check for Nether Crystal in hand to trigger side color coding of pockets
+		checkPlayerForNetherCrystal(evt.player);
+	}
 }

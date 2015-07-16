@@ -32,81 +32,82 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 
+
 @Controller(configFile = "DimensionalPockets")
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets implements IConfigRegistrar {
 
-    @Instance(Reference.MOD_ID)
-    public static DimensionalPockets instance;
+	@Instance(Reference.MOD_ID)
+	public static DimensionalPockets instance;
 
-    @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-    public static CommonProxy proxy;
+	@SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
+	public static CommonProxy proxy;
 
-    public static CreativeTabSimple creativeTab = new CreativeTabSimple(Reference.MOD_ID);
+	public static CreativeTabSimple creativeTab = new CreativeTabSimple(Reference.MOD_ID);
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        DPLogger.init(LogManager.getLogger(Reference.MOD_NAME.replaceAll(" ", "")));
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		DPLogger.init(LogManager.getLogger(Reference.MOD_NAME.replaceAll(" ", "")));
 
-        ModBlocks.init();
-        ModItems.init();
+		ModBlocks.init();
+		ModItems.init();
 
-        creativeTab.setIcon(ModBlocks.dimensionalPocket);
+		creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
-        ModItems.initRecipes();
+		ModItems.initRecipes();
 
-        DPNetwork.init();
-    }
+		DPNetwork.init();
+	}
 
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-        proxy.initServerSide();
-        proxy.initClientSide();
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		proxy.initServerSide();
+		proxy.initClientSide();
 
-        MinecraftForge.EVENT_BUS.register(proxy);
+		MinecraftForge.EVENT_BUS.register(proxy);
 
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
-        DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, false);
-        DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
+		DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, false);
+		DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
-        BiomeHelper.init();
+		BiomeHelper.init();
 
-        if (Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
-            ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
-        }
-    }
+		if (Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
+			ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
+		}
+	}
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInitClientSide();
-    }
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInitClientSide();
+	}
 
-    @EventHandler
-    public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
-        // PocketRegistry needs to be loaded before the TileEntities are read from NBT
-        PocketRegistry.loadData();
-    }
+	@EventHandler
+	public void onServerAboutToStart(FMLServerAboutToStartEvent event) {
+		// PocketRegistry needs to be loaded before the TileEntities are read from NBT
+		PocketRegistry.loadData();
+	}
 
-    @EventHandler
-    public void onServerStarted(FMLServerStartingEvent event) {
-        PocketRegistry.initChunkLoading();
-        PocketRegistry.validatePocketConnectors();
-    }
+	@EventHandler
+	public void onServerStarted(FMLServerStartingEvent event) {
+		PocketRegistry.initChunkLoading();
+		PocketRegistry.validatePocketConnectors();
+	}
 
-    @EventHandler
-    public void onServerStopping(FMLServerStoppingEvent event) {
-        PocketRegistry.saveData();
-        ChunkLoaderHandler.clearTicketMap();
-    }
+	@EventHandler
+	public void onServerStopping(FMLServerStoppingEvent event) {
+		PocketRegistry.saveData();
+		ChunkLoaderHandler.clearTicketMap();
+	}
 
-    //    @Override
-    //    public void registerCustomAnnotations(IConfigRegistry registry) {
-    //        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
-    //    }
+	//    @Override
+	//    public void registerCustomAnnotations(IConfigRegistry registry) {
+	//        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+	//    }
 
-    @Override
-    public void registerCustomAnnotations() {
-        me.jezza.oc.api.configuration.ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
-    }
+	@Override
+	public void registerCustomAnnotations() {
+		me.jezza.oc.api.configuration.ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+	}
 }

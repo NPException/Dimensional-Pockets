@@ -11,30 +11,31 @@ import net.minecraft.item.ItemStack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+
 @SideOnly(Side.CLIENT)
 public class RenderUtils {
 
-    public static void renderItemStackInGUI(ItemStack itemStack, FontRenderer fontRendererObj, RenderItem itemRender, int x, int y, float zLevel) {
-        if (itemStack == null)
-            return;
+	public static void renderItemStackInGUI(ItemStack itemStack, FontRenderer fontRendererObj, RenderItem itemRender, int x, int y, float zLevel) {
+		if (itemStack == null)
+			return;
 
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 
-        RenderHelper.enableGUIStandardItemLighting();
-        glDisable(GL_LIGHTING);
-        glEnable(GL_RESCALE_NORMAL);
-        glEnable(GL_COLOR_MATERIAL);
-        glEnable(GL_LIGHTING);
+		RenderHelper.enableGUIStandardItemLighting();
+		glDisable(GL_LIGHTING);
+		glEnable(GL_RESCALE_NORMAL);
+		glEnable(GL_COLOR_MATERIAL);
+		glEnable(GL_LIGHTING);
 
-        itemRender.zLevel = zLevel;
+		itemRender.zLevel = zLevel;
 
-        itemRender.renderItemAndEffectIntoGUI(fontRendererObj, textureManager, itemStack, x, y);
-        itemRender.renderItemOverlayIntoGUI(fontRendererObj, textureManager, itemStack, x, y);
+		itemRender.renderItemAndEffectIntoGUI(fontRendererObj, textureManager, itemStack, x, y);
+		itemRender.renderItemOverlayIntoGUI(fontRendererObj, textureManager, itemStack, x, y);
 
-        itemRender.zLevel = 0.0F;
+		itemRender.zLevel = 0.0F;
 
-        glDisable(GL_LIGHTING);
-        glEnable(GL_LIGHTING);
-        glEnable(GL_DEPTH_TEST);
-    }
+		glDisable(GL_LIGHTING);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+	}
 }

@@ -20,62 +20,63 @@ import cofh.api.block.IDismantleable;
 
 import com.google.common.collect.Lists;
 
+
 public class BlockDimensionalPocket extends BlockAbstractModel implements IDismantleable, ITileProvider {
 
-    public BlockDimensionalPocket(Material material, String name) {
-        super(material, name);
-        setHardness(4F);
-        setLightOpacity(255);
-        setLightLevel(1F);
-        setResistance(Reference.DIMENSIONAL_POCKET_RESISTANCE);
-        setCreativeTab(DimensionalPockets.creativeTab);
-    }
+	public BlockDimensionalPocket(Material material, String name) {
+		super(material, name);
+		setHardness(4F);
+		setLightOpacity(255);
+		setLightLevel(1F);
+		setResistance(Reference.DIMENSIONAL_POCKET_RESISTANCE);
+		setCreativeTab(DimensionalPockets.creativeTab);
+	}
 
-    @Override
-    public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
-        if (world.isRemote)
-            return null;
+	@Override
+	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
+		if (world.isRemote)
+			return null;
 
-        TileEntity tileEntity = world.getTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
-        if (tileEntity instanceof TileDimensionalPocket) {
-            TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-            ItemStack itemStack = tile.generateItemStack();
+		if (tileEntity instanceof TileDimensionalPocket) {
+			TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
+			ItemStack itemStack = tile.generateItemStack();
 
-            boolean flag = world.func_147480_a(x, y, z, false);
+			boolean flag = world.func_147480_a(x, y, z, false);
 
-            if (flag) {
-                if (returnBlock) {
-                    player.inventory.addItemStackToInventory(itemStack);
-                    MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
-                } else {
-                    Utils.spawnItemStack(itemStack, world, x + 0.5F, y + 0.5F, z + 0.5F, 0);
-                }
-                tile.unloadPocket();
-            }
+			if (flag) {
+				if (returnBlock) {
+					player.inventory.addItemStackToInventory(itemStack);
+					MinecraftServer.getServer().getConfigurationManager().syncPlayerInventory((EntityPlayerMP) player);
+				} else {
+					Utils.spawnItemStack(itemStack, world, x + 0.5F, y + 0.5F, z + 0.5F, 0);
+				}
+				tile.unloadPocket();
+			}
 
-            return Lists.newArrayList(itemStack);
-        }
-        return null;
-    }
+			return Lists.newArrayList(itemStack);
+		}
+		return null;
+	}
 
-    @Override
-    public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
-        return true;
-    }
+	@Override
+	public boolean canDismantle(EntityPlayer player, World world, int x, int y, int z) {
+		return true;
+	}
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int meta) {
-        return new TileDimensionalPocket();
-    }
+	@Override
+	public TileEntity createNewTileEntity(World world, int meta) {
+		return new TileDimensionalPocket();
+	}
 
-    @Override
-    public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
-        return false;
-    }
+	@Override
+	public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
+		return false;
+	}
 
-    @Override
-    public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_) {
-        // do nothing, since ItemStack spawning happens in the TileEntity
-    }
+	@Override
+	public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_) {
+		// do nothing, since ItemStack spawning happens in the TileEntity
+	}
 }

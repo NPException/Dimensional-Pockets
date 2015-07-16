@@ -10,90 +10,91 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 
+
 public class ModItems {
 
-    public static ItemDP book;
-    public static ItemDP endCrystal;
-    public static ItemDP netherCrystal;
+	public static ItemDP book;
+	public static ItemDP endCrystal;
+	public static ItemDP netherCrystal;
 
-    public static void init() {
-        book = new ItemBook(Strings.INFO_BOOK);
-        endCrystal = new ItemEndCrystal(Strings.END_CRYSTAL);
-        netherCrystal = new ItemNetherCrystal(Strings.NETHER_CRYSTAL);
-    }
+	public static void init() {
+		book = new ItemBook(Strings.INFO_BOOK);
+		endCrystal = new ItemEndCrystal(Strings.END_CRYSTAL);
+		netherCrystal = new ItemNetherCrystal(Strings.NETHER_CRYSTAL);
+	}
 
-    @SuppressWarnings("boxing")
-    public static void initRecipes() {
-        CraftingManager crafting = CraftingManager.getInstance();
+	@SuppressWarnings("boxing")
+	public static void initRecipes() {
+		CraftingManager crafting = CraftingManager.getInstance();
 
-        //@formatter:off
-        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
-                "#N#",
-                "IDI",
-                "#E#",
+		//@formatter:off
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
+				"#N#",
+				"IDI",
+				"#E#",
 
-                '#',
-                new ItemStack(Blocks.stonebrick, 1, 0),
+				'#',
+				new ItemStack(Blocks.stonebrick, 1, 0),
 
-                'I',
-                Blocks.iron_block,
+				'I',
+				Blocks.iron_block,
 
-                'D',
-                Blocks.diamond_block,
+				'D',
+				Blocks.diamond_block,
 
-                'N',
-                netherCrystal,
+				'N',
+				netherCrystal,
 
-                'E',
-                endCrystal
-                );
+				'E',
+				endCrystal
+				);
 
-        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
-                "#E#",
-                "IDI",
-                "#N#",
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
+				"#E#",
+				"IDI",
+				"#N#",
 
-                '#',
-                new ItemStack(Blocks.stonebrick, 1, 0),
+				'#',
+				new ItemStack(Blocks.stonebrick, 1, 0),
 
-                'I',
-                Blocks.iron_block,
+				'I',
+				Blocks.iron_block,
 
-                'D',
-                Blocks.diamond_block,
+				'D',
+				Blocks.diamond_block,
 
-                'N',
-                netherCrystal,
+				'N',
+				netherCrystal,
 
-                'E',
-                endCrystal
-                );
+				'E',
+				endCrystal
+				);
 
-        crafting.addRecipe(new ItemStack(netherCrystal),
-                "TTT",
-                "TRT",
-                "TTT",
+		crafting.addRecipe(new ItemStack(netherCrystal),
+				"TTT",
+				"TRT",
+				"TTT",
 
-                'T',
-                Items.ghast_tear,
+				'T',
+				Items.ghast_tear,
 
-                'R',
-                Blocks.redstone_block
-                );
+				'R',
+				Blocks.redstone_block
+				);
 
-        crafting.addRecipe(new ItemStack(endCrystal),
-                "EEE",
-                "EGE",
-                "EEE",
+		crafting.addRecipe(new ItemStack(endCrystal),
+				"EEE",
+				"EGE",
+				"EEE",
 
-                'E',
-                Items.ender_eye,
+				'E',
+				Items.ender_eye,
 
-                'G',
-                Blocks.glass);
+				'G',
+				Blocks.glass);
 
-        crafting.addShapelessRecipe(new ItemStack(book),Items.book, Items.leather);
-        //@formatter:on
-    }
+		crafting.addShapelessRecipe(new ItemStack(book),Items.book, Items.leather);
+		//@formatter:on
+	}
 
 }

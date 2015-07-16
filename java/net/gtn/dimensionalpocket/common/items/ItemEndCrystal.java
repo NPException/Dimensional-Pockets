@@ -14,42 +14,43 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
+
 public class ItemEndCrystal extends ItemDP {
 
-    public ItemEndCrystal(String name) {
-        super(name);
-        setEffect();
-    }
+	public ItemEndCrystal(String name) {
+		super(name);
+		setEffect();
+	}
 
-    @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (player.dimension != Reference.DIMENSION_ID)
-            return itemStack;
+	@Override
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+		if (player.dimension != Reference.DIMENSION_ID)
+			return itemStack;
 
-        if (world.isRemote) {
-            player.swingItem();
-            return itemStack;
-        }
+		if (world.isRemote) {
+			player.swingItem();
+			return itemStack;
+		}
 
-        CoordSet coordSet = new CoordSet(player);
-        Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-        if (pocket == null)
-            return itemStack;
+		CoordSet coordSet = new CoordSet(player);
+		Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
+		if (pocket == null)
+			return itemStack;
 
-        pocket.setSpawnInPocket(Hacks.toChunkOffset(coordSet), player.rotationYaw, player.rotationPitch);
+		pocket.setSpawnInPocket(Hacks.toChunkOffset(coordSet), player.rotationYaw, player.rotationPitch);
 
-        ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
-        comp.getChatStyle().setItalic(Boolean.TRUE);
-        player.addChatMessage(comp);
+		ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
+		comp.getChatStyle().setItalic(Boolean.TRUE);
+		player.addChatMessage(comp);
 
-        return itemStack;
-    }
+		return itemStack;
+	}
 
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, IItemTooltip information) {
-        information.defaultInfoList();
-        String text = Localise.translate("info.tooltip.endCrystal.shift");
-        List<String> lines = Localise.wrapToSize(text, 40);
-        information.addAllToShiftList(lines);
-    }
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, IItemTooltip information) {
+		information.defaultInfoList();
+		String text = Localise.translate("info.tooltip.endCrystal.shift");
+		List<String> lines = Localise.wrapToSize(text, 40);
+		information.addAllToShiftList(lines);
+	}
 }

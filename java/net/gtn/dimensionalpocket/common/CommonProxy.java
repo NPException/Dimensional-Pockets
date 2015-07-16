@@ -22,74 +22,73 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
+
 public class CommonProxy implements IGuiHandler {
 
-    private static final String GIVEN_INFO_BOOK = "givenInfoBook";
+	private static final String GIVEN_INFO_BOOK = "givenInfoBook";
 
-    public void initServerSide() {
-        registerTileEntities();
+	public void initServerSide() {
+		registerTileEntities();
 
-        InterModConfigHandler.initComms();
+		InterModConfigHandler.initComms();
 
-        MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
-        MinecraftForge.EVENT_BUS.register(new InsidePocketEventHandler());
-    }
+		MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
+		MinecraftForge.EVENT_BUS.register(new InsidePocketEventHandler());
+	}
 
-    public void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.TILE_POCKET);
-        GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
-    }
+	public void registerTileEntities() {
+		GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.TILE_POCKET);
+		GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
+	}
 
-    public void initClientSide() {
-        // do nothing
-    }
+	public void initClientSide() {
+		// do nothing
+	}
 
-    public void postInitClientSide() {
-        // do nothing
-    }
+	public void postInitClientSide() {
+		// do nothing
+	}
 
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        switch (ID) {
-            case 1:
-                TileEntity tileEntity = world.getTileEntity(x, y, z);
-                if (tileEntity instanceof TileDimensionalPocket)
-                    return new ContainerPocketConfig((TileDimensionalPocket) tileEntity);
-                break;
-        }
-        return null;
-    }
+	@Override
+	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+		if (id == 1) {
+			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			if (tileEntity instanceof TileDimensionalPocket)
+				return new ContainerPocketConfig((TileDimensionalPocket) tileEntity);
+		}
+		return null;
+	}
 
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return null;
-    }
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		return null;
+	}
 
-    @SubscribeEvent
-    public void onEntityJoin(EntityJoinWorldEvent event) {
-        Entity entity = event.entity;
-        World world = event.world;
+	@SubscribeEvent
+	public void onEntityJoin(EntityJoinWorldEvent event) {
+		Entity entity = event.entity;
+		World world = event.world;
 
-        if (!world.isRemote && entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) entity;
+		if (!world.isRemote && entity instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer) entity;
 
-            checkIfSpawnWithBook(player);
-        }
-    }
+			checkIfSpawnWithBook(player);
+		}
+	}
 
-    private static void checkIfSpawnWithBook(EntityPlayer player) {
-        NBTTagCompound persistTag = Utils.getPlayerPersistTag(player);
-        boolean shouldGiveManual = Reference.SHOULD_SPAWN_WITH_BOOK && !persistTag.getBoolean(GIVEN_INFO_BOOK);
-        if (shouldGiveManual) {
-            ItemStack infoBook = new ItemStack(ModItems.book);
-            if (!player.inventory.addItemStackToInventory(infoBook)) {
-                World playerWorld = player.worldObj;
-                EntityItem entityItem = new EntityItem(playerWorld, player.posX, player.posY, player.posZ, infoBook);
-                entityItem.delayBeforeCanPickup = 0;
+	private static void checkIfSpawnWithBook(EntityPlayer player) {
+		NBTTagCompound persistTag = Utils.getPlayerPersistTag(player);
+		boolean shouldGiveManual = Reference.SHOULD_SPAWN_WITH_BOOK && !persistTag.getBoolean(GIVEN_INFO_BOOK);
+		if (shouldGiveManual) {
+			ItemStack infoBook = new ItemStack(ModItems.book);
+			if (!player.inventory.addItemStackToInventory(infoBook)) {
+				World playerWorld = player.worldObj;
+				EntityItem entityItem = new EntityItem(playerWorld, player.posX, player.posY, player.posZ, infoBook);
+				entityItem.delayBeforeCanPickup = 0;
 
-                playerWorld.spawnEntityInWorld(entityItem);
-            }
-            persistTag.setBoolean(GIVEN_INFO_BOOK, true);
-        }
-    }
+				playerWorld.spawnEntityInWorld(entityItem);
+			}
+			persistTag.setBoolean(GIVEN_INFO_BOOK, true);
+		}
+	}
 }

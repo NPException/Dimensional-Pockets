@@ -16,107 +16,109 @@ import net.minecraft.server.MinecraftServer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+
 public class PocketConfig {
 
-    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private static final String backLinkFile = "teleportRegistry";
-    private static final String pocketGenParamsFile = "pocketGenParameters";
+	private static final String backLinkFile = "teleportRegistry";
+	private static final String pocketGenParamsFile = "pocketGenParameters";
 
-    /**
-     * Adds .json to it.
-     *
-     * @param fileName
-     * @return
-     */
-    private static File getConfig(String fileName) throws IOException {
-        MinecraftServer server = MinecraftServer.getServer();
-        StringBuilder pathName = new StringBuilder();
+	/**
+	 * Adds .json to it.
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	private static File getConfig(String fileName) throws IOException {
+		MinecraftServer server = MinecraftServer.getServer();
+		StringBuilder pathName = new StringBuilder();
 
-        if (server.isSinglePlayer()) {
-            pathName.append("saves/");
-        }
+		if (server.isSinglePlayer()) {
+			pathName.append("saves/");
+		}
 
-        pathName.append(server.getFolderName());
-        pathName.append("/dimpockets/");
-        pathName.append(fileName);
-        pathName.append(".json");
+		pathName.append(server.getFolderName());
+		pathName.append("/dimpockets/");
+		pathName.append(fileName);
+		pathName.append(".json");
 
-        File savefile = server.getFile(pathName.toString());
-        if (!savefile.exists()) {
-            savefile.getParentFile().mkdirs();
-            savefile.createNewFile();
-        }
-        return savefile;
-    }
+		File savefile = server.getFile(pathName.toString());
+		if (!savefile.exists()) {
+			savefile.getParentFile().mkdirs();
+			savefile.createNewFile();
+		}
+		return savefile;
+	}
 
-    public static void saveBackLinkMap(Map<CoordSet, Pocket> backLinkMap) {
-        try {
-            File registryFile = getConfig(backLinkFile);
+	public static void saveBackLinkMap(Map<CoordSet, Pocket> backLinkMap) {
+		try {
+			File registryFile = getConfig(backLinkFile);
 
-            Collection<Pocket> values = backLinkMap.values();
-            Pocket[] tempArray = values.toArray(new Pocket[values.size()]);
+			Collection<Pocket> values = backLinkMap.values();
+			Pocket[] tempArray = values.toArray(new Pocket[values.size()]);
 
-            FileWriter writer = new FileWriter(registryFile);
-            GSON.toJson(tempArray, writer);
-            writer.close();
+			try (FileWriter writer = new FileWriter(registryFile)) {
+				GSON.toJson(tempArray, writer);
+				writer.flush();
+			}
 
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
-    }
+		} catch (Exception e) {
+			DPLogger.severe(e);
+		}
+	}
 
-    public static Map<CoordSet, Pocket> loadBackLinkMap() {
-        Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
-        try {
-            File registryFile = getConfig(backLinkFile);
+	public static Map<CoordSet, Pocket> loadBackLinkMap() {
+		Map<CoordSet, Pocket> backLinkMap = new HashMap<>();
+		try {
+			File registryFile = getConfig(backLinkFile);
 
-            final FileReader reader = new FileReader(registryFile);
+			Pocket[] tempArray = null;
+			try (FileReader reader = new FileReader(registryFile)) {
+				tempArray = GSON.fromJson(reader, Pocket[].class);
+			}
 
-            Pocket[] tempArray = GSON.fromJson(reader, Pocket[].class);
-            reader.close();
+			if (tempArray != null) {
+				for (Pocket link : tempArray) {
+					backLinkMap.put(link.getChunkCoords(), link);
+				}
+			}
 
-            if (tempArray != null) {
-                for (Pocket link : tempArray) {
-                    backLinkMap.put(link.getChunkCoords(), link);
-                }
-            }
+		} catch (Exception e) {
+			DPLogger.severe(e);
+		}
 
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
+		return backLinkMap;
+	}
 
-        return backLinkMap;
-    }
+	public static void savePocketGenParams(PocketGenParameters pocketGenParameters) {
+		try {
+			File dataFile = getConfig(pocketGenParamsFile);
 
-    public static void savePocketGenParams(PocketGenParameters pocketGenParameters) {
-        try {
-            File dataFile = getConfig(pocketGenParamsFile);
+			try (FileWriter writer = new FileWriter(dataFile)) {
+				GSON.toJson(pocketGenParameters, writer);
+			}
+		} catch (Exception e) {
+			DPLogger.severe(e);
+		}
+	}
 
-            try (FileWriter writer = new FileWriter(dataFile)) {
-                GSON.toJson(pocketGenParameters, writer);
-            }
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
-    }
+	public static PocketGenParameters loadPocketGenParams() {
+		try {
+			File dataFile = getConfig(pocketGenParamsFile);
 
-    public static PocketGenParameters loadPocketGenParams() {
-        try {
-            File dataFile = getConfig(pocketGenParamsFile);
+			if (dataFile.exists()) {
+				try (FileReader dataReader = new FileReader(dataFile)) {
+					PocketGenParameters pocketGenParams = GSON.fromJson(dataReader, PocketGenParameters.class);
+					if (pocketGenParams != null)
+						return pocketGenParams;
+				}
+			}
+		} catch (Exception e) {
+			DPLogger.severe(e);
+		}
 
-            if (dataFile.exists()) {
-                try (FileReader dataReader = new FileReader(dataFile)) {
-                    PocketGenParameters pocketGenParams = GSON.fromJson(dataReader, PocketGenParameters.class);
-                    if (pocketGenParams != null)
-                        return pocketGenParams;
-                }
-            }
-        } catch (Exception e) {
-            DPLogger.severe(e);
-        }
-
-        return new PocketGenParameters();
-    }
+		return new PocketGenParameters();
+	}
 
 }

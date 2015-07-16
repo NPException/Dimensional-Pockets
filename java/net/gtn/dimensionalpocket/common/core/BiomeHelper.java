@@ -11,39 +11,40 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 
 import com.google.common.collect.Lists;
 
+
 public class BiomeHelper {
 
-    private static BiomeGenBase pocketBiome;
-    private static boolean init = false;
+	private static BiomeGenBase pocketBiome;
+	private static boolean init = false;
 
-    public static void init() {
-        if (init) {
-            DPLogger.severe("Tried calling BiomeHelper.init() again!");
-            return;
-        }
-        init = true;
+	public static void init() {
+		if (init) {
+			DPLogger.severe("Tried calling BiomeHelper.init() again!");
+			return;
+		}
+		init = true;
 
-        pocketBiome = new BiomeGenBase(Reference.BIOME_ID) {
-            @Override
-            public boolean canSpawnLightningBolt() {
-                return false;
-            }
+		pocketBiome = new BiomeGenBase(Reference.BIOME_ID) {
+			@Override
+			public boolean canSpawnLightningBolt() {
+				return false;
+			}
 
-            @Override
-            public List getSpawnableList(EnumCreatureType par1EnumCreatureType) {
-                return Lists.newArrayList();
-            }
+			@Override
+			public List getSpawnableList(EnumCreatureType par1EnumCreatureType) {
+				return Lists.newArrayList();
+			}
 
-            @Override
-            public float getSpawningChance() {
-                return 0.0F;
-            }
-        }.setBiomeName("Pocket Dimension").setDisableRain();
+			@Override
+			public float getSpawningChance() {
+				return 0.0F;
+			}
+		}.setBiomeName("Pocket Dimension").setDisableRain();
 
-        BiomeDictionary.registerBiomeType(pocketBiome, Type.MAGICAL);
-    }
+		BiomeDictionary.registerBiomeType(pocketBiome, Type.MAGICAL);
+	}
 
-    public static BiomeGenBase getPocketBiome() {
-        return pocketBiome;
-    }
+	public static BiomeGenBase getPocketBiome() {
+		return pocketBiome;
+	}
 }

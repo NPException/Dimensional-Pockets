@@ -18,38 +18,39 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+
 @SideOnly(Side.CLIENT)
 public class UtilsFX {
 
-    private static Map<String, ResourceLocation> boundTextures = new HashMap<String, ResourceLocation>();
+	private static Map<String, ResourceLocation> boundTextures = new HashMap<>();
 
-    public static void bindTexture(String texture) {
-        ResourceLocation resource = null;
-        String key = "textures/misc/" + texture + ".png";
+	public static void bindTexture(String texture) {
+		ResourceLocation resource = null;
+		String key = "textures/misc/" + texture + ".png";
 
-        if (boundTextures.containsKey(key)) {
-            resource = boundTextures.get(key);
-        } else {
-            resource = new ResourceLocation(Reference.MOD_IDENTIFIER + key);
-            boundTextures.put(texture, resource);
-        }
+		if (boundTextures.containsKey(key)) {
+			resource = boundTextures.get(key);
+		} else {
+			resource = new ResourceLocation(Reference.MOD_IDENTIFIER + key);
+			boundTextures.put(texture, resource);
+		}
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(resource);
-    }
+		Minecraft.getMinecraft().renderEngine.bindTexture(resource);
+	}
 
-    public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
-        EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), Colour.WHITE);
+	public static void createPlayerStream(EntityPlayer player, CoordSet targetSet, int ticksToTake) {
+		EntityFX fx = new PlayerStreamFX(player.worldObj, player, targetSet, ticksToTake, new Random(), Colour.WHITE);
 
-        Minecraft.getMinecraft().effectRenderer.addEffect(fx);
-    }
+		Minecraft.getMinecraft().effectRenderer.addEffect(fx);
+	}
 
-    public static ResourceLocation getParticleTexture() {
-        try {
-            return (ResourceLocation) ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "b", "field_110737_b");
-        } catch (Exception e) {
-            DPLogger.warning("Could not load particleTextures");
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public static ResourceLocation getParticleTexture() {
+		try {
+			return (ResourceLocation) ReflectionHelper.getPrivateValue(EffectRenderer.class, null, "particleTextures", "b", "field_110737_b");
+		} catch (Exception e) {
+			DPLogger.warning("Could not load particleTextures");
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

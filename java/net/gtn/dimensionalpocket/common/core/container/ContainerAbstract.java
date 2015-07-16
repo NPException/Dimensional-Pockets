@@ -5,16 +5,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 
+
 public abstract class ContainerAbstract extends Container {
 
-    private TileDP tile;
+	private TileDP tile;
 
-    public ContainerAbstract(TileEntity tile) {
-        this.tile = (TileDP) tile;
-    }
+	public ContainerAbstract(TileEntity tile) {
+		this.tile = (TileDP) tile;
+	}
 
-    @Override
-    public boolean canInteractWith(EntityPlayer player) {
-        return tile.isUsableByPlayer(player);
-    }
+	@Override
+	public boolean canInteractWith(EntityPlayer player) {
+		return tile.isUsableByPlayer(player);
+	}
 }
