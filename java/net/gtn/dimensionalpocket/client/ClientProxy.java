@@ -1,8 +1,5 @@
 package net.gtn.dimensionalpocket.client;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
@@ -23,6 +20,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 
 public class ClientProxy extends CommonProxy {
 
@@ -31,21 +31,21 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void initClientSide() {
         ShaderHelper.initShaders();
-        
+
         MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.dimensionalPocket), new ItemPocketRenderer());
-    	
+
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocket.class, new TileRendererPocket());
         ClientRegistry.bindTileEntitySpecialRenderer(TileDimensionalPocketWallConnector.class, new TileRendererPocketWall());
-        
+
         MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
 
         ClientEventHandler ceh = new ClientEventHandler();
         MinecraftForge.EVENT_BUS.register(ceh);
         FMLCommonHandler.instance().bus().register(ceh);
-        
+
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
     }
-    
+
     @Override
     public void postInitClientSide() {
         FMLCommonHandler.instance().bus().register(new ClientPlayerTickEventHandler());

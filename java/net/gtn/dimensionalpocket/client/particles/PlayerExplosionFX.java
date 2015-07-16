@@ -1,11 +1,6 @@
 package net.gtn.dimensionalpocket.client.particles;
 
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Random;
 
@@ -20,6 +15,7 @@ import net.minecraft.world.World;
 
 /**
  * TO BE DECIDED
+ *
  * @author Jeremy
  *
  */
@@ -33,11 +29,11 @@ public class PlayerExplosionFX extends EntityFX {
     protected PlayerExplosionFX(World world, EntityPlayer player, Random rand, Colour colour) {
         super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.5F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.5F));
         this.colour = colour.copy();
-        
+
         motionX = (16 - posX) / 10;
         motionY = (16 - posY) / 10;
         motionZ = (16 - posZ) / 10;
-        
+
         particleNumber = random.nextInt(3) + 1;
     }
 
@@ -47,10 +43,11 @@ public class PlayerExplosionFX extends EntityFX {
         prevPosY = posY;
         prevPosZ = posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-            this.setDead();
+        if (particleAge++ >= particleMaxAge) {
+            setDead();
+        }
 
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        moveEntity(motionX, motionY, motionZ);
     }
 
     @Override

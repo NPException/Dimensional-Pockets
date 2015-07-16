@@ -1,14 +1,14 @@
 package net.gtn.dimensionalpocket.client.theme;
 
+import static net.gtn.dimensionalpocket.client.lib.TextureMaps.*;
+import static net.gtn.dimensionalpocket.common.core.pocket.PocketSideState.*;
+
+import java.util.EnumMap;
+
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.EnumMap;
-
-import static net.gtn.dimensionalpocket.client.lib.TextureMaps.TEXTURE_BLOCK_ROOT;
-import static net.gtn.dimensionalpocket.common.core.pocket.PocketSideState.TEXTURED_STATES;
 
 public enum Theme {
     // Add new themes here.
@@ -39,8 +39,9 @@ public enum Theme {
         ResourceLocation indicator = new ResourceLocation(blockDir + "pocketIndicator.png");
 
         // Frame textures and indicators
-        for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS)
+        for (ForgeDirection fd : ForgeDirection.VALID_DIRECTIONS) {
             sideIndicators.put(fd.getOpposite(), new TextureWrapper(indicator, new ResourceLocation(blockDir + "pocketIndicator_" + fd.getOpposite().name().toLowerCase() + ".png")));
+        }
 
         sideIndicators.put(ForgeDirection.UP, new TextureWrapper(indicator));
         sideIndicators.put(ForgeDirection.DOWN, new TextureWrapper(indicator));
@@ -55,38 +56,44 @@ public enum Theme {
     }
 
     public IColourBlindTexture getSideIndicator(ForgeDirection direction) {
-        if (!init)
+        if (!init) {
             init();
+        }
         return sideIndicators.get(direction);
     }
 
     public IColourBlindTexture getOverlay(PocketSideState sideState) {
-        if (!init)
+        if (!init) {
             init();
+        }
         return overlays.get(sideState);
     }
 
     public ResourceLocation getPocketTexture() {
-        if (!init)
+        if (!init) {
             init();
+        }
         return pocketFrame;
     }
 
     public ResourceLocation getPocketInsideTexture() {
-        if (!init)
+        if (!init) {
             init();
+        }
         return pocketFrameInside;
     }
 
     public ResourceLocation getConnector() {
-        if (!init)
+        if (!init) {
             init();
+        }
         return connector;
     }
 
     public ResourceLocation getConnectorBG() {
-        if (!init)
+        if (!init) {
             init();
+        }
         return connectorBG;
     }
 }

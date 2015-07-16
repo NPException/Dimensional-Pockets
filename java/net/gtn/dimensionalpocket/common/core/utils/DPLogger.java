@@ -23,8 +23,9 @@ public class DPLogger {
     public static void log(Level logLevel, String levelName, Class<?> srcClass, Object object) {
         StringBuilder sb = new StringBuilder(levelName);
         sb.append(" ");
-        if (srcClass != null)
+        if (srcClass != null) {
             sb.append("<").append(srcClass.getSimpleName()).append("> ");
+        }
         sb.append(object);
         INSTANCE.logger.log(logLevel, sb.toString());
     }

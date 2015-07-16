@@ -17,7 +17,7 @@ public class WorldProviderPocket extends WorldProvider {
 
     public WorldProviderPocket() {
         hasNoSky = true;
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             setSkyRenderer(new IRenderHandler() {
                 @Override
                 @SideOnly(Side.CLIENT)
@@ -25,6 +25,7 @@ public class WorldProviderPocket extends WorldProvider {
                     // do nothing
                 }
             });
+        }
     }
 
     @Override

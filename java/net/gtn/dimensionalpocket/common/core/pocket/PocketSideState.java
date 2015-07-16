@@ -1,23 +1,24 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import java.util.EnumMap;
+
 import me.jezza.oc.client.gui.lib.Colour;
 import net.minecraft.util.StatCollector;
-
-import java.util.EnumMap;
 
 public enum PocketSideState {
     NONE(Colour.WHITE),
     // used for RF & Items atm.
     ENERGY(Colour.GREEN, "Basic");
 
-    public static PocketSideState[] TEXTURED_STATES = new PocketSideState[]{ENERGY};
+    public static PocketSideState[] TEXTURED_STATES = new PocketSideState[] { ENERGY };
 
     private static EnumMap<PocketSideState, Colour> stateColours;
 
     static {
         stateColours = new EnumMap<>(PocketSideState.class);
-        for (PocketSideState state : values())
+        for (PocketSideState state : values()) {
             stateColours.put(state, state.colour);
+        }
     }
 
     private Colour colour;

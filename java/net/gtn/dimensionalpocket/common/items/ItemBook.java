@@ -14,8 +14,9 @@ public class ItemBook extends ItemDP {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (world.isRemote)
+        if (world.isRemote) {
             player.openGui(DimensionalPockets.instance, 0, world, 0, 0, 0);
+        }
         return itemStack;
     }
 }

@@ -26,7 +26,7 @@ public class Reference {
      * DEBUGGING CONFIGS
      */
     @ConfigBoolean(category = "Debugging", comment = { "If set to \"true\" a RuntimeException will be thrown if there ever",
-            "is a client-only method called by the server or vice versa." })
+    "is a client-only method called by the server or vice versa." })
     public static boolean ENFORCE_SIDED_METHODS = false;
 
     @ConfigBoolean(category = "Debugging", comment = "Set this to \"true\" if you desperately want to try to break your world :P")
@@ -38,14 +38,14 @@ public class Reference {
     @ConfigInteger(category = "Graphics", minValue = 1, maxValue = 50, comment = { "If you experience low FPS, try reducing this number first",
             "before switching fancy rendering off entirely.",
             "Or if you have render power to spare you could raise this value.",
-            "(This setting only affects the client. This setting will have no effect if you use the particle field shader)" })
+    "(This setting only affects the client. This setting will have no effect if you use the particle field shader)" })
     public static int NUMBER_OF_PARTICLE_PLANES = 15;
 
     @ConfigInteger(category = "Graphics", minValue = 0, maxValue = 2,
             comment = { "0 = Particle field appearance based on Minecraft's Graphics settings (fancy or fast)",
-                    "1 = Particle field appearance forced to non-fancy version",
-                    "2 = Particle field appearance forced to fancy version",
-                    "(This setting only affects the client)" })
+            "1 = Particle field appearance forced to non-fancy version",
+            "2 = Particle field appearance forced to fancy version",
+    "(This setting only affects the client)" })
     public static int FORCE_FANCY_RENDERING = 0;
 
     public static boolean useFancyField() {

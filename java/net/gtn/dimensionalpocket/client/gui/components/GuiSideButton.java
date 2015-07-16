@@ -1,10 +1,10 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
+import java.util.ArrayList;
+
 import me.jezza.oc.client.gui.components.interactions.GuiUntexturedButton;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.ArrayList;
 
 public class GuiSideButton extends GuiUntexturedButton {
 
@@ -22,7 +22,6 @@ public class GuiSideButton extends GuiUntexturedButton {
         this.direction = direction;
         return this;
     }
-
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {

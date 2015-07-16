@@ -1,11 +1,7 @@
 package net.gtn.dimensionalpocket;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import me.jezza.oc.api.configuration.Config.Controller;
+import me.jezza.oc.api.configuration.Config.IConfigRegistrar;
 import me.jezza.oc.client.CreativeTabSimple;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -24,8 +20,17 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
 
-import static me.jezza.oc.api.configuration.Config.Controller;
-import static me.jezza.oc.api.configuration.Config.IConfigRegistrar;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 @Controller(configFile = "DimensionalPockets")
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
@@ -49,7 +54,7 @@ public class DimensionalPockets implements IConfigRegistrar {
         creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
         ModItems.initRecipes();
-        
+
         DPNetwork.init();
     }
 
@@ -67,8 +72,9 @@ public class DimensionalPockets implements IConfigRegistrar {
 
         BiomeHelper.init();
 
-        if (Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
+        if (Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
             ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkLoaderHandler());
+        }
     }
 
     @EventHandler
@@ -94,11 +100,11 @@ public class DimensionalPockets implements IConfigRegistrar {
         ChunkLoaderHandler.clearTicketMap();
     }
 
-//    @Override
-//    public void registerCustomAnnotations(IConfigRegistry registry) {
-//        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
-//    }
-    
+    //    @Override
+    //    public void registerCustomAnnotations(IConfigRegistry registry) {
+    //        registry.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+    //    }
+
     @Override
     public void registerCustomAnnotations() {
         me.jezza.oc.api.configuration.ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);

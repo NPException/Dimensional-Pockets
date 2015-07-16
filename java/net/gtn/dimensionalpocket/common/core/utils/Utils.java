@@ -27,7 +27,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class Utils {
 
     public static EnumMap<ForgeDirection, Colour> FD_COLOURS = new EnumMap<>(ForgeDirection.class);
-    
+
     private static Map<String, EnumChatFormatting> chatColours = new HashMap<>();
 
     static {
@@ -45,7 +45,7 @@ public class Utils {
         green.a = alpha;
         Colour red = Colour.RED.copy();
         red.a = alpha;
-        
+
         FD_COLOURS.put(ForgeDirection.DOWN,  purple);
         FD_COLOURS.put(ForgeDirection.UP,    orange);
         FD_COLOURS.put(ForgeDirection.NORTH, yellow);
@@ -53,7 +53,7 @@ public class Utils {
         FD_COLOURS.put(ForgeDirection.WEST,  green);
         FD_COLOURS.put(ForgeDirection.EAST,  red);
         // @formatter:on
-        
+
         chatColours.put("BLACK", EnumChatFormatting.BLACK);
         chatColours.put("DARK_BLUE", EnumChatFormatting.DARK_BLUE);
         chatColours.put("DARK_GREEN", EnumChatFormatting.DARK_GREEN);
@@ -124,7 +124,8 @@ public class Utils {
     }
 
     /**
-     * This method will write the given name and lore to the itemStack's "display"-nbt tag. (Thanks to oku)
+     * This method will write the given name and lore to the itemStack's
+     * "display"-nbt tag. (Thanks to oku)
      */
     public static ItemStack generateItem(ItemStack itemStack, String name, boolean forceCleanName, String... loreStrings) {
         NBTTagCompound nbt = itemStack.getTagCompound();
@@ -142,16 +143,18 @@ public class Utils {
         if (loreStrings != null && loreStrings.length > 0) {
             NBTTagList lore = new NBTTagList();
             for (String s : loreStrings) {
-                if (s != null)
+                if (s != null) {
                     lore.appendTag(new NBTTagString(EnumChatFormatting.GRAY + s));
+                }
             }
             display.setTag("Lore", lore);
         }
 
         if (name != null) {
             StringBuilder sb = new StringBuilder();
-            if (forceCleanName)
+            if (forceCleanName) {
                 sb.append(EnumChatFormatting.RESET);
+            }
             sb.append(name);
 
             display.setString("Name", sb.toString());
@@ -171,26 +174,26 @@ public class Utils {
     }
 
     /**
-     * Tries to check if this is a server side call. If it is a remote call, this throws an exception.
+     * Tries to check if this is a server side call. If it is a remote call,
+     * this throws an exception.
      */
     public static void enforceServer() {
         if (Reference.ENFORCE_SIDED_METHODS) {
             Minecraft mc = Minecraft.getMinecraft();
-            if (!mc.isIntegratedServerRunning() && (mc.theWorld != null && mc.theWorld.isRemote)) {
+            if (!mc.isIntegratedServerRunning() && (mc.theWorld != null && mc.theWorld.isRemote))
                 throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
-            }
         }
     }
 
     /**
-     * Tries to check if this is a client side call. If it is a non remote call, this throws an exception.
+     * Tries to check if this is a client side call. If it is a non remote call,
+     * this throws an exception.
      */
     public static void enforceClient() {
         if (Reference.ENFORCE_SIDED_METHODS) {
             Minecraft mc = Minecraft.getMinecraft();
-            if (mc.theWorld != null && !mc.theWorld.isRemote) {
+            if (mc.theWorld != null && !mc.theWorld.isRemote)
                 throw new RuntimeException("DONT YOU DARE CALL THIS METHOD ON A CLIENT!");
-            }
         }
     }
 
@@ -259,18 +262,20 @@ public class Utils {
                 adjacent = chest.adjacentChestZPos;
             }
 
-            if (adjacent != null) {
+            if (adjacent != null)
                 return new InventoryLargeChest("", inv, adjacent);
-            }
             return inv;
         }
         return inv;
     }
-    
+
     /**
-     * Gets the {@link EnumChatFormatting} colour for the given name. (which must match the unobuscated name of the enum value exactly)
+     * Gets the {@link EnumChatFormatting} colour for the given name. (which
+     * must match the unobuscated name of the enum value exactly)
+     *
      * @param colourName
-     * @return the ECF colour for the given name, or {@link EnumChatFormatting#WHITE} if not found
+     * @return the ECF colour for the given name, or
+     *         {@link EnumChatFormatting#WHITE} if not found
      */
     public static EnumChatFormatting getColourByName(String colourName) {
         EnumChatFormatting colour = chatColours.get(colourName);

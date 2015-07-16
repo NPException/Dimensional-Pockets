@@ -1,10 +1,10 @@
 package net.gtn.dimensionalpocket.common.core.config.comms;
 
-import net.gtn.dimensionalpocket.common.core.config.comms.framework.AbstractConfig;
-import net.gtn.dimensionalpocket.common.lib.Reference;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import net.gtn.dimensionalpocket.common.core.config.comms.framework.AbstractConfig;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 
 public class TinkersConstructConfig extends AbstractConfig {
 

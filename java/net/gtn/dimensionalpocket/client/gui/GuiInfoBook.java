@@ -1,7 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.*;
 import me.jezza.oc.client.gui.GuiContainerAbstract;
 import me.jezza.oc.client.gui.components.GuiWidget;
 import me.jezza.oc.client.gui.lib.Colour;
@@ -15,8 +14,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-
-import static org.lwjgl.opengl.GL11.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class GuiInfoBook extends GuiContainerAbstract {
@@ -62,13 +61,16 @@ public class GuiInfoBook extends GuiContainerAbstract {
 
         initArrows();
         int index = 0;
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
                 itemStackArray[index++] = new GuiItemStack(null, guiLeft + 51 + (j * 18), guiTop + 36 + (i * 18));
+            }
+        }
         itemStackArray[9] = new GuiItemStack(null, guiLeft + 69, guiTop + 124);
 
-        for (GuiItemStack gui : itemStackArray)
+        for (GuiItemStack gui : itemStackArray) {
             addButton(gui);
+        }
     }
 
     private void initArrows() {
@@ -114,8 +116,9 @@ public class GuiInfoBook extends GuiContainerAbstract {
 
         String tempString = shouldDrawRecipe() ? StatCollector.translateToLocal(getRecipeString()) : StatCollector.translateToLocal("info.page." + currentPage);
 
-        if (tempString == null)
+        if (tempString == null) {
             tempString = "";
+        }
 
         drawWrappedString(tempString, 0, 0, 140, new Colour(0.2, 0.2, 0.2, 1.0));
 
@@ -128,18 +131,22 @@ public class GuiInfoBook extends GuiContainerAbstract {
     public void onActionPerformed(GuiWidget widget, int mouse) {
         int id = widget.getId();
 
-        if (id == leftArrow.getId())
+        if (id == leftArrow.getId()) {
             currentPage--;
-        if (id == rightArrow.getId())
+        }
+        if (id == rightArrow.getId()) {
             currentPage++;
+        }
 
         currentPage = MathHelper.clamp_int(currentPage, 0, MAX_PAGE);
         rightArrow.setVisible(currentPage != MAX_PAGE);
         leftArrow.setVisible(currentPage != 0);
 
-        if (!shouldDrawRecipe())
-            for (GuiItemStack gui : itemStackArray)
+        if (!shouldDrawRecipe()) {
+            for (GuiItemStack gui : itemStackArray) {
                 gui.setItemStack(null);
+            }
+        }
     }
 
     protected void drawWrappedString(String string, int xOffset, int yOffset, int length, Colour colour) {
@@ -184,12 +191,13 @@ public class GuiInfoBook extends GuiContainerAbstract {
     private int getRecipeType() {
         int type = -1;
 
-        if (currentPage == CRAFTING_RECIPE_POCKET)
+        if (currentPage == CRAFTING_RECIPE_POCKET) {
             type = 0;
-        else if (currentPage == CRAFTING_RECIPE_END_CRYSTAL)
+        } else if (currentPage == CRAFTING_RECIPE_END_CRYSTAL) {
             type = 1;
-        else if (currentPage == CRAFTING_RECIPE_NETHER_CRYSTAL)
+        } else if (currentPage == CRAFTING_RECIPE_NETHER_CRYSTAL) {
             type = 2;
+        }
 
         return type;
     }
@@ -200,7 +208,8 @@ public class GuiInfoBook extends GuiContainerAbstract {
             return;
 
         int index = 0;
-        for (ItemStack itemStack : itemStacks)
+        for (ItemStack itemStack : itemStacks) {
             itemStackArray[index++].setItemStack(itemStack);
+        }
     }
 }

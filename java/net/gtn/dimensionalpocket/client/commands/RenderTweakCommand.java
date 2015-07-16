@@ -1,5 +1,8 @@
 package net.gtn.dimensionalpocket.client.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -9,9 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RenderTweakCommand implements ICommand {
 
@@ -103,8 +103,9 @@ public class RenderTweakCommand implements ICommand {
                     return;
                 case OPTION_HELP:
                     sender.addChatMessage(new ChatComponentText("Valid options: "));
-                    for (String option : ALL_OPTIONS)
+                    for (String option : ALL_OPTIONS) {
                         sender.addChatMessage(new ChatComponentText(option));
+                    }
                     return;
                 case OPTION_THEME:
                     boolean help = false;
@@ -124,8 +125,9 @@ public class RenderTweakCommand implements ICommand {
                             }
                         }
                     }
-                    if (help)
+                    if (help) {
                         sender.addChatMessage(new ChatComponentText("Valid values from 0 to " + Theme.SIZE + " (Inclusive)"));
+                    }
 
                     sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
                     return;
@@ -137,8 +139,9 @@ public class RenderTweakCommand implements ICommand {
         }
         sender.addChatMessage(new ChatComponentText(getCommandUsage(sender)));
         sender.addChatMessage(new ChatComponentText("Valid options: "));
-        for (String option : ALL_OPTIONS)
+        for (String option : ALL_OPTIONS) {
             sender.addChatMessage(new ChatComponentText(option));
+        }
     }
 
     @Override
@@ -152,8 +155,9 @@ public class RenderTweakCommand implements ICommand {
             return null;
         List<String> result = new ArrayList<>(ALL_OPTIONS.size());
         for (String option : ALL_OPTIONS) {
-            if (option.toLowerCase().startsWith(args[0].toLowerCase()))
+            if (option.toLowerCase().startsWith(args[0].toLowerCase())) {
                 result.add(option);
+            }
         }
         return result;
     }

@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import me.jezza.oc.client.gui.components.interactions.GuiToggle;
-
 import java.util.ArrayList;
+
+import me.jezza.oc.client.gui.components.interactions.GuiToggle;
 
 public class GuiStateType extends GuiToggle {
 
@@ -19,10 +19,11 @@ public class GuiStateType extends GuiToggle {
     public void renderForeground(int mouseX, int mouseY) {
         if (canClick(mouseX, mouseY)) {
             ArrayList<String> list = new ArrayList<String>();
-            if (typeState == 0)
+            if (typeState == 0) {
                 list.add("Enabled");
-            else if (typeState == 1)
+            } else if (typeState == 1) {
                 list.add("Disabled");
+            }
             renderHoveringText(list, mouseX, mouseY, fontRendererObj);
         }
     }

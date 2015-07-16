@@ -37,14 +37,16 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     static {
         long base = random.nextLong() / 6;
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= 6; i++) {
             seeds[i - 1] = base * i;
+        }
     }
 
     private static float[] fieldOffsets = new float[6];
     static {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) {
             fieldOffsets[i] = -0.0001f;
+        }
     }
 
     protected float stateColorLevel;
@@ -57,7 +59,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
     public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float tick) {
         double maxDistance = 32.0; // distance to block
-        this.inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+        inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
 
         glPushMatrix();
 
@@ -130,8 +132,9 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
             for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
                 PocketSideState state = pocket.getFlowState(direction);
                 IColourBlindTexture texture = Reference.THEME.getOverlay(state);
-                if (texture == null)
+                if (texture == null) {
                     continue;
+                }
                 Colour colour = state.getColour();
                 glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
                 Hacks.BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
@@ -146,12 +149,13 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
     protected void updateStateColorLevel() {
         long colorCycleTime = 1337000000L;
         double minColorLevel = 0.5;
-        this.stateColorLevel = (float) (minColorLevel + (1 - minColorLevel) * Math.sin((System.nanoTime() % colorCycleTime) * Math.PI / colorCycleTime));
+        stateColorLevel = (float) (minColorLevel + (1 - minColorLevel) * Math.sin((System.nanoTime() % colorCycleTime) * Math.PI / colorCycleTime));
     }
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
-        if (tile instanceof TileDimensionalPocket)
+        if (tile instanceof TileDimensionalPocket) {
             renderDimensionalPocketAt((TileDimensionalPocket) tile, x, y, z, tick);
+        }
     }
 }

@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
+import java.util.ArrayList;
+
 import me.jezza.oc.client.gui.components.GuiTexturedButton;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.util.ArrayList;
 
 public class GuiExitButton extends GuiTexturedButton<GuiExitButton> {
 

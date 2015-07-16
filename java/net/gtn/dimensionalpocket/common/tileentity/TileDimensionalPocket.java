@@ -1,11 +1,10 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import cpw.mods.fml.common.Optional;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
@@ -35,22 +34,22 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.cdmp.api.wormhole.IWormhole;
 import de.cdmp.api.wormhole.WormholeTarget;
 
-@Optional.Interface(iface="li.cil.oc.api.network.SidedEnvironment", modid="OpenComputers")
+@Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = "OpenComputers")
 public class TileDimensionalPocket extends TileDP implements
-        IBlockNotifier, IBlockInteract,
-        IEnergyReceiver, IEnergyProvider, IEnergyHandler,
-        ISidedInventory,
-        IWormhole,
-        SidedEnvironment {
+IBlockNotifier, IBlockInteract,
+IEnergyReceiver, IEnergyProvider, IEnergyHandler,
+ISidedInventory,
+IWormhole,
+SidedEnvironment {
     private static final String TAG_CUSTOM_DP_NAME = "customDPName";
 
     private String customName;
@@ -65,8 +64,9 @@ public class TileDimensionalPocket extends TileDP implements
             return;
 
         if (telePrep != null)
-            if (telePrep.doPrepareTick())
+            if (telePrep.doPrepareTick()) {
                 telePrep = null;
+            }
     }
 
     @Override
@@ -84,9 +84,11 @@ public class TileDimensionalPocket extends TileDP implements
             return;
 
         Pocket p = getPocket();
-        if (p != null)
-            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+        if (p != null) {
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
                 p.markConnectorForUpdate(side);
+            }
+        }
     }
 
     @Override
@@ -126,14 +128,16 @@ public class TileDimensionalPocket extends TileDP implements
 
             if (itemCompound.hasKey("display")) {
                 String tempString = itemCompound.getCompoundTag("display").getString("Name");
-                if (!tempString.isEmpty())
+                if (!tempString.isEmpty()) {
                     customName = tempString;
+                }
             }
 
             if (entityLivingBase instanceof EntityPlayer) {
                 EntityPlayerMP player = (EntityPlayerMP) entityLivingBase;
-                if (player.getCurrentEquippedItem() == itemStack)
+                if (player.getCurrentEquippedItem() == itemStack) {
                     player.destroyCurrentEquippedItem();
+                }
             }
         }
 
@@ -163,17 +167,19 @@ public class TileDimensionalPocket extends TileDP implements
     public ItemStack generateItemStack() {
         ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
-        if (!itemStack.hasTagCompound())
+        if (!itemStack.hasTagCompound()) {
             itemStack.setTagCompound(new NBTTagCompound());
+        }
 
         CoordSet chunkSet = getPocket().getChunkCoords();
         chunkSet.writeToNBT(itemStack.getTagCompound());
 
         String creatorLore = null;
         Pocket pocket = getPocket();
-        if (pocket != null && pocket.getCreator() != null)
+        if (pocket != null && pocket.getCreator() != null) {
             creatorLore = "Creator: §3§o" + pocket.getCreator();
-        
+        }
+
         CoordSet blockSet = chunkSet.toBlockCoords();
 
         itemStack = Utils.generateItem(itemStack, customName, false, "~ Pocket §e" + blockSet.x + "," + blockSet.y + "," + blockSet.z + "§8 ~", creatorLore);
@@ -196,20 +202,23 @@ public class TileDimensionalPocket extends TileDP implements
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         getPocket().writeToNBT(tag);
-        if (customName != null)
+        if (customName != null) {
             tag.setString(TAG_CUSTOM_DP_NAME, customName);
+        }
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        if (worldObj != null && worldObj.isRemote) // worldObj is null on initial world loading
+        if (worldObj != null && worldObj.isRemote) {
             pocket = Pocket.readFromNBT(tag);
+        }
 
         String tempString = tag.getString(TAG_CUSTOM_DP_NAME);
-        if (!tempString.isEmpty())
+        if (!tempString.isEmpty()) {
             customName = tempString;
+        }
     }
 
     public void prepareTeleportIntoPocket(EntityPlayer player) {
@@ -218,16 +227,19 @@ public class TileDimensionalPocket extends TileDP implements
             telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
         } else {
             // TODO Sync for all clients.
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 40; i++) {
                 UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
+            }
         }
     }
 
     /**
-     * Returns the neighboring TileEntity of the Frame connector block at the given side.
+     * Returns the neighboring TileEntity of the Frame connector block at the
+     * given side.
      *
      * @param side
-     * @return the neighboring TE, or null if the the chunk is not loaded or no TE exists at the spot.
+     * @return the neighboring TE, or null if the the chunk is not loaded or no
+     *         TE exists at the spot.
      */
     private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
         if (worldObj.isRemote)
@@ -267,7 +279,8 @@ public class TileDimensionalPocket extends TileDP implements
     }
 
     /**
-     * Redirects the receiveEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     * Redirects the receiveEnergy call to the neighboring TileEntity of the
+     * corresponding FrameConnector wall block if possible.
      */
     @Override
     public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
@@ -282,7 +295,8 @@ public class TileDimensionalPocket extends TileDP implements
     }
 
     /**
-     * Redirects the extractEnergy call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     * Redirects the extractEnergy call to the neighboring TileEntity of the
+     * corresponding FrameConnector wall block if possible.
      */
     @Override
     public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
@@ -297,7 +311,8 @@ public class TileDimensionalPocket extends TileDP implements
     }
 
     /**
-     * Redirects the getEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     * Redirects the getEnergyStored call to the neighboring TileEntity of the
+     * corresponding FrameConnector wall block if possible.
      */
     @Override
     public int getEnergyStored(ForgeDirection from) {
@@ -315,7 +330,8 @@ public class TileDimensionalPocket extends TileDP implements
     }
 
     /**
-     * Redirects the getMaxEnergyStored call to the neighboring TileEntity of the corresponding FrameConnector wall block if possible.
+     * Redirects the getMaxEnergyStored call to the neighboring TileEntity of
+     * the corresponding FrameConnector wall block if possible.
      */
     @Override
     public int getMaxEnergyStored(ForgeDirection from) {
@@ -369,11 +385,11 @@ public class TileDimensionalPocket extends TileDP implements
         int maskedSide = slot & 0b111;
         int innerSlot = slot >> SIDE_BITS;
 
-        IInventory inventory = getInventoryOnInsideWall(maskedSide);
-        if (inventory == null)
-            return null;
+            IInventory inventory = getInventoryOnInsideWall(maskedSide);
+            if (inventory == null)
+                return null;
 
-        return inventory.getStackInSlot(innerSlot);
+            return inventory.getStackInSlot(innerSlot);
     }
 
     @Override
@@ -399,8 +415,9 @@ public class TileDimensionalPocket extends TileDP implements
         int innerSlot = slot >> SIDE_BITS;
 
         IInventory inventory = getInventoryOnInsideWall(maskedSide);
-        if (inventory != null)
+        if (inventory != null) {
             inventory.setInventorySlotContents(innerSlot, stack);
+        }
     }
 
     @Override
@@ -479,9 +496,8 @@ public class TileDimensionalPocket extends TileDP implements
         WeakReference<IInventory> cachedInventory = lastKnownInventories.get(side);
 
         if (cachedInventory != null && cachedInventory.get() == inventory
-                && inventory.getSizeInventory() == lastKnownInventorySlots[side].length) {
+                && inventory.getSizeInventory() == lastKnownInventorySlots[side].length)
             return lastKnownInventorySlots[side];
-        }
 
         int[] slots = new int[inventory.getSizeInventory()];
         for (int i = 0; i < slots.length; i++) {
@@ -503,11 +519,11 @@ public class TileDimensionalPocket extends TileDP implements
 
         int innerSlot = slot >> SIDE_BITS;
 
-        IInventory inventory = getInventoryOnInsideWall(side);
-        if (inventory == null)
-            return false;
+            IInventory inventory = getInventoryOnInsideWall(side);
+            if (inventory == null)
+                return false;
 
-        return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canInsertItem(innerSlot, stack, side);
+            return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canInsertItem(innerSlot, stack, side);
     }
 
     @Override
@@ -524,7 +540,7 @@ public class TileDimensionalPocket extends TileDP implements
 
         return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(innerSlot, stack, side);
     }
-    
+
     //////////////////
     // WORMHOLE API //
     //////////////////
@@ -541,24 +557,24 @@ public class TileDimensionalPocket extends TileDP implements
         World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
         CoordSet targetCoords = p.getConnectorCoords(fromDirection);
-        
+
         if (targetCoords == null)
             return Collections.emptyList();
 
         ForgeDirection toDirection = fromDirection.getOpposite();
         targetCoords.addForgeDirection(toDirection);
-        
+
         List<WormholeTarget<Block, TileEntity>> wormholeTargets = new ArrayList<>(1);
         wormholeTargets.add(new WormholeTarget<>(targetWorld, targetCoords.x, targetCoords.y, targetCoords.z, toDirection));
-        
+
         return wormholeTargets;
     }
-    
+
     ///////////////////
     // OpenComputers //
     ///////////////////
 
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid = "OpenComputers")
     @Override
     public Node sidedNode(ForgeDirection side) {
         if (worldObj.isRemote)
@@ -581,7 +597,7 @@ public class TileDimensionalPocket extends TileDP implements
         }
     }
 
-    @Optional.Method(modid="OpenComputers")
+    @Optional.Method(modid = "OpenComputers")
     @Override
     @SideOnly(Side.CLIENT)
     public boolean canConnect(ForgeDirection side) {

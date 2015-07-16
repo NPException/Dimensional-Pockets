@@ -1,5 +1,8 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
@@ -13,17 +16,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class PocketRegistry {
     private static Map<CoordSet, Pocket> backLinkMap = new HashMap<CoordSet, Pocket>();
-    
+
     // TODO: check generation with old world again. did overwrite existing pocket.
 
     private static final int pocketChunkSpacing = 20;
     private static PocketGenParameters pocketGenParameters = new PocketGenParameters();
-    
+
     static class PocketGenParameters {
         private CoordSet currentChunk = new CoordSet(0, 0, 0);
         private ForgeDirection nextPocketCoordsDirection = ForgeDirection.NORTH;
@@ -39,10 +39,10 @@ public class PocketRegistry {
             return backLinkMap.get(chunkCoords);
         return null;
     }
-    
+
     private static CoordSet getNextPocketCoords(CoordSet currentCoords) {
         CoordSet result = currentCoords;
-        
+
         // step until an empty spot has been reached
         while (backLinkMap.containsKey(result)) {
             // create offset for next pocket
@@ -55,7 +55,7 @@ public class PocketRegistry {
             // needed to bring old saves to this height
             result.y = 4;
         }
-        
+
         // create test offset to check for the next pockets direction
         ForgeDirection clockwiseTurn = pocketGenParameters.nextPocketCoordsDirection.getRotation(ForgeDirection.UP);
         CoordSet probeOffset = new CoordSet().addForgeDirection(clockwiseTurn);
@@ -64,23 +64,25 @@ public class PocketRegistry {
 
         // check if probed coordset is mapped to a pocket already
         CoordSet probeCoords = result.copy().addCoordSet(probeOffset);
-        if (!backLinkMap.containsKey(probeCoords))
+        if (!backLinkMap.containsKey(probeCoords)) {
             pocketGenParameters.nextPocketCoordsDirection = clockwiseTurn;
-        
+        }
+
         return result;
     }
 
     public static Pocket getOrCreatePocket(World world, CoordSet coordSetSource) {
         Utils.enforceServer();
-        
+
         int dimIDSource = world.provider.dimensionId;
         for (Pocket pocket : backLinkMap.values())
             if (pocket.getBlockDim() == dimIDSource && pocket.getBlockCoords().equals(coordSetSource))
                 return pocket;
 
         // only update currentChunkCoords if pockets already exist
-        if (!backLinkMap.isEmpty())
+        if (!backLinkMap.isEmpty()) {
             pocketGenParameters.currentChunk = getNextPocketCoords(pocketGenParameters.currentChunk);
+        }
 
         Pocket pocket = new Pocket(pocketGenParameters.currentChunk.copy(), dimIDSource, coordSetSource);
         backLinkMap.put(pocket.getChunkCoords(), pocket);
@@ -113,7 +115,7 @@ public class PocketRegistry {
         backLinkMap = PocketConfig.loadBackLinkMap();
         pocketGenParameters = PocketConfig.loadPocketGenParams();
     }
-    
+
     public static void validatePocketConnectors() {
         DPLogger.info("Enforcing valid metadata for wall connector blocks");
         World pocketWorld = getWorldForPockets();
@@ -123,15 +125,17 @@ public class PocketRegistry {
                 CoordSet coords = pocket.getConnectorCoords(side);
                 if (coords != null) {
                     Block block = coords.getBlock(pocketWorld);
-                    if (block == ModBlocks.dimensionalPocketWall)
+                    if (block == ModBlocks.dimensionalPocketWall) {
                         pocketWorld.setBlockMetadataWithNotify(coords.x, coords.y, coords.z, BlockDimensionalPocketWall.CONNECTOR_META, 3);
+                    }
                 }
             }
         }
     }
-    
+
     public static void initChunkLoading() {
-        for (Pocket pocket : backLinkMap.values())
+        for (Pocket pocket : backLinkMap.values()) {
             ChunkLoaderHandler.addPocketToChunkLoader(pocket);
+        }
     }
 }

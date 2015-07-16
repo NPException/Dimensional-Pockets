@@ -1,7 +1,9 @@
 package net.gtn.dimensionalpocket.client.particles;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static org.lwjgl.opengl.GL11.*;
+
+import java.util.Random;
+
 import me.jezza.oc.client.gui.lib.Colour;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
@@ -11,10 +13,8 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-
-import java.util.Random;
-
-import static org.lwjgl.opengl.GL11.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
@@ -34,7 +34,7 @@ public class PlayerStreamFX extends EntityFX {
         motionX = (targetSet.x + 0.5F - posX) / ticksToTake;
         motionY = (targetSet.y + 0.5F - posY) / ticksToTake;
         motionZ = (targetSet.z + 0.5F - posZ) / ticksToTake;
-        
+
         particleNumber = random.nextInt(3) + 1;
     }
 
@@ -44,10 +44,11 @@ public class PlayerStreamFX extends EntityFX {
         prevPosY = posY;
         prevPosZ = posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge)
-            this.setDead();
+        if (particleAge++ >= particleMaxAge) {
+            setDead();
+        }
 
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        moveEntity(motionX, motionY, motionZ);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import java.util.List;
+
 import me.jezza.oc.common.interfaces.IItemTooltip;
 import me.jezza.oc.common.utils.CoordSet;
 import me.jezza.oc.common.utils.Localise;
@@ -11,8 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class ItemEndCrystal extends ItemDP {
 

@@ -7,9 +7,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderEventHandler {
-    
+
     public static boolean isRenderingGUI = false;
-    
+
     @SubscribeEvent
     public void preGUIRenderTick(GuiScreenEvent.DrawScreenEvent.Pre event) {
         isRenderingGUI = true;

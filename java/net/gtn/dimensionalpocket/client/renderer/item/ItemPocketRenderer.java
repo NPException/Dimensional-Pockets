@@ -12,7 +12,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ItemPocketRenderer implements IItemRenderer {
 
-    private static final float[] offsets = new float[]{-0.001F, -0.001F, -0.001F, -0.001F, -0.001F, -0.001F};
+    private static final float[] offsets = new float[] { -0.001F, -0.001F, -0.001F, -0.001F, -0.001F, -0.001F };
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -28,11 +28,13 @@ public class ItemPocketRenderer implements IItemRenderer {
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
         glPushMatrix();
 
-        if (type == ItemRenderType.INVENTORY)
+        if (type == ItemRenderType.INVENTORY) {
             glTranslatef(0.0F, -0.1F, 0.0F);
+        }
 
-        if (type == ItemRenderType.ENTITY)
+        if (type == ItemRenderType.ENTITY) {
             glTranslatef(-0.5F, -0.4F, -0.5F);
+        }
 
         Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
         glEnable(GL_BLEND);

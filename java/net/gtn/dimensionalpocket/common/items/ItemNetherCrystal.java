@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import java.util.List;
+
 import me.jezza.oc.common.interfaces.IItemTooltip;
 import me.jezza.oc.common.utils.CoordSet;
 import me.jezza.oc.common.utils.Localise;
@@ -18,8 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.List;
 
 public class ItemNetherCrystal extends ItemDP {
 
@@ -83,8 +83,9 @@ public class ItemNetherCrystal extends ItemDP {
     private static void cyclePocketSideState(Pocket pocket, ForgeDirection wallSide, EntityPlayer player) {
         PocketSideState state = pocket.getFlowState(wallSide);
         int nextStateOrdinal = state.ordinal() + 1;
-        if (nextStateOrdinal >= PocketSideState.values().length)
+        if (nextStateOrdinal >= PocketSideState.values().length) {
             nextStateOrdinal = 0;
+        }
 
         PocketSideState newState = PocketSideState.values()[nextStateOrdinal];
         pocket.setFlowState(wallSide, newState);

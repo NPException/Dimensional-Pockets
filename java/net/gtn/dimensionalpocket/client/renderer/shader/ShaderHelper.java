@@ -39,8 +39,9 @@ public final class ShaderHelper {
             int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
             ARBShaderObjects.glUniform1iARB(time, ClientEventHandler.gameTicks);
 
-            if (callback != null)
+            if (callback != null) {
                 callback.call(shader);
+            }
         }
     }
 
@@ -66,19 +67,23 @@ public final class ShaderHelper {
 
     static int createProgram(String vert, String frag) {
         int vertId = 0, fragId = 0, program = 0;
-        if (vert != null)
+        if (vert != null) {
             vertId = createShader(PREFIX + vert, VERT);
-        if (frag != null)
+        }
+        if (frag != null) {
             fragId = createShader(PREFIX + frag, FRAG);
+        }
 
         program = ARBShaderObjects.glCreateProgramObjectARB();
         if (program == 0)
             return 0;
 
-        if (vert != null)
+        if (vert != null) {
             ARBShaderObjects.glAttachObjectARB(program, vertId);
-        if (frag != null)
+        }
+        if (frag != null) {
             ARBShaderObjects.glAttachObjectARB(program, fragId);
+        }
 
         ARBShaderObjects.glLinkProgramARB(program);
         if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE) {
@@ -136,18 +141,20 @@ public final class ShaderHelper {
             Exception innerExc = null;
             try {
                 String line;
-                while ((line = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null) {
                     source.append(line).append('\n');
+                }
             } catch (Exception exc) {
                 exception = exc;
             } finally {
                 try {
                     reader.close();
                 } catch (Exception exc) {
-                    if (innerExc == null)
+                    if (innerExc == null) {
                         innerExc = exc;
-                    else
+                    } else {
                         exc.printStackTrace();
+                    }
                 }
             }
 
@@ -159,10 +166,11 @@ public final class ShaderHelper {
             try {
                 in.close();
             } catch (Exception exc) {
-                if (exception == null)
+                if (exception == null) {
                     exception = exc;
-                else
+                } else {
                     exc.printStackTrace();
+                }
             }
 
             if (exception != null)

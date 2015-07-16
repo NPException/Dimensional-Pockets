@@ -82,8 +82,9 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
             if (pocket == null)
                 return false;
 
-            if (pocket.getBlockDim() != Reference.DIMENSION_ID)
+            if (pocket.getBlockDim() != Reference.DIMENSION_ID) {
                 player.setSneaking(false);
+            }
 
             pocket.teleportFrom(player);
             return true;

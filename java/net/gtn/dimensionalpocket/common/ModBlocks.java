@@ -11,7 +11,7 @@ public class ModBlocks {
 
     public static Block dimensionalPocket;
     public static Block dimensionalPocketWall;
-    
+
     public static void init() {
         dimensionalPocket = new BlockDimensionalPocket(Material.anvil, Strings.BLOCK_POCKET);
         dimensionalPocketWall = new BlockDimensionalPocketWall(Material.anvil, Strings.BLOCK_POCKET_WALL);

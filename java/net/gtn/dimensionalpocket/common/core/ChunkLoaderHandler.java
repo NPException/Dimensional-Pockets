@@ -1,5 +1,10 @@
 package net.gtn.dimensionalpocket.common.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
@@ -13,11 +18,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ChunkLoaderHandler implements LoadingCallback {
 
@@ -35,14 +35,16 @@ public class ChunkLoaderHandler implements LoadingCallback {
     public void ticketsLoaded(List<Ticket> tickets, World world) {
         Utils.enforceServer();
         for (Ticket ticket : tickets) {
-            if (ticket == null)
+            if (ticket == null) {
                 continue;
+            }
 
             CoordSet chunkXZSet = CoordSet.readFromNBT(ticket.getModData());
-            
-            if (chunkXZSet == null) // probably not our ticket then
+
+            if (chunkXZSet == null) {
                 continue;
-            
+            }
+
             TicketWrapper wrapper = ticketMap.get(chunkXZSet);
 
             if (wrapper == null) {
@@ -68,8 +70,9 @@ public class ChunkLoaderHandler implements LoadingCallback {
             return;
         }
 
-        if (wrapper.ticket != null)
+        if (wrapper.ticket != null) {
             ForgeChunkManager.releaseTicket(wrapper.ticket);
+        }
 
         wrapper.ticket = currentTicket;
 
@@ -134,10 +137,11 @@ public class ChunkLoaderHandler implements LoadingCallback {
 
         TicketWrapper wrapper = ticketMap.get(chunkXZSet);
 
-        if (wrapper.loadedRooms.remove(pocketSet))
+        if (wrapper.loadedRooms.remove(pocketSet)) {
             DPLogger.info("Removed the following pocket room from the list of loaded rooms: " + pocketSet.toString(), ChunkLoaderHandler.class);
-        else
+        } else {
             DPLogger.warning("The following pocket room wanted to be removed, but was not marked as loaded: " + pocketSet.toString(), ChunkLoaderHandler.class);
+        }
 
         if (wrapper.loadedRooms.isEmpty()) {
             ForgeChunkManager.releaseTicket(wrapper.ticket);

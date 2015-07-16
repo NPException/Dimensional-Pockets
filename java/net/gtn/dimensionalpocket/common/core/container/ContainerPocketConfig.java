@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.core.container;
 
 import me.jezza.oc.client.gui.interfaces.IGuiMessageHandler;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;

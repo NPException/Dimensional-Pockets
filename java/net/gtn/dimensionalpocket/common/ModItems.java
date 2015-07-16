@@ -27,7 +27,7 @@ public class ModItems {
         CraftingManager crafting = CraftingManager.getInstance();
 
         //@formatter:off
-        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
+        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
                 "#N#",
                 "IDI",
                 "#E#",
@@ -46,29 +46,29 @@ public class ModItems {
 
                 'E',
                 endCrystal
-        );
+                );
 
-        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4), 
+        crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
                 "#E#",
                 "IDI",
                 "#N#",
-            
+
                 '#',
                 new ItemStack(Blocks.stonebrick, 1, 0),
-            
+
                 'I',
                 Blocks.iron_block,
-            
+
                 'D',
                 Blocks.diamond_block,
-            
+
                 'N',
                 netherCrystal,
-            
+
                 'E',
                 endCrystal
-        );
-        
+                );
+
         crafting.addRecipe(new ItemStack(netherCrystal),
                 "TTT",
                 "TRT",
@@ -79,8 +79,8 @@ public class ModItems {
 
                 'R',
                 Blocks.redstone_block
-        );
-        
+                );
+
         crafting.addRecipe(new ItemStack(endCrystal),
                 "EEE",
                 "EGE",
@@ -91,7 +91,7 @@ public class ModItems {
 
                 'G',
                 Blocks.glass);
-        
+
         crafting.addShapelessRecipe(new ItemStack(book),Items.book, Items.leather);
         //@formatter:on
     }

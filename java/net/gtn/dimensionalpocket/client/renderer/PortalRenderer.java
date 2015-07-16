@@ -19,8 +19,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class PortalRenderer {
 
     public static final ResourceLocation[] fieldTextures = {
-            new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleField.png"),
-            new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleFieldStatic.png"),
+        new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleField.png"),
+        new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleFieldStatic.png"),
     };
 
     public static final int MAX_BRIGHTNESS = 240;
@@ -58,13 +58,14 @@ public class PortalRenderer {
     }
 
     public void overrideMaxPlaneDepth(float planeDepth) {
-        this.maxPlaneDepth = planeDepth;
+        maxPlaneDepth = planeDepth;
     }
 
     /**
      * One is added for the tunnel layer.
      *
-     * @param planeCount The number of planes to render.
+     * @param planeCount
+     *            The number of planes to render.
      */
     public void overridePlaneCount(int planeCount) {
         this.planeCount = planeCount + 1;
@@ -275,11 +276,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x + offset, y,         z);
-			tessellator.addVertex(x + offset, y,         z + scale);
-			tessellator.addVertex(x + offset, y + scale, z + scale);
-			tessellator.addVertex(x + offset, y + scale, z);
-			// @formatter:on
+            tessellator.addVertex(x + offset, y,         z);
+            tessellator.addVertex(x + offset, y,         z + scale);
+            tessellator.addVertex(x + offset, y + scale, z + scale);
+            tessellator.addVertex(x + offset, y + scale, z);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -375,11 +376,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x + offset, y + scale, z);
-			tessellator.addVertex(x + offset, y + scale, z + scale);
-			tessellator.addVertex(x + offset, y,         z + scale);
-			tessellator.addVertex(x + offset, y,         z);
-			// @formatter:on
+            tessellator.addVertex(x + offset, y + scale, z);
+            tessellator.addVertex(x + offset, y + scale, z + scale);
+            tessellator.addVertex(x + offset, y,         z + scale);
+            tessellator.addVertex(x + offset, y,         z);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -475,11 +476,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x,         y + offset, z + scale);
-			tessellator.addVertex(x,         y + offset, z       );
-			tessellator.addVertex(x + scale, y + offset, z       );
-			tessellator.addVertex(x + scale, y + offset, z + scale);
-			// @formatter:on
+            tessellator.addVertex(x,         y + offset, z + scale);
+            tessellator.addVertex(x,         y + offset, z       );
+            tessellator.addVertex(x + scale, y + offset, z       );
+            tessellator.addVertex(x + scale, y + offset, z + scale);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -575,11 +576,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x,         y + offset, z);
-			tessellator.addVertex(x,         y + offset, z + scale);
-			tessellator.addVertex(x + scale, y + offset, z + scale);
-			tessellator.addVertex(x + scale, y + offset, z);
-			// @formatter:on
+            tessellator.addVertex(x,         y + offset, z);
+            tessellator.addVertex(x,         y + offset, z + scale);
+            tessellator.addVertex(x + scale, y + offset, z + scale);
+            tessellator.addVertex(x + scale, y + offset, z);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -675,11 +676,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x,         y,         z + offset);
-			tessellator.addVertex(x,         y + scale, z + offset);
-			tessellator.addVertex(x + scale, y + scale, z + offset);
-			tessellator.addVertex(x + scale, y,         z + offset);
-			// @formatter:on
+            tessellator.addVertex(x,         y,         z + offset);
+            tessellator.addVertex(x,         y + scale, z + offset);
+            tessellator.addVertex(x + scale, y + scale, z + offset);
+            tessellator.addVertex(x + scale, y,         z + offset);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -775,11 +776,11 @@ public class PortalRenderer {
             tessellator.setBrightness(brightness);
             tessellator.setColorRGBA_F(f11 * f7, f12 * f7, f13 * f7, 1.0F);
             // @formatter:off
-			tessellator.addVertex(x,         y + scale, z + offset);
-			tessellator.addVertex(x,         y,         z + offset);
-			tessellator.addVertex(x + scale, y,         z + offset);
-			tessellator.addVertex(x + scale, y + scale, z + offset);
-			// @formatter:on
+            tessellator.addVertex(x,         y + scale, z + offset);
+            tessellator.addVertex(x,         y,         z + offset);
+            tessellator.addVertex(x + scale, y,         z + offset);
+            tessellator.addVertex(x + scale, y + scale, z + offset);
+            // @formatter:on
             tessellator.draw();
             glPopMatrix();
             glMatrixMode(5888);
@@ -795,9 +796,9 @@ public class PortalRenderer {
     }
 
     private FloatBuffer calcFloatBuffer(float f, float f1, float f2, float f3) {
-        this.floatBuffer.clear();
-        this.floatBuffer.put(f).put(f1).put(f2).put(f3);
-        this.floatBuffer.flip();
-        return this.floatBuffer;
+        floatBuffer.clear();
+        floatBuffer.put(f).put(f1).put(f2).put(f3);
+        floatBuffer.flip();
+        return floatBuffer;
     }
 }

@@ -1,12 +1,5 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import me.jezza.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.minecraft.server.MinecraftServer;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,8 +8,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.minecraft.server.MinecraftServer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class PocketConfig {
-    
+
     private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private static final String backLinkFile = "teleportRegistry";
@@ -24,7 +25,7 @@ public class PocketConfig {
 
     /**
      * Adds .json to it.
-     * 
+     *
      * @param fileName
      * @return
      */
@@ -32,8 +33,9 @@ public class PocketConfig {
         MinecraftServer server = MinecraftServer.getServer();
         StringBuilder pathName = new StringBuilder();
 
-        if (server.isSinglePlayer())
+        if (server.isSinglePlayer()) {
             pathName.append("saves/");
+        }
 
         pathName.append(server.getFolderName());
         pathName.append("/dimpockets/");
@@ -74,9 +76,11 @@ public class PocketConfig {
             Pocket[] tempArray = GSON.fromJson(reader, Pocket[].class);
             reader.close();
 
-            if (tempArray != null)
-                for (Pocket link : tempArray)
+            if (tempArray != null) {
+                for (Pocket link : tempArray) {
                     backLinkMap.put(link.getChunkCoords(), link);
+                }
+            }
 
         } catch (Exception e) {
             DPLogger.severe(e);
@@ -100,7 +104,7 @@ public class PocketConfig {
     public static PocketGenParameters loadPocketGenParams() {
         try {
             File dataFile = getConfig(pocketGenParamsFile);
-            
+
             if (dataFile.exists()) {
                 try (FileReader dataReader = new FileReader(dataFile)) {
                     PocketGenParameters pocketGenParams = GSON.fromJson(dataReader, PocketGenParameters.class);
@@ -111,7 +115,7 @@ public class PocketConfig {
         } catch (Exception e) {
             DPLogger.severe(e);
         }
-        
+
         return new PocketGenParameters();
     }
 

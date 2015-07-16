@@ -43,7 +43,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
         connectorColor.g = connectorBaseColor.g * level;
         connectorColor.b = connectorBaseColor.b * level;
         connectorColor.a = connectorBaseColor.a * level;
-        
+
         connectorBGColour.a = isInGUI ? 0.2 : 0.8;
     }
 
@@ -180,7 +180,8 @@ public class TileRendererPocketWall extends TileRendererPocket {
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float tick) {
-        if (tile instanceof TileDimensionalPocketWallConnector)
+        if (tile instanceof TileDimensionalPocketWallConnector) {
             renderDimensionalPocketWallAt((TileDimensionalPocketWallConnector) tile, x, y, z, tick);
+        }
     }
 }

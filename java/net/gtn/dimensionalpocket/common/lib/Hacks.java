@@ -1,18 +1,18 @@
 package net.gtn.dimensionalpocket.common.lib;
 
 import static org.lwjgl.opengl.GL11.*;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import me.jezza.oc.common.utils.CoordSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
-import me.jezza.oc.common.utils.CoordSet;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * This class contains hacky workaround methods to account for flaws in other
  * mods that we might interact with or depend on.
- * 
+ *
  * @author NPException
  * @deprecated This class is deprecated to further indicate it's temporary
  *             nature
@@ -112,53 +112,53 @@ public class Hacks {
 
         public static void drawFace(ForgeDirection direction, ResourceLocation texture, float offset) {
             switch (direction) {
-            case DOWN:
-                BlockRenderer.drawFaceYNeg(texture, offset);
-                break;
-            case UP:
-                BlockRenderer.drawFaceYPos(texture, offset);
-                break;
-            case NORTH:
-                BlockRenderer.drawFaceZNeg(texture, offset);
-                break;
-            case SOUTH:
-                BlockRenderer.drawFaceZPos(texture, offset);
-                break;
-            case WEST:
-                BlockRenderer.drawFaceXNeg(texture, offset);
-                break;
-            case EAST:
-                BlockRenderer.drawFaceXPos(texture, offset);
-                break;
-            default:
-            case UNKNOWN:
-                break;
+                case DOWN:
+                    BlockRenderer.drawFaceYNeg(texture, offset);
+                    break;
+                case UP:
+                    BlockRenderer.drawFaceYPos(texture, offset);
+                    break;
+                case NORTH:
+                    BlockRenderer.drawFaceZNeg(texture, offset);
+                    break;
+                case SOUTH:
+                    BlockRenderer.drawFaceZPos(texture, offset);
+                    break;
+                case WEST:
+                    BlockRenderer.drawFaceXNeg(texture, offset);
+                    break;
+                case EAST:
+                    BlockRenderer.drawFaceXPos(texture, offset);
+                    break;
+                default:
+                case UNKNOWN:
+                    break;
             }
         }
 
         public static void drawFace(ForgeDirection direction, ResourceLocation texture, float offset, float scale) {
             switch (direction) {
-            case DOWN:
-                BlockRenderer.drawFaceYNeg(texture, offset, scale);
-                break;
-            case UP:
-                BlockRenderer.drawFaceYPos(texture, offset, scale);
-                break;
-            case NORTH:
-                BlockRenderer.drawFaceZNeg(texture, offset, scale);
-                break;
-            case SOUTH:
-                BlockRenderer.drawFaceZPos(texture, offset, scale);
-                break;
-            case WEST:
-                BlockRenderer.drawFaceXNeg(texture, offset, scale);
-                break;
-            case EAST:
-                BlockRenderer.drawFaceXPos(texture, offset, scale);
-                break;
-            default:
-            case UNKNOWN:
-                break;
+                case DOWN:
+                    BlockRenderer.drawFaceYNeg(texture, offset, scale);
+                    break;
+                case UP:
+                    BlockRenderer.drawFaceYPos(texture, offset, scale);
+                    break;
+                case NORTH:
+                    BlockRenderer.drawFaceZNeg(texture, offset, scale);
+                    break;
+                case SOUTH:
+                    BlockRenderer.drawFaceZPos(texture, offset, scale);
+                    break;
+                case WEST:
+                    BlockRenderer.drawFaceXNeg(texture, offset, scale);
+                    break;
+                case EAST:
+                    BlockRenderer.drawFaceXPos(texture, offset, scale);
+                    break;
+                default:
+                case UNKNOWN:
+                    break;
             }
         }
 
@@ -168,8 +168,9 @@ public class Hacks {
 
         public static void drawFaceXNeg(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(-1.0F, 0.0F, 0.0F);
 
             // @formatter:off
@@ -188,8 +189,9 @@ public class Hacks {
 
         public static void drawFaceXPos(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(1.0F, 0.0F, 0.0F);
 
             // @formatter:off
@@ -208,8 +210,9 @@ public class Hacks {
 
         public static void drawFaceYNeg(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(0.0F, -1.0F, 0.0F);
 
             // @formatter:off
@@ -228,8 +231,9 @@ public class Hacks {
 
         public static void drawFaceYPos(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(0.0F, 1.0F, 0.0F);
 
             // @formatter:off
@@ -248,8 +252,9 @@ public class Hacks {
 
         public static void drawFaceZNeg(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(0.0F, 0.0F, -1.0F);
 
             // @formatter:off
@@ -268,8 +273,9 @@ public class Hacks {
 
         public static void drawFaceZPos(ResourceLocation texture, float offset, float scale) {
             bindTexture(texture);
-            if (!instance.isDrawing)
+            if (!instance.isDrawing) {
                 instance.startDrawingQuads();
+            }
             instance.setNormal(0.0F, 0.0F, 1.0F);
 
             // @formatter:off

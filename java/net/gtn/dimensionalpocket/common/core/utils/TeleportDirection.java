@@ -5,9 +5,9 @@ import net.minecraft.world.World;
 
 /**
  * Wrapper of ForgeDirection for the teleporter.
- * 
+ *
  * @author Jeremy
- * 
+ *
  */
 public enum TeleportDirection {
 
@@ -29,19 +29,19 @@ public enum TeleportDirection {
 
     /** +X  */
     EAST(1, 0, 0), EAST_MINUS_ONE(1, -1, 0),
-    
+
     /** -Z -X */
     NORTHWEST(-1, 0, -1), NORTHWEST_MINUS_ONE(-1, -1, -1),
-    
+
     /** -Z +X */
     NORTHEAST(1, 0, -1), NORTHEAST_MINUS_ONE(1, -1, -1),
-    
+
     /** +Z -X */
     SOUTHWEST(-1, 0, 1), SOUTHWEST_MINUS_ONE(-1, -1, 1),
-    
+
     /** +Z +X */
     SOUTHEAST(1, 0, 1), SOUTHEAST_MINUS_ONE(1, -1, 1),
-    
+
     UNKNOWN(0, 0, 0);
     //@formatter:on
 

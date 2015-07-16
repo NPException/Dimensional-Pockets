@@ -33,7 +33,7 @@ public class Snooper {
 
     /**
      * Registers a player login
-     * 
+     *
      * @param playerID
      */
     public static void playerLoggedOn(UUID playerID) {
@@ -43,7 +43,7 @@ public class Snooper {
 
     /**
      * Registers a player logoff
-     * 
+     *
      * @param playerID
      */
     public static void playerLoggedOff(UUID playerID) {
@@ -54,7 +54,7 @@ public class Snooper {
 
     /**
      * Sets the snooper setting that this player has sent.
-     * 
+     *
      * @param playerID
      * @param canSnoop
      */

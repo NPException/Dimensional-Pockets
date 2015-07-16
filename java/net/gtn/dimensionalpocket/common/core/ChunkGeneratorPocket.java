@@ -85,11 +85,11 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 
     @Override
     public void recreateStructures(int var1, int var2) {
-     // do nothing
+        // do nothing
     }
 
     @Override
     public void saveExtraData() {
-     // do nothing
+        // do nothing
     }
 }

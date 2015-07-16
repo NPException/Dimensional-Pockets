@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import me.jezza.oc.client.gui.components.GuiCycle;
-
 import java.util.ArrayList;
+
+import me.jezza.oc.client.gui.components.GuiCycle;
 
 public class GuiToggleProcess extends GuiCycle<GuiToggleProcess> {
 

@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 /**
  * This message get's sent to the server on login if the client has the snooper
  * settings enabled or not.
- * 
+ *
  * @author NPException
  *
  */

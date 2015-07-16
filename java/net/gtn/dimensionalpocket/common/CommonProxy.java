@@ -1,8 +1,5 @@
 package net.gtn.dimensionalpocket.common;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
 import net.gtn.dimensionalpocket.common.core.container.ContainerPocketConfig;
@@ -21,6 +18,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class CommonProxy implements IGuiHandler {
 
@@ -72,7 +72,7 @@ public class CommonProxy implements IGuiHandler {
 
         if (!world.isRemote && entity instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entity;
-            
+
             checkIfSpawnWithBook(player);
         }
     }
