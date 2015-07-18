@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket.client;
 
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
@@ -28,6 +29,11 @@ import cpw.mods.fml.common.Loader;
 public class ClientProxy extends CommonProxy {
 
 	public static int currentPage = 0;
+
+	@Override
+	public void preInitClientSide() {
+		DimensionalPockets.analytics.isClient = true;
+	}
 
 	@Override
 	public void initClientSide() {

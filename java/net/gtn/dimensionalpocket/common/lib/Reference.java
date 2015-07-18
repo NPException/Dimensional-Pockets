@@ -86,4 +86,12 @@ public class Reference {
 	@ConfigBoolean(category = "General", comment = "If you have a hard time distinguishing colours, you can change this to true.\n"
 			+ "Gameplay relevant parts of the mod will be displayed in a less color dependent way then.")
 	public static boolean COLOR_BLIND_MODE = false;
+
+	/*
+	 * ANALYTICS
+	 */
+	@ConfigBoolean(category = "Analytics",
+			comment = { "If this is set to true AND you have snooper enabled in Minecraft, the mod will collect anonymous usage data.",
+					"Would be awesome if you could let this stay on true to help improve DP! :)" })
+	public static boolean MAY_COLLECT_ANONYMOUS_USAGE_DATA = true;
 }

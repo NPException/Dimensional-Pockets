@@ -6,7 +6,6 @@ import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
-import net.gtn.dimensionalpocket.common.core.network.DPNetwork;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -24,8 +23,6 @@ public class ClientPlayerTickEventHandler {
 	public static boolean hideStuffFromNEI = false;
 
 	private static boolean checkForVersion = Reference.DO_VERSION_CHECK;
-
-	private static boolean sendSnooper = true;
 
 	/**
 	 * Hides blocks and items from NEI that it should not show. The Dimensional
@@ -60,11 +57,6 @@ public class ClientPlayerTickEventHandler {
 		if (checkForVersion) {
 			checkForVersion = false;
 			VersionChecker.checkUpToDate(evt.player);
-		}
-
-		if (sendSnooper) {
-			sendSnooper = false;
-			DPNetwork.sendSnooperSetting();
 		}
 
 		// check for Nether Crystal in hand to trigger side color coding of pockets

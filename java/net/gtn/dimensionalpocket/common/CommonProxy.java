@@ -27,6 +27,14 @@ public class CommonProxy implements IGuiHandler {
 
 	private static final String GIVEN_INFO_BOOK = "givenInfoBook";
 
+	public void preInitServerSide() {
+		// do nothing
+	}
+
+	public void preInitClientSide() {
+		// do nothing
+	}
+
 	public void initServerSide() {
 		registerTileEntities();
 
@@ -36,17 +44,21 @@ public class CommonProxy implements IGuiHandler {
 		MinecraftForge.EVENT_BUS.register(new InsidePocketEventHandler());
 	}
 
-	public void registerTileEntities() {
-		GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.TILE_POCKET);
-		GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
+	public void initClientSide() {
+		// do nothing
 	}
 
-	public void initClientSide() {
+	public void postInitServerSide() {
 		// do nothing
 	}
 
 	public void postInitClientSide() {
 		// do nothing
+	}
+
+	public void registerTileEntities() {
+		GameRegistry.registerTileEntity(TileDimensionalPocket.class, Strings.TILE_POCKET);
+		GameRegistry.registerTileEntity(TileDimensionalPocketWallConnector.class, Strings.TILE_POCKET_WALL_CONNECTOR);
 	}
 
 	@Override

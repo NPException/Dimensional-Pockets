@@ -20,8 +20,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class PocketRegistry {
 	private static Map<CoordSet, Pocket> backLinkMap = new HashMap<>();
 
-	// TODO: check generation with old world again. did overwrite existing pocket.
-
 	private static final int pocketChunkSpacing = 20;
 	private static PocketGenParameters pocketGenParameters = new PocketGenParameters();
 

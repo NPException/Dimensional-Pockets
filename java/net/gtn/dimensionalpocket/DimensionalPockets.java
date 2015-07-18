@@ -2,6 +2,7 @@ package net.gtn.dimensionalpocket;
 
 import me.jezza.oc.api.configuration.Config.Controller;
 import me.jezza.oc.api.configuration.Config.IConfigRegistrar;
+import me.jezza.oc.api.configuration.ConfigHandler;
 import me.jezza.oc.client.CreativeTabSimple;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -9,7 +10,6 @@ import net.gtn.dimensionalpocket.common.ModItems;
 import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
-import net.gtn.dimensionalpocket.common.core.network.DPNetwork;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme;
@@ -37,6 +37,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets implements IConfigRegistrar {
 
+	public static final DPAnalytics analytics = new DPAnalytics();
+
 	@Instance(Reference.MOD_ID)
 	public static DimensionalPockets instance;
 
@@ -49,14 +51,15 @@ public class DimensionalPockets implements IConfigRegistrar {
 	public void preInit(FMLPreInitializationEvent event) {
 		DPLogger.init(LogManager.getLogger(Reference.MOD_NAME.replaceAll(" ", "")));
 
+		proxy.preInitServerSide();
+		proxy.preInitClientSide();
+
 		ModBlocks.init();
 		ModItems.init();
 
 		creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
 		ModItems.initRecipes();
-
-		DPNetwork.init();
 	}
 
 	@EventHandler
@@ -80,7 +83,12 @@ public class DimensionalPockets implements IConfigRegistrar {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInitServerSide();
 		proxy.postInitClientSide();
+
+		if (analytics.isClient) {
+			analytics.eventDesign("ModLoaded");
+		}
 	}
 
 	@EventHandler
@@ -108,6 +116,6 @@ public class DimensionalPockets implements IConfigRegistrar {
 
 	@Override
 	public void registerCustomAnnotations() {
-		me.jezza.oc.api.configuration.ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
+		ConfigHandler.registerAnnotation(ConfigEntryTheme.ConfigTheme.class, ConfigEntryTheme.class);
 	}
 }
