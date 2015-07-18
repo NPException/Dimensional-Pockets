@@ -32,7 +32,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void preInitClientSide() {
-		DimensionalPockets.analytics.isClient = true;
+		DimensionalPockets.analytics.markClientSide();
 	}
 
 	@Override
