@@ -18,7 +18,7 @@ public class DPAnalytics extends SimpleAnalytics {
 	}
 
 	@Override
-	public boolean active() {
+	public boolean isActive() {
 		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA && Minecraft.getMinecraft().isSnooperEnabled();
 	}
 }
