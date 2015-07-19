@@ -21,18 +21,16 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	private static String SUB_PLAYER = "Player:";
 	private static String SUB_TRANSFER = "Transfer:";
+	private static String SUB_STATE = "State:";
 
-	private static String TELEPORT = "Teleport";
-	private static String TRAPPED = "Trapped";
-	private static String ITEMS = "Items";
-	private static String ENERGY_RF = "EnergyRF";
-	private static String FLUIDS = "Fluids";
-
-	public static String ANALYITCS_PLAYER_TELEPORT = MAIN_POCKET + SUB_PLAYER + TELEPORT;
-	public static String ANALYITCS_PLAYER_TRAPPED = MAIN_POCKET + SUB_PLAYER + TRAPPED;
-	public static String ANALYITCS_TRANSFER_ITEMS = MAIN_POCKET + SUB_TRANSFER + ITEMS;
-	public static String ANALYITCS_TRANSFER_ENERGY_RF = MAIN_POCKET + SUB_TRANSFER + ENERGY_RF;
-	public static String ANALYITCS_TRANSFER_FLUIDS = MAIN_POCKET + SUB_TRANSFER + FLUIDS;
+	public static String ANALYITCS_PLAYER_TELEPORT = MAIN_POCKET + SUB_PLAYER + "Teleport";
+	public static String ANALYITCS_PLAYER_TRAPPED = MAIN_POCKET + SUB_PLAYER + "Trapped";
+	public static String ANALYITCS_TRANSFER_ITEMS = MAIN_POCKET + SUB_TRANSFER + "Items";
+	public static String ANALYITCS_TRANSFER_ENERGY_RF = MAIN_POCKET + SUB_TRANSFER + "EnergyRF";
+	public static String ANALYITCS_TRANSFER_FLUIDS = MAIN_POCKET + SUB_TRANSFER + "Fluids";
+	public static String ANALYTICS_POCKET_PLACED = MAIN_POCKET + SUB_STATE + "Placed";
+	public static String ANALYTICS_POCKET_MINED = MAIN_POCKET + SUB_STATE + "Mined";
+	public static String ANALYTICS_POCKET_CRAFTED = MAIN_POCKET + SUB_STATE + "Crafted";
 
 
 	public DPAnalytics() {

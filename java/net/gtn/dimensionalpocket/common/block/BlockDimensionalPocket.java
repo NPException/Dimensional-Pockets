@@ -42,7 +42,7 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 
 		if (tileEntity instanceof TileDimensionalPocket) {
 			TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
-			ItemStack itemStack = tile.generateItemStack();
+			ItemStack itemStack = tile.generateItemStackOnRemoval();
 
 			boolean flag = world.func_147480_a(x, y, z, false);
 
@@ -87,7 +87,7 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 		if (!world.isRemote) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileDimensionalPocket) {
-				items.add(((TileDimensionalPocket) te).generateItemStack());
+				items.add(((TileDimensionalPocket) te).generateItemStackOnRemoval());
 			}
 		}
 		return items;

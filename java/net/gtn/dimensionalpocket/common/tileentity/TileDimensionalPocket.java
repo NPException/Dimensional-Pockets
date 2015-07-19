@@ -53,7 +53,7 @@ import de.cdmp.api.wormhole.WormholeTarget;
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = "OpenComputers")
 public class TileDimensionalPocket extends TileDP
-		implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISidedInventory, IWormhole, SidedEnvironment {
+implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISidedInventory, IWormhole, SidedEnvironment {
 
 	// start of analytics variables //
 	private int analyticTicksPassed = 0;
@@ -63,6 +63,8 @@ public class TileDimensionalPocket extends TileDP
 	private long rfTransferedOut = 0l;
 	private long fluidsTransferedIn = 0l;
 	private long fluidsTransferedOut = 0l;
+
+	private boolean alreadyMarkedAsRemoved = false;
 	// end of analytics variables //
 
 	private void sendTileAnalytics() {
@@ -159,7 +161,7 @@ public class TileDimensionalPocket extends TileDP
 		if (worldObj.isRemote)
 			return;
 
-		Utils.spawnItemStack(generateItemStack(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
+		Utils.spawnItemStack(generateItemStackOnRemoval(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
 	}
 
 	@Override
@@ -229,6 +231,10 @@ public class TileDimensionalPocket extends TileDP
 		pocket.generatePocketRoom(entityLivingBase.getCommandSenderName());
 
 		ChunkLoaderHandler.addPocketToChunkLoader(pocket);
+
+		if (analytics.isActive()) {
+			analytics.eventDesign(ANALYTICS_POCKET_PLACED);
+		}
 	}
 
 	@Override
@@ -248,7 +254,12 @@ public class TileDimensionalPocket extends TileDP
 		return true;
 	}
 
-	public ItemStack generateItemStack() {
+	public ItemStack generateItemStackOnRemoval() {
+		if (!alreadyMarkedAsRemoved && analytics.isActive()) {
+			alreadyMarkedAsRemoved = true;
+			analytics.eventDesign(ANALYTICS_POCKET_MINED);
+		}
+
 		ItemStack itemStack = new ItemStack(ModBlocks.dimensionalPocket);
 
 		if (!itemStack.hasTagCompound()) {
