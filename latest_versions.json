@@ -1,9 +1,9 @@
 {
   "1.7.10": {
-    "version": "0.10.6",
+    "version": "0.11.0",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "Updated to use OmnisCore 0.0.6",
-    "additionalInfoColour": "GOLD",
+    "additionalInfo": "Now with fluid transfer and Open Computers support! :D",
+    "additionalInfoColour": "GREEN",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
