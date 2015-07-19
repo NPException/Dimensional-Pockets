@@ -64,7 +64,7 @@ public class ClientPlayerTickEventHandler {
 					}
 					activityGAEvent = ae;
 				}
-				DimensionalPockets.analytics.event(activityGAEvent);
+				DimensionalPockets.analytics.event(activityGAEvent, true);
 			}
 			nextActivityReport = now + 60000;
 		}
