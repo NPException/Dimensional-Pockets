@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
+import static net.gtn.dimensionalpocket.DPAnalytics.*;
+
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -294,6 +296,9 @@ public class Pocket {
 			ChatComponentTranslation comp = new ChatComponentTranslation("info.exit.blocked");
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
+			if (analytics.isActive()) {
+				analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "outside");
+			}
 			return;
 		}
 
@@ -313,6 +318,10 @@ public class Pocket {
 			PocketTeleporter.transferPlayerToDimension(player, Reference.DIMENSION_ID, teleporter);
 		} else {
 			teleporter.placeInPortal(player, 0, 0, 0, 0);
+		}
+
+		if (analytics.isActive()) {
+			analytics.eventDesign(ANALYITCS_PLAYER_TELEPORT, "to");
 		}
 	}
 
@@ -335,15 +344,25 @@ public class Pocket {
 				} else {
 					teleporter.placeInPortal(player, 0, 0, 0, 0);
 				}
+
+				if (analytics.isActive()) {
+					analytics.eventDesign(ANALYITCS_PLAYER_TELEPORT, "from");
+				}
 			} else {
 				ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped.2");
 				comp.getChatStyle().setItalic(Boolean.TRUE);
 				entityPlayer.addChatMessage(comp);
+				if (analytics.isActive()) {
+					analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "inside", Float.valueOf(100f));
+				}
 			}
 		} else {
 			ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped.1");
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
+			if (analytics.isActive()) {
+				analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "inside", Float.valueOf(0f));
+			}
 		}
 	}
 

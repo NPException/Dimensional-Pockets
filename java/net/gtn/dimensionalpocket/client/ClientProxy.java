@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client;
 
-import net.gtn.dimensionalpocket.DimensionalPockets;
+import net.gtn.dimensionalpocket.DPAnalytics;
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
@@ -32,7 +32,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void preInitClientSide() {
-		DimensionalPockets.analytics.markClientSide();
+		DPAnalytics.analytics.markClientSide();
 	}
 
 	@Override

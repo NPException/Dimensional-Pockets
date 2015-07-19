@@ -1,8 +1,9 @@
 package net.gtn.dimensionalpocket.client.event;
 
+import static net.gtn.dimensionalpocket.DPAnalytics.*;
+
 import java.lang.reflect.Method;
 
-import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
 import net.gtn.dimensionalpocket.client.utils.version.VersionChecker;
 import net.gtn.dimensionalpocket.common.ModBlocks;
@@ -51,9 +52,9 @@ public class ClientPlayerTickEventHandler {
 	private static void sendAnalyticsActivityEvent() {
 		long now = System.currentTimeMillis();
 		if (now >= nextActivityReport) {
-			if (DimensionalPockets.analytics.isActive()) {
+			if (analytics.isActive()) {
 				if (activityGAEvent == null) {
-					GAUserEvent ae = new GAUserEvent(DimensionalPockets.analytics);
+					GAUserEvent ae = new GAUserEvent(analytics);
 					try {
 						ae.device(System.getProperty("os.arch")); // os/processor info
 						ae.platform(System.getProperty("os.name"));
@@ -64,7 +65,7 @@ public class ClientPlayerTickEventHandler {
 					}
 					activityGAEvent = ae;
 				}
-				DimensionalPockets.analytics.event(activityGAEvent, true);
+				analytics.event(activityGAEvent, true);
 			}
 			nextActivityReport = now + 60000;
 		}

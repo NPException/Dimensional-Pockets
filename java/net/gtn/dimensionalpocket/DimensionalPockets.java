@@ -1,5 +1,6 @@
 package net.gtn.dimensionalpocket;
 
+import static net.gtn.dimensionalpocket.DPAnalytics.*;
 import me.jezza.oc.api.configuration.Config.Controller;
 import me.jezza.oc.api.configuration.Config.IConfigRegistrar;
 import me.jezza.oc.api.configuration.ConfigHandler;
@@ -36,8 +37,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 @Controller(configFile = "DimensionalPockets")
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets implements IConfigRegistrar {
-
-	public static final DPAnalytics analytics = new DPAnalytics();
 
 	@Instance(Reference.MOD_ID)
 	public static DimensionalPockets instance;
