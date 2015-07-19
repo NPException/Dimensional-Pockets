@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
@@ -56,7 +57,8 @@ public class TileDimensionalPocket extends TileDP
 
 	// start of analytics variables //
 	private int analyticTicksPassed = 0;
-	private final Object analyticsLock = new Object();
+	private final ReentrantLock analyticsLock = new ReentrantLock(true);
+
 	private long rfTransferedIn = 0l;
 	private long rfTransferedOut = 0l;
 	private long fluidsTransferedIn = 0l;
@@ -64,7 +66,9 @@ public class TileDimensionalPocket extends TileDP
 	// end of analytics variables //
 
 	private void sendTileAnalytics() {
-		synchronized (analyticsLock) {
+		try {
+			analyticsLock.lock();
+
 			// RF going into the pocket
 			if (rfTransferedIn > 0) {
 				rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
@@ -116,6 +120,8 @@ public class TileDimensionalPocket extends TileDP
 				}
 				fluidsTransferedOut = 0;
 			}
+		} finally {
+			analyticsLock.unlock();
 		}
 	}
 
@@ -363,9 +369,9 @@ public class TileDimensionalPocket extends TileDP
 		if (targetTE instanceof IEnergyReceiver) {
 			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					rfTransferedIn += received;
-				}
+				analyticsLock.lock();
+				rfTransferedIn += received;
+				analyticsLock.unlock();
 			}
 			return received;
 		}
@@ -384,9 +390,9 @@ public class TileDimensionalPocket extends TileDP
 		if (targetTE instanceof IEnergyProvider) {
 			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					rfTransferedOut += extracted;
-				}
+				analyticsLock.lock();
+				rfTransferedOut += extracted;
+				analyticsLock.unlock();
 			}
 			return extracted;
 		}
@@ -699,9 +705,9 @@ public class TileDimensionalPocket extends TileDP
 		if (targetTE instanceof IFluidHandler) {
 			int filled = ((IFluidHandler) targetTE).fill(from, resource, doFill);
 			if (doFill && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedIn += filled;
-				}
+				analyticsLock.lock();
+				fluidsTransferedIn += filled;
+				analyticsLock.unlock();
 			}
 			return filled;
 		}
@@ -715,9 +721,9 @@ public class TileDimensionalPocket extends TileDP
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, resource, doDrain);
 			if (doDrain && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedOut += drained.amount;
-				}
+				analyticsLock.lock();
+				fluidsTransferedOut += drained.amount;
+				analyticsLock.unlock();
 			}
 			return drained;
 		}
@@ -731,9 +737,9 @@ public class TileDimensionalPocket extends TileDP
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, maxDrain, doDrain);
 			if (doDrain && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedOut += drained.amount;
-				}
+				analyticsLock.lock();
+				fluidsTransferedOut += drained.amount;
+				analyticsLock.unlock();
 			}
 			return drained;
 		}

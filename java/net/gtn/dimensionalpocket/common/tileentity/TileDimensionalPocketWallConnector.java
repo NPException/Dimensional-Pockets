@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
@@ -51,7 +52,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	// start of analytics variables //
 	private int analyticTicksPassed = 0;
-	private final Object analyticsLock = new Object();
+	private final ReentrantLock analyticsLock = new ReentrantLock(true);
 
 	private long rfTransferedIn = 0l;
 	private long rfTransferedOut = 0l;
@@ -60,7 +61,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	// end of analytics variables //
 
 	private void sendTileAnalytics() {
-		synchronized (analyticsLock) {
+		try {
+			analyticsLock.lock();
+
 			// RF going into the pocket
 			if (rfTransferedIn > 0) {
 				rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
@@ -112,6 +115,8 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 				}
 				fluidsTransferedOut = 0;
 			}
+		} finally {
+			analyticsLock.unlock();
 		}
 	}
 
@@ -246,9 +251,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IEnergyReceiver) {
 			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					rfTransferedOut += received;
-				}
+				analyticsLock.lock();
+				rfTransferedOut += received;
+				analyticsLock.unlock();
 			}
 			return received;
 		}
@@ -267,9 +272,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IEnergyProvider) {
 			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					rfTransferedIn += extracted;
-				}
+				analyticsLock.lock();
+				rfTransferedIn += extracted;
+				analyticsLock.unlock();
 			}
 			return extracted;
 		}
@@ -608,9 +613,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IFluidHandler) {
 			int filled = ((IFluidHandler) targetTE).fill(from, resource, doFill);
 			if (doFill && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedOut += filled;
-				}
+				analyticsLock.lock();
+				fluidsTransferedOut += filled;
+				analyticsLock.unlock();
 			}
 			return filled;
 		}
@@ -624,9 +629,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, resource, doDrain);
 			if (doDrain && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedIn += drained.amount;
-				}
+				analyticsLock.lock();
+				fluidsTransferedIn += drained.amount;
+				analyticsLock.unlock();
 			}
 			return drained;
 		}
@@ -640,9 +645,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, maxDrain, doDrain);
 			if (doDrain && !worldObj.isRemote) {
-				synchronized (analyticsLock) {
-					fluidsTransferedIn += drained.amount;
-				}
+				analyticsLock.lock();
+				fluidsTransferedIn += drained.amount;
+				analyticsLock.unlock();
 			}
 			return drained;
 		}
