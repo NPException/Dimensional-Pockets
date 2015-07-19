@@ -56,6 +56,7 @@ public class ClientPlayerTickEventHandler {
 				if (activityGAEvent == null) {
 					GAUserEvent ae = new GAUserEvent(analytics);
 					try {
+						ae.installSite(Minecraft.getMinecraft().gameSettings.language); // abuse install site for language
 						ae.device(System.getProperty("os.arch")); // os/processor info
 						ae.platform(System.getProperty("os.name"));
 						ae.osMajor(System.getProperty("os.version"));
