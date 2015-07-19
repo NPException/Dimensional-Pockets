@@ -3,6 +3,7 @@ package net.gtn.dimensionalpocket.common;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
 import net.gtn.dimensionalpocket.common.core.config.InterModConfigHandler;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
+import net.gtn.dimensionalpocket.common.event.CraftingEventHandler;
 import net.gtn.dimensionalpocket.common.event.InsidePocketEventHandler;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
@@ -16,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -40,6 +42,7 @@ public class CommonProxy implements IGuiHandler {
 
 		MinecraftForge.EVENT_BUS.register(new BlockEventHandler());
 		MinecraftForge.EVENT_BUS.register(new InsidePocketEventHandler());
+		FMLCommonHandler.instance().bus().register(new CraftingEventHandler());
 	}
 
 	public void initClientSide() {
