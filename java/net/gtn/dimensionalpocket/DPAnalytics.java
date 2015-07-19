@@ -26,13 +26,13 @@ public class DPAnalytics extends SimpleAnalytics {
 	private static String TRAPPED = "Trapped";
 	private static String ITEMS = "Items";
 	private static String ENERGY_RF = "EnergyRF";
-	private static String LIQUIDS = "Liquids";
+	private static String FLUIDS = "Fluids";
 
 	public static String ANALYITCS_PLAYER_TELEPORT = MAIN_POCKET + SUB_PLAYER + TELEPORT;
 	public static String ANALYITCS_PLAYER_TRAPPED = MAIN_POCKET + SUB_PLAYER + TRAPPED;
 	public static String ANALYITCS_TRANSFER_ITEMS = MAIN_POCKET + SUB_TRANSFER + ITEMS;
 	public static String ANALYITCS_TRANSFER_ENERGY_RF = MAIN_POCKET + SUB_TRANSFER + ENERGY_RF;
-	public static String ANALYITCS_TRANSFER_LIQUIDS = MAIN_POCKET + SUB_TRANSFER + LIQUIDS;
+	public static String ANALYITCS_TRANSFER_FLUIDS = MAIN_POCKET + SUB_TRANSFER + FLUIDS;
 
 
 	public DPAnalytics() {
