@@ -5,6 +5,7 @@ package net.gtn.dimensionalpocket;
 
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 import de.npe.gameanalytics.SimpleAnalytics;
 
 
@@ -19,6 +20,7 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	@Override
 	public boolean isActive() {
-		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA && Minecraft.getMinecraft().isSnooperEnabled();
+		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA &&
+				(isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : MinecraftServer.getServer().isSnooperEnabled());
 	}
 }
