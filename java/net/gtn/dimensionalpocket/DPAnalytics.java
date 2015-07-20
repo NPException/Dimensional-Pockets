@@ -6,8 +6,11 @@ package net.gtn.dimensionalpocket;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ICrashCallable;
 import de.npe.gameanalytics.SimpleAnalytics;
 import de.npe.gameanalytics.events.GADesignEvent;
+import de.npe.gameanalytics.events.GAErrorEvent.Severity;
 import de.npe.gameanalytics.events.GAEvent;
 
 
@@ -22,14 +25,30 @@ public class DPAnalytics extends SimpleAnalytics {
 	private static final String MAIN_POCKET = "Pocket:";
 
 	private static final String SUB_PLAYER = "Player:";
+	private static final String SUB_TELEPORT = "Teleport:";
 	private static final String SUB_TRANSFER = "Transfer:";
 	private static final String SUB_STATE = "State:";
 	private static final String SUB_CRAFTED = "Crafted:";
+	private static final String SUB_ENERGY_RF = "EnergyRF:";
+	private static final String SUB_FLUIDS = "Fluids:";
+	private static final String SUB_TRAPPED = "Trapped:";
 
-	private static final String ANALYITCS_PLAYER_TELEPORT = MAIN_POCKET + SUB_PLAYER + "Teleport";
-	private static final String ANALYITCS_PLAYER_TRAPPED = MAIN_POCKET + SUB_PLAYER + "Trapped";
-	private static final String ANALYITCS_TRANSFER_ENERGY_RF = MAIN_POCKET + SUB_TRANSFER + "EnergyRF";
-	private static final String ANALYITCS_TRANSFER_FLUIDS = MAIN_POCKET + SUB_TRANSFER + "Fluids";
+	private static final String TRAPPED_INSIDE_NOT_PLACED = "Inside_NotPlaced";
+	private static final String TRAPPED_INSIDE_EXIT_BLOCKED = "Inside_ExitBlocked";
+	private static final String TRAPPED_OUTSIDE_EXIT_BLOCKED = "Outside_ExitBlocked";
+	private static final String DIRECTION_IN = "In";
+	private static final String DIRECTION_OUT = "Out";
+
+
+	private static final String ANALYITCS_PLAYER_TELEPORT_IN = MAIN_POCKET + SUB_PLAYER + SUB_TELEPORT + DIRECTION_IN;
+	private static final String ANALYITCS_PLAYER_TELEPORT_OUT = MAIN_POCKET + SUB_PLAYER + SUB_TELEPORT + DIRECTION_OUT;
+	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_NOT_PLACED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_INSIDE_NOT_PLACED;
+	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_EXIT_BLOCKED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_INSIDE_EXIT_BLOCKED;
+	private static final String ANALYITCS_PLAYER_TRAPPED_OUTSIDE_EXIT_BLOCKED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_OUTSIDE_EXIT_BLOCKED;
+	private static final String ANALYITCS_TRANSFER_ENERGY_RF_IN = MAIN_POCKET + SUB_TRANSFER + SUB_ENERGY_RF + DIRECTION_IN;
+	private static final String ANALYITCS_TRANSFER_ENERGY_RF_OUT = MAIN_POCKET + SUB_TRANSFER + SUB_ENERGY_RF + DIRECTION_OUT;
+	private static final String ANALYITCS_TRANSFER_FLUIDS_IN = MAIN_POCKET + SUB_TRANSFER + SUB_FLUIDS + DIRECTION_IN;
+	private static final String ANALYITCS_TRANSFER_FLUIDS_OUT = MAIN_POCKET + SUB_TRANSFER + SUB_FLUIDS + DIRECTION_OUT;
 	private static final String ANALYTICS_POCKET_PLACED = MAIN_POCKET + SUB_STATE + "Placed";
 	private static final String ANALYTICS_POCKET_MINED = MAIN_POCKET + SUB_STATE + "Mined";
 	private static final String ANALYTICS_POCKET_CRAFTED_PLAYER = MAIN_POCKET + SUB_STATE + SUB_CRAFTED + "Player";
@@ -54,7 +73,7 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	public void logPlayerTeleportInEvent() {
 		if (teleportIn == null) {
-			teleportIn = new GADesignEvent(this, ANALYITCS_PLAYER_TELEPORT, "to", Float.valueOf(1f));
+			teleportIn = new GADesignEvent(this, ANALYITCS_PLAYER_TELEPORT_IN, null, Float.valueOf(1f));
 		}
 		event(teleportIn, false);
 	}
@@ -63,34 +82,34 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	public void logPlayerTeleportOutEvent() {
 		if (teleportOut == null) {
-			teleportOut = new GADesignEvent(this, ANALYITCS_PLAYER_TELEPORT, "from", Float.valueOf(1f));
+			teleportOut = new GADesignEvent(this, ANALYITCS_PLAYER_TELEPORT_OUT, null, Float.valueOf(1f));
 		}
 		event(teleportOut, false);
 	}
 
 	private GAEvent trappedNotPlaced;
 
-	public void logPlayerTrappedNotPlacedEvent() {
+	public void logPlayerTrappedInside_NotPlaced_Event() {
 		if (trappedNotPlaced == null) {
-			trappedNotPlaced = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED, "inside - not placed", Float.valueOf(1f));
+			trappedNotPlaced = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED_INSIDE_NOT_PLACED, null, Float.valueOf(1f));
 		}
 		event(trappedNotPlaced, false);
 	}
 
 	private GAEvent trappedBlocked;
 
-	public void logPlayerTrappedBlockedEvent() {
+	public void logPlayerTrappedInside_ExitBlocked_Event() {
 		if (trappedBlocked == null) {
-			trappedBlocked = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED, "inside - blocked", Float.valueOf(1f));
+			trappedBlocked = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED_INSIDE_EXIT_BLOCKED, null, Float.valueOf(1f));
 		}
 		event(trappedBlocked, false);
 	}
 
 	private GAEvent trappedOutside;
 
-	public void logPlayerTrappedOutsideEvent() {
+	public void logPlayerTrappedOutside_ExitBlocked_Event() {
 		if (trappedOutside == null) {
-			trappedOutside = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED, "outside", Float.valueOf(1f));
+			trappedOutside = new GADesignEvent(this, ANALYITCS_PLAYER_TRAPPED_OUTSIDE_EXIT_BLOCKED, null, Float.valueOf(1f));
 		}
 		event(trappedOutside, false);
 	}
@@ -100,11 +119,11 @@ public class DPAnalytics extends SimpleAnalytics {
 	///////////////////////////////////
 
 	public void logRFTransferIn(int amount) {
-		eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "in", Integer.valueOf(amount));
+		eventDesign(ANALYITCS_TRANSFER_ENERGY_RF_IN, Integer.valueOf(amount));
 	}
 
 	public void logRFTransferOut(int amount) {
-		eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "out", Integer.valueOf(amount));
+		eventDesign(ANALYITCS_TRANSFER_ENERGY_RF_OUT, Integer.valueOf(amount));
 	}
 
 	//////////////////////////////////
@@ -112,11 +131,11 @@ public class DPAnalytics extends SimpleAnalytics {
 	//////////////////////////////////
 
 	public void logFluidTransferIn(int amount) {
-		eventDesign(ANALYITCS_TRANSFER_FLUIDS, "in", Integer.valueOf(amount));
+		eventDesign(ANALYITCS_TRANSFER_FLUIDS_IN, Integer.valueOf(amount));
 	}
 
 	public void logFluidTransferOut(int amount) {
-		eventDesign(ANALYITCS_TRANSFER_FLUIDS, "out", Integer.valueOf(amount));
+		eventDesign(ANALYITCS_TRANSFER_FLUIDS_OUT, Integer.valueOf(amount));
 	}
 
 	////////////////////////////////////////////////

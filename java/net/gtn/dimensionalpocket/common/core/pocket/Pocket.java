@@ -297,7 +297,7 @@ public class Pocket {
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
 			if (analytics.isActive()) {
-				analytics.logPlayerTrappedOutsideEvent();
+				analytics.logPlayerTrappedOutside_ExitBlocked_Event();
 			}
 			return;
 		}
@@ -353,7 +353,7 @@ public class Pocket {
 				comp.getChatStyle().setItalic(Boolean.TRUE);
 				entityPlayer.addChatMessage(comp);
 				if (analytics.isActive()) {
-					analytics.logPlayerTrappedBlockedEvent();
+					analytics.logPlayerTrappedInside_ExitBlocked_Event();
 				}
 			}
 		} else {
@@ -361,7 +361,7 @@ public class Pocket {
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
 			if (analytics.isActive()) {
-				analytics.logPlayerTrappedNotPlacedEvent();
+				analytics.logPlayerTrappedInside_NotPlaced_Event();
 			}
 		}
 	}

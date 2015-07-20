@@ -85,7 +85,7 @@ public class DimensionalPockets implements IConfigRegistrar {
 		proxy.postInitServerSide();
 		proxy.postInitClientSide();
 
-		analytics.eventDesign("ModLoaded:" + (analytics.userPrefix()));
+		analytics.eventDesign("ModLoaded:" + (analytics.userPrefix()), Integer.valueOf(1));
 	}
 
 	@EventHandler

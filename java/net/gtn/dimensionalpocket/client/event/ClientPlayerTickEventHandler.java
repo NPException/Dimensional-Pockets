@@ -56,11 +56,12 @@ public class ClientPlayerTickEventHandler {
 				if (activityGAEvent == null) {
 					GAUserEvent ae = new GAUserEvent(analytics);
 					try {
-						ae.installSite(Minecraft.getMinecraft().gameSettings.language); // abuse install site for language
-						ae.device(System.getProperty("os.arch")); // os/processor info
-						ae.platform(System.getProperty("os.name"));
-						ae.osMajor(System.getProperty("os.version"));
-						ae.osMinor(System.getProperty("java.runtime.version")); // abuse os_minor for java version
+						// lets abuse some event fields for user system properties
+						ae.installSite(Minecraft.getMinecraft().gameSettings.language); // language
+						ae.installAdGroup(System.getProperty("os.arch")); // os/processor info
+						ae.installAd(System.getProperty("os.name"));
+						ae.installCampaign(System.getProperty("os.version"));
+						ae.installPublisher(System.getProperty("java.runtime.version"));
 					} catch (Exception e) {
 						DPLogger.warning("Couldnot get all system properties: " + e);
 					}
