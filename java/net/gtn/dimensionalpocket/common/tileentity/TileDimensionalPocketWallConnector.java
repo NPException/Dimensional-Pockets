@@ -68,11 +68,11 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			if (rfTransferedIn > 0) {
 				rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
 				while (rfTransferedIn > 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "in", Integer.valueOf(Integer.MAX_VALUE));
+					analytics.logRFTransferIn(Integer.MAX_VALUE);
 					rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
 				}
 				if (rfTransferedIn < 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "in", Integer.valueOf((int) (rfTransferedIn + Integer.MAX_VALUE)));
+					analytics.logRFTransferIn((int) (rfTransferedIn + Integer.MAX_VALUE));
 				}
 				rfTransferedIn = 0;
 			}
@@ -81,11 +81,11 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			if (rfTransferedOut > 0) {
 				rfTransferedOut = rfTransferedOut - Integer.MAX_VALUE;
 				while (rfTransferedOut > 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "out", Integer.valueOf(Integer.MAX_VALUE));
+					analytics.logRFTransferOut(Integer.MAX_VALUE);
 					rfTransferedOut = rfTransferedOut - Integer.MAX_VALUE;
 				}
 				if (rfTransferedOut < 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_ENERGY_RF, "out", Integer.valueOf((int) (rfTransferedOut + Integer.MAX_VALUE)));
+					analytics.logRFTransferOut((int) (rfTransferedOut + Integer.MAX_VALUE));
 				}
 				rfTransferedOut = 0;
 			}
@@ -94,11 +94,11 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			if (fluidsTransferedIn > 0) {
 				fluidsTransferedIn = fluidsTransferedIn - Integer.MAX_VALUE;
 				while (fluidsTransferedIn > 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_FLUIDS, "in", Integer.valueOf(Integer.MAX_VALUE));
+					analytics.logFluidTransferIn(Integer.MAX_VALUE);
 					fluidsTransferedIn = fluidsTransferedIn - Integer.MAX_VALUE;
 				}
 				if (fluidsTransferedIn < 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_FLUIDS, "in", Integer.valueOf((int) (fluidsTransferedIn + Integer.MAX_VALUE)));
+					analytics.logFluidTransferIn((int) (fluidsTransferedIn + Integer.MAX_VALUE));
 				}
 				fluidsTransferedIn = 0;
 			}
@@ -107,11 +107,11 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			if (fluidsTransferedOut > 0) {
 				fluidsTransferedOut = fluidsTransferedOut - Integer.MAX_VALUE;
 				while (fluidsTransferedOut > 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_FLUIDS, "out", Integer.valueOf(Integer.MAX_VALUE));
+					analytics.logFluidTransferOut(Integer.MAX_VALUE);
 					fluidsTransferedOut = fluidsTransferedOut - Integer.MAX_VALUE;
 				}
 				if (fluidsTransferedOut < 0) {
-					analytics.eventDesign(ANALYITCS_TRANSFER_FLUIDS, "out", Integer.valueOf((int) (fluidsTransferedOut + Integer.MAX_VALUE)));
+					analytics.logFluidTransferOut((int) (fluidsTransferedOut + Integer.MAX_VALUE));
 				}
 				fluidsTransferedOut = 0;
 			}

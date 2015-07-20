@@ -297,7 +297,7 @@ public class Pocket {
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
 			if (analytics.isActive()) {
-				analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "outside");
+				analytics.logPlayerTrappedOutsideEvent();
 			}
 			return;
 		}
@@ -321,7 +321,7 @@ public class Pocket {
 		}
 
 		if (analytics.isActive()) {
-			analytics.eventDesign(ANALYITCS_PLAYER_TELEPORT, "to");
+			analytics.logPlayerTeleportInEvent();
 		}
 	}
 
@@ -346,14 +346,14 @@ public class Pocket {
 				}
 
 				if (analytics.isActive()) {
-					analytics.eventDesign(ANALYITCS_PLAYER_TELEPORT, "from");
+					analytics.logPlayerTeleportOutEvent();
 				}
 			} else {
 				ChatComponentTranslation comp = new ChatComponentTranslation("info.trapped.2");
 				comp.getChatStyle().setItalic(Boolean.TRUE);
 				entityPlayer.addChatMessage(comp);
 				if (analytics.isActive()) {
-					analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "inside", Float.valueOf(100f));
+					analytics.logPlayerTrappedBlockedEvent();
 				}
 			}
 		} else {
@@ -361,7 +361,7 @@ public class Pocket {
 			comp.getChatStyle().setItalic(Boolean.TRUE);
 			entityPlayer.addChatMessage(comp);
 			if (analytics.isActive()) {
-				analytics.eventDesign(ANALYITCS_PLAYER_TRAPPED, "inside", Float.valueOf(0f));
+				analytics.logPlayerTrappedNotPlacedEvent();
 			}
 		}
 	}
