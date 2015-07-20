@@ -167,4 +167,42 @@ public class DPAnalytics extends SimpleAnalytics {
 	public void logPocketsCraftedByAutomation(int amount) {
 		eventDesign(ANALYTICS_POCKET_CRAFTED_AUTOMATION, Integer.valueOf(amount));
 	}
+
+	///////////////////
+	// Shutdown hook //
+	///////////////////
+
+	private static boolean hasRegisteredCrash;
+
+	/**
+	 * Creates a shutdown hook that looks for crashes
+	 */
+	public void initShutdownHook() {
+		FMLCommonHandler.instance().registerCrashCallable(new ICrashCallable() {
+			@Override
+			public String call() throws Exception {
+				hasRegisteredCrash = true;
+				return DPAnalytics.this.isActive() ? "Will analyze crash-log before shutdown and send error to developer if DimensionalPockets might be involved." : "[inactive]";
+			}
+
+			@Override
+			public String getLabel() {
+				return "DPAnalytics Crash Check";
+			}
+		});
+
+		Runtime.getRuntime().addShutdownHook(new Thread("DPAnalytics-ShutdownHook") {
+			@Override
+			public void run() {
+				if (DPAnalytics.this.isActive()) {
+					if (hasRegisteredCrash) {
+						System.out.println("Analyzing last crash log");
+						DPAnalytics.this.eventErrorNOW(Severity.debug, "testing the send this error now thing with a thread");
+					} else {
+						System.out.println("No crash, we are good.");
+					}
+				}
+			}
+		});
+	}
 }

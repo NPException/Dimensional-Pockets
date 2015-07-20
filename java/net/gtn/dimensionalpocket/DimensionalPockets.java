@@ -53,12 +53,16 @@ public class DimensionalPockets implements IConfigRegistrar {
 		proxy.preInitServerSide();
 		proxy.preInitClientSide();
 
+		analytics.initShutdownHook();
+
 		ModBlocks.init();
 		ModItems.init();
 
 		creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
 		ModItems.initRecipes();
+
+		throw new NullPointerException("DPNPE");
 	}
 
 	@EventHandler
