@@ -51,7 +51,7 @@ public class DPCrashAnalyzer {
 			// TODO: grab most recent crash file on server
 		}
 
-		if (mostRecent.getPath().equals(lastAnalyzed))
+		if (mostRecent.getName().equals(lastAnalyzed))
 			return null;
 
 		byte[] encoded = Files.readAllBytes(Paths.get(mostRecent.getPath()));
@@ -60,7 +60,7 @@ public class DPCrashAnalyzer {
 		if (!content.contains("at " + DimensionalPockets.class.getPackage().getName()))
 			return null; // DP basepackage not found in crashlog, so it is probably not our fault.
 
-		analyticsConfig.setProperty(LAST_ANALYZED_FILE, mostRecent.getPath());
+		analyticsConfig.setProperty(LAST_ANALYZED_FILE, mostRecent.getName());
 		return content;
 	}
 }
