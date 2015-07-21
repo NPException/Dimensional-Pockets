@@ -3,6 +3,8 @@
  */
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import java.util.Properties;
+
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -63,6 +65,11 @@ public class DPAnalytics extends SimpleAnalytics {
 	public boolean isActive() {
 		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA &&
 				(isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : MinecraftServer.getServer().isSnooperEnabled());
+	}
+
+	@Override
+	protected String getConfigFileName() {
+		return "net.gtn.dimensionalpocket.DPAnalytics";
 	}
 
 	////////////////////////////////////////////
@@ -182,7 +189,7 @@ public class DPAnalytics extends SimpleAnalytics {
 			@Override
 			public String call() throws Exception {
 				hasRegisteredCrash = true;
-				return DPAnalytics.this.isActive() ? "Will analyze crash-log before shutdown and send error to developer if DimensionalPockets might be involved." : "[inactive]";
+				return analytics.isActive() ? "Will analyze crash-log before shutdown and send error to developer if DimensionalPockets might be involved." : "[inactive]";
 			}
 
 			@Override
@@ -191,18 +198,33 @@ public class DPAnalytics extends SimpleAnalytics {
 			}
 		});
 
+		// startup check. 1) to initialize the crash analyzer. 2) to get a crashlog we might not had the time to check yet
+		checkCrashLogs();
+
 		Runtime.getRuntime().addShutdownHook(new Thread("DPAnalytics-ShutdownHook") {
 			@Override
 			public void run() {
-				if (DPAnalytics.this.isActive()) {
+				if (analytics.isActive()) {
 					if (hasRegisteredCrash) {
-						System.out.println("Analyzing last crash log");
-						DPAnalytics.this.eventErrorNOW(Severity.debug, "testing the send this error now thing with a thread");
+						checkCrashLogs();
 					} else {
 						System.out.println("No crash, we are good.");
 					}
 				}
 			}
 		});
+	}
+
+	private void checkCrashLogs() {
+		try {
+			Properties config = analytics.loadConfig();
+			String message = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
+			if (message != null) {
+				analytics.saveConfig(config);
+				DPAnalytics.this.eventErrorNOW(Severity.debug, message); // change this to critical before pushing an update
+			}
+		} catch (Exception ex) {
+			DPLogger.warning("We tried to analyze crash reports but failed for some reason: " + ex);
+		}
 	}
 }
