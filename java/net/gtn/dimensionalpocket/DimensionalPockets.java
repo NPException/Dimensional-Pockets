@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket;
 
-import static net.gtn.dimensionalpocket.DPAnalytics.*;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
 import me.jezza.oc.api.configuration.Config.Controller;
 import me.jezza.oc.api.configuration.Config.IConfigRegistrar;
 import me.jezza.oc.api.configuration.ConfigHandler;

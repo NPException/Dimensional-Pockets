@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.client;
 
-import net.gtn.dimensionalpocket.DPAnalytics;
 import net.gtn.dimensionalpocket.client.commands.RenderTweakCommand;
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
 import net.gtn.dimensionalpocket.client.event.ClientPlayerTickEventHandler;
@@ -13,6 +12,7 @@ import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
+import net.gtn.dimensionalpocket.common.core.utils.DPAnalytics;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.entity.player.EntityPlayer;

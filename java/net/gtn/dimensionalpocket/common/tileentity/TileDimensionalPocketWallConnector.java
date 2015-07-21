@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import static net.gtn.dimensionalpocket.DPAnalytics.*;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

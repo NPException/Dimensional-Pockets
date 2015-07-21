@@ -1,7 +1,7 @@
 /**
  * (C) 2015 NPException
  */
-package net.gtn.dimensionalpocket;
+package net.gtn.dimensionalpocket.common.core.utils;
 
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;

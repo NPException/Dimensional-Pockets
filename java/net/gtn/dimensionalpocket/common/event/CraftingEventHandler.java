@@ -3,7 +3,7 @@
  */
 package net.gtn.dimensionalpocket.common.event;
 
-import static net.gtn.dimensionalpocket.DPAnalytics.*;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
