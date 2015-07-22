@@ -61,8 +61,6 @@ public class DimensionalPockets implements IConfigRegistrar {
 		creativeTab.setIcon(ModBlocks.dimensionalPocket);
 
 		ModItems.initRecipes();
-
-		throw new NullPointerException("DPNPE");
 	}
 
 	@EventHandler

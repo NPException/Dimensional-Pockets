@@ -21,6 +21,8 @@ import de.npe.gameanalytics.events.GAEvent;
  *
  */
 public class DPAnalytics extends SimpleAnalytics {
+	public static final String GA_GAME_KEY = "12345";
+	public static final String GA_SECRET_KEY = "12345";
 
 	public static final DPAnalytics analytics = new DPAnalytics();
 
@@ -58,13 +60,27 @@ public class DPAnalytics extends SimpleAnalytics {
 
 
 	public DPAnalytics() {
-		super(Reference.VERSION, Reference.GA_GAME_KEY, Reference.GA_SECRET_KEY);
+		super(Reference.VERSION, GA_GAME_KEY, GA_SECRET_KEY);
 	}
 
 	@Override
 	public boolean isActive() {
 		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA &&
-				(isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : MinecraftServer.getServer().isSnooperEnabled());
+				(isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : isServerSnooper());
+	}
+
+	/**
+	 * We try to grab the snooper settings from the server. If they are not yet
+	 * initialized, we assume true.
+	 *
+	 * @return
+	 */
+	private static boolean isServerSnooper() {
+		try {
+			return MinecraftServer.getServer().isSnooperEnabled();
+		} catch (NullPointerException npe) {
+			return true;
+		}
 	}
 
 	@Override
@@ -221,7 +237,7 @@ public class DPAnalytics extends SimpleAnalytics {
 			String message = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
 			if (message != null) {
 				analytics.saveConfig(config);
-				DPAnalytics.this.eventErrorNOW(Severity.debug, message); // change this to critical before pushing an update
+				DPAnalytics.this.eventErrorNOW(Severity.critical, message);
 			}
 		} catch (Exception ex) {
 			DPLogger.warning("We tried to analyze crash reports but failed for some reason: " + ex);
