@@ -26,37 +26,38 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	public static final DPAnalytics analytics = new DPAnalytics();
 
-	private static final String MAIN_POCKET = "Pocket:";
+	private static final String CAT_POCKET = "Pocket:";
 
-	private static final String SUB_PLAYER = "Player:";
-	private static final String SUB_TELEPORT = "Teleport:";
-	private static final String SUB_TRANSFER = "Transfer:";
-	private static final String SUB_STATE = "State:";
-	private static final String SUB_CRAFTED = "Crafted:";
-	private static final String SUB_ENERGY_RF = "EnergyRF:";
-	private static final String SUB_FLUIDS = "Fluids:";
-	private static final String SUB_TRAPPED = "Trapped:";
+	private static final String CAT_PLAYER = "Player:";
+	private static final String CAT_TELEPORT = "Teleport:";
+	private static final String CAT_TRANSFER = "Transfer:";
+	private static final String CAT_STATE = "State:";
+	private static final String CAT_ITEM = "Item:";
+	private static final String CAT_CRAFTED = "Crafted:";
+	private static final String CAT_ENERGY_RF = "EnergyRF:";
+	private static final String CAT_FLUIDS = "Fluids:";
+	private static final String CAT_TRAPPED = "Trapped:";
 
-	private static final String TRAPPED_INSIDE_NOT_PLACED = "Inside_NotPlaced";
-	private static final String TRAPPED_INSIDE_EXIT_BLOCKED = "Inside_ExitBlocked";
-	private static final String TRAPPED_OUTSIDE_EXIT_BLOCKED = "Outside_ExitBlocked";
-	private static final String DIRECTION_IN = "In";
-	private static final String DIRECTION_OUT = "Out";
+	private static final String VAL_TRAPPED_INSIDE_NOT_PLACED = "Inside_NotPlaced";
+	private static final String VAL_TRAPPED_INSIDE_EXIT_BLOCKED = "Inside_ExitBlocked";
+	private static final String VAL_TRAPPED_OUTSIDE_EXIT_BLOCKED = "Outside_ExitBlocked";
+	private static final String VAL_DIRECTION_IN = "In";
+	private static final String VAL_DIRECTION_OUT = "Out";
 
 
-	private static final String ANALYITCS_PLAYER_TELEPORT_IN = MAIN_POCKET + SUB_PLAYER + SUB_TELEPORT + DIRECTION_IN;
-	private static final String ANALYITCS_PLAYER_TELEPORT_OUT = MAIN_POCKET + SUB_PLAYER + SUB_TELEPORT + DIRECTION_OUT;
-	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_NOT_PLACED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_INSIDE_NOT_PLACED;
-	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_EXIT_BLOCKED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_INSIDE_EXIT_BLOCKED;
-	private static final String ANALYITCS_PLAYER_TRAPPED_OUTSIDE_EXIT_BLOCKED = MAIN_POCKET + SUB_PLAYER + SUB_TRAPPED + TRAPPED_OUTSIDE_EXIT_BLOCKED;
-	private static final String ANALYITCS_TRANSFER_ENERGY_RF_IN = MAIN_POCKET + SUB_TRANSFER + SUB_ENERGY_RF + DIRECTION_IN;
-	private static final String ANALYITCS_TRANSFER_ENERGY_RF_OUT = MAIN_POCKET + SUB_TRANSFER + SUB_ENERGY_RF + DIRECTION_OUT;
-	private static final String ANALYITCS_TRANSFER_FLUIDS_IN = MAIN_POCKET + SUB_TRANSFER + SUB_FLUIDS + DIRECTION_IN;
-	private static final String ANALYITCS_TRANSFER_FLUIDS_OUT = MAIN_POCKET + SUB_TRANSFER + SUB_FLUIDS + DIRECTION_OUT;
-	private static final String ANALYTICS_POCKET_PLACED = MAIN_POCKET + SUB_STATE + "Placed";
-	private static final String ANALYTICS_POCKET_MINED = MAIN_POCKET + SUB_STATE + "Mined";
-	private static final String ANALYTICS_POCKET_CRAFTED_PLAYER = MAIN_POCKET + SUB_STATE + SUB_CRAFTED + "Player";
-	private static final String ANALYTICS_POCKET_CRAFTED_AUTOMATION = MAIN_POCKET + SUB_STATE + SUB_CRAFTED + "Automation";
+	private static final String ANALYITCS_PLAYER_TELEPORT_IN = CAT_POCKET + CAT_PLAYER + CAT_TELEPORT + VAL_DIRECTION_IN;
+	private static final String ANALYITCS_PLAYER_TELEPORT_OUT = CAT_POCKET + CAT_PLAYER + CAT_TELEPORT + VAL_DIRECTION_OUT;
+	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_NOT_PLACED = CAT_POCKET + CAT_PLAYER + CAT_TRAPPED + VAL_TRAPPED_INSIDE_NOT_PLACED;
+	private static final String ANALYITCS_PLAYER_TRAPPED_INSIDE_EXIT_BLOCKED = CAT_POCKET + CAT_PLAYER + CAT_TRAPPED + VAL_TRAPPED_INSIDE_EXIT_BLOCKED;
+	private static final String ANALYITCS_PLAYER_TRAPPED_OUTSIDE_EXIT_BLOCKED = CAT_POCKET + CAT_PLAYER + CAT_TRAPPED + VAL_TRAPPED_OUTSIDE_EXIT_BLOCKED;
+	private static final String ANALYITCS_TRANSFER_ENERGY_RF_IN = CAT_POCKET + CAT_TRANSFER + CAT_ENERGY_RF + VAL_DIRECTION_IN;
+	private static final String ANALYITCS_TRANSFER_ENERGY_RF_OUT = CAT_POCKET + CAT_TRANSFER + CAT_ENERGY_RF + VAL_DIRECTION_OUT;
+	private static final String ANALYITCS_TRANSFER_FLUIDS_IN = CAT_POCKET + CAT_TRANSFER + CAT_FLUIDS + VAL_DIRECTION_IN;
+	private static final String ANALYITCS_TRANSFER_FLUIDS_OUT = CAT_POCKET + CAT_TRANSFER + CAT_FLUIDS + VAL_DIRECTION_OUT;
+	private static final String ANALYTICS_POCKET_PLACED = CAT_POCKET + CAT_STATE + "Placed";
+	private static final String ANALYTICS_POCKET_MINED = CAT_POCKET + CAT_STATE + "Mined";
+
+	private static final String ANALYTICS_ITEM_CRAFTED = CAT_ITEM + CAT_CRAFTED;
 
 
 	public DPAnalytics() {
@@ -183,12 +184,8 @@ public class DPAnalytics extends SimpleAnalytics {
 		event(pocketMined, false);
 	}
 
-	public void logPocketsCraftedByPlayer(int amount) {
-		eventDesign(ANALYTICS_POCKET_CRAFTED_PLAYER, Integer.valueOf(amount));
-	}
-
-	public void logPocketsCraftedByAutomation(int amount) {
-		eventDesign(ANALYTICS_POCKET_CRAFTED_AUTOMATION, Integer.valueOf(amount));
+	public void logItemCrafted(String name, int amount) {
+		eventDesign(ANALYTICS_ITEM_CRAFTED + name, Integer.valueOf(amount));
 	}
 
 	///////////////////

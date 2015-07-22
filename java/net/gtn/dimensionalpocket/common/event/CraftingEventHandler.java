@@ -24,7 +24,7 @@ public class CraftingEventHandler {
 			dpBlockItem = Item.getItemFromBlock(ModBlocks.dimensionalPocket);
 		}
 		if (event.crafting.getItem() == dpBlockItem && analytics.isActive()) {
-			analytics.logPocketsCraftedByPlayer(event.crafting.stackSize);
+			analytics.logItemCrafted(event.crafting.getUnlocalizedName(), event.crafting.stackSize);
 		}
 	}
 }
