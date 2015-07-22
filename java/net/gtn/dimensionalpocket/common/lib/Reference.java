@@ -74,6 +74,10 @@ public class Reference {
 	@ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
 	public static boolean SHOULD_SPAWN_WITH_BOOK = true;
 
+	@ConfigBoolean(category = "Gameplay",
+			comment = { "'false': Recipe only yields one Dimensional Pocket, but does not consume crystals.",
+	public static boolean CONSUME_CRYSTALS_IN_RECIPE = false;
+
 	/*
 	 * GENERAL CONFIGS
 	 */
@@ -92,6 +96,5 @@ public class Reference {
 	 */
 	@ConfigBoolean(category = "Analytics",
 			comment = { "If this is set to true AND you have snooper enabled in Minecraft, the mod will collect anonymous usage data.",
-					"Would be awesome if you could let this stay on true to help improve DP! :)" })
 	public static boolean MAY_COLLECT_ANONYMOUS_USAGE_DATA = true;
 }

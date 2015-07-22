@@ -26,6 +26,9 @@ public class ItemNetherCrystal extends ItemDP {
 
 	public ItemNetherCrystal(String name) {
 		super(name);
+		if (!Reference.CONSUME_CRYSTALS_IN_RECIPE) {
+			setContainerItem(this);
+		}
 		setEffect();
 	}
 

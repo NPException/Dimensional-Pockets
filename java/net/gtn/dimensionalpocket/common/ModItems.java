@@ -4,6 +4,7 @@ import net.gtn.dimensionalpocket.common.items.ItemBook;
 import net.gtn.dimensionalpocket.common.items.ItemDP;
 import net.gtn.dimensionalpocket.common.items.ItemEndCrystal;
 import net.gtn.dimensionalpocket.common.items.ItemNetherCrystal;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -27,8 +28,9 @@ public class ModItems {
 	public static void initRecipes() {
 		CraftingManager crafting = CraftingManager.getInstance();
 
+		int yieldPockets = Reference.CONSUME_CRYSTALS_IN_RECIPE ? 4 : 1;
 		//@formatter:off
-		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, yieldPockets),
 				"#N#",
 				"IDI",
 				"#E#",
@@ -49,7 +51,7 @@ public class ModItems {
 				endCrystal
 				);
 
-		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, 4),
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, yieldPockets),
 				"#E#",
 				"IDI",
 				"#N#",

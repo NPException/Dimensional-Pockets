@@ -19,6 +19,9 @@ public class ItemEndCrystal extends ItemDP {
 
 	public ItemEndCrystal(String name) {
 		super(name);
+		if (!Reference.CONSUME_CRYSTALS_IN_RECIPE) {
+			setContainerItem(this);
+		}
 		setEffect();
 	}
 
