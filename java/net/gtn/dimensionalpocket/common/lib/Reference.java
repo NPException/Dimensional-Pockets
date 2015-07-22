@@ -76,6 +76,7 @@ public class Reference {
 
 	@ConfigBoolean(category = "Gameplay",
 			comment = { "'false': Recipe only yields one Dimensional Pocket, but does not consume crystals.",
+					"'true': Recipe yields four Dimensional Pockets, but consumes crystals. (equal to recipe prior to 0.11.1)" })
 	public static boolean CONSUME_CRYSTALS_IN_RECIPE = false;
 
 	/*
@@ -96,5 +97,6 @@ public class Reference {
 	 */
 	@ConfigBoolean(category = "Analytics",
 			comment = { "If this is set to true AND you have snooper enabled in Minecraft, the mod will collect anonymous usage data.",
+					"For example how much RF and Fluids pass through Pockets and how many players get trapped." })
 	public static boolean MAY_COLLECT_ANONYMOUS_USAGE_DATA = true;
 }
