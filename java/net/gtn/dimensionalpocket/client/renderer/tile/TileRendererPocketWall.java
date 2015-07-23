@@ -111,8 +111,6 @@ public class TileRendererPocketWall extends TileRendererPocket {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-		Pocket pocket = tile.getPocket();
-
 		// frame other offsets and scale because the texture is smaller
 		int ox = (offX == 0) ? 0 : offX - 1;
 		int oy = (offY == 0) ? 0 : offY - 1;
@@ -162,6 +160,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
 			updateStateColorLevel();
 
 			// Overlays
+			Pocket pocket = tile.getPocket();
 			if (pocket != null) {
 				PocketSideState state = pocket.getFlowState(wallVisibleSide.getOpposite());
 				IColourBlindTexture texture = THEME.getOverlay(state);
