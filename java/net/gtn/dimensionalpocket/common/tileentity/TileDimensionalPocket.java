@@ -292,7 +292,10 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		super.writeToNBT(tag);
-		getPocket().writeToNBT(tag);
+		Pocket pocket = getPocket();
+		if (pocket != null) {
+			pocket.writeToNBT(tag);
+		}
 		if (customName != null) {
 			tag.setString(TAG_CUSTOM_DP_NAME, customName);
 		}

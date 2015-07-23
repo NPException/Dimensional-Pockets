@@ -128,17 +128,20 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 			}
 
 			Pocket pocket = tile.getPocket();
-			updateStateColorLevel();
 
-			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
-				PocketSideState state = pocket.getFlowState(direction);
-				IColourBlindTexture texture = Reference.THEME.getOverlay(state);
-				if (texture == null) {
-					continue;
+			if (pocket != null) {
+				updateStateColorLevel();
+
+				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
+					PocketSideState state = pocket.getFlowState(direction);
+					IColourBlindTexture texture = Reference.THEME.getOverlay(state);
+					if (texture == null) {
+						continue;
+					}
+					Colour colour = state.getColour();
+					glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
+					Hacks.BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
 				}
-				Colour colour = state.getColour();
-				glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
-				Hacks.BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
 			}
 		}
 
