@@ -3,7 +3,9 @@
  */
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import java.util.Calendar;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
@@ -231,9 +233,25 @@ public class DPAnalytics extends SimpleAnalytics {
 	private void checkCrashLogs() {
 		try {
 			Properties config = analytics.loadConfig();
-			String message = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
-			if (message != null) {
+			String log = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
+			if (log != null) {
 				analytics.saveConfig(config);
+
+				String descritpionAndTrace = log.substring(log.indexOf("Description: "), log.indexOf("A detailed walkthrough")).trim();
+				String loadedMods = log.substring(log.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed"), log.indexOf("GL info: ")).trim();
+
+				Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
+
+				@SuppressWarnings("boxing")
+				String date = String.format("%04d", cal.get(Calendar.YEAR)) + "-"
+						+ String.format("%02d", cal.get(Calendar.MONTH)) + "-"
+						+ String.format("%02d", cal.get(Calendar.DAY_OF_MONTH) + 1) + " "
+						+ String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)) + ":"
+						+ String.format("%02d", cal.get(Calendar.MINUTE)) + ":"
+						+ String.format("%02d", cal.get(Calendar.SECOND));
+
+				String message = date + "\n\n" + descritpionAndTrace + "\n\n" + loadedMods;
+
 				DPAnalytics.this.eventErrorNOW(Severity.critical, message);
 			}
 		} catch (Exception ex) {
