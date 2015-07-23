@@ -1,9 +1,9 @@
 {
   "1.7.10": {
-    "version": "0.11.1",
+    "version": "0.11.2",
     "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "Fluid transfer, Open Computers support and GameAnalytics",
-    "additionalInfoColour": "GREEN",
+    "additionalInfo": "Important crash fix for 0.11.1",
+    "additionalInfoColour": "RED",
     "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
   }
 }
