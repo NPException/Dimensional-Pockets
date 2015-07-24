@@ -229,8 +229,6 @@ public class DPAnalytics extends SimpleAnalytics {
 				}
 			}
 		});
-
-		throw new NullPointerException("wheeeeee");
 	}
 
 	private void checkCrashLogs() {
