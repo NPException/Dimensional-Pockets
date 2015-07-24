@@ -23,8 +23,8 @@ import de.npe.gameanalytics.events.GAEvent;
  *
  */
 public class DPAnalytics extends SimpleAnalytics {
-	public static final String GA_GAME_KEY = "12345";
-	public static final String GA_SECRET_KEY = "12345";
+	public static final String GA_GAME_KEY = "da1d2ad5b654b795d187f0a2cc8d0609";
+	public static final String GA_SECRET_KEY = "760658a7191e5d29f3a6cc9f8ad325ed88631535";
 
 	public static final DPAnalytics analytics = new DPAnalytics();
 
@@ -194,6 +194,7 @@ public class DPAnalytics extends SimpleAnalytics {
 	// Shutdown hook //
 	///////////////////
 
+	private static final String CRASH_CHECK_LABEL = "DPAnalytics Crash Check";
 	private static boolean hasRegisteredCrash;
 
 	/**
@@ -209,7 +210,7 @@ public class DPAnalytics extends SimpleAnalytics {
 
 			@Override
 			public String getLabel() {
-				return "DPAnalytics Crash Check";
+				return CRASH_CHECK_LABEL;
 			}
 		});
 
@@ -228,6 +229,8 @@ public class DPAnalytics extends SimpleAnalytics {
 				}
 			}
 		});
+
+		throw new NullPointerException("wheeeeee");
 	}
 
 	private void checkCrashLogs() {
@@ -237,8 +240,12 @@ public class DPAnalytics extends SimpleAnalytics {
 			if (log != null) {
 				analytics.saveConfig(config);
 
+				// this is the same on client and server
 				String descritpionAndTrace = log.substring(log.indexOf("Description: "), log.indexOf("A detailed walkthrough")).trim();
-				String loadedMods = log.substring(log.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed"), log.indexOf("GL info: ")).trim();
+
+				int modsStart = log.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed");
+				int modsEnd = log.indexOf(CRASH_CHECK_LABEL + ": ");
+				String loadedMods = log.substring(modsStart, modsEnd).trim();
 
 				Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
 
