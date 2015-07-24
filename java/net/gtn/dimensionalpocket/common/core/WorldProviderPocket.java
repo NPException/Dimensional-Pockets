@@ -54,12 +54,12 @@ public class WorldProviderPocket extends WorldProvider {
 
 	@Override
 	public String getDepartMessage() {
-		return "Leaving the block...";
+		return "Leaving the Dimensional Pocket...";
 	}
 
 	@Override
 	public String getWelcomeMessage() {
-		return "Entering the block...";
+		return "Entering the Dimensional Pocket...";
 	}
 
 	@Override
