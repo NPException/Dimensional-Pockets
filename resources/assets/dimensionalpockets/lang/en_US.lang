@@ -20,6 +20,8 @@ info.pocket.side.state.set.to=§7§o{} §8§oset to: {}
 info.tooltip.shift={0}Press {}Shift {}for more info.
 info.tooltip.endCrystal.shift=When used inside a Dimensional Pocket, it will set the spawn point inside that Pocket to the position you are currently at.
 info.tooltip.netherCrystal.shift=You can use this on the face of a Dimensional Pocket to toggle the state of that face. This also works on the inside of the Pocket.\nIf you use this crystal on the inside wall of a Pocket while sneaking, you can set the position of the "Connector" spot on that wall.
+info.tooltip.crystal.craft.remaining.singular=Can be used 1 more time for crafting
+info.tooltip.crystal.craft.remaining.plural=Can be used {} more times for crafting
 
 info.page.maxPage=9
 

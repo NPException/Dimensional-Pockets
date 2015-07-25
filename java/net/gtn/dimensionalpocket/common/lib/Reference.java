@@ -74,10 +74,10 @@ public class Reference {
 	@ConfigBoolean(category = "Gameplay", comment = "Decides whether or not any player spawns with a book upon new spawn.")
 	public static boolean SHOULD_SPAWN_WITH_BOOK = true;
 
-	@ConfigBoolean(category = "Gameplay",
-			comment = { "'false': Recipe only yields one Dimensional Pocket, but does not consume crystals.",
-					"'true': Recipe yields four Dimensional Pockets, but consumes crystals. (equal to recipe prior to 0.11.1)" })
-	public static boolean CONSUME_CRYSTALS_IN_RECIPE = false;
+	@ConfigInteger(category = "Gameplay", minValue = 0,
+			comment = { "This is the number of Dimensional Pockets you can craft with a pair of crystals before they break.",
+					"If set to 0, crystals will never break." })
+	public static int CRAFTINGS_PER_CRYSTAL = 4;
 
 	/*
 	 * GENERAL CONFIGS

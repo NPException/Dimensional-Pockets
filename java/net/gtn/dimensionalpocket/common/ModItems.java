@@ -4,12 +4,12 @@ import net.gtn.dimensionalpocket.common.items.ItemBook;
 import net.gtn.dimensionalpocket.common.items.ItemDP;
 import net.gtn.dimensionalpocket.common.items.ItemEndCrystal;
 import net.gtn.dimensionalpocket.common.items.ItemNetherCrystal;
-import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraftforge.oredict.OreDictionary;
 
 
 public class ModItems {
@@ -28,9 +28,8 @@ public class ModItems {
 	public static void initRecipes() {
 		CraftingManager crafting = CraftingManager.getInstance();
 
-		int yieldPockets = Reference.CONSUME_CRYSTALS_IN_RECIPE ? 4 : 1;
 		//@formatter:off
-		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, yieldPockets),
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket),
 				"#N#",
 				"IDI",
 				"#E#",
@@ -45,13 +44,13 @@ public class ModItems {
 				Blocks.diamond_block,
 
 				'N',
-				netherCrystal,
+				new ItemStack(netherCrystal,1,OreDictionary.WILDCARD_VALUE),
 
 				'E',
-				endCrystal
+				new ItemStack(endCrystal,1,OreDictionary.WILDCARD_VALUE)
 				);
 
-		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket, yieldPockets),
+		crafting.addRecipe(new ItemStack(ModBlocks.dimensionalPocket),
 				"#E#",
 				"IDI",
 				"#N#",
@@ -66,10 +65,10 @@ public class ModItems {
 				Blocks.diamond_block,
 
 				'N',
-				netherCrystal,
+				new ItemStack(netherCrystal,1,OreDictionary.WILDCARD_VALUE),
 
 				'E',
-				endCrystal
+				new ItemStack(endCrystal,1,OreDictionary.WILDCARD_VALUE)
 				);
 
 		crafting.addRecipe(new ItemStack(netherCrystal),

@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.common.items;
 
+import static net.gtn.dimensionalpocket.common.lib.Reference.*;
+
 import java.util.List;
 
 import me.jezza.oc.common.interfaces.IItemTooltip;
@@ -26,10 +28,26 @@ public class ItemNetherCrystal extends ItemDP {
 
 	public ItemNetherCrystal(String name) {
 		super(name);
-		if (!Reference.CONSUME_CRYSTALS_IN_RECIPE) {
-			setContainerItem(this);
-		}
 		setEffect();
+		setMaxDamage(CRAFTINGS_PER_CRYSTAL);
+	}
+
+	@Override
+	public boolean hasContainerItem(ItemStack stack) {
+		return !(CRAFTINGS_PER_CRYSTAL > 0 && stack.getItemDamage() >= CRAFTINGS_PER_CRYSTAL);
+	}
+
+	@Override
+	public ItemStack getContainerItem(ItemStack itemStack) {
+		if (CRAFTINGS_PER_CRYSTAL == 0)
+			return new ItemStack(this);
+
+		int damage = itemStack.getItemDamage() + 1;
+
+		if (damage >= CRAFTINGS_PER_CRYSTAL)
+			return null;
+
+		return new ItemStack(this, itemStack.stackSize, damage);
 	}
 
 	@Override
@@ -100,6 +118,17 @@ public class ItemNetherCrystal extends ItemDP {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, IItemTooltip information) {
+		final int damage = stack.getItemDamage();
+		if (damage > 0) {
+			int remaining = CRAFTINGS_PER_CRYSTAL - damage;
+			final String text;
+			if (remaining == 1) {
+				text = Localise.format("info.tooltip.crystal.craft.remaining.singular");
+			} else {
+				text = Localise.format("info.tooltip.crystal.craft.remaining.plural", Integer.valueOf(remaining));
+			}
+			information.addAllToInfoList(Localise.wrapToSize(text, 40));
+		}
 		information.defaultInfoList();
 		String text = Localise.translate("info.tooltip.netherCrystal.shift");
 		List<String> lines = Localise.wrapToSize(text, 40);
