@@ -100,6 +100,11 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
 	}
 
 	@Override
+	public boolean canDropFromExplosion(Explosion explosion) {
+		return false;
+	}
+
+	@Override
 	public boolean hasTileEntity(int metadata) {
 		return metadata == CONNECTOR_META;
 	}
