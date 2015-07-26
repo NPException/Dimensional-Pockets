@@ -18,6 +18,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class BlockDimensionalPocketWall extends BlockAbstractModel implements ITileProvider {
@@ -33,6 +35,15 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
 		useNeighborBrightness = false;
 		disableStats();
 		setCreativeTab(null);
+		// make sure OC registers a texture.
+		textureReg = true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected String getTextureName() {
+		// we use the empty texture, because we don't want random particles to be drawn on falling/running
+		return "empty";
 	}
 
 	@Override

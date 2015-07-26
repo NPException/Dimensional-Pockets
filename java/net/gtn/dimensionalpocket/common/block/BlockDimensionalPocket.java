@@ -20,6 +20,9 @@ import cofh.api.block.IDismantleable;
 
 import com.google.common.collect.Lists;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 
 public class BlockDimensionalPocket extends BlockAbstractModel implements IDismantleable, ITileProvider {
 
@@ -30,13 +33,21 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 		setLightLevel(1F);
 		setResistance(Reference.DIMENSIONAL_POCKET_RESISTANCE);
 		setCreativeTab(DimensionalPockets.creativeTab);
+		// make sure OC registers a texture.
+		textureReg = true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	protected String getTextureName() {
+		// we use the empty texture, because we don't want random particles to be drawn on falling/running
+		return "empty";
 	}
 
 	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
-		if (world.isRemote) {
+		if (world.isRemote)
 			return null;
-		}
 
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
