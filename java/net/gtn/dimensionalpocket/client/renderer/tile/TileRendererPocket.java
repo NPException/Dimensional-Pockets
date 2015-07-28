@@ -74,7 +74,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 			portalRenderer.overrideRange(inRange);
 
 			portalRenderer.startDrawing();
-			portalRenderer.updateField(2F);
+			portalRenderer.updateField(true);
 
 			portalRenderer.setInterpolatedPosition(x, y, z);
 			portalRenderer.setSeed(seeds[0]);

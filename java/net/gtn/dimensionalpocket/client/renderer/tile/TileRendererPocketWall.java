@@ -100,7 +100,7 @@ public class TileRendererPocketWall extends TileRendererPocket {
 			portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
 
 			portalRenderer.startDrawing();
-			portalRenderer.updateField(3F);
+			portalRenderer.updateField(false);
 			portalRenderer.setSeed(seeds[ordinal]);
 			portalRenderer.setInterpolatedPosition(x - tempX, y - tempY, z - tempZ);
 			portalRenderer.drawFace(wallVisibleSide, offset, 14.0F);

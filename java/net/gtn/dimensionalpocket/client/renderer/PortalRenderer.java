@@ -20,8 +20,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class PortalRenderer {
 
 	public static final ResourceLocation[] fieldTextures = {
-			new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleField.png"),
-			new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleFieldStatic.png"),
+		new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleField.png"),
+			new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleFieldStaticSmall.png"),
+			new ResourceLocation(TEXTURE_PARTICLE_FIELD_ROOT + "particleFieldStatic.png")
 	};
 
 	public static final int MAX_BRIGHTNESS = 240;
@@ -109,10 +110,10 @@ public class PortalRenderer {
 		glPopMatrix();
 	}
 
-	public void updateField(float distance) {
-		long cycleTime = (long) (5000L / distance);
+	public void updateField(boolean small) {
+		long cycleTime = (long) (5000L / (small ? 2F : 3F));
 		fieldTranslation = ClientEventHandler.gameTicks % cycleTime / ((float) cycleTime);
-		currentTexture = fancyRendering ? fieldTextures[0] : fieldTextures[1];
+		currentTexture = fancyRendering ? fieldTextures[0] : fieldTextures[small ? 1 : 2];
 		planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / (planeCount);
 	}
 

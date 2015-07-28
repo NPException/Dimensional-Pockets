@@ -37,11 +37,17 @@ public class ItemPocketRenderer implements IItemRenderer {
 			glTranslatef(-0.5F, -0.4F, -0.5F);
 		}
 
-		Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
+		glDisable(GL_LIGHTING);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor3f(1.0F, 1.0F, 1.0F);
+
+		Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
 		Hacks.BlockRenderer.drawFaces(Reference.THEME.getPocketTexture());
+
 		glDisable(GL_BLEND);
+		glEnable(GL_LIGHTING);
+
 		glPopMatrix();
 	}
 }
