@@ -17,7 +17,7 @@ public enum Theme {
 
 	public static final int SIZE = Theme.values().length - 1;
 
-	private boolean init = false;
+	private boolean isInitialized = false;
 
 	private ResourceLocation pocketFrame, pocketFrameInside, connector, connectorBG;
 
@@ -27,10 +27,10 @@ public enum Theme {
 	Theme() {
 	}
 
-	public void init() {
-		if (init)
+	public synchronized void init() {
+		if (isInitialized)
 			return;
-		init = true;
+		isInitialized = true;
 
 		String blockDir = TEXTURE_BLOCK_ROOT + name().toLowerCase() + "/";
 
@@ -57,42 +57,42 @@ public enum Theme {
 	}
 
 	public IColourBlindTexture getSideIndicator(ForgeDirection direction) {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return sideIndicators.get(direction);
 	}
 
 	public IColourBlindTexture getOverlay(PocketSideState sideState) {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return overlays.get(sideState);
 	}
 
 	public ResourceLocation getPocketTexture() {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return pocketFrame;
 	}
 
 	public ResourceLocation getPocketInsideTexture() {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return pocketFrameInside;
 	}
 
 	public ResourceLocation getConnector() {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return connector;
 	}
 
 	public ResourceLocation getConnectorBG() {
-		if (!init) {
+		if (!isInitialized) {
 			init();
 		}
 		return connectorBG;

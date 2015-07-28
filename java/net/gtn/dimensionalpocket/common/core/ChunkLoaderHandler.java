@@ -49,7 +49,7 @@ public class ChunkLoaderHandler implements LoadingCallback {
 			TicketWrapper wrapper = ticketMap.get(chunkXZSet);
 
 			if (wrapper == null) {
-				DPLogger.warning("Ticket from forge contained a chunkXZSet for which no TicketWrapper exists. Ignoring ticket.", ChunkLoaderHandler.class);
+				DPLogger.info("Ticket from forge contained a chunkXZSet for which no TicketWrapper exists. Ignoring ticket.", ChunkLoaderHandler.class);
 				continue;
 			}
 
@@ -81,14 +81,12 @@ public class ChunkLoaderHandler implements LoadingCallback {
 	}
 
 	public static void addPocketToChunkLoader(Pocket pocket) {
-		if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED) {
+		if (!Reference.KEEP_POCKET_ROOMS_CHUNK_LOADED)
 			return;
-		}
 
 		Utils.enforceServer();
-		if (pocket == null) {
+		if (pocket == null)
 			return;
-		}
 
 		CoordSet pocketSet = pocket.getChunkCoords();
 		CoordSet chunkXZSet = pocketSet.copy();

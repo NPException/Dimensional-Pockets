@@ -39,8 +39,8 @@ public class DPCrashAnalyzer {
 
 		File crashfolder = new File((isClient) ? Minecraft.getMinecraft().mcDataDir : new File("."), "crash-reports");
 		File[] crashLogs = crashfolder.listFiles(new FileFilter() {
-			// only check files that are not older than a week 7L * 24L *
-			private final long compareTimeStamp = System.currentTimeMillis() - (60L * 60L * 1000L);
+			// only check files that are not older than a week
+			private final long compareTimeStamp = System.currentTimeMillis() - (7L * 24L * 60L * 60L * 1000L);
 			@Override
 			public boolean accept(File file) {
 				if (file.lastModified() < compareTimeStamp)
@@ -63,7 +63,7 @@ public class DPCrashAnalyzer {
 			}
 		}
 
-		if (mostRecent.getName().equals(lastAnalyzed))
+		if (mostRecent == null || mostRecent.getName().equals(lastAnalyzed))
 			return null;
 
 		byte[] encoded = Files.readAllBytes(Paths.get(mostRecent.getPath()));

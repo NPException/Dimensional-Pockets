@@ -4,7 +4,6 @@ import me.jezza.oc.api.configuration.Config.ConfigBoolean;
 import me.jezza.oc.api.configuration.Config.ConfigFloat;
 import me.jezza.oc.api.configuration.Config.ConfigInteger;
 import net.gtn.dimensionalpocket.client.theme.Theme;
-import net.gtn.dimensionalpocket.common.lib.ConfigEntryTheme.ConfigTheme;
 import net.minecraft.client.Minecraft;
 
 
@@ -53,7 +52,6 @@ public class Reference {
 		return FORCE_FANCY_RENDERING != 1 && (FORCE_FANCY_RENDERING == 2 || Minecraft.getMinecraft().gameSettings.fancyGraphics);
 	}
 
-	@ConfigTheme(category = "Graphics", comment = "dp.config.theme")
 	public static Theme THEME = Theme.DEFAULT;
 
 	@ConfigBoolean(category = "Graphics", comment = "If set to true, a shader will be used for the particle field rendering instead of the old method.")
