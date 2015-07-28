@@ -25,6 +25,7 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Di
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -315,13 +316,14 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		}
 	}
 
-	public void prepareTeleportIntoPocket(EntityPlayer player) {
+	private void prepareTeleportIntoPocket(EntityPlayer player) {
 		int ticksToTake = 15;
 		if (!worldObj.isRemote) {
 			telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
 		} else {
 			// TODO Sync for all clients.
-			for (int i = 0; i < 40; i++) {
+			int numParticles = 5 * (4 - Minecraft.getMinecraft().gameSettings.particleSetting);
+			for (int i = 0; i < numParticles; i++) {
 				UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
 			}
 		}

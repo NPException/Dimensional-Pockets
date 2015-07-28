@@ -12,5 +12,5 @@ public class Strings {
 	public static final String END_CRYSTAL = "endCrystal";
 	public static final String NETHER_CRYSTAL = "netherCrystal";
 
-	public static final String DIMENSIONAL_POCKET_PARTICLE = "dimensionalParticle";
+	public static final String DIMENSIONAL_POCKET_PARTICLE = "fx8_lighteningBall/lighteningball_1_20_";
 }

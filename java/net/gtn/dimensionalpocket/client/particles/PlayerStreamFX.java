@@ -20,23 +20,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class PlayerStreamFX extends EntityFX {
 
-	private static final Random random = new Random();
+	private static final long frames = 20;
 
-	private int particleNumber;
+	private long frameOffset;
 	private Colour colour;
 
 	public PlayerStreamFX(World world, EntityPlayer player, CoordSet targetSet, int ticksToTake, Random rand, Colour colour) {
-		super(world, player.posX + ((rand.nextDouble() - 0.5F) * 0.6F), player.posY - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 0.6F));
+		super(world, player.posX + ((rand.nextDouble() - 0.5F) * 2.0F), player.posY + player.height / 4 - (rand.nextDouble() * 1.1D), player.posZ + ((rand.nextDouble() - 0.5F) * 2.0F));
 		noClip = true;
-		particleScale = 0.5F;
+		particleScale = 1.5F;
 		this.colour = colour.copy();
 		particleMaxAge = ticksToTake;
+
+		frameOffset = rand.nextInt((int) frames);
 
 		motionX = (targetSet.x + 0.5F - posX) / ticksToTake;
 		motionY = (targetSet.y + 0.5F - posY) / ticksToTake;
 		motionZ = (targetSet.z + 0.5F - posZ) / ticksToTake;
-
-		particleNumber = random.nextInt(3) + 1;
 	}
 
 	@Override
@@ -65,6 +65,14 @@ public class PlayerStreamFX extends EntityFX {
 		glDepthMask(false);
 		glEnable(3042);
 		glBlendFunc(770, 771);
+
+		double nanosPerFrame = 500000000.0;
+		long particleNumber = (long) ((System.nanoTime() % nanosPerFrame) / (nanosPerFrame / frames)) + 1L;
+		particleNumber += frameOffset;
+
+		if (particleNumber > frames) {
+			particleNumber = particleNumber % frames;
+		}
 
 		UtilsFX.bindTexture(Strings.DIMENSIONAL_POCKET_PARTICLE + particleNumber);
 
