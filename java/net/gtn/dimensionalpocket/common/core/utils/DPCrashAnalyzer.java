@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.minecraft.client.Minecraft;
+import de.npe.gameanalytics.events.GAErrorEvent.Severity;
 
 
 /**
@@ -33,7 +34,7 @@ public class DPCrashAnalyzer {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String analyzeCrash(Properties analyticsConfig, final boolean isClient) throws IOException {
+	public static CrashWrapper analyzeCrash(Properties analyticsConfig, final boolean isClient) throws IOException {
 		String lastAnalyzed = analyticsConfig.getProperty(LAST_ANALYZED_FILE);
 
 		File crashfolder = new File((isClient) ? Minecraft.getMinecraft().mcDataDir : new File("."), "crash-reports");
@@ -68,10 +69,38 @@ public class DPCrashAnalyzer {
 		byte[] encoded = Files.readAllBytes(Paths.get(mostRecent.getPath()));
 		String content = new String(encoded, "UTF-8");
 
-		if (!content.contains("at " + DimensionalPockets.class.getPackage().getName()))
-			return null; // DP basepackage not found in crashlog, so it is probably not our fault.
+		Severity severity = Severity.warning;
+
+		if (content.contains("at " + DimensionalPockets.class.getPackage().getName())) {
+			severity = Severity.critical; // DP basepackage found in crashlog, so it is most likely our fault.
+
+		} else if (content.contains("at me.jezza.oc")) { // don't actually use OC here, since I still want the crash to get sent even if it is not there
+			severity = Severity.error; // might be OC's fault.
+		}
 
 		analyticsConfig.setProperty(LAST_ANALYZED_FILE, mostRecent.getName());
-		return content;
+
+		return new CrashWrapper(content, severity);
+	}
+
+	public static class CrashWrapper {
+		public final String report;
+		public final Severity severity;
+
+		//		public final String date;
+
+		private CrashWrapper(String report, Severity severity) {
+			this.report = report;
+			this.severity = severity;
+
+			//			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
+			//
+			//			date = String.format("%04d", cal.get(Calendar.YEAR)) + "-"
+			//					+ String.format("%02d", cal.get(Calendar.MONTH)) + "-"
+			//					+ String.format("%02d", cal.get(Calendar.DAY_OF_MONTH) + 1) + " "
+			//					+ String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)) + ":"
+			//					+ String.format("%02d", cal.get(Calendar.MINUTE)) + ":"
+			//					+ String.format("%02d", cal.get(Calendar.SECOND));
+		}
 	}
 }

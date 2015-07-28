@@ -3,10 +3,9 @@
  */
 package net.gtn.dimensionalpocket.common.core.utils;
 
-import java.util.Calendar;
 import java.util.Properties;
-import java.util.TimeZone;
 
+import net.gtn.dimensionalpocket.common.core.utils.DPCrashAnalyzer.CrashWrapper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -14,7 +13,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
 import de.npe.gameanalytics.SimpleAnalytics;
 import de.npe.gameanalytics.events.GADesignEvent;
-import de.npe.gameanalytics.events.GAErrorEvent.Severity;
 import de.npe.gameanalytics.events.GAEvent;
 
 
@@ -205,7 +203,7 @@ public class DPAnalytics extends SimpleAnalytics {
 			@Override
 			public String call() throws Exception {
 				hasRegisteredCrash = true;
-				return analytics.isActive() ? "Will analyze crash-log before shutdown and send error to developer if DimensionalPockets might be involved." : "[inactive]";
+				return analytics.isActive() ? ("Will analyze crash-log before shutdown and send it to the " + Reference.MOD_NAME + " developer") : "[inactive]";
 			}
 
 			@Override
@@ -232,35 +230,42 @@ public class DPAnalytics extends SimpleAnalytics {
 	}
 
 	private void checkCrashLogs() {
+		CrashWrapper cw = null;
 		try {
 			Properties config = analytics.loadConfig();
-			String log = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
-			if (log != null) {
+			cw = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
+			if (cw != null) {
 				analytics.saveConfig(config);
 
 				// this is the same on client and server
-				String descritpionAndTrace = log.substring(log.indexOf("Description: "), log.indexOf("A detailed walkthrough")).trim();
+				String descritpionAndTrace = cw.report.substring(cw.report.indexOf("Description: "), cw.report.indexOf("A detailed walkthrough")).trim();
 
-				int modsStart = log.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed");
-				int modsEnd = log.indexOf(CRASH_CHECK_LABEL + ": ");
-				String loadedMods = log.substring(modsStart, modsEnd).trim();
+				int modsStart = cw.report.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed");
+				int modsEnd = cw.report.indexOf(CRASH_CHECK_LABEL + ": ");
+				String loadedMods = cw.report.substring(modsStart, modsEnd).trim();
 
-				Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Berlin"));
+				String message = descritpionAndTrace + "\n\n" + loadedMods;
 
-				@SuppressWarnings("boxing")
-				String date = String.format("%04d", cal.get(Calendar.YEAR)) + "-"
-						+ String.format("%02d", cal.get(Calendar.MONTH)) + "-"
-						+ String.format("%02d", cal.get(Calendar.DAY_OF_MONTH) + 1) + " "
-						+ String.format("%02d", cal.get(Calendar.HOUR_OF_DAY)) + ":"
-						+ String.format("%02d", cal.get(Calendar.MINUTE)) + ":"
-						+ String.format("%02d", cal.get(Calendar.SECOND));
-
-				String message = date + "\n\n" + descritpionAndTrace + "\n\n" + loadedMods;
-
-				DPAnalytics.this.eventErrorNOW(Severity.critical, message);
+				try {
+					message = Gzip.compressToBase64(message);
+				} catch (Exception ex) {
+					// failed to compress
+				}
+				DPAnalytics.this.eventErrorNOW(cw.severity, "Extracted -> " + message);
 			}
 		} catch (Exception ex) {
-			DPLogger.warning("We tried to analyze crash reports but failed for some reason: " + ex);
+			if (cw == null) {
+				DPLogger.warning("We tried to analyze crash reports but failed for some reason: " + ex);
+			} else {
+				DPLogger.info("We couldn't extract the important bits from the crash-report, so we just send the whole thing");
+				String message = cw.report;
+				try {
+					message = Gzip.compressToBase64(message);
+				} catch (Exception e) {
+					// failed to compress
+				}
+				DPAnalytics.this.eventErrorNOW(cw.severity, "Complete -> " + message);
+			}
 		}
 	}
 }
