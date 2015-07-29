@@ -69,7 +69,7 @@ public class DimensionalPockets {
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
 
-		DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, false);
+		DimensionManager.registerProviderType(Reference.DIMENSION_ID, WorldProviderPocket.class, true);
 		DimensionManager.registerDimension(Reference.DIMENSION_ID, Reference.DIMENSION_ID);
 
 		BiomeHelper.init();

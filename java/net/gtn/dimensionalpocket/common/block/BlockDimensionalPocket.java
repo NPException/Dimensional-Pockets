@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
-import me.jezza.oc.common.blocks.BlockAbstractModel;
+import me.jezza.oc.common.blocks.BlockAbstract;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
@@ -24,7 +24,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockDimensionalPocket extends BlockAbstractModel implements IDismantleable, ITileProvider {
+public class BlockDimensionalPocket extends BlockAbstract implements IDismantleable, ITileProvider {
 
 	public BlockDimensionalPocket(Material material, String name) {
 		super(material, name);
@@ -42,6 +42,11 @@ public class BlockDimensionalPocket extends BlockAbstractModel implements IDisma
 	protected String getTextureName() {
 		// we use the empty texture, because we don't want random particles to be drawn on falling/running
 		return "empty";
+	}
+
+	@Override
+	public int getRenderType() {
+		return -1;
 	}
 
 	@Override

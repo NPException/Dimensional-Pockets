@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.block;
 
-import me.jezza.oc.common.blocks.BlockAbstractModel;
+import me.jezza.oc.common.blocks.BlockAbstract;
 import me.jezza.oc.common.interfaces.ITileProvider;
 import me.jezza.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModItems;
@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockDimensionalPocketWall extends BlockAbstractModel implements ITileProvider {
+public class BlockDimensionalPocketWall extends BlockAbstract implements ITileProvider {
 
 	public static final int CONNECTOR_META = 1;
 
@@ -44,6 +44,11 @@ public class BlockDimensionalPocketWall extends BlockAbstractModel implements IT
 	protected String getTextureName() {
 		// we use the empty texture, because we don't want random particles to be drawn on falling/running
 		return "empty";
+	}
+
+	@Override
+	public int getRenderType() {
+		return -1;
 	}
 
 	@Override
