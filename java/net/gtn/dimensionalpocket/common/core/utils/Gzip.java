@@ -6,11 +6,12 @@ package net.gtn.dimensionalpocket.common.core.utils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 
 
 /**
@@ -40,9 +41,28 @@ public class Gzip {
 
 		byte[] bytes = Base64.decodeBase64(compressedBase64);
 
-		try (GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
-			result = IOUtils.toString(zi, "UTF-8");
+		try (GZIPInputStream zi = new GZIPInputStream(new ByteArrayInputStream(bytes));
+				StringWriter output = new StringWriter(bytes.length*3);
+				InputStreamReader input = new InputStreamReader(zi, "UTF-8");) {
+
+			boolean incomplete = false;
+			try {
+				int n;
+				while (-1 != (n = input.read())) {
+					output.write(n);
+				}
+			} catch (Exception ex) {
+				incomplete = true;
+			}
+
+			result = (incomplete ? "[INCOMPLETE]\n" : "") + output.toString();
 		}
 		return result;
+	}
+
+	// just to be able to quick test things
+	public static void main(String[] args) throws Exception {
+		String data = "";
+		System.out.println(uncompressFromBase64(data));
 	}
 }
