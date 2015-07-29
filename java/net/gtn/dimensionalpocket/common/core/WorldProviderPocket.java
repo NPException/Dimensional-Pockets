@@ -86,13 +86,8 @@ public class WorldProviderPocket extends WorldProvider {
 	}
 
 	@Override
-	public boolean isDaytime() {
-		return false;
-	}
-
-	@Override
 	public boolean canRespawnHere() {
-		return true;
+		return false;
 	}
 
 	@Override
