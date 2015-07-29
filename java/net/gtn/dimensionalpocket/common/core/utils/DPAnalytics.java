@@ -7,13 +7,11 @@ import java.util.Properties;
 
 import net.gtn.dimensionalpocket.common.core.utils.DPCrashAnalyzer.CrashWrapper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
-import de.npe.gameanalytics.SimpleAnalytics;
 import de.npe.gameanalytics.events.GADesignEvent;
 import de.npe.gameanalytics.events.GAEvent;
+import de.npe.gameanalytics.minecraft.MCSimpleAnalytics;
 
 
 /**
@@ -24,7 +22,7 @@ public class DPAnalytics extends SimpleAnalytics {
 	public static final String GA_GAME_KEY = "12345";
 	public static final String GA_SECRET_KEY = "12345";
 
-	public static final DPAnalytics analytics = new DPAnalytics();
+	public static DPAnalytics analytics;
 
 	private static final String CAT_POCKET = "Pocket:";
 
@@ -66,22 +64,7 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	@Override
 	public boolean isActive() {
-		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA &&
-				(isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : isServerSnooper());
-	}
-
-	/**
-	 * We try to grab the snooper settings from the server. If they are not yet
-	 * initialized, we assume true.
-	 *
-	 * @return
-	 */
-	private static boolean isServerSnooper() {
-		try {
-			return MinecraftServer.getServer().isSnooperEnabled();
-		} catch (NullPointerException npe) {
-			return true;
-		}
+		return Reference.MAY_COLLECT_ANONYMOUS_USAGE_DATA && super.isActive();
 	}
 
 	@Override
@@ -233,7 +216,7 @@ public class DPAnalytics extends SimpleAnalytics {
 		CrashWrapper cw = null;
 		try {
 			Properties config = analytics.loadConfig();
-			cw = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient());
+			cw = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient);
 			if (cw != null) {
 				analytics.saveConfig(config);
 

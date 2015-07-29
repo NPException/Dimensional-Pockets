@@ -10,6 +10,7 @@ import net.gtn.dimensionalpocket.common.core.BiomeHelper;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
 import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.utils.DPAnalytics;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraftforge.common.DimensionManager;
@@ -47,10 +48,11 @@ public class DimensionalPockets {
 	public void preInit(FMLPreInitializationEvent event) {
 		DPLogger.init(LogManager.getLogger(Reference.MOD_NAME.replaceAll(" ", "")));
 
+		analytics = new DPAnalytics();
+		analytics.initShutdownHook();
+
 		proxy.preInitServerSide();
 		proxy.preInitClientSide();
-
-		analytics.initShutdownHook();
 
 		ModBlocks.init();
 		ModItems.init();

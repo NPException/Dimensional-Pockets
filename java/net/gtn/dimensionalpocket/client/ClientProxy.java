@@ -12,7 +12,6 @@ import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocketWall;
 import net.gtn.dimensionalpocket.common.CommonProxy;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.event.BlockEventHandler;
-import net.gtn.dimensionalpocket.common.core.utils.DPAnalytics;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void preInitClientSide() {
-		DPAnalytics.analytics.markClientSide();
+		// do nothing
 	}
 
 	@Override

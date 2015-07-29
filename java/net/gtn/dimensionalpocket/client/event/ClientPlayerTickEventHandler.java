@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.client.event;
 
-import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
-
 import java.lang.reflect.Method;
 
 import net.gtn.dimensionalpocket.client.renderer.tile.TileRendererPocket;
@@ -17,7 +15,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.npe.gameanalytics.events.GAUserEvent;
 
 
 @SideOnly(Side.CLIENT)
@@ -26,9 +23,6 @@ public class ClientPlayerTickEventHandler {
 	public static boolean hideStuffFromNEI = false;
 
 	private static boolean checkForVersion = Reference.DO_VERSION_CHECK;
-
-	private static long nextActivityReport = 0;
-	private static GAUserEvent activityGAEvent;
 
 	/**
 	 * Hides blocks and items from NEI that it should not show. The Dimensional
@@ -49,30 +43,6 @@ public class ClientPlayerTickEventHandler {
 		TileRendererPocket.doIndicateSides = equippedItem != null && equippedItem.getItem() == ModItems.netherCrystal;
 	}
 
-	private static void sendAnalyticsActivityEvent() {
-		long now = System.currentTimeMillis();
-		if (now >= nextActivityReport) {
-			if (analytics.isActive()) {
-				if (activityGAEvent == null) {
-					GAUserEvent ae = new GAUserEvent(analytics);
-					try {
-						// lets abuse some event fields for user system properties
-						ae.installSite(Minecraft.getMinecraft().gameSettings.language); // language
-						ae.installAdGroup(System.getProperty("os.arch")); // os/processor info
-						ae.installAd(System.getProperty("os.name"));
-						ae.installCampaign(System.getProperty("os.version"));
-						ae.installPublisher(System.getProperty("java.runtime.version"));
-					} catch (Exception e) {
-						DPLogger.warning("Couldnot get all system properties: " + e);
-					}
-					activityGAEvent = ae;
-				}
-				analytics.event(activityGAEvent, true);
-			}
-			nextActivityReport = now + 60000;
-		}
-	}
-
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void event(PlayerTickEvent evt) {
@@ -91,7 +61,5 @@ public class ClientPlayerTickEventHandler {
 
 		// check for Nether Crystal in hand to trigger side color coding of pockets
 		checkPlayerForNetherCrystal(evt.player);
-
-		sendAnalyticsActivityEvent();
 	}
 }
