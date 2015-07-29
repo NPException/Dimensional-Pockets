@@ -3,12 +3,15 @@
  */
 package net.gtn.dimensionalpocket.common.core.utils;
 
+import java.util.List;
 import java.util.Properties;
 
 import net.gtn.dimensionalpocket.common.core.utils.DPCrashAnalyzer.CrashWrapper;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICrashCallable;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import de.npe.gameanalytics.events.GADesignEvent;
 import de.npe.gameanalytics.events.GAEvent;
 import de.npe.gameanalytics.minecraft.MCSimpleAnalytics;
@@ -214,6 +217,7 @@ public class DPAnalytics extends SimpleAnalytics {
 
 	private void checkCrashLogs() {
 		CrashWrapper cw = null;
+		String type = analytics.isClient ? "[C]" : "[S]";
 		try {
 			Properties config = analytics.loadConfig();
 			cw = DPCrashAnalyzer.analyzeCrash(config, analytics.isClient);
@@ -221,20 +225,25 @@ public class DPAnalytics extends SimpleAnalytics {
 				analytics.saveConfig(config);
 
 				// this is the same on client and server
-				String descritpionAndTrace = cw.report.substring(cw.report.indexOf("Description: "), cw.report.indexOf("A detailed walkthrough")).trim();
+				String descritpionAndTrace = cw.report.substring(cw.report.indexOf("Description: ") + 12, cw.report.indexOf("A detailed walkthrough")).trim();
 
-				int modsStart = cw.report.indexOf("States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed");
-				int modsEnd = cw.report.indexOf(CRASH_CHECK_LABEL + ": ");
-				String loadedMods = cw.report.substring(modsStart, modsEnd).trim();
+				StringBuilder sb = new StringBuilder(type);
+				sb.append(" Filtered -> ").append(descritpionAndTrace).append('\n');
 
-				String message = descritpionAndTrace + "\n\n" + loadedMods;
-
-				try {
-					message = Gzip.compressToBase64(message);
-				} catch (Exception ex) {
-					// failed to compress
+				List<ModContainer> mods = Loader.instance().getActiveModList();
+				for (ModContainer mod : mods) {
+					sb.append('\n').append(mod.getName());
+					sb.append(" {").append(mod.getVersion()).append("}");
 				}
-				DPAnalytics.this.eventErrorNOW(cw.severity, "Extracted -> " + message);
+
+				String message = sb.toString();
+
+				//				try {
+				//					message = Gzip.compressToBase64(message);
+				//				} catch (Exception ex) {
+				//					// failed to compress
+				//				}
+				DPAnalytics.this.eventErrorNOW(cw.severity, message);
 			}
 		} catch (Exception ex) {
 			if (cw == null) {
@@ -247,7 +256,7 @@ public class DPAnalytics extends SimpleAnalytics {
 				} catch (Exception e) {
 					// failed to compress
 				}
-				DPAnalytics.this.eventErrorNOW(cw.severity, "Complete -> " + message);
+				DPAnalytics.this.eventErrorNOW(cw.severity, type + " Complete -> " + message);
 			}
 		}
 	}
