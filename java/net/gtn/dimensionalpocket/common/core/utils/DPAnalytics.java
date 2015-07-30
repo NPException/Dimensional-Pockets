@@ -21,7 +21,7 @@ import de.npe.gameanalytics.minecraft.MCSimpleAnalytics;
  * @author NPException
  *
  */
-public class DPAnalytics extends SimpleAnalytics {
+public class DPAnalytics extends MCSimpleAnalytics {
 	public static final String GA_GAME_KEY = "12345";
 	public static final String GA_SECRET_KEY = "12345";
 
