@@ -23,7 +23,7 @@ public class CraftingEventHandler {
 		if (dpBlockItem == null) {
 			dpBlockItem = Item.getItemFromBlock(ModBlocks.dimensionalPocket);
 		}
-		if (!event.player.worldObj.isRemote && event.crafting.getItem() == dpBlockItem && analytics.isActive()) {
+		if (event.crafting.getItem() == dpBlockItem && analytics.isActive()) {
 			analytics.logItemCrafted(event.crafting.getUnlocalizedName(), event.crafting.stackSize);
 		}
 	}
