@@ -1,5 +1,5 @@
 ## Attention
-_**The development of DP will be stopped for good shortly. There will be a final release within March/April 2017 mainly to iron out the last crash causing bugs. After that, only horrible bugs may be fixed at most. The development on the successor to DP, [Dimensional Pockets 2](https://github.com/NPException/Dimensional-Pockets-2), will be started after the aforementioned final release of DP.**_
+_**The development of DP will be stopped for good. There will be a final release within March/April 2017 mainly to iron out the last crash causing bugs. After that, only horrible bugs may be fixed at most. The development on the successor to DP, [Dimensional Pockets 2](https://github.com/NPException/Dimensional-Pockets-2), will be started after the aforementioned final release of DP.**_
 
 ## Current Release
 https://minecraft.curseforge.com/projects/dimensional-pockets
