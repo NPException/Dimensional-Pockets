@@ -2,8 +2,8 @@ package net.gtn.dimensionalpocket.client.renderer.tile;
 
 import static net.gtn.dimensionalpocket.common.lib.Reference.*;
 import static org.lwjgl.opengl.GL11.*;
-import me.jezza.oc.client.gui.lib.Colour;
-import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.client.lib.Colour;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.event.RenderEventHandler;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;

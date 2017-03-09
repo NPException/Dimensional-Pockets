@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client.event;
 
-import me.jezza.oc.common.utils.Localise;
+import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;

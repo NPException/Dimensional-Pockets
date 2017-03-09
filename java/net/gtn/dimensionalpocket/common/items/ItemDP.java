@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common.items;
 
 import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
-import me.jezza.oc.common.items.ItemAbstract;
+import net.gtn.dimensionalpocket.oc.common.items.ItemAbstract;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

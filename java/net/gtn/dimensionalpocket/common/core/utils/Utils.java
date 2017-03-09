@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.jezza.oc.client.gui.lib.Colour;
+import net.gtn.dimensionalpocket.oc.client.lib.Colour;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;

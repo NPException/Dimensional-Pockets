@@ -74,7 +74,7 @@ public class DPCrashAnalyzer {
 		if (content.contains("at " + DimensionalPockets.class.getPackage().getName())) {
 			severity = Severity.critical; // DP basepackage found in crashlog, so it is most likely our fault.
 
-		} else if (content.contains("at me.jezza.oc")) { // don't actually use OC here, since I still want the crash to get sent even if it is not there
+		} else if (content.contains("at net.gtn.dimensionalpocket.oc")) { // don't actually use OC here, since I still want the crash to get sent even if it is not there
 			severity = Severity.error; // might be OC's fault.
 		}
 

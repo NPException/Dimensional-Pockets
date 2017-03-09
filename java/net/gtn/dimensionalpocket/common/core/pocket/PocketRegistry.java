@@ -3,7 +3,7 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
 import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;

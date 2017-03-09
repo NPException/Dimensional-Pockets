@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.Random;
 
-import me.jezza.oc.client.gui.lib.Colour;
+import net.gtn.dimensionalpocket.oc.client.lib.Colour;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.client.Minecraft;

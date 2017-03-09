@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.minecraft.server.MinecraftServer;

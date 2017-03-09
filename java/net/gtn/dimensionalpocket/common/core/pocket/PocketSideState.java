@@ -2,7 +2,7 @@ package net.gtn.dimensionalpocket.common.core.pocket;
 
 import java.util.EnumMap;
 
-import me.jezza.oc.client.gui.lib.Colour;
+import net.gtn.dimensionalpocket.oc.client.lib.Colour;
 import net.minecraft.util.StatCollector;
 
 

@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import me.jezza.oc.client.gui.components.GuiTexturedButton;
+import net.gtn.dimensionalpocket.oc.client.gui.components.GuiTexturedButton;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

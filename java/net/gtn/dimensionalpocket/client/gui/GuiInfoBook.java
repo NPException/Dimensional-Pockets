@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.client.gui;
 
 import static org.lwjgl.opengl.GL11.*;
-import me.jezza.oc.client.gui.GuiContainerAbstract;
-import me.jezza.oc.client.gui.components.GuiWidget;
-import me.jezza.oc.client.gui.lib.Colour;
+import net.gtn.dimensionalpocket.oc.client.gui.GuiContainerAbstract;
+import net.gtn.dimensionalpocket.oc.client.gui.components.GuiWidget;
+import net.gtn.dimensionalpocket.oc.client.lib.Colour;
 import net.gtn.dimensionalpocket.client.ClientProxy;
 import net.gtn.dimensionalpocket.client.gui.components.GuiArrow;
 import net.gtn.dimensionalpocket.client.gui.components.GuiItemStack;

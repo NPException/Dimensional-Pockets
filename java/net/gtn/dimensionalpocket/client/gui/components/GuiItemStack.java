@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.client.gui.components;
 
-import me.jezza.oc.client.gui.components.GuiWidget;
+import net.gtn.dimensionalpocket.oc.client.gui.components.GuiWidget;
 import net.gtn.dimensionalpocket.client.utils.RenderUtils;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

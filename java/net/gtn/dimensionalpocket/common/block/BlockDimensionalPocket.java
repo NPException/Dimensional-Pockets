@@ -2,8 +2,8 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
-import me.jezza.oc.common.blocks.BlockAbstract;
-import me.jezza.oc.common.interfaces.ITileProvider;
+import net.gtn.dimensionalpocket.oc.common.blocks.BlockAbstract;
+import net.gtn.dimensionalpocket.oc.common.interfaces.ITileProvider;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;

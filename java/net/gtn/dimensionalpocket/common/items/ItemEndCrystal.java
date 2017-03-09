@@ -4,9 +4,9 @@ import static net.gtn.dimensionalpocket.common.lib.Reference.*;
 
 import java.util.List;
 
-import me.jezza.oc.common.interfaces.IItemTooltip;
-import me.jezza.oc.common.utils.CoordSet;
-import me.jezza.oc.common.utils.Localise;
+import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.lib.Hacks;

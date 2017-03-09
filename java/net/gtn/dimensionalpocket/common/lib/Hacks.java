@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.common.lib;
 
 import static org.lwjgl.opengl.GL11.*;
-import me.jezza.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;

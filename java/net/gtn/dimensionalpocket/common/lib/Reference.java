@@ -1,8 +1,8 @@
 package net.gtn.dimensionalpocket.common.lib;
 
-import me.jezza.oc.api.configuration.Config.ConfigBoolean;
-import me.jezza.oc.api.configuration.Config.ConfigFloat;
-import me.jezza.oc.api.configuration.Config.ConfigInteger;
+import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigBoolean;
+import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigFloat;
+import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigInteger;
 import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.minecraft.client.Minecraft;
 

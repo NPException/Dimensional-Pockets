@@ -1,6 +1,6 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import me.jezza.oc.common.tile.TileAbstract;
+import net.gtn.dimensionalpocket.oc.common.tile.TileAbstract;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.minecraft.entity.player.EntityPlayer;
 
