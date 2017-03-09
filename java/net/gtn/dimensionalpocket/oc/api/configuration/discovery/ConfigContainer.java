@@ -1,11 +1,5 @@
 package net.gtn.dimensionalpocket.oc.api.configuration.discovery;
 
-import cpw.mods.fml.common.discovery.ASMDataTable;
-import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
-import net.gtn.dimensionalpocket.oc.api.configuration.ConfigEntry;
-import net.gtn.dimensionalpocket.oc.common.core.CoreProperties;
-import net.minecraftforge.common.config.Configuration;
-
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -13,6 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import cpw.mods.fml.common.discovery.ASMDataTable;
+import cpw.mods.fml.common.discovery.ASMDataTable.ASMData;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.oc.api.configuration.ConfigEntry;
+import net.minecraftforge.common.config.Configuration;
 
 /**
  * A main config container for all the config annotations.
@@ -40,7 +40,7 @@ public class ConfigContainer {
             try {
                 annotationMap.put(entry.getKey(), entry.getValue().newInstance().setConfig(config));
             } catch (InstantiationException | IllegalAccessException e) {
-                CoreProperties.logger.fatal("Failed to create instance of the registered ConfigEntry!", e);
+                DPLogger.severe("Failed to create instance of the registered ConfigEntry!", e);
             }
         }
 
@@ -63,7 +63,7 @@ public class ConfigContainer {
             clazz = Class.forName(className);
         } catch (ClassNotFoundException e) {
             // Should never happen seeing as we got it from the system.
-            CoreProperties.logger.fatal("Failed to find class!", e);
+      	  DPLogger.severe("Failed to find class!", e);
             return;
         }
 

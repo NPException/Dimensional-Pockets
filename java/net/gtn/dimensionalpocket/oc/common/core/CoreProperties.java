@@ -1,7 +1,5 @@
 package net.gtn.dimensionalpocket.oc.common.core;
 
-import org.apache.logging.log4j.Logger;
-
 public class CoreProperties {
 
     public static final String MOD_ID = "OmnisCore";
@@ -20,6 +18,4 @@ public class CoreProperties {
 
     public static final String SERVER_PROXY = "net.gtn.dimensionalpocket.oc.common.CommonProxy";
     public static final String CLIENT_PROXY = "net.gtn.dimensionalpocket.oc.client.ClientProxy";
-
-    public static Logger logger; //  = LogManager.getLogger(MOD_ID)
 }

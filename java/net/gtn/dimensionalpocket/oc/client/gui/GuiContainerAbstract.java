@@ -1,9 +1,12 @@
 package net.gtn.dimensionalpocket.oc.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.gtn.dimensionalpocket.oc.OmnisCore;
+import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.oc.client.gui.components.GuiWidget;
 import net.gtn.dimensionalpocket.oc.client.gui.interfaces.IGuiRenderHandler;
 import net.gtn.dimensionalpocket.oc.client.lib.Colour;
@@ -16,9 +19,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiContainerAbstract extends GuiContainer implements IGuiRenderHandler {
@@ -149,7 +149,7 @@ public abstract class GuiContainerAbstract extends GuiContainer implements IGuiR
     }
 
     public static void sendMessage(IMessage message) {
-        OmnisCore.networkDispatcher.sendToServer(message);
+        DimensionalPockets.networkDispatcher.sendToServer(message);
     }
 
     public abstract void onActionPerformed(GuiWidget widget, int mouse);

@@ -1,21 +1,6 @@
 package net.gtn.dimensionalpocket;
 
-import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
-import me.jezza.oc.api.configuration.Config.Controller;
-import me.jezza.oc.client.CreativeTabSimple;
-import net.gtn.dimensionalpocket.common.CommonProxy;
-import net.gtn.dimensionalpocket.common.ModBlocks;
-import net.gtn.dimensionalpocket.common.ModItems;
-import net.gtn.dimensionalpocket.common.core.BiomeHelper;
-import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
-import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.core.utils.DPAnalytics;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.MinecraftForge;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.analytics;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -30,10 +15,29 @@ import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import net.gtn.dimensionalpocket.common.CommonProxy;
+import net.gtn.dimensionalpocket.common.ModBlocks;
+import net.gtn.dimensionalpocket.common.ModItems;
+import net.gtn.dimensionalpocket.common.core.BiomeHelper;
+import net.gtn.dimensionalpocket.common.core.ChunkLoaderHandler;
+import net.gtn.dimensionalpocket.common.core.WorldProviderPocket;
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
+import net.gtn.dimensionalpocket.common.core.utils.DPAnalytics;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.oc.api.configuration.Config.Controller;
+import net.gtn.dimensionalpocket.oc.api.configuration.ConfigHandler;
+import net.gtn.dimensionalpocket.oc.client.CreativeTabSimple;
+import net.gtn.dimensionalpocket.oc.common.core.network.MessageGuiNotify;
+import net.gtn.dimensionalpocket.oc.common.core.network.NetworkDispatcher;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.MinecraftForge;
 
 
 @Controller(configFile = "DimensionalPockets")
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);required-after:OmnisCore@[0.0.6,);after:TConstruct;after:Thaumcraft;")
+@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Forge@[10.13.2.1230,);after:TConstruct;after:Thaumcraft;")
 public class DimensionalPockets {
 
 	@Instance(Reference.MOD_ID)
@@ -43,6 +47,8 @@ public class DimensionalPockets {
 	public static CommonProxy proxy;
 
 	public static CreativeTabSimple creativeTab = new CreativeTabSimple(Reference.MOD_ID);
+	
+	public static NetworkDispatcher networkDispatcher;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -50,6 +56,11 @@ public class DimensionalPockets {
 
 		analytics = new DPAnalytics();
 		analytics.initShutdownHook();
+		
+		ConfigHandler.initConfigHandler(event);
+
+      networkDispatcher = new NetworkDispatcher(Reference.MOD_ID);
+      networkDispatcher.registerMessage(MessageGuiNotify.class, Side.SERVER);
 
 		proxy.preInitServerSide();
 		proxy.preInitClientSide();

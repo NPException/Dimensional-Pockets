@@ -1,9 +1,9 @@
 package net.gtn.dimensionalpocket.common.lib;
 
+import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigBoolean;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigFloat;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigInteger;
-import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.minecraft.client.Minecraft;
 
 
@@ -11,7 +11,7 @@ public class Reference {
 
 	public static final String MOD_ID = "dimensionalPockets";
 	public static final String MOD_NAME = "Dimensional Pockets";
-	public static final String VERSION = "0.11.5";
+	public static final String VERSION = "1.0.0";
 
 	public static final String MOD_IDENTIFIER = MOD_ID + ":";
 

@@ -8,13 +8,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
-import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
-import net.minecraft.server.MinecraftServer;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry.PocketGenParameters;
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
+import net.minecraft.server.MinecraftServer;
 
 
 public class PocketConfig {
@@ -64,7 +64,7 @@ public class PocketConfig {
 			}
 
 		} catch (Exception e) {
-			DPLogger.severe(e);
+			DPLogger.severe("Error when saving backLinkFile", e);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class PocketConfig {
 			}
 
 		} catch (Exception e) {
-			DPLogger.severe(e);
+			DPLogger.severe("Error when loading backLinkFile", e);
 		}
 
 		return backLinkMap;
@@ -99,7 +99,7 @@ public class PocketConfig {
 				GSON.toJson(pocketGenParameters, writer);
 			}
 		} catch (Exception e) {
-			DPLogger.severe(e);
+			DPLogger.severe("Error when saving pocketGenParamsFile", e);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class PocketConfig {
 				}
 			}
 		} catch (Exception e) {
-			DPLogger.severe(e);
+			DPLogger.severe("Error when loading pocketGenParamsFile", e);
 		}
 
 		return new PocketGenParameters();

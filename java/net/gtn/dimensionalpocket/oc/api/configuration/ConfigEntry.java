@@ -1,11 +1,6 @@
 package net.gtn.dimensionalpocket.oc.api.configuration;
 
-import com.google.common.base.Throwables;
-import net.gtn.dimensionalpocket.oc.common.core.CoreProperties;
-import net.gtn.dimensionalpocket.oc.common.utils.Localise;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import org.apache.logging.log4j.Level;
+import static net.minecraftforge.common.config.Property.Type.STRING;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -13,7 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static net.minecraftforge.common.config.Property.Type.STRING;
+import com.google.common.base.Throwables;
+
+import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
+import net.gtn.dimensionalpocket.oc.common.utils.Localise;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public abstract class ConfigEntry<T extends Annotation, D> {
 
@@ -34,7 +34,6 @@ public abstract class ConfigEntry<T extends Annotation, D> {
             configMap.put(field, new FieldWrapper(field, annotation));
     }
 
-    @SuppressWarnings("unchecked")
     public void processFields(boolean saveFlag) {
         for (Map.Entry<Field, FieldWrapper> entry : configMap.entrySet()) {
             Field field = entry.getKey();
@@ -48,7 +47,7 @@ public abstract class ConfigEntry<T extends Annotation, D> {
                 } else
                     saveAnnotation(config, fieldName, wrapper.annotation, wrapper.currentValue(), wrapper.defaultValue);
             } catch (Exception e) {
-                CoreProperties.logger.log(Level.FATAL, String.format("Failed to configure field: %s, with annotated type: %s", fieldName, wrapper.annotation.annotationType().getSimpleName()), e);
+                DPLogger.severe(String.format("Failed to configure field: %s, with annotated type: %s", fieldName, wrapper.annotation.annotationType().getSimpleName()), e);
             }
         }
     }
@@ -111,7 +110,7 @@ public abstract class ConfigEntry<T extends Annotation, D> {
             try {
                 return (D) field.get(null);
             } catch (IllegalAccessException e) {
-                CoreProperties.logger.info("Failed to get current value.");
+                DPLogger.info("Failed to get current value.");
                 Throwables.propagate(e);
             }
             return null;
