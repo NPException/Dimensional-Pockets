@@ -1,12 +1,14 @@
 package net.gtn.dimensionalpocket.common.core.pocket;
 
-import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.analytics;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
+import com.google.common.base.Strings;
+import com.google.gson.annotations.SerializedName;
+
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocket;
 import net.gtn.dimensionalpocket.common.block.BlockDimensionalPocketWall;
@@ -15,6 +17,7 @@ import net.gtn.dimensionalpocket.common.core.utils.TeleportDirection;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocketWallConnector;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,9 +29,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.google.common.base.Strings;
-import com.google.gson.annotations.SerializedName;
 
 
 public class Pocket {
@@ -107,8 +107,9 @@ public class Pocket {
 	}
 
 	public void generatePocketRoom(String creatorName) {
-		if (isGenerated)
+		if (isGenerated) {
 			return;
+		}
 
 		World world = PocketRegistry.getWorldForPockets();
 
@@ -134,11 +135,11 @@ public class Pocket {
 					boolean flagZ = z == 0 || z == 15;
 
 					// Added those flags, so I could add these checks, almost halves the time.
-					if (!(flagX || flagY || flagZ) || (flagX && (flagY || flagZ)) || (flagY && flagZ)) {
+					if (!(flagX || flagY || flagZ) || flagX && (flagY || flagZ) || flagY && flagZ) {
 						continue;
 					}
 
-					extendedBlockStorage.func_150818_a(x, y, z, ModBlocks.dimensionalPocketWall);
+					extendedBlockStorage.setExtBlockID(x, y, z, ModBlocks.dimensionalPocketWall);
 					world.markBlockForUpdate(worldX + x, worldY + y, worldZ + z);
 				}
 			} // @Jezza please do me the favor and let me have these brackets...
@@ -245,7 +246,7 @@ public class Pocket {
 		}
 
 		CoordSet connectorCoords = cMap.get(side);
-		return (connectorCoords == null) ? null : connectorCoords.copy();
+		return connectorCoords == null ? null : connectorCoords.copy();
 	}
 
 	/**
@@ -256,8 +257,9 @@ public class Pocket {
 		Utils.enforceServer();
 
 		World world = PocketRegistry.getWorldForPockets();
-		if (ModBlocks.dimensionalPocketWall != connectorCoords.getBlock(world))
+		if (ModBlocks.dimensionalPocketWall != connectorCoords.getBlock(world)) {
 			return false;
+		}
 
 		if (getConnectorMap().size() == 6) { // the check is needed to prevent a stack overflow on first connector creation
 			CoordSet oldCoords = getConnectorCoords(side);
@@ -287,8 +289,9 @@ public class Pocket {
 	}
 
 	public void teleportTo(EntityPlayer entityPlayer) {
-		if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
+		if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP)) {
 			return;
+		}
 
 		World world = getBlockWorld();
 		TeleportDirection teleportSide = TeleportDirection.getValidTeleportLocation(world, blockCoords.x, blockCoords.y, blockCoords.z);
@@ -326,8 +329,9 @@ public class Pocket {
 	}
 
 	public void teleportFrom(EntityPlayer entityPlayer) {
-		if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP))
+		if (entityPlayer.worldObj.isRemote || !(entityPlayer instanceof EntityPlayerMP)) {
 			return;
+		}
 
 		EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 		World world = getBlockWorld();
@@ -430,18 +434,24 @@ public class Pocket {
 	public static ForgeDirection getSideForConnector(CoordSet coordSet) {
 		ForgeDirection direction = ForgeDirection.UNKNOWN;
 
-		if (coordSet.x == 0)
+		if (coordSet.x == 0) {
 			return ForgeDirection.WEST;
-		if (coordSet.x == 15)
+		}
+		if (coordSet.x == 15) {
 			return ForgeDirection.EAST;
-		if (coordSet.y == 0)
+		}
+		if (coordSet.y == 0) {
 			return ForgeDirection.DOWN;
-		if (coordSet.y == 15)
+		}
+		if (coordSet.y == 15) {
 			return ForgeDirection.UP;
-		if (coordSet.z == 0)
+		}
+		if (coordSet.z == 0) {
 			return ForgeDirection.NORTH;
-		if (coordSet.z == 15)
+		}
+		if (coordSet.z == 15) {
 			return ForgeDirection.SOUTH;
+		}
 
 		return direction;
 	}
@@ -500,8 +510,9 @@ public class Pocket {
 	public static Pocket readFromNBT(NBTTagCompound tag) {
 		// this is for staying compatible with older saves prior to version 0.10.0
 		CoordSet oldVersionChunkCoords = CoordSet.readFromNBT(tag);
-		if (oldVersionChunkCoords != null)
+		if (oldVersionChunkCoords != null) {
 			return PocketRegistry.getPocket(oldVersionChunkCoords);
+		}
 
 		NBTTagCompound pocketTag = tag.getCompoundTag(NBT_DIMENSIONAL_POCKET_KEY);
 

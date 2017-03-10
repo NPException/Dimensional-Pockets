@@ -1,5 +1,7 @@
 package net.gtn.dimensionalpocket.oc.common.items;
 
+import java.util.List;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
@@ -9,18 +11,16 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
-import java.util.List;
-
 public class ItemBlockAbstract extends ItemBlock {
 
     public ItemBlockAbstract(Block block) {
         super(block);
-        setMaxDamage(0);
+        setMaxDurability(0);
         setHasSubtypes(true);
     }
 
     public Block getBlock() {
-        return field_150939_a;
+        return blockInstance;
     }
 
     @Override

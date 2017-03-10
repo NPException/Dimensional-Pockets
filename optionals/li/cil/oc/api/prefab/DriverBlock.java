@@ -37,9 +37,9 @@ public abstract class DriverBlock implements li.cil.oc.api.driver.Block {
         for (ItemStack stack : blocks) {
             if (stack != null && stack.getItem() instanceof ItemBlock) {
                 final ItemBlock item = (ItemBlock) stack.getItem();
-                final Block supportedBlock = item.field_150939_a;
-                final int supportedMetadata = item.getMetadata(stack.getItemDamage());
-                if (referenceBlock == supportedBlock && (referenceMetadata == supportedMetadata || stack.getItemDamage() == OreDictionary.WILDCARD_VALUE)) {
+                final Block supportedBlock = item.blockInstance;
+                final int supportedMetadata = item.getMetadata(stack.getCurrentDurability());
+                if (referenceBlock == supportedBlock && (referenceMetadata == supportedMetadata || stack.getCurrentDurability() == OreDictionary.WILDCARD_VALUE)) {
                     return true;
                 }
             }

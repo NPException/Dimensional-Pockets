@@ -3,6 +3,8 @@ package net.gtn.dimensionalpocket.common.core;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.IProgressUpdate;
@@ -10,8 +12,6 @@ import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-
-import com.google.common.collect.Lists;
 
 
 public class ChunkGeneratorPocket implements IChunkProvider {
@@ -75,7 +75,7 @@ public class ChunkGeneratorPocket implements IChunkProvider {
 	}
 
 	@Override
-	public ChunkPosition func_147416_a(World var1, String var2, int var3, int var4, int var5) {
+	public ChunkPosition findClosestStructure(World var1, String var2, int var3, int var4, int var5) {
 		return null;
 	}
 

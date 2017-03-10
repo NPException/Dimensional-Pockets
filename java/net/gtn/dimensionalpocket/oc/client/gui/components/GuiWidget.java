@@ -1,5 +1,9 @@
 package net.gtn.dimensionalpocket.oc.client.gui.components;
 
+import java.util.List;
+
+import org.lwjgl.input.Keyboard;
+
 import net.gtn.dimensionalpocket.oc.client.gui.interfaces.IGuiRenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -8,13 +12,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
-
-import java.util.List;
 
 public abstract class GuiWidget<T extends GuiWidget> extends Gui {
 
-    public final FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRenderer;
+    public final FontRenderer fontRendererObj = Minecraft.getMinecraft().fontRendererObj;
     protected static RenderItem itemRender = new RenderItem();
 
     private IGuiRenderHandler renderHandler;
@@ -100,8 +101,9 @@ public abstract class GuiWidget<T extends GuiWidget> extends Gui {
         if (clicked) {
             timeClicked = System.currentTimeMillis();
             onClickAction(mouseClick);
-            if (shouldPlaySoundOnClick())
-                playButtonClick();
+            if (shouldPlaySoundOnClick()) {
+					playButtonClick();
+				}
         }
         return clicked;
     }
@@ -114,7 +116,7 @@ public abstract class GuiWidget<T extends GuiWidget> extends Gui {
     }
 
     public boolean isWithinBounds(int mouseX, int mouseY) {
-        return x < mouseX && mouseX < (x + width) && y < mouseY && mouseY < (y + height);
+        return x < mouseX && mouseX < x + width && y < mouseY && mouseY < y + height;
     }
 
     public boolean shouldPlaySoundOnClick() {
@@ -122,17 +124,19 @@ public abstract class GuiWidget<T extends GuiWidget> extends Gui {
     }
 
     public void playButtonClick() {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.createPositionedSoundRecord(new ResourceLocation("gui.button.press"), 1.0F));
     }
 
     public void renderToolTip(ItemStack itemStack, int x, int y) {
-        if (renderHandler != null)
-            renderHandler.renderTooltip(itemStack, x, y);
+        if (renderHandler != null) {
+			renderHandler.renderTooltip(itemStack, x, y);
+		}
     }
 
     public void renderHoveringText(List list, int x, int y, FontRenderer font) {
-        if (renderHandler != null)
-            renderHandler.renderHoveringText(list, x, y, font);
+        if (renderHandler != null) {
+			renderHandler.renderHoveringText(list, x, y, font);
+		}
     }
 
     public abstract void renderBackground(int mouseX, int mouseY);

@@ -544,7 +544,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean isCustomInventoryName() {
 		return false;
 	}
 
@@ -559,12 +559,12 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	}
 
 	@Override
-	public void openInventory() {
+	public void openChest() {
 		// do nothing
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeChest() {
 		// do nothing
 	}
 
@@ -591,7 +591,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	private transient int[][] lastKnownInventorySlots;
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int side) {
+	public int[] getSlotsForFace(int side) {
 		if (side > 5) {
 			return EMPTY_SLOT_ARRAY;
 		}
@@ -611,7 +611,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		}
 
 		if (inventory instanceof ISidedInventory) {
-			return ((ISidedInventory) inventory).getAccessibleSlotsFromSide(side);
+			return ((ISidedInventory) inventory).getSlotsForFace(side);
 		}
 
 		// use cache for plain IInventory if possible

@@ -2,12 +2,17 @@ package net.gtn.dimensionalpocket.common.block;
 
 import java.util.ArrayList;
 
-import net.gtn.dimensionalpocket.oc.common.blocks.BlockAbstract;
-import net.gtn.dimensionalpocket.oc.common.interfaces.ITileProvider;
+import com.google.common.collect.Lists;
+
+import cofh.api.block.IDismantleable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.DimensionalPockets;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.gtn.dimensionalpocket.oc.common.blocks.BlockAbstract;
+import net.gtn.dimensionalpocket.oc.common.interfaces.ITileProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,12 +21,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cofh.api.block.IDismantleable;
-
-import com.google.common.collect.Lists;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 
 public class BlockDimensionalPocket extends BlockAbstract implements IDismantleable, ITileProvider {
@@ -51,8 +50,9 @@ public class BlockDimensionalPocket extends BlockAbstract implements IDismantlea
 
 	@Override
 	public ArrayList<ItemStack> dismantleBlock(EntityPlayer player, World world, int x, int y, int z, boolean returnBlock) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return null;
+		}
 
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
 
@@ -60,7 +60,7 @@ public class BlockDimensionalPocket extends BlockAbstract implements IDismantlea
 			TileDimensionalPocket tile = (TileDimensionalPocket) tileEntity;
 			ItemStack itemStack = tile.generateItemStackOnRemoval();
 
-			boolean flag = world.func_147480_a(x, y, z, false);
+			boolean flag = world.breakBlock(x, y, z, false);
 
 			if (flag) {
 				if (returnBlock) {

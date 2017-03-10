@@ -44,10 +44,10 @@ public class FileSystemAccessEvent extends Event {
      */
     protected FileSystemAccessEvent(String sound, TileEntity tileEntity, NBTTagCompound data) {
         this.sound = sound;
-        this.world = tileEntity.getWorldObj();
-        this.x = tileEntity.xCoord + 0.5;
-        this.y = tileEntity.yCoord + 0.5;
-        this.z = tileEntity.zCoord + 0.5;
+        world = tileEntity.getWorld();
+        x = tileEntity.xCoord + 0.5;
+        y = tileEntity.yCoord + 0.5;
+        z = tileEntity.zCoord + 0.5;
         this.tileEntity = tileEntity;
         this.data = data;
     }
@@ -68,7 +68,7 @@ public class FileSystemAccessEvent extends Event {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.tileEntity = null;
+        tileEntity = null;
         this.data = data;
     }
 

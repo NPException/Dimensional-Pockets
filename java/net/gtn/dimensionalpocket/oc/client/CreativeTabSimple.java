@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 public class CreativeTabSimple extends CreativeTabs {
 
     private Item icon = Items.apple;
-    private int damage = 0;
+    private int durability = 0;
 
     public CreativeTabSimple(String label) {
         super(label);
@@ -24,13 +24,13 @@ public class CreativeTabSimple extends CreativeTabs {
 
     public CreativeTabSimple setIcon(Item icon, int damage) {
         this.icon = icon;
-        this.damage = damage;
+        durability = damage;
         return this;
     }
 
     public CreativeTabSimple setIcon(ItemStack itemStack) {
-        this.icon = itemStack.getItem();
-        this.damage = itemStack.getItemDamage();
+        icon = itemStack.getItem();
+        durability = itemStack.getCurrentDurability();
         return this;
     }
 
@@ -44,9 +44,11 @@ public class CreativeTabSimple extends CreativeTabs {
         return icon;
     }
 
+
+
     @Override
     @SideOnly(Side.CLIENT)
-    public int func_151243_f() {
-        return damage;
+    public int getIconItemDamage() {
+        return durability;
     }
 }

@@ -1,6 +1,10 @@
 package net.gtn.dimensionalpocket.oc.common.core.command;
 
-import net.minecraft.command.*;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandHandler;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.NumberInvalidException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -49,8 +53,9 @@ public abstract class CommandAbstract extends CommandBase {
         for (int i = 0; i < objects.length; ++i) {
             if (i > 0) {
                 stringbuilder.append(", ");
-                if (i == objects.length - 1)
-                    stringbuilder.append("and ");
+                if (i == objects.length - 1) {
+						stringbuilder.append("and ");
+					}
             }
 
             stringbuilder.append(objects[i].toString());
@@ -69,8 +74,9 @@ public abstract class CommandAbstract extends CommandBase {
         for (int i = 0; i < components.length; ++i) {
             if (i > 0) {
                 chatcomponenttext.appendText(", ");
-                if (i == components.length - 1)
-                    chatcomponenttext.appendText("and ");
+                if (i == components.length - 1) {
+						chatcomponenttext.appendText("and ");
+					}
             }
 
             chatcomponenttext.appendSibling(components[i]);
@@ -89,7 +95,7 @@ public abstract class CommandAbstract extends CommandBase {
      * @return The value given any necessary shifts.
      */
     public static double parseRelativePosition(ICommandSender sender, double position, String argument) {
-        return func_110665_a(sender, position, argument, -30000000, 30000000);
+        return parseRelativePosition(sender, position, argument, -30000000, 30000000);
     }
 
     /**
@@ -104,7 +110,7 @@ public abstract class CommandAbstract extends CommandBase {
      * @return The value given any necessary shifts.
      */
     public static double parseRelativePosition(ICommandSender sender, double position, String argument, int lowerBound, int upperBound) {
-        return CommandBase.func_110665_a(sender, position, argument, lowerBound, upperBound);
+        return CommandBase.clamp_double(sender, position, argument, lowerBound, upperBound);
     }
 
     public static int parseInt(String number) {
@@ -117,8 +123,9 @@ public abstract class CommandAbstract extends CommandBase {
 
     public static boolean parseBoolean(String booleanValue) {
         if (!booleanValue.equals("true") && !booleanValue.equals("1")) {
-            if (!booleanValue.equals("false") && !booleanValue.equals("0"))
-                throw new CommandException("commands.generic.boolean.invalid", booleanValue);
+            if (!booleanValue.equals("false") && !booleanValue.equals("0")) {
+					throw new CommandException("commands.generic.boolean.invalid", booleanValue);
+				}
             return false;
         }
         return true;

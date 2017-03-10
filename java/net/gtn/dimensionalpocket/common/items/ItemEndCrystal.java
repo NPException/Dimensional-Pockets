@@ -22,13 +22,13 @@ public class ItemEndCrystal extends ItemDP {
 	public ItemEndCrystal(String name) {
 		super(name);
 		setEffect();
-		setMaxDamage(CRAFTINGS_PER_CRYSTAL);
+		setMaxDurability(CRAFTINGS_PER_CRYSTAL);
 		setNoRepair();
 	}
 
 	@Override
 	public boolean hasContainerItem(ItemStack stack) {
-		return !(CRAFTINGS_PER_CRYSTAL > 0 && stack.getItemDamage() >= CRAFTINGS_PER_CRYSTAL);
+		return !(CRAFTINGS_PER_CRYSTAL > 0 && stack.getCurrentDurability() >= CRAFTINGS_PER_CRYSTAL);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ItemEndCrystal extends ItemDP {
 			return new ItemStack(this);
 		}
 
-		int damage = itemStack.getItemDamage() + 1;
+		int damage = itemStack.getCurrentDurability() + 1;
 
 		if (damage >= CRAFTINGS_PER_CRYSTAL) {
 			return null;
@@ -74,7 +74,7 @@ public class ItemEndCrystal extends ItemDP {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, IItemTooltip information) {
-		final int damage = stack.getItemDamage();
+		final int damage = stack.getCurrentDurability();
 		if (damage > 0) {
 			int remaining = CRAFTINGS_PER_CRYSTAL - damage;
 			final String text;

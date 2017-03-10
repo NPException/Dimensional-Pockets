@@ -27,13 +27,13 @@ public enum TextAlignment implements ITextAlignment {
 
     @Override
     public int translateX(int width, String text) {
-        int stringWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
-        return MathHelper.floor_double(((width * xOffset) / 2)) - MathHelper.floor_double((stringWidth * xOffset) / 2);
+        int stringWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+        return MathHelper.floor_double(width * xOffset / 2) - MathHelper.floor_double(stringWidth * xOffset / 2);
     }
 
     @Override
     public int translateY(int height, String text) {
-        int stringHeight = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
-        return MathHelper.floor_double(((height * yOffset) / 2)) - MathHelper.floor_double(((stringHeight * yOffset) / 2));
+        int stringHeight = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
+        return MathHelper.floor_double(height * yOffset / 2) - MathHelper.floor_double(stringHeight * yOffset / 2);
     }
 }

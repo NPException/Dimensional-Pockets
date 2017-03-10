@@ -55,12 +55,12 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
 	@Override
 	protected void bindTexture(ResourceLocation texture) {
-		field_147501_a.field_147553_e.bindTexture(texture);
+		field_147501_a.renderEngine.bindTexture(texture);
 	}
 
 	public void renderDimensionalPocketAt(TileDimensionalPocket tile, double x, double y, double z, float tick) {
 		double maxDistance = 32.0; // distance to block
-		inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < (maxDistance * maxDistance);
+		inRange = Minecraft.getMinecraft().renderViewEntity.getDistanceSq(tile.xCoord + 0.5D, tile.yCoord + 0.5D, tile.zCoord + 0.5D) < maxDistance * maxDistance;
 
 		glPushMatrix();
 
@@ -153,7 +153,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 	protected void updateStateColorLevel() {
 		long colorCycleTime = 1337000000L;
 		double minColorLevel = 0.5;
-		stateColorLevel = (float) (minColorLevel + (1 - minColorLevel) * Math.sin((System.nanoTime() % colorCycleTime) * Math.PI / colorCycleTime));
+		stateColorLevel = (float) (minColorLevel + (1 - minColorLevel) * Math.sin(System.nanoTime() % colorCycleTime * Math.PI / colorCycleTime));
 	}
 
 	@Override

@@ -32,13 +32,13 @@ public abstract class BlockAbstract extends Block {
     }
 
     public BlockAbstract setName(String name) {
-        setBlockName(name);
-        setBlockTextureName(name);
+        setUnlocalizedName(name);
+        setTextureName(name);
         return this;
     }
 
     public BlockAbstract setTextureless() {
-        this.textureReg = false;
+        textureReg = false;
         return this;
     }
 
@@ -51,8 +51,9 @@ public abstract class BlockAbstract extends Block {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IBlockInteract)
-            return ((IBlockInteract) tileEntity).onActivated(world, x, y, z, player, side, hitVecX, hitVecY, hitVecZ);
+        if (tileEntity instanceof IBlockInteract) {
+			return ((IBlockInteract) tileEntity).onActivated(world, x, y, z, player, side, hitVecX, hitVecY, hitVecZ);
+		}
         return false;
     }
 
@@ -65,8 +66,9 @@ public abstract class BlockAbstract extends Block {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IBlockNotifier)
-            ((IBlockNotifier) tileEntity).onBlockAdded(entityLiving, world, x, y, z, itemStack);
+        if (tileEntity instanceof IBlockNotifier) {
+			((IBlockNotifier) tileEntity).onBlockAdded(entityLiving, world, x, y, z, itemStack);
+		}
     }
 
     @Override
@@ -83,29 +85,33 @@ public abstract class BlockAbstract extends Block {
 
     public void onBlockRemoval(World world, int x, int y, int z) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IBlockNotifier)
-            ((IBlockNotifier) tileEntity).onBlockRemoval(world, x, y, z);
+        if (tileEntity instanceof IBlockNotifier) {
+			((IBlockNotifier) tileEntity).onBlockRemoval(world, x, y, z);
+		}
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IBlockNotifier)
-            ((IBlockNotifier) tileEntity).onNeighbourBlockChanged(world, x, y, z, block);
+        if (tileEntity instanceof IBlockNotifier) {
+			((IBlockNotifier) tileEntity).onNeighbourBlockChanged(world, x, y, z, block);
+		}
     }
 
     @Override
     public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
         TileEntity tileEntity = world.getTileEntity(x, y, z);
-        if (tileEntity instanceof IBlockNotifier)
-            ((IBlockNotifier) tileEntity).onNeighbourTileChanged(world, x, y, z, tileX, tileY, tileZ);
+        if (tileEntity instanceof IBlockNotifier) {
+			((IBlockNotifier) tileEntity).onNeighbourTileChanged(world, x, y, z, tileX, tileY, tileZ);
+		}
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        if (textureReg)
-            blockIcon = iconRegister.registerIcon(modIdentifier + getTextureName());
+    public void registerIcons(IIconRegister iconRegister) {
+        if (textureReg) {
+			blockIcon = iconRegister.registerIcon(modIdentifier + getTextureName());
+		}
     }
 
     @Override
