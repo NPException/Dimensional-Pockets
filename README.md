@@ -7,10 +7,11 @@ https://minecraft.curseforge.com/projects/dimensional-pockets
 For info about the stuff that DP offers, check out [the Wiki](https://github.com/NPException/Dimensional-Pockets/wiki).
 So this is the repo for our Modjam 4 entry. Dimensional Pockets.
 
-Members are: (in ranking of awesome)
-Jezza, gellegbs, and NPException
+Dimensional Pockets is currently being maintained by NPException.
 
-The team name is:
-```
-Team team = new Team("GTN");
-```
+---
+
+Originally conceived and created by `Team("GTN")` for ModJam 4.
+
+The team members are: (in ranking of awesome)
+Jezza, gellegbs, NPException
