@@ -1,19 +1,23 @@
 package net.gtn.dimensionalpocket.common.tileentity;
 
-import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.*;
+import static net.gtn.dimensionalpocket.common.core.utils.DPAnalytics.analytics;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
+import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyProvider;
+import cofh.api.energy.IEnergyReceiver;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.cdmp.api.wormhole.IWormhole;
+import de.cdmp.api.wormhole.WormholeTarget;
 import li.cil.oc.api.network.Environment;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SidedEnvironment;
-import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockInteract;
-import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockNotifier;
-import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.gtn.dimensionalpocket.client.utils.UtilsFX;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.ModItems;
@@ -24,6 +28,9 @@ import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketTeleportPreparation.Direction;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockInteract;
+import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockNotifier;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,14 +49,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyProvider;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.cdmp.api.wormhole.IWormhole;
-import de.cdmp.api.wormhole.WormholeTarget;
 
 
 @Optional.Interface(iface = "li.cil.oc.api.network.SidedEnvironment", modid = "OpenComputers")
@@ -58,7 +57,6 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	// start of analytics variables //
 	private int analyticTicksPassed = 0;
-	private final ReentrantLock analyticsLock = new ReentrantLock(true);
 
 	private long rfTransferedIn = 0l;
 	private long rfTransferedOut = 0l;
@@ -69,62 +67,64 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	// end of analytics variables //
 
 	private void sendTileAnalytics() {
-		try {
-			analyticsLock.lock();
+		// RF going into the pocket
+		if (rfTransferedIn > 0) {
+			long amount = rfTransferedIn;
+			rfTransferedIn = 0;
 
-			// RF going into the pocket
-			if (rfTransferedIn > 0) {
-				rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
-				while (rfTransferedIn > 0) {
-					analytics.logRFTransferIn(Integer.MAX_VALUE);
-					rfTransferedIn = rfTransferedIn - Integer.MAX_VALUE;
-				}
-				if (rfTransferedIn < 0) {
-					analytics.logRFTransferIn((int) (rfTransferedIn + Integer.MAX_VALUE));
-				}
-				rfTransferedIn = 0;
+			amount -= Integer.MAX_VALUE;
+			while (amount > 0) {
+				analytics.logRFTransferIn(Integer.MAX_VALUE);
+				amount -= Integer.MAX_VALUE;
 			}
+			if (amount < 0) {
+				analytics.logRFTransferIn((int) (amount + Integer.MAX_VALUE));
+			}
+		}
 
-			// RF coming out of the pocket
-			if (rfTransferedOut > 0) {
-				rfTransferedOut = rfTransferedOut - Integer.MAX_VALUE;
-				while (rfTransferedOut > 0) {
-					analytics.logRFTransferOut(Integer.MAX_VALUE);
-					rfTransferedOut = rfTransferedOut - Integer.MAX_VALUE;
-				}
-				if (rfTransferedOut < 0) {
-					analytics.logRFTransferOut((int) (rfTransferedOut + Integer.MAX_VALUE));
-				}
-				rfTransferedOut = 0;
-			}
+		// RF coming out of the pocket
+		if (rfTransferedOut > 0) {
+			long amount = rfTransferedOut;
+			rfTransferedOut = 0;
 
-			// fluids going into the pocket
-			if (fluidsTransferedIn > 0) {
-				fluidsTransferedIn = fluidsTransferedIn - Integer.MAX_VALUE;
-				while (fluidsTransferedIn > 0) {
-					analytics.logFluidTransferIn(Integer.MAX_VALUE);
-					fluidsTransferedIn = fluidsTransferedIn - Integer.MAX_VALUE;
-				}
-				if (fluidsTransferedIn < 0) {
-					analytics.logFluidTransferIn((int) (fluidsTransferedIn + Integer.MAX_VALUE));
-				}
-				fluidsTransferedIn = 0;
+			amount -= Integer.MAX_VALUE;
+			while (amount > 0) {
+				analytics.logRFTransferOut(Integer.MAX_VALUE);
+				amount -= Integer.MAX_VALUE;
 			}
+			if (amount < 0) {
+				analytics.logRFTransferOut((int) (amount + Integer.MAX_VALUE));
+			}
+		}
 
-			// fluids coming out of the pocket
-			if (fluidsTransferedOut > 0) {
-				fluidsTransferedOut = fluidsTransferedOut - Integer.MAX_VALUE;
-				while (fluidsTransferedOut > 0) {
-					analytics.logFluidTransferOut(Integer.MAX_VALUE);
-					fluidsTransferedOut = fluidsTransferedOut - Integer.MAX_VALUE;
-				}
-				if (fluidsTransferedOut < 0) {
-					analytics.logFluidTransferOut((int) (fluidsTransferedOut + Integer.MAX_VALUE));
-				}
-				fluidsTransferedOut = 0;
+		// fluids going into the pocket
+		if (fluidsTransferedIn > 0) {
+			long amount = fluidsTransferedIn;
+			fluidsTransferedIn = 0;
+
+			amount -= Integer.MAX_VALUE;
+			while (amount > 0) {
+				analytics.logFluidTransferIn(Integer.MAX_VALUE);
+				amount -= Integer.MAX_VALUE;
 			}
-		} finally {
-			analyticsLock.unlock();
+			if (amount < 0) {
+				analytics.logFluidTransferIn((int) (amount + Integer.MAX_VALUE));
+			}
+		}
+
+		// fluids coming out of the pocket
+		if (fluidsTransferedOut > 0) {
+			long amount = fluidsTransferedOut;
+			fluidsTransferedOut = 0;
+
+			amount -= Integer.MAX_VALUE;
+			while (amount > 0) {
+				analytics.logFluidTransferOut(Integer.MAX_VALUE);
+				amount -= Integer.MAX_VALUE;
+			}
+			if (amount < 0) {
+				analytics.logFluidTransferOut((int) (amount + Integer.MAX_VALUE));
+			}
 		}
 	}
 
@@ -138,8 +138,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		if (telePrep != null) {
 			if (telePrep.doPrepareTick()) {
@@ -159,16 +160,18 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public void onBlockRemoval(World world, int x, int y, int z) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		Utils.spawnItemStack(generateItemStackOnRemoval(), worldObj, xCoord + 0.5F, yCoord + 0.5F, zCoord + 0.5F, 0);
 	}
 
 	@Override
 	public void onNeighbourBlockChanged(World world, int x, int y, int z, Block block) {
-		if (world.isRemote)
+		if (world.isRemote) {
 			return;
+		}
 
 		Pocket p = getPocket();
 		if (p != null) {
@@ -180,8 +183,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public void onNeighbourTileChanged(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ) {
-		if (!(world instanceof World) || ((World) world).isRemote)
+		if (!(world instanceof World) || ((World) world).isRemote) {
 			return;
+		}
 
 		Pocket p = getPocket();
 		if (p != null) {
@@ -199,8 +203,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public void onBlockAdded(EntityLivingBase entityLivingBase, World world, int x, int y, int z, ItemStack itemStack) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return;
+		}
 
 		if (itemStack.hasTagCompound()) {
 			NBTTagCompound itemCompound = itemStack.getTagCompound();
@@ -208,8 +213,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			CoordSet chunkSet = CoordSet.readFromNBT(itemCompound);
 			boolean success = PocketRegistry.getPocket(chunkSet) != null;
 
-			if (!success)
+			if (!success) {
 				throw new RuntimeException("YOU DESERVED THIS!");
+			}
 
 			PocketRegistry.updatePocket(chunkSet, entityLivingBase.dimension, getCoordSet());
 
@@ -240,8 +246,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public boolean onActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitVecX, float hitVecY, float hitVecZ) {
-		if (player == null)
+		if (player == null) {
 			return true;
+		}
 
 		ItemStack equippedItemStack = player.getCurrentEquippedItem();
 		if (equippedItemStack != null) {
@@ -284,8 +291,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public Pocket getPocket() {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return pocket;
+		}
 
 		return PocketRegistry.getOrCreatePocket(worldObj, getCoordSet());
 	}
@@ -321,7 +329,6 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (!worldObj.isRemote) {
 			telePrep = new PocketTeleportPreparation(player, ticksToTake, getPocket(), Direction.INTO_POCKET);
 		} else {
-			// TODO Sync for all clients.
 			int numParticles = 5 * (4 - Minecraft.getMinecraft().gameSettings.particleSetting);
 			for (int i = 0; i < numParticles; i++) {
 				UtilsFX.createPlayerStream(player, getCoordSet(), ticksToTake);
@@ -338,18 +345,21 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	 *         TE exists at the spot.
 	 */
 	private TileEntity getFrameConnectorNeighborTileEntity(ForgeDirection side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
 		CoordSet targetCoords = p.getConnectorCoords(side);
-		if (targetCoords == null || !targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z))
+		if (targetCoords == null || !targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z)) {
 			return null;
+		}
 
 		targetCoords.addForgeDirection(side.getOpposite());
 		return targetWorld.blockExists(targetCoords.x, targetCoords.y, targetCoords.z) ? targetWorld.getTileEntity(targetCoords.x, targetCoords.y, targetCoords.z) : null;
@@ -363,8 +373,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from) {
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return false;
+		}
 
 		switch (p.getFlowState(from)) {
 			case ENERGY:
@@ -385,9 +396,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IEnergyReceiver) {
 			int received = ((IEnergyReceiver) targetTE).receiveEnergy(from, maxReceive, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				analyticsLock.lock();
 				rfTransferedIn += received;
-				analyticsLock.unlock();
 			}
 			return received;
 		}
@@ -406,9 +415,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IEnergyProvider) {
 			int extracted = ((IEnergyProvider) targetTE).extractEnergy(from, maxExtract, simulate);
 			if (!simulate && !worldObj.isRemote) {
-				analyticsLock.lock();
 				rfTransferedOut += extracted;
-				analyticsLock.unlock();
 			}
 			return extracted;
 		}
@@ -461,20 +468,23 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	private static final int SIDE_BITS = 3;
 
 	private IInventory getInventoryOnInsideWall(int side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		ForgeDirection fdSide = ForgeDirection.getOrientation(side);
 
 		switch (p.getFlowState(fdSide)) {
 			case ENERGY:
 				TileEntity te = getFrameConnectorNeighborTileEntity(fdSide);
-				if (te instanceof IInventory)
+				if (te instanceof IInventory) {
 					return Utils.getInventory((IInventory) te);
+				}
 				return null;
 			default:
 				return null;
@@ -492,8 +502,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		int innerSlot = slot >> SIDE_BITS;
 
 			IInventory inventory = getInventoryOnInsideWall(maskedSide);
-			if (inventory == null)
+			if (inventory == null) {
 				return null;
+			}
 
 			return inventory.getStackInSlot(innerSlot);
 	}
@@ -504,8 +515,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(maskedSide);
-		if (inventory == null)
+		if (inventory == null) {
 			return null;
+		}
 
 		return inventory.decrStackSize(innerSlot, count);
 	}
@@ -562,8 +574,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		slot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return false;
+		}
 
 		return inventory.isItemValidForSlot(slot, stack);
 	}
@@ -579,12 +592,14 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
-		if (side > 5)
+		if (side > 5) {
 			return EMPTY_SLOT_ARRAY;
+		}
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return EMPTY_SLOT_ARRAY;
+		}
 
 		// lazy init of "lastKnown" cache
 		if (lastKnownInventories == null || lastKnownInventorySlots == null) {
@@ -595,19 +610,21 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			lastKnownInventorySlots = new int[6][];
 		}
 
-		if (inventory instanceof ISidedInventory)
+		if (inventory instanceof ISidedInventory) {
 			return ((ISidedInventory) inventory).getAccessibleSlotsFromSide(side);
+		}
 
 		// use cache for plain IInventory if possible
 		WeakReference<IInventory> cachedInventory = lastKnownInventories.get(side);
 
 		if (cachedInventory != null && cachedInventory.get() == inventory
-				&& inventory.getSizeInventory() == lastKnownInventorySlots[side].length)
+				&& inventory.getSizeInventory() == lastKnownInventorySlots[side].length) {
 			return lastKnownInventorySlots[side];
+		}
 
 		int[] slots = new int[inventory.getSizeInventory()];
 		for (int i = 0; i < slots.length; i++) {
-			slots[i] = (i << SIDE_BITS) | side;
+			slots[i] = i << SIDE_BITS | side;
 		}
 
 		// store in cache
@@ -620,14 +637,16 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	@Override
 	public boolean canInsertItem(int slot, ItemStack stack, int side) {
 		int maskedSide = slot & 0b111;
-		if (maskedSide != side)
+		if (maskedSide != side) {
 			return false;
+		}
 
 		int innerSlot = slot >> SIDE_BITS;
 
 			IInventory inventory = getInventoryOnInsideWall(side);
-			if (inventory == null)
+			if (inventory == null) {
 				return false;
+			}
 
 			return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canInsertItem(innerSlot, stack, side);
 	}
@@ -635,14 +654,16 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	@Override
 	public boolean canExtractItem(int slot, ItemStack stack, int side) {
 		int maskedSide = slot & 0b111;
-		if (maskedSide != side)
+		if (maskedSide != side) {
 			return false;
+		}
 
 		int innerSlot = slot >> SIDE_BITS;
 
 		IInventory inventory = getInventoryOnInsideWall(side);
-		if (inventory == null)
+		if (inventory == null) {
 			return false;
+		}
 
 		return !(inventory instanceof ISidedInventory) ? true : ((ISidedInventory) inventory).canExtractItem(innerSlot, stack, side);
 	}
@@ -653,19 +674,22 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public List<WormholeTarget<Block, TileEntity>> getAllTargets(ForgeDirection fromDirection) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return Collections.emptyList();
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return Collections.emptyList();
+		}
 
 		World targetWorld = MinecraftServer.getServer().worldServerForDimension(Reference.DIMENSION_ID);
 
 		CoordSet targetCoords = p.getConnectorCoords(fromDirection);
 
-		if (targetCoords == null)
+		if (targetCoords == null) {
 			return Collections.emptyList();
+		}
 
 		ForgeDirection toDirection = fromDirection.getOpposite();
 		targetCoords.addForgeDirection(toDirection);
@@ -683,20 +707,23 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	@Optional.Method(modid = "OpenComputers")
 	@Override
 	public Node sidedNode(ForgeDirection side) {
-		if (worldObj.isRemote)
+		if (worldObj.isRemote) {
 			return null;
+		}
 
 		Pocket p = getPocket();
-		if (p == null)
+		if (p == null) {
 			return null;
+		}
 
 		switch (p.getFlowState(side)) {
 			case ENERGY:
 				TileEntity te = getFrameConnectorNeighborTileEntity(side);
-				if (te instanceof SidedEnvironment)
+				if (te instanceof SidedEnvironment) {
 					return ((SidedEnvironment) te).sidedNode(side);
-				else if (te instanceof Environment)
+				} else if (te instanceof Environment) {
 					return ((Environment) te).node();
+				}
 				return null;
 			default:
 				return null;
@@ -721,9 +748,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 		if (targetTE instanceof IFluidHandler) {
 			int filled = ((IFluidHandler) targetTE).fill(from, resource, doFill);
 			if (doFill && !worldObj.isRemote) {
-				analyticsLock.lock();
 				fluidsTransferedIn += filled;
-				analyticsLock.unlock();
 			}
 			return filled;
 		}
@@ -736,10 +761,8 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, resource, doDrain);
-			if (doDrain && !worldObj.isRemote) {
-				analyticsLock.lock();
+			if (drained != null && doDrain && !worldObj.isRemote) {
 				fluidsTransferedOut += drained.amount;
-				analyticsLock.unlock();
 			}
 			return drained;
 		}
@@ -752,10 +775,8 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 		if (targetTE instanceof IFluidHandler) {
 			FluidStack drained = ((IFluidHandler) targetTE).drain(from, maxDrain, doDrain);
-			if (doDrain && !worldObj.isRemote) {
-				analyticsLock.lock();
+			if (drained != null && doDrain && !worldObj.isRemote) {
 				fluidsTransferedOut += drained.amount;
-				analyticsLock.unlock();
 			}
 			return drained;
 		}
@@ -766,8 +787,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	public boolean canFill(ForgeDirection from, Fluid fluid) {
 		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
 
-		if (targetTE instanceof IFluidHandler)
+		if (targetTE instanceof IFluidHandler) {
 			return ((IFluidHandler) targetTE).canFill(from, fluid);
+		}
 		return false;
 	}
 
@@ -775,8 +797,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	public boolean canDrain(ForgeDirection from, Fluid fluid) {
 		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
 
-		if (targetTE instanceof IFluidHandler)
+		if (targetTE instanceof IFluidHandler) {
 			return ((IFluidHandler) targetTE).canDrain(from, fluid);
+		}
 		return false;
 	}
 
@@ -784,8 +807,9 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 	public FluidTankInfo[] getTankInfo(ForgeDirection from) {
 		TileEntity targetTE = getFrameConnectorNeighborTileEntity(from);
 
-		if (targetTE instanceof IFluidHandler)
+		if (targetTE instanceof IFluidHandler) {
 			return ((IFluidHandler) targetTE).getTankInfo(from);
+		}
 		return null;
 	}
 }
