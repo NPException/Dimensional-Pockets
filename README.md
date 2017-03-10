@@ -11,7 +11,7 @@ Dimensional Pockets is currently being maintained by NPException.
 
 ---
 
-Originally conceived and created by `Team team = new Team("GTN");` for ModJam 4.
+Originally conceived and created by `Team("GTN")` for ModJam 4.
 
 The team members are: (in ranking of awesome)
 Jezza, gellegbs, NPException
