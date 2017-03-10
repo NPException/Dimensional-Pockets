@@ -1,16 +1,16 @@
 package net.gtn.dimensionalpocket.common.items;
 
-import static net.gtn.dimensionalpocket.common.lib.Reference.*;
+import static net.gtn.dimensionalpocket.common.lib.Reference.CRAFTINGS_PER_CRYSTAL;
 
 import java.util.List;
 
-import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
-import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
+import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
@@ -23,6 +23,7 @@ public class ItemEndCrystal extends ItemDP {
 		super(name);
 		setEffect();
 		setMaxDamage(CRAFTINGS_PER_CRYSTAL);
+		setNoRepair();
 	}
 
 	@Override
@@ -32,21 +33,24 @@ public class ItemEndCrystal extends ItemDP {
 
 	@Override
 	public ItemStack getContainerItem(ItemStack itemStack) {
-		if (CRAFTINGS_PER_CRYSTAL == 0)
+		if (CRAFTINGS_PER_CRYSTAL == 0) {
 			return new ItemStack(this);
+		}
 
 		int damage = itemStack.getItemDamage() + 1;
 
-		if (damage >= CRAFTINGS_PER_CRYSTAL)
+		if (damage >= CRAFTINGS_PER_CRYSTAL) {
 			return null;
+		}
 
 		return new ItemStack(this, itemStack.stackSize, damage);
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		if (player.dimension != Reference.DIMENSION_ID)
+		if (player.dimension != Reference.DIMENSION_ID) {
 			return itemStack;
+		}
 
 		if (world.isRemote) {
 			player.swingItem();
@@ -55,8 +59,9 @@ public class ItemEndCrystal extends ItemDP {
 
 		CoordSet coordSet = new CoordSet(player);
 		Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
-		if (pocket == null)
+		if (pocket == null) {
 			return itemStack;
+		}
 
 		pocket.setSpawnInPocket(Hacks.toChunkOffset(coordSet), player.rotationYaw, player.rotationPitch);
 

@@ -1,12 +1,9 @@
 package net.gtn.dimensionalpocket.common.items;
 
-import static net.gtn.dimensionalpocket.common.lib.Reference.*;
+import static net.gtn.dimensionalpocket.common.lib.Reference.CRAFTINGS_PER_CRYSTAL;
 
 import java.util.List;
 
-import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
-import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
-import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.gtn.dimensionalpocket.common.ModBlocks;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
@@ -15,6 +12,9 @@ import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
+import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
+import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
+import net.gtn.dimensionalpocket.oc.common.utils.Localise;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +30,7 @@ public class ItemNetherCrystal extends ItemDP {
 		super(name);
 		setEffect();
 		setMaxDamage(CRAFTINGS_PER_CRYSTAL);
+		setNoRepair();
 	}
 
 	@Override
@@ -39,13 +40,15 @@ public class ItemNetherCrystal extends ItemDP {
 
 	@Override
 	public ItemStack getContainerItem(ItemStack itemStack) {
-		if (CRAFTINGS_PER_CRYSTAL == 0)
+		if (CRAFTINGS_PER_CRYSTAL == 0) {
 			return new ItemStack(this);
+		}
 
 		int damage = itemStack.getItemDamage() + 1;
 
-		if (damage >= CRAFTINGS_PER_CRYSTAL)
+		if (damage >= CRAFTINGS_PER_CRYSTAL) {
 			return null;
+		}
 
 		return new ItemStack(this, itemStack.stackSize, damage);
 	}
@@ -54,8 +57,9 @@ public class ItemNetherCrystal extends ItemDP {
 	public boolean onItemUseFirst(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		CoordSet coordSet = new CoordSet(x, y, z);
 		Block block = coordSet.getBlock(world);
-		if (block != ModBlocks.dimensionalPocket && block != ModBlocks.dimensionalPocketWall)
+		if (block != ModBlocks.dimensionalPocket && block != ModBlocks.dimensionalPocketWall) {
 			return false;
+		}
 
 		if (world.isRemote) {
 			player.swingItem();
@@ -63,8 +67,9 @@ public class ItemNetherCrystal extends ItemDP {
 		}
 
 		if (block == ModBlocks.dimensionalPocketWall) {
-			if (world.provider.dimensionId != Reference.DIMENSION_ID)
+			if (world.provider.dimensionId != Reference.DIMENSION_ID) {
 				return false;
+			}
 
 			Pocket pocket = PocketRegistry.getPocket(coordSet.toChunkCoords());
 			if (pocket == null) {
@@ -80,8 +85,9 @@ public class ItemNetherCrystal extends ItemDP {
 
 			if (player.isSneaking()) {
 				CoordSet oldConnectorCoords = pocket.getConnectorCoords(wallSide);
-				if (coordSet.equals(oldConnectorCoords))
+				if (coordSet.equals(oldConnectorCoords)) {
 					return false;
+				}
 
 				pocket.setConnectorForSide(wallSide, coordSet);
 			} else {
@@ -89,8 +95,9 @@ public class ItemNetherCrystal extends ItemDP {
 			}
 		} else {
 			TileEntity te = coordSet.getTileEntity(world);
-			if (!(te instanceof TileDimensionalPocket))
+			if (!(te instanceof TileDimensionalPocket)) {
 				return false;
+			}
 
 			TileDimensionalPocket tdp = (TileDimensionalPocket) te;
 			Pocket pocket = tdp.getPocket();
