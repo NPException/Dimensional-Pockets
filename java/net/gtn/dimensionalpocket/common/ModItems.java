@@ -78,7 +78,7 @@ public class ModItems {
 				"TTT",
 
 				'T',
-				Reference.usePeacefulRecipes ? Items.gold_nugget : Items.ghast_tear,
+				Reference.USE_PEACEFUL_RECIPES ? Items.gold_nugget : Items.ghast_tear,
 
 				'R',
 				Blocks.redstone_block
@@ -90,7 +90,7 @@ public class ModItems {
 				"EEE",
 
 				'E',
-				Reference.usePeacefulRecipes ? Items.quartz : Items.ender_eye,
+				Reference.USE_PEACEFUL_RECIPES ? Items.quartz : Items.ender_eye,
 
 				'G',
 				Blocks.glass);

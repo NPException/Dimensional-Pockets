@@ -76,7 +76,7 @@ public class Reference {
 
 	@ConfigBoolean(category = "Gameplay", comment = "Decides if the Nether Crystal and End Crystal can be crafted without hostile mob drops.\n"
 			+ "The Nether Crystal will use gold nuggets instead of Ghast tears, and the End Crystal will use Quartz instead of Ender Eyes")
-	public static boolean usePeacefulRecipes = false;
+	public static boolean USE_PEACEFUL_RECIPES = false;
 
 	/*
 	 * GENERAL CONFIGS
