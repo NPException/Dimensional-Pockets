@@ -74,6 +74,10 @@ public class Reference {
 					"If set to 0, crystals will never break." })
 	public static int CRAFTINGS_PER_CRYSTAL = 4;
 
+	@ConfigBoolean(category = "Gameplay", comment = "Decides if the Nether Crystal and End Crystal can be crafted without hostile mob drops.\n"
+			+ "The Nether Crystal will use gold nuggets instead of Ghast tears, and the End Crystal will use Quartz instead of Ender Eyes")
+	public static boolean usePeacefulRecipes = false;
+
 	/*
 	 * GENERAL CONFIGS
 	 */

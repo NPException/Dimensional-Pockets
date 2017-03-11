@@ -4,6 +4,7 @@ import net.gtn.dimensionalpocket.common.items.ItemBook;
 import net.gtn.dimensionalpocket.common.items.ItemDP;
 import net.gtn.dimensionalpocket.common.items.ItemEndCrystal;
 import net.gtn.dimensionalpocket.common.items.ItemNetherCrystal;
+import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.lib.Strings;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -77,7 +78,7 @@ public class ModItems {
 				"TTT",
 
 				'T',
-				Items.ghast_tear,
+				Reference.usePeacefulRecipes ? Items.gold_nugget : Items.ghast_tear,
 
 				'R',
 				Blocks.redstone_block
@@ -89,7 +90,7 @@ public class ModItems {
 				"EEE",
 
 				'E',
-				Items.ender_eye,
+				Reference.usePeacefulRecipes ? Items.quartz : Items.ender_eye,
 
 				'G',
 				Blocks.glass);
