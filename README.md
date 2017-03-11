@@ -5,7 +5,6 @@ _**The development of DP will be stopped for good. There will be a final release
 https://minecraft.curseforge.com/projects/dimensional-pockets
 
 For info about the stuff that DP offers, check out [the Wiki](https://github.com/NPException/Dimensional-Pockets/wiki).
-So this is the repo for our Modjam 4 entry. Dimensional Pockets.
 
 Dimensional Pockets is currently being maintained by NPException.
 
