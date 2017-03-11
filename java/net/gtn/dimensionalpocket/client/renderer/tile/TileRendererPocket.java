@@ -14,10 +14,10 @@ import net.gtn.dimensionalpocket.client.theme.PocketTextures;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.common.tileentity.TileDimensionalPocket;
 import net.gtn.dimensionalpocket.oc.client.lib.Colour;
+import net.gtn.dimensionalpocket.oc.client.renderer.BlockRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -103,10 +103,10 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
 		if (useFieldShader && !isInGUI) {
 			ParticleFieldShader.use();
-			Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[0], fieldOffsets);
+			BlockRenderer.drawFaces(PortalRenderer.fieldTextures[0], fieldOffsets);
 			ParticleFieldShader.release();
 		}
-		Hacks.BlockRenderer.drawFaces(PocketTextures.pocketFrame);
+		BlockRenderer.drawFaces(PocketTextures.pocketFrame);
 
 		if (!inRange) {
 			glDisable(GL_BLEND);
@@ -120,11 +120,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 				Colour texColour = Utils.FD_COLOURS.get(direction);
 				glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-				Hacks.BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(false), 0.0003F);
+				BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(false), 0.0003F);
 				if (Reference.COLOR_BLIND_MODE) {
 					texColour = Colour.WHITE;
 					glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-					Hacks.BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(true), 0.0003F);
+					BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(true), 0.0003F);
 				}
 			}
 
@@ -141,7 +141,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 					}
 					Colour colour = state.getColour();
 					glColor4d(colour.r * stateColorLevel, colour.g * stateColorLevel, colour.b * stateColorLevel, colour.a * stateColorLevel);
-					Hacks.BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
+					BlockRenderer.drawFace(direction, texture.getTexture(Reference.COLOR_BLIND_MODE), 0.0002F);
 				}
 			}
 		}

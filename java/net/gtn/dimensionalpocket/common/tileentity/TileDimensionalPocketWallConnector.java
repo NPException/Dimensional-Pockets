@@ -23,7 +23,6 @@ import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
 import net.gtn.dimensionalpocket.common.core.utils.DPLogger;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockInteract;
 import net.gtn.dimensionalpocket.oc.common.interfaces.IBlockNotifier;
 import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
@@ -157,7 +156,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			Pocket p = getPocket();
 			if (p != null) {
 				CoordSet tileCoords = getCoordSet();
-				ForgeDirection wallSide = Pocket.getSideForConnector(Hacks.toChunkOffset(tileCoords));
+				ForgeDirection wallSide = Pocket.getSideForConnector(tileCoords.toChunkOffset());
 				CoordSet connectorCoords = p.getConnectorCoords(wallSide);
 				if (!tileCoords.equals(connectorCoords)) {
 					DPLogger.debug("Connector:" + wallSide.name() + ":" + tileCoords.toString() + " invalid -> current Connector=" + String.valueOf(connectorCoords));
@@ -327,7 +326,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		CoordSet offSet = Hacks.asChunkOffset(getCoordSet());
+		CoordSet offSet = getCoordSet().asChunkOffset();
 
 		boolean ignoreX = offSet.x == 0 || offSet.x == 15;
 		boolean ignoreY = offSet.y == 0 || offSet.y == 15;
@@ -400,7 +399,7 @@ implements IBlockNotifier, IBlockInteract, IEnergyHandler, IFluidHandler, ISided
 			return null;
 		}
 
-		ForgeDirection fdSide = Pocket.getSideForConnector(Hacks.asChunkOffset(getCoordSet()));
+		ForgeDirection fdSide = Pocket.getSideForConnector(getCoordSet().asChunkOffset());
 
 		switch (p.getFlowState(fdSide)) {
 			case ENERGY:

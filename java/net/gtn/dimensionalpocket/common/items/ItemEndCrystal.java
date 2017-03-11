@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketRegistry;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
 import net.gtn.dimensionalpocket.common.lib.Reference;
 import net.gtn.dimensionalpocket.oc.common.interfaces.IItemTooltip;
 import net.gtn.dimensionalpocket.oc.common.utils.CoordSet;
@@ -63,7 +62,7 @@ public class ItemEndCrystal extends ItemDP {
 			return itemStack;
 		}
 
-		pocket.setSpawnInPocket(Hacks.toChunkOffset(coordSet), player.rotationYaw, player.rotationPitch);
+		pocket.setSpawnInPocket(coordSet.toChunkOffset(), player.rotationYaw, player.rotationPitch);
 
 		ChatComponentTranslation comp = new ChatComponentTranslation("info.spawn.set.in.pocket");
 		comp.getChatStyle().setItalic(Boolean.TRUE);

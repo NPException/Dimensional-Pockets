@@ -1,7 +1,7 @@
 package net.gtn.dimensionalpocket.client.renderer;
 
-import static net.gtn.dimensionalpocket.client.lib.TextureMaps.*;
-import static net.gtn.dimensionalpocket.common.lib.Hacks.BlockRenderer.*;
+import static net.gtn.dimensionalpocket.client.lib.TextureMaps.TEXTURE_PARTICLE_FIELD_ROOT;
+import static net.gtn.dimensionalpocket.oc.client.renderer.BlockRenderer.bindTexture;
 import static net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -9,7 +9,7 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 
 import net.gtn.dimensionalpocket.client.event.ClientEventHandler;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
+import net.gtn.dimensionalpocket.oc.client.renderer.BlockRenderer;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.Tessellator;
@@ -95,16 +95,18 @@ public class PortalRenderer {
 	}
 
 	public void startDrawing() {
-		if (isDrawing)
+		if (isDrawing) {
 			throw new IllegalStateException("Already drawing!");
+		}
 
 		glPushMatrix();
 		isDrawing = true;
 	}
 
 	public void stopDrawing() {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Can't stop renderer! It's not drawing!");
+		}
 
 		resetRenderer();
 		glPopMatrix();
@@ -112,14 +114,15 @@ public class PortalRenderer {
 
 	public void updateField(boolean small) {
 		long cycleTime = (long) (5000L / (small ? 2F : 3F));
-		fieldTranslation = ClientEventHandler.gameTicks % cycleTime / ((float) cycleTime);
+		fieldTranslation = ClientEventHandler.gameTicks % cycleTime / (float) cycleTime;
 		currentTexture = fancyRendering ? fieldTextures[0] : fieldTextures[small ? 1 : 2];
-		planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / (planeCount);
+		planeDepthIncrement = (maxPlaneDepth - minPlaneDepth) / planeCount;
 	}
 
 	public void drawFaces(float offset) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		drawFaceYNeg(offset);
 		drawFaceYPos(offset);
@@ -130,8 +133,9 @@ public class PortalRenderer {
 	}
 
 	public void drawFaces(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		drawFaceYNeg(offset, scale);
 		drawFaceYPos(offset, scale);
@@ -142,8 +146,9 @@ public class PortalRenderer {
 	}
 
 	public void drawFace(ForgeDirection direction, float offset) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 		switch (direction) {
 			case DOWN:
 				drawFaceYNeg(offset);
@@ -170,8 +175,9 @@ public class PortalRenderer {
 	}
 
 	public void drawFace(ForgeDirection direction, float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 		switch (direction) {
 			case DOWN:
 				drawFaceYNeg(offset, scale);
@@ -202,14 +208,15 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceXNeg(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceXNeg(currentTexture, -offset, scale);
+			BlockRenderer.drawFaceXNeg(currentTexture, -offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -301,15 +308,16 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceXPos(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceXPos(currentTexture, -1 + offset, scale);
+			BlockRenderer.drawFaceXPos(currentTexture, -1 + offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -335,7 +343,7 @@ public class PortalRenderer {
 				glBlendFunc(1, 1);
 				f6 = 0.5F;
 			}
-			float f8 = (float) (-(x + offset));
+			float f8 = (float) -(x + offset);
 			float f9 = f8 + ActiveRenderInfo.objectX;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectX;
 			float f11 = f9 / f10;
@@ -401,15 +409,16 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceYNeg(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceYNeg(currentTexture, -offset, scale);
+			BlockRenderer.drawFaceYNeg(currentTexture, -offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -501,15 +510,16 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceYPos(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceYPos(currentTexture, -1 + offset, scale);
+			BlockRenderer.drawFaceYPos(currentTexture, -1 + offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -535,7 +545,7 @@ public class PortalRenderer {
 				glBlendFunc(1, 1);
 				f6 = 0.5F;
 			}
-			float f8 = (float) (-(y + offset));
+			float f8 = (float) -(y + offset);
 			float f9 = f8 + ActiveRenderInfo.objectY;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectY;
 			float f11 = f9 / f10;
@@ -601,15 +611,16 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceZNeg(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceZNeg(currentTexture, -offset, scale);
+			BlockRenderer.drawFaceZNeg(currentTexture, -offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -701,15 +712,16 @@ public class PortalRenderer {
 	}
 
 	public void drawFaceZPos(float offset, float scale) {
-		if (!isDrawing)
+		if (!isDrawing) {
 			throw new IllegalStateException("Renderer is not drawing!");
+		}
 
 		glPushMatrix();
 		glDisable(GL_LIGHTING);
 
 		if (!fancyRendering) {
 			glTranslated(x, y, z);
-			Hacks.BlockRenderer.drawFaceZPos(currentTexture, -1 + offset, scale);
+			BlockRenderer.drawFaceZPos(currentTexture, -1 + offset, scale);
 			glPopMatrix();
 			return;
 		}
@@ -735,7 +747,7 @@ public class PortalRenderer {
 				glBlendFunc(1, 1);
 				f6 = 0.5F;
 			}
-			float f8 = (float) (-(z + offset));
+			float f8 = (float) -(z + offset);
 			float f9 = f8 + ActiveRenderInfo.objectZ;
 			float f10 = f8 + f5 + ActiveRenderInfo.objectZ;
 			float f11 = f9 / f10;

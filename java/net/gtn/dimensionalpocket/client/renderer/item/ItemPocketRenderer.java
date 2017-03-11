@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
 import net.gtn.dimensionalpocket.client.theme.PocketTextures;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
+import net.gtn.dimensionalpocket.oc.client.renderer.BlockRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
@@ -43,8 +43,8 @@ public class ItemPocketRenderer implements IItemRenderer {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1.0F, 1.0F, 1.0F);
 
-		Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
-		Hacks.BlockRenderer.drawFaces(PocketTextures.pocketFrame);
+		BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
+		BlockRenderer.drawFaces(PocketTextures.pocketFrame);
 
 		glDisable(GL_BLEND);
 		glEnable(GL_LIGHTING);
