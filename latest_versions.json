@@ -1,9 +1,9 @@
 {
   "1.7.10": {
-    "version": "0.11.4.1",
-    "url": "http://minecraft.curseforge.com/mc-mods/226990-dimensional-pockets/files",
-    "additionalInfo": "Important crash fix for servers!",
-    "additionalInfoColour": "RED",
-    "changelog" : "https://github.com/NPException42/Dimensional-Pockets/wiki/Changelog"
+    "version": "1.0.0",
+    "url": "https://minecraft.curseforge.com/projects/dimensional-pockets",
+    "additionalInfo": "Grab the final release! It is done.",
+    "additionalInfoColour": "LIME",
+    "changelog" : "https://github.com/NPException/Dimensional-Pockets/wiki/Changelog"
   }
 }
