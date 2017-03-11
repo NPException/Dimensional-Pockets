@@ -1,6 +1,5 @@
 package net.gtn.dimensionalpocket.common.lib;
 
-import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigBoolean;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigFloat;
 import net.gtn.dimensionalpocket.oc.api.configuration.Config.ConfigInteger;
@@ -51,8 +50,6 @@ public class Reference {
 	public static boolean useFancyField() {
 		return FORCE_FANCY_RENDERING != 1 && (FORCE_FANCY_RENDERING == 2 || Minecraft.getMinecraft().gameSettings.fancyGraphics);
 	}
-
-	public static Theme THEME = Theme.DEFAULT;
 
 	@ConfigBoolean(category = "Graphics", comment = "If set to true, a shader will be used for the particle field rendering instead of the old method.")
 	public static boolean USE_SHADER_FOR_PARTICLE_FIELD = false;

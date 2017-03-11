@@ -1,13 +1,14 @@
 package net.gtn.dimensionalpocket.client.renderer.item;
 
 import static org.lwjgl.opengl.GL11.*;
-import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
-import net.gtn.dimensionalpocket.common.lib.Hacks;
-import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
+import net.gtn.dimensionalpocket.client.theme.PocketTextures;
+import net.gtn.dimensionalpocket.common.lib.Hacks;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.IItemRenderer;
 
 
 @SideOnly(Side.CLIENT)
@@ -43,7 +44,7 @@ public class ItemPocketRenderer implements IItemRenderer {
 		glColor3f(1.0F, 1.0F, 1.0F);
 
 		Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[1], offsets);
-		Hacks.BlockRenderer.drawFaces(Reference.THEME.getPocketTexture());
+		Hacks.BlockRenderer.drawFaces(PocketTextures.pocketFrame);
 
 		glDisable(GL_BLEND);
 		glEnable(GL_LIGHTING);

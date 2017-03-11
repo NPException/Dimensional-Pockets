@@ -10,6 +10,7 @@ import net.gtn.dimensionalpocket.client.event.RenderEventHandler;
 import net.gtn.dimensionalpocket.client.lib.IColourBlindTexture;
 import net.gtn.dimensionalpocket.client.renderer.PortalRenderer;
 import net.gtn.dimensionalpocket.client.renderer.shader.ParticleFieldShader;
+import net.gtn.dimensionalpocket.client.theme.PocketTextures;
 import net.gtn.dimensionalpocket.common.core.pocket.Pocket;
 import net.gtn.dimensionalpocket.common.core.pocket.PocketSideState;
 import net.gtn.dimensionalpocket.common.core.utils.Utils;
@@ -105,7 +106,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 			Hacks.BlockRenderer.drawFaces(PortalRenderer.fieldTextures[0], fieldOffsets);
 			ParticleFieldShader.release();
 		}
-		Hacks.BlockRenderer.drawFaces(Reference.THEME.getPocketTexture());
+		Hacks.BlockRenderer.drawFaces(PocketTextures.pocketFrame);
 
 		if (!inRange) {
 			glDisable(GL_BLEND);
@@ -119,11 +120,11 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 				Colour texColour = Utils.FD_COLOURS.get(direction);
 				glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-				Hacks.BlockRenderer.drawFace(direction, Reference.THEME.getSideIndicator(direction).getTexture(false), 0.0003F);
+				Hacks.BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(false), 0.0003F);
 				if (Reference.COLOR_BLIND_MODE) {
 					texColour = Colour.WHITE;
 					glColor4d(texColour.r, texColour.g, texColour.b, texColour.a);
-					Hacks.BlockRenderer.drawFace(direction, Reference.THEME.getSideIndicator(direction).getTexture(true), 0.0003F);
+					Hacks.BlockRenderer.drawFace(direction, PocketTextures.sideIndicatorFor(direction).getTexture(true), 0.0003F);
 				}
 			}
 
@@ -134,7 +135,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS) {
 					PocketSideState state = pocket.getFlowState(direction);
-					IColourBlindTexture texture = Reference.THEME.getOverlay(state);
+					IColourBlindTexture texture = PocketTextures.overlayFor(state);
 					if (texture == null) {
 						continue;
 					}

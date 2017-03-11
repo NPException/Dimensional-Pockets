@@ -3,15 +3,11 @@ package net.gtn.dimensionalpocket.client.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.gtn.dimensionalpocket.client.theme.Theme;
 import net.gtn.dimensionalpocket.common.lib.Reference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
 
 
 public class RenderTweakCommand implements ICommand {
@@ -21,8 +17,6 @@ public class RenderTweakCommand implements ICommand {
 	private static final String OPTION_FIELD_SHADER = "useFieldShader";
 	private static final String OPTION_PLANE_COUNT = "particlePlanes";
 	private static final String OPTION_HELP = "help";
-	private static final String OPTION_THEME = "theme";
-	private static final String OPTION_SAVE = "saveConfig";
 
 	private static final List<String> ALL_OPTIONS = new ArrayList<>();
 
@@ -32,8 +26,6 @@ public class RenderTweakCommand implements ICommand {
 		ALL_OPTIONS.add(OPTION_FIELD_SHADER);
 		ALL_OPTIONS.add(OPTION_PLANE_COUNT);
 		ALL_OPTIONS.add(OPTION_HELP);
-		ALL_OPTIONS.add(OPTION_THEME);
-		ALL_OPTIONS.add(OPTION_SAVE);
 	}
 
 	private List<String> aliases = new ArrayList<>();
@@ -107,34 +99,6 @@ public class RenderTweakCommand implements ICommand {
 					for (String option : ALL_OPTIONS) {
 						sender.addChatMessage(new ChatComponentText(option));
 					}
-					return;
-				case OPTION_THEME:
-					boolean help = false;
-					if (args.length > 1) {
-						try {
-							int newValue = Integer.parseInt(args[1]);
-							newValue = MathHelper.clamp_int(newValue, 0, Theme.SIZE);
-							Reference.THEME = Theme.values()[newValue];
-						} catch (NumberFormatException ignored) {
-							// Check for refresh.
-							if ("refresh".equals(args[1])) {
-								sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Prepare for lag."));
-								sender.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_RED + "Refreshing current theme"));
-								Minecraft.getMinecraft().scheduleResourcesRefresh();
-							} else {
-								help = true;
-							}
-						}
-					}
-					if (help) {
-						sender.addChatMessage(new ChatComponentText("Valid values from 0 to " + Theme.SIZE + " (Inclusive)"));
-					}
-
-					sender.addChatMessage(new ChatComponentText("Current theme: " + Reference.THEME));
-					return;
-				case OPTION_SAVE:
-					// TODO: ConfigHandler.save(Reference.MOD_ID);
-					sender.addChatMessage(new ChatComponentText("In the future, this command will save the current DP config."));
 					return;
 				default:
 					sender.addChatMessage(new ChatComponentText(getCommandUsage(sender)));
