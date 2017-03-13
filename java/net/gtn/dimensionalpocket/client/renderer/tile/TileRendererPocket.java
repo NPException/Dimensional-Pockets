@@ -71,7 +71,7 @@ public class TileRendererPocket extends TileEntitySpecialRenderer {
 
 		if (!useFieldShader && !isInGUI) {
 			portalRenderer.overrideFancyRendering(fancy);
-			portalRenderer.overridePlaneCount(Reference.NUMBER_OF_PARTICLE_PLANES);
+			portalRenderer.overridePlaneCount(Reference.numberOfParticlePlanes());
 			portalRenderer.overrideRange(inRange);
 
 			portalRenderer.startDrawing();

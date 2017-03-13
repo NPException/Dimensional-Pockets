@@ -48,7 +48,15 @@ public class Reference {
 	public static int FORCE_FANCY_RENDERING = 0;
 
 	public static boolean useFancyField() {
-		return FORCE_FANCY_RENDERING != 1 && (FORCE_FANCY_RENDERING == 2 || Minecraft.getMinecraft().gameSettings.fancyGraphics);
+		return FORCE_FANCY_RENDERING != 1;
+	}
+
+	public static int numberOfParticlePlanes() {
+		return FORCE_FANCY_RENDERING == 0
+				&& NUMBER_OF_PARTICLE_PLANES > 3
+				&& !Minecraft.getMinecraft().gameSettings.fancyGraphics
+					? 3
+					: NUMBER_OF_PARTICLE_PLANES;
 	}
 
 	@ConfigBoolean(category = "Graphics", comment = "If set to true, a shader will be used for the particle field rendering instead of the old method.")
