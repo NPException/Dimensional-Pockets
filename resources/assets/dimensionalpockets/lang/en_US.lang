@@ -44,6 +44,10 @@ info.page.9=Coders:<br> <br> <br> - Jezza<br>      @Jezzadabomb338<br> <br> - NP
 info.update.available.1=§7Version §6[{}]§7 of Dimensional Pockets is available!
 info.update.available.2=§7(You are running version [{}])
 
+info.wiki.1=You want to know how to use Dimensional Pockets?
+info.wiki.2=Check out the official Wiki
+click.me=CLICK ME
+
 functionality.disabled.in.pocket=This seems to have no effect in a Dimensional Pocket...
 
 
