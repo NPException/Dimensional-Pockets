@@ -115,7 +115,7 @@ task sourceJar(type: Jar) {
 // deobf jars
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'deobf'
+    classifier = 'dev'
 //    manifest {
 //        attributes 'FMLAT' : 'iChunUtil-deobf_at.cfg'
 //    }
