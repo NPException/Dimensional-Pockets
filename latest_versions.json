@@ -1,8 +1,8 @@
 {
   "1.7.10": {
-    "version": "1.0.1",
+    "version": "1.0.2",
     "url": "https://minecraft.curseforge.com/projects/dimensional-pockets",
-    "additionalInfo": "Grab the final release! It is done.",
+    "additionalInfo": "New: Ingame link to the wiki and the /dptweak command!",
     "additionalInfoColour": "GREEN",
     "changelog" : "https://github.com/NPException/Dimensional-Pockets/wiki/Changelog"
   }
