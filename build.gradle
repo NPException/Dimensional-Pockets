@@ -24,7 +24,7 @@ apply plugin: 'forge'
 sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 
-version = "1.0.1"
+version = "1.0.2"
 group = "net.gtn.dimensionalpocket"
 archivesBaseName = "DimensionalPockets-1.7.10"
 
