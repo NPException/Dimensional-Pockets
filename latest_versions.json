@@ -1,8 +1,8 @@
 {
   "1.7.10": {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "url": "https://minecraft.curseforge.com/projects/dimensional-pockets",
-    "additionalInfo": "New: Ingame link to the wiki and the /dptweak command!",
+    "additionalInfo": "Fixed a conflict with OpenComputers",
     "additionalInfoColour": "GREEN",
     "changelog" : "https://github.com/NPException/Dimensional-Pockets/wiki/Changelog"
   }
