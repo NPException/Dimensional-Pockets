@@ -24,7 +24,7 @@ apply plugin: 'forge'
 sourceCompatibility = '1.7'
 targetCompatibility = '1.7'
 
-version = "1.0.2"
+version = "1.0.3"
 group = "net.gtn.dimensionalpocket"
 archivesBaseName = "DimensionalPockets-1.7.10"
 
@@ -33,7 +33,7 @@ sourceSets {
         java {
             srcDir "./java"
 			srcDir "./api"
-			srcDir "./optionals"
+			//srcDir "./optionals"
 			srcDir "../WormholeAPI/src/main/java"
 			srcDir "../GameAnalyticsAPI/src/main/java"
         }
@@ -49,9 +49,14 @@ minecraft {
     runDir = "eclipse"
 }
 
+repositories {
+    maven { url = "http://maven.cil.li/" }
+}
 dependencies {
 	compile fileTree('eclipse/mods')   
 			// compile files('path/to/file.jar')
+			
+	compile "li.cil.oc:OpenComputers:MC1.7.10-1.6.+:api"
 			
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
