@@ -10,7 +10,7 @@ public class Reference {
 
 	public static final String MOD_ID = "dimensionalPockets";
 	public static final String MOD_NAME = "Dimensional Pockets";
-	public static final String VERSION = "1.0.2";
+	public static final String VERSION = "1.0.3";
 
 	public static final String MOD_IDENTIFIER = MOD_ID + ":";
 
