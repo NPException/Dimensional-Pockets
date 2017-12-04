@@ -1,5 +1,5 @@
 ## Attention
-_**The development of DP has basically stopped. DP will likely only receive critical bugfixes if necessary. The development on the successor to DP, [Dimensional Pockets 2](https://github.com/NPException/Dimensional-Pockets-2), is in the planning phase.**_
+_**The development of DP has basically stopped. DP will likely only receive critical bugfixes if necessary. The development on the successor to DP is in the ideas phase.**_
 
 ## Current Release
 https://minecraft.curseforge.com/projects/dimensional-pockets
